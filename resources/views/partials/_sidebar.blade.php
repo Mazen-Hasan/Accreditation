@@ -1,4 +1,11 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item">
+                {{ Auth::user()->name }}
+                <br>
+                {{ Auth::user()->roles->first()->name }}
+        </li>
+    </ul>
             <ul class="nav">
                 @role('event-admin')
                 <li class="nav-item">
@@ -100,4 +107,15 @@
 {{--                    </div>--}}
 {{--                </li>--}}
             </ul>
+
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                   onclick="event.preventDefault();
+                   document.getElementById('logout-form').submit();">
+                    {{ __('Logout') }}
+                </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+
         </nav>

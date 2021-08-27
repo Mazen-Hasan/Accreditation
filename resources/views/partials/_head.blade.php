@@ -6,12 +6,14 @@
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ URL::asset('vendors/feather/feather.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('vendors/mdi/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('vendors/ti-icons/css/themify-icons.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('vendors/typicons/typicons.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('vendors/simple-line-icons/css/simple-line-icons.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('vendors/css/vendor.bundle.base.css') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+{{--    <link rel="stylesheet" href="{{ URL::asset('vendors/ti-icons/css/themify-icons.css') }}">--}}
+{{--    <link rel="stylesheet" href="{{ URL::asset('vendors/typicons/typicons.css') }}">--}}
+{{--    <link rel="stylesheet" href="{{ URL::asset('vendors/simple-line-icons/css/simple-line-icons.css') }}">--}}
+{{--    <link rel="stylesheet" href="{{ URL::asset('vendors/css/vendor.bundle.base.css') }}">--}}
+
+@include('partials._javascript')
+{{--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>--}}
+{{--    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>--}}
 {{--    <link rel="stylesheet" href="vendors/feather/feather.css">--}}
 {{--    <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">--}}
 {{--    <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">--}}
@@ -32,7 +34,7 @@
     <link rel="stylesheet" href="{{ URL::asset('css/vertical-layout-light/style.css') }}">
     <!-- endinject -->
 {{--    <link rel="shortcut icon" href="images/favicon.png" />--}}
-    <link rel="shortcut icon" href="{{ URL::asset('images/favicon.png') }}" />
+{{--    <link rel="shortcut icon" href="{{ URL::asset('images/favicon.png') }}" />--}}
 {{--    <script src="vendors/js/vendor.bundle.base.js"></script>--}}
 {{--    <script src="{{ URL::asset('vendors/js/vendor.bundle.base.js') }}"></script>--}}
     <!-- endinject -->
@@ -51,8 +53,6 @@
     <script src="{{ URL::asset('js/off-canvas.js') }}"></script>
     <script src="{{ URL::asset('js/hoverable-collapse.js') }}"></script>
     <script src="{{ URL::asset('js/template.js') }}"></script>
-    <script src="{{ URL::asset('js/settings.js') }}"></script>
-    <script src="{{ URL::asset('js/todolist.js') }}"></script>
 
     <!-- endinject -->
     <!-- Custom js for this page-->

@@ -39,3 +39,7 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('titleController/destroy/{id}', 'App\Http\Controllers\TitleController@destroy');
     Route::get('titleController/changeStatus/{id}/{status}', 'App\Http\Controllers\TitleController@changeStatus');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

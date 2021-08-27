@@ -113,59 +113,59 @@
                     <i class="icon-bell"></i>
                     <span class="count"></span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="countDropdown">
-                    <a class="dropdown-item py-3">
-                        <p class="mb-0 font-weight-medium float-left">You have 7 unread mails </p>
-                        <span class="badge badge-pill badge-primary float-right">View all</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item preview-item">
-                        <div class="preview-thumbnail">
+{{--                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="countDropdown">--}}
+{{--                    <a class="dropdown-item py-3">--}}
+{{--                        <p class="mb-0 font-weight-medium float-left">You have 7 unread mails </p>--}}
+{{--                        <span class="badge badge-pill badge-primary float-right">View all</span>--}}
+{{--                    </a>--}}
+{{--                    <div class="dropdown-divider"></div>--}}
+{{--                    <a class="dropdown-item preview-item">--}}
+{{--                        <div class="preview-thumbnail">--}}
 {{--                            <img src="{{ URL::asset('images/faces/face10.jpg') }}" alt="image" class="img-sm profile-pic">--}}
-                            <img src="{{ URL::asset('images/faces/face10.jpg') }}" alt="image" class="img-sm profile-pic">
-                        </div>
-                        <div class="preview-item-content flex-grow py-2">
-                            <p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>
-                            <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-                        </div>
-                    </a>
-                    <a class="dropdown-item preview-item">
-                        <div class="preview-thumbnail">
-                            <img src="{{ URL::asset('images/faces/face12.jpg') }}" alt="image" class="img-sm profile-pic">
-                        </div>
-                        <div class="preview-item-content flex-grow py-2">
-                            <p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>
-                            <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-                        </div>
-                    </a>
-                    <a class="dropdown-item preview-item">
-                        <div class="preview-thumbnail">
-                            <img src="{{ URL::asset('images/faces/face1.jpg') }}" alt="image" class="img-sm profile-pic">
-                        </div>
-                        <div class="preview-item-content flex-grow py-2">
-                            <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
-                            <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-                        </div>
-                    </a>
-                </div>
+{{--                            <img src="{{ URL::asset('images/faces/face10.jpg') }}" alt="image" class="img-sm profile-pic">--}}
+{{--                        </div>--}}
+{{--                        <div class="preview-item-content flex-grow py-2">--}}
+{{--                            <p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>--}}
+{{--                            <p class="fw-light small-text mb-0"> The meeting is cancelled </p>--}}
+{{--                        </div>--}}
+{{--                    </a>--}}
+{{--                    <a class="dropdown-item preview-item">--}}
+{{--                        <div class="preview-thumbnail">--}}
+{{--                            <img src="{{ URL::asset('images/faces/face12.jpg') }}" alt="image" class="img-sm profile-pic">--}}
+{{--                        </div>--}}
+{{--                        <div class="preview-item-content flex-grow py-2">--}}
+{{--                            <p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>--}}
+{{--                            <p class="fw-light small-text mb-0"> The meeting is cancelled </p>--}}
+{{--                        </div>--}}
+{{--                    </a>--}}
+{{--                    <a class="dropdown-item preview-item">--}}
+{{--                        <div class="preview-thumbnail">--}}
+{{--                            <img src="{{ URL::asset('images/faces/face1.jpg') }}" alt="image" class="img-sm profile-pic">--}}
+{{--                        </div>--}}
+{{--                        <div class="preview-item-content flex-grow py-2">--}}
+{{--                            <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>--}}
+{{--                            <p class="fw-light small-text mb-0"> The meeting is cancelled </p>--}}
+{{--                        </div>--}}
+{{--                    </a>--}}
+{{--                </div>--}}
             </li>
-            <li class="nav-item dropdown">
-                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                    {{ Auth::user()->name }}
-                </a>
+{{--            <li class="nav-item dropdown">--}}
+{{--                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>--}}
+{{--                    {{ Auth::user()->name }}--}}
+{{--                </a>--}}
 
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}
-                    </a>
+{{--                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">--}}
+{{--                    <a class="dropdown-item" href="{{ route('logout') }}"--}}
+{{--                       onclick="event.preventDefault();--}}
+{{--                                                     document.getElementById('logout-form').submit();">--}}
+{{--                        {{ __('Logout') }}--}}
+{{--                    </a>--}}
 
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </div>
-            </li>
+{{--                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">--}}
+{{--                        @csrf--}}
+{{--                    </form>--}}
+{{--                </div>--}}
+{{--            </li>--}}
 {{--            <li class="nav-item dropdown d-none d-lg-block user-dropdown">--}}
 {{--                <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">--}}
 {{--                    <img class="img-xs rounded-circle" src="{{ URL::asset('images/faces/face8.jpg') }}" alt="Profile image"> </a>--}}
@@ -183,8 +183,8 @@
 {{--                </div>--}}
 {{--            </li>--}}
         </ul>
-{{--        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">--}}
-{{--            <span class="mdi mdi-menu"></span>--}}
-{{--        </button>--}}
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+        </button>
     </div>
 </nav>

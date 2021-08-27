@@ -21,7 +21,7 @@
     <div class="content-wrapper">
         <br>
         @role('super-admin')
-        <a href="{{route('eventAdd')}}" class="btn btn-info ml-3" id="add-new-post">Add New Evant</a>
+        <a href="{{route('eventAdd')}}" class="btn btn-info ml-3" id="add-new-post">Add New Event</a>
 {{--        <a href="javascript:void(0)" class="btn btn-info ml-3" id="add-new-post">Add New Evant</a>--}}
         @endrole
         <br><br>

@@ -32,6 +32,7 @@
     <!-- inject:css -->
 {{--    <link rel="stylesheet" href="css/vertical-layout-light/style.css">--}}
     <link rel="stylesheet" href="{{ URL::asset('css/vertical-layout-light/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <!-- endinject -->
 {{--    <link rel="shortcut icon" href="images/favicon.png" />--}}
 {{--    <link rel="shortcut icon" href="{{ URL::asset('images/favicon.png') }}" />--}}

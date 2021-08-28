@@ -1,4 +1,4 @@
-<nav class="sidebar sidebar-offcanvas" id="sidebar">
+<nav class="sidebar sidebar-offcanvas" id="sidebar" style="background: transparent">
     <ul class="nav">
         <li class="nav-item">
                 {{ Auth::user()->name }}

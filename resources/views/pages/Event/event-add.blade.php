@@ -28,17 +28,17 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Name</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="name" name="name" value="" required=""/>
+                                        <label class="col-form-label">Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="input100" id="name" name="name" value="" required="" placeholder="enter name"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Period</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="period" name="period" value="" required=""/>
+                                        <label class=" col-form-label">Period</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="input100" id="period" name="period" value="" required=""placeholder="enter period"/>
                                         </div>
                                     </div>
                                 </div>
@@ -46,9 +46,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Event Admin</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="event_admin" name="event_admin" value="" required="">
+                                        <label class=" col-form-label">Event Admin</label>
+                                        <div class="col-sm-12">
+                                           <select class="input100 minimal" id="event_admin" name="event_admin" required="">
                                                 @foreach ($eventAdmins as $eventAdmin)
                                                     <option value="{{ $eventAdmin->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -63,9 +63,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Accreditation Period</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="accreditation_period" name="accreditation_period" value="" required=""/>
+                                        <label class="col-form-label">Accreditation Period</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="input100" id="accreditation_period" name="accreditation_period" value="" placeholder="enter accreditation period" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -73,9 +73,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Owner</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="owner" name="owner" value="" required="">
+                                        <label class=" col-form-label">Owner</label>
+                                        <div class="col-sm-12">
+                                           <select class="input100 minimal" id="owner" name="owner" required="">
                                                 @foreach ($owners as $owner)
                                                     <option value="{{ $owner->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -90,9 +90,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Organizer</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="organizer" name="organizer" value="" required="">
+                                        <label class=" col-form-label">Organizer</label>
+                                        <div class="col-sm-12">
+                                           <select class="input100 minimal" id="organizer" name="organizer" required="">
                                                 @foreach ($organizers as $organizer)
                                                     <option value="{{ $organizer->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -112,17 +112,17 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Location</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="location" name="location" value="" required=""/>
+                                        <label class=" col-form-label">Location</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="input100" id="location" name="location" value="" placeholder="enter location"  required=""/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Size</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="size" name="size" value="" required=""/>
+                                        <label class=" col-form-label">Size</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="input100" id="size" name="size" placeholder="enter size" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -130,9 +130,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Security Officer</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="security_officer" name="security_officer" value="" required="">
+                                        <label class=" col-form-label">Security Officer</label>
+                                        <div class="col-sm-12">
+                                           <select class="input100 minimal" id="security_officer" name="security_officer" required="">
                                                 @foreach ($securityOfficers as $securityOfficer)
                                                     <option value="{{ $securityOfficer->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -147,9 +147,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Security Option</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="approval_option" name="approval_option" value="" required="">
+                                        <label class=" col-form-label">Security Option</label>
+                                        <div class="col-sm-12">
+                                           <select class="input100 minimal" id="approval_option" name="approval_option" required="">
                                                 @foreach ($approvalOptions as $approvalOption)
                                                     <option value="{{ $approvalOption->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -166,9 +166,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Event Type</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="event_type" name="event_type" value="" required="">
+                                        <label class=" col-form-label">Event Type</label>
+                                        <div class="col-sm-12">
+                                           <select class="input100 minimal" id="event_type" name="event_type" required="">
                                                 @foreach ($eventTypes as $eventType)
                                                     <option value="{{ $eventType->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -183,9 +183,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Status</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="status" name="status" value="" required="">
+                                        <label class=" col-form-label">Status</label>
+                                        <div class="col-sm-12">
+                                           <select class="input100 minimal" id="status" name="status" required="">
                                                 @foreach ($eventStatuss as $eventStatus)
                                                     <option value="{{ $eventStatus->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -200,11 +200,11 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Registration Form Template</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="event_form" name="event_form" value="" required="">
+                                        <label class="col-form-label">Registration Form Template</label>
+                                        <div class="col-sm-12">
+                                           <select class="input100 minimal" id="event_form" name="event_form" required="">
                                                 @foreach ($eventForms as $eventForm)
                                                     <option value="{{ $eventForm->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -218,8 +218,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary" id="btn-save" value="create">Save
+                            <div class="col-sm-offset-2 col-sm-2">
+                                <button type="submit" class="login100-form-btn" id="btn-save" value="create">Save
                                 </button>
                             </div>
                         </form>

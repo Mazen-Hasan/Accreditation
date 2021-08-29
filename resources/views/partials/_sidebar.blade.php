@@ -1,15 +1,15 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar" style="background: transparent">
     <ul class="nav">
         <li class="nav-item">
-                {{ Auth::user()->name }}
-                <br>
-                {{ Auth::user()->roles->first()->name }}
+{{--                {{ Auth::user()->name }}--}}
+{{--                <br>--}}
+{{--                {{ Auth::user()->roles->first()->name }}--}}
         </li>
     </ul>
             <ul class="nav">
                 @role('event-admin')
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('events') }}">
+                    <a class="nav-link" href="{{ route('events') }} ">
                         <i class="mdi mdi-grid-large menu-icon"></i>
                         <span class="menu-title">Event management</span>
                     </a>

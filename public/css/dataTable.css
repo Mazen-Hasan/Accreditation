@@ -181,7 +181,7 @@ table.dataTable.display tbody tr:hover.selected > .sorting_3, table.dataTable.or
 }
 
 table.dataTable.no-footer {
-    border-bottom: 1px solid #111
+    /*border-bottom: 1px solid #111*/
 }
 
 table.dataTable.nowrap th, table.dataTable.nowrap td {
@@ -439,4 +439,18 @@ table.dataTable, table.dataTable th, table.dataTable td {
     .dataTables_wrapper .dataTables_filter {
         margin-top: 0.5em
     }
+}
+
+tr:nth-child(even) td {
+    background: #FFFFFF;
+    height: 40px;
+}
+
+tr:nth-child(odd) td {
+    background: lightgray;
+    height: 40px;
+}
+
+th{
+    height: 40px;
 }

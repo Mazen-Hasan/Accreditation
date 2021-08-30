@@ -28,6 +28,12 @@
                         <span class="menu-title">Title management</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('companyCategories') }}">
+                        <i class="mdi mdi-grid-large menu-icon"></i>
+                        <span class="menu-title">Company category management</span>
+                    </a>
+                </li>
                 @endrole
 {{--                <li class="nav-item nav-category">UI Elements</li>--}}
 {{--                <li class="nav-item">--}}

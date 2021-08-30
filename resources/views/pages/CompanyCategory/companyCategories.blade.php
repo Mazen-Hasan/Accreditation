@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Titles')
+@section('subtitle',' Company categories')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
@@ -22,7 +22,7 @@
     <div class="content-wrapper">
         <br>
 {{--        <a href="{{route('eventAdd')}}" class="btn btn-info ml-3" id="add-new-Title">Add New Evant</a>--}}
-        <a href="javascript:void(0)" class="btn btn-info ml-3" id="add-new-post">Add New Title</a>
+        <a href="javascript:void(0)" class="btn btn-info ml-3" id="add-new-category">Add New Category</a>
         <br><br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
@@ -34,7 +34,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Title</th>
+                                    <th>name</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -55,12 +55,12 @@
                     <h4 class="modal-title" id="postCrudModal"></h4>
                 </div>
                 <div class="modal-body">
-                    <form id="postForm" name="postForm" class="form-horizontal">
-                        <input type="hidden" name="post_id" id="post_id">
+                    <form id="categoryForm" name="categoryForm" class="form-horizontal">
+                        <input type="hidden" name="category_id" id="category_id">
                         <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">Title</label>
+                            <label for="name" class="col-sm-2 control-label">Name</label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="title_label" name="title_label" value="" required="">
+                                <input type="text" class="form-control" id="name" name="name" value="" required="">
                             </div>
                         </div>
 
@@ -68,7 +68,7 @@
                             <label class="col-sm-2 control-label">Status</label>
                             <div class="col-sm-12">
 {{--                                <input class="form-control" id="status" name="status" value="" required="">--}}
-                                <select class="form-control" id="status" name="status" value="" required="">
+                                <select class="form-control" id="status" name="status" required="">
                                     <option value="1">Active</option>
                                     <option value="0">InActive</option>
                                 </select>
@@ -100,48 +100,47 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('titleController.index') }}",
+                    url: "{{ route('companyCategoryController.index') }}",
                     type: 'GET',
                 },
                 columns: [
                     { data: 'id', name: 'id', 'visible': false},
-                    { data: 'title_label', name: 'title_label' },
+                    { data: 'name', name: 'name' },
                     { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ return "<p style='color: red'>InActive</p>" }}},
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
             });
 
-            $('#add-new-post').click(function () {
-                $('#btn-save').val("create-post");
-                $('#post_id').val('');
+            $('#add-new-category').click(function () {
+                $('#btn-save').val("create-category");
+                $('#category_id').val('');
                 $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Post");
+                $('#postCrudModal').html("Add New Category");
                 $('#ajax-crud-modal').modal('show');
             });
 
 
-            $('body').on('click', '.edit-post', function () {
-                var post_id = $(this).data('id');
-                //alert(post_id);
-                $.get('titleController/'+post_id+'/edit', function (data) {
+            $('body').on('click', '.edit-category', function () {
+                var category_id = $(this).data('id');
+                $.get('companyCategoryController/'+category_id+'/edit', function (data) {
                     $('#name-error').hide();
-                    $('#email-error').hide();
-                    $('#postCrudModal').html("Edit Title");
-                    $('#btn-save').val("edit-post");
+                    $('#postCrudModal').html("Edit Category Name");
+                    $('#btn-save').val("edit-category");
                     $('#ajax-crud-modal').modal('show');
-                    $('#post_id').val(data.id);
-                    $('#title_label').val(data.title_label);
+                    $('#category_id').val(data.id);
+                    $('#name').val(data.name);
                     $('#status').val(data.status);
+                    // alert($('#name').val(data.name).val());
                 })
             });
 
-            $('body').on('click', '#delete-post', function () {
-                var post_id = $(this).data("id");
+            $('body').on('click', '#delete-category', function () {
+                var category_id = $(this).data("id");
                 confirm("Are You sure want to delete !");
                 $.ajax({
                     type: "get",
-                    url: "titleController/destroy/"+post_id,
+                    url: "companyCategoryController/destroy/"+ category_id,
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -151,12 +150,12 @@
                     }
                 });
             });
-            $('body').on('click', '#activate-title', function () {
-                var post_id = $(this).data("id");
+            $('body').on('click', '#activate-category', function () {
+                var category_id = $(this).data("id");
                 confirm("Are You sure want to activate ?!");
                 $.ajax({
                     type: "get",
-                    url: "titleController/changeStatus/"+post_id+"/1",
+                    url: "companyCategoryController/changeStatus/"+category_id+"/1",
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -166,12 +165,12 @@
                     }
                 });
             });
-            $('body').on('click', '#deActivate-title', function () {
-                var post_id = $(this).data("id");
+            $('body').on('click', '#deActivate-category', function () {
+                var category_id = $(this).data("id");
                 confirm("Are You sure want to deActivate ?!");
                 $.ajax({
                     type: "get",
-                    url: "titleController/changeStatus/"+post_id+"/0",
+                    url: "companyCategoryController/changeStatus/"+category_id+"/0",
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -183,16 +182,14 @@
             });
         });
 
-        if ($("#postForm").length > 0) {
-            $("#postForm").validate({
+        if ($("#categoryForm").length > 0) {
+            $("#categoryForm").validate({
                 submitHandler: function(form) {
-                    //$('#post_id').val('');
-                    var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
 
                     $.ajax({
-                        data: $('#postForm').serialize(),
-                        url: "{{ route('titleController.store') }}",
+                        data: $('#categoryForm').serialize(),
+                        url: "{{ route('companyCategoryController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {

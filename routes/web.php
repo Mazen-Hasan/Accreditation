@@ -31,13 +31,15 @@ Route::group(['middleware' => 'role:super-admin'], function() {
 //    Route::get('/event-add', [App\Http\Controllers\EventController::class, 'eventAdd'])->name('eventAdd');
 //    Route::get('/event-edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('eventEdit');
     Route::get('/titles', [App\Http\Controllers\TitleController::class, 'index'])->name('titles');
-
-//    Route::resource('dtable-posts', 'App\Http\Controllers\EventController');
-//    Route::get('dtable-posts/destroy/{id}', 'App\Http\Controllers\EventController@destroy');
+    Route::get('/companyCategories', [App\Http\Controllers\CompanyCategoryController::class, 'index'])->name('companyCategories');
 
     Route::resource('titleController', 'App\Http\Controllers\TitleController');
     Route::get('titleController/destroy/{id}', 'App\Http\Controllers\TitleController@destroy');
     Route::get('titleController/changeStatus/{id}/{status}', 'App\Http\Controllers\TitleController@changeStatus');
+
+    Route::resource('companyCategoryController', 'App\Http\Controllers\CompanyCategoryController');
+    Route::get('companyCategoryController/destroy/{id}', 'App\Http\Controllers\CompanyCategoryController@destroy');
+    Route::get('companyCategoryController/changeStatus/{id}/{status}', 'App\Http\Controllers\CompanyCategoryController@changeStatus');
     Route::resource('contactController', 'App\Http\Controllers\ContactController');
     Route::get('/contacts', [App\Http\Controllers\ContactController::class, 'index'])->name('contacts');
     Route::get('/contact-add', [App\Http\Controllers\ContactController::class, 'contactAdd'])->name('contactAdd');

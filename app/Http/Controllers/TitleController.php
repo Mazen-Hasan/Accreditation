@@ -41,17 +41,9 @@ class TitleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-//    public function store(Request $request)
-//    {
-//        $postId = $request->post_id;
-//        $post   =   Events::updateOrCreate(['id' => $postId],
-//            ['title' => $request->title, 'body' => $request->body]);
-//        return Response::json($post);
-//    }
 
     public function store(Request $request)
     {
-        //xdebug_break();
         $postId = $request->post_id;
         $post   =   Title::updateOrCreate(['id' => $postId],
             ['title_label' => $request->title_label,

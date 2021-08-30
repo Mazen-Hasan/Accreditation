@@ -47,6 +47,16 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('contactController/removeContactTitle/{contact_id}/{title_id}', 'App\Http\Controllers\ContactController@removeContactTitle');
     Route::get('contactController/storeContactTitle/{contact_id}/{title_id}', 'App\Http\Controllers\ContactController@storeContactTitle');
 //    Route::get('contactController/storeContactTitle', 'App\Http\Controllers\ContactController@storeContactTitle');
+
+    Route::get('/securityCategories', [App\Http\Controllers\SecurityCategoryController::class, 'index'])->name('securityCategories');
+    Route::resource('securityCategoryController', 'App\Http\Controllers\SecurityCategoryController');
+    Route::get('securityCategoryController/destroy/{id}', 'App\Http\Controllers\SecurityCategoryController@destroy');
+    Route::get('securityCategoryController/changeStatus/{id}/{status}', 'App\Http\Controllers\SecurityCategoryController@changeStatus');
+
+    Route::get('/eventTypes', [App\Http\Controllers\EventTypeController::class, 'index'])->name('eventTypes');
+    Route::resource('eventTypeController', 'App\Http\Controllers\EventTypeController');
+    Route::get('eventTypeController/destroy/{id}', 'App\Http\Controllers\EventTypeController@destroy');
+    Route::get('eventTypeController/changeStatus/{id}/{status}', 'App\Http\Controllers\EventTypeController@changeStatus');
 });
 
 Auth::routes();

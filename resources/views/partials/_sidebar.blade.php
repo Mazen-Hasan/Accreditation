@@ -34,6 +34,18 @@
                         <span class="menu-title">Company category management</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('securityCategories') }}">
+                        <i class="mdi mdi-grid-large menu-icon"></i>
+                        <span class="menu-title">Security Category management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('eventTypes') }}">
+                        <i class="mdi mdi-grid-large menu-icon"></i>
+                        <span class="menu-title">Event Type management</span>
+                    </a>
+                </li>
                 @endrole
 {{--                <li class="nav-item nav-category">UI Elements</li>--}}
 {{--                <li class="nav-item">--}}

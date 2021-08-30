@@ -38,6 +38,13 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::resource('titleController', 'App\Http\Controllers\TitleController');
     Route::get('titleController/destroy/{id}', 'App\Http\Controllers\TitleController@destroy');
     Route::get('titleController/changeStatus/{id}/{status}', 'App\Http\Controllers\TitleController@changeStatus');
+    Route::resource('contactController', 'App\Http\Controllers\ContactController');
+    Route::get('/contacts', [App\Http\Controllers\ContactController::class, 'index'])->name('contacts');
+    Route::get('/contact-add', [App\Http\Controllers\ContactController::class, 'contactAdd'])->name('contactAdd');
+    Route::get('/contact-edit/{id}', [App\Http\Controllers\ContactController::class, 'edit'])->name('contactEdit');
+    Route::get('contactController/removeContactTitle/{contact_id}/{title_id}', 'App\Http\Controllers\ContactController@removeContactTitle');
+    Route::get('contactController/storeContactTitle/{contact_id}/{title_id}', 'App\Http\Controllers\ContactController@storeContactTitle');
+//    Route::get('contactController/storeContactTitle', 'App\Http\Controllers\ContactController@storeContactTitle');
 });
 
 Auth::routes();

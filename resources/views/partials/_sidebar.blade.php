@@ -16,7 +16,7 @@
                 </li>
                 @endrole
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{{ route('contacts') }}">
                         <i class="mdi mdi-grid-large menu-icon"></i>
                         <span class="menu-title">Contact management</span>
                     </a>

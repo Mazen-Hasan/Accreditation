@@ -95,4 +95,5 @@ class TitleController extends Controller
         return Response::json($post);
     }
 
+
 }

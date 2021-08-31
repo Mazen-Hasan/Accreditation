@@ -195,9 +195,9 @@ class ContactController extends Controller
         return Response::json($post);
     }
 
-    public function removeContactTitle($contact_id,$title_id){
+    public function removeContactTitle($contact_title_id){
 
-        $where = array('contact_id'=> $contact_id, 'title_id'=> $title_id);
+        $where = array('id'=> $contact_title_id);
         $post = ContactTitle::where($where)->delete();
         return Response::json($post);
     }

@@ -228,7 +228,71 @@
                                 </button>
                             </div>
                         </form>
+                        <br><br>
+                        <div class="row">
+                            <div class="col-lg-6 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Security Category Table</h4>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover" id="laravel_datatable" style="text-align: center">
+                                                <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Security Category</th>
+                                                    {{--                                                    <th style="color: black">Status</th>--}}
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        {{--        <a href="{{route('eventAdd')}}" class="btn btn-info ml-3" id="add-new-Title">Add New Evant</a>--}}
+                        <a href="javascript:void(0)" class="btn btn-info ml-3" id="add-new-post">Add New Event Security Category</a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ajax-crud-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="postCrudModal"></h4>
+                </div>
+                <div class="modal-body">
+                    {{--                    <form id="contactTitleForm" name="contactTitleForm" class="form-horizontal">--}}
+                    <input type="hidden" name="event_id" id="event_id" value="{{$post->id}}">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Security Category</label>
+                        <div class="col-sm-12">
+                            {{--                                <input class="form-control" id="status" name="status" value="" required="">--}}
+                            <select class="form-control" id="eventSecurityCategory" name="eventSecurityCategory" value="" required="">
+                                @foreach ($securityCategories as $securityCategory)
+                                    <option value="{{ $securityCategory->key }}"
+{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                            @if ($securityCategory->key == 1)
+                                            selected="selected"
+                                        @endif
+                                    >{{ $securityCategory->value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button class="btn btn-primary" id="btn-event-security-category-save" value="create">Save
+                        </button>
+                    </div>
+                    {{--                    </form>--}}
+                </div>
+                <div class="modal-footer">
+
                 </div>
             </div>
         </div>
@@ -259,29 +323,64 @@
                 }
             });
 
-            {{--$('#laravel_datatable').DataTable({--}}
-            {{--    processing: true,--}}
-            {{--    serverSide: true,--}}
-            {{--    ajax: {--}}
-            {{--        url: "{{ route('dtable-posts.index') }}",--}}
-            {{--        type: 'GET',--}}
-            {{--    },--}}
-            {{--    columns: [--}}
-            {{--        { data: 'id', name: 'id', 'visible': false},--}}
-            {{--        { data: 'title', name: 'title' },--}}
-            {{--        { data: 'body', name: 'body' },--}}
-            {{--        { data: 'created_at', name: 'created_at' },--}}
-            {{--        {data: 'action', name: 'action', orderable: false},--}}
-            {{--    ],--}}
-            {{--    order: [[0, 'desc']]--}}
-            {{--});--}}
+            $('#laravel_datatable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('EventController.edit',[$post->id]) }}",
+                    type: 'GET',
+                },
+                columns: [
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'name', name: 'name'},
+                    {data: 'action', name: 'action', orderable: false}
+                ],
+                order: [[0, 'desc']]
+            });
 
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Post");
+                $('#postCrudModal').html("Add New Event Security Category");
                 $('#ajax-crud-modal').modal('show');
+            });
+
+            $('body').on('click', '#remove-event-security-category', function () {
+                var post_id = $(this).data("id");
+                // var event_id = $('#event_id').val();
+                //alert(event_id + " "+ post_id);
+                confirm("Are You sure want to remove event security category ?!");
+                $.ajax({
+                    type: "get",
+                    url: "../EventController/remove/"+post_id,
+                    success: function (data) {
+                        var oTable = $('#laravel_datatable').dataTable();
+                        oTable.fnDraw(false);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+            $('body').on('click', '#btn-event-security-category-save', function () {
+                var event_id = $('#event_id').val();
+                var eventSecurityCategory = $('#eventSecurityCategory').val();
+                //alert('hey hey');
+                //confirm("Are You sure want to deActivate ?!");
+                $.ajax({
+                    type: "get",
+                    url: "../EventController/storeEventSecurityCategory/"+event_id+"/"+eventSecurityCategory,
+                    success: function (data) {
+                        //alert(data);
+                        $('#ajax-crud-modal').modal('hide');
+                        var oTable = $('#laravel_datatable').dataTable();
+                        oTable.fnDraw(false);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
             });
 
 

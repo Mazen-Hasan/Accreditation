@@ -267,11 +267,11 @@
             // });
             $('body').on('click', '#remove-contact_title', function () {
                 var post_id = $(this).data("id");
-                var contact_id = $('#contact_id').val();
+                // var contact_id = $('#contact_id').val();
                 confirm("Are You sure want to remove contact title ?!");
                 $.ajax({
                     type: "get",
-                    url: "../contactController/removeContactTitle/"+contact_id+"/"+post_id,
+                    url: "../contactController/removeContactTitle/"+post_id,
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);

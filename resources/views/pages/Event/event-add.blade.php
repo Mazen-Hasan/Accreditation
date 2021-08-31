@@ -1,7 +1,7 @@
 @extends('main')
 @section('subtitle',' Add Event')
 @section('style')
-{{--    <meta name="csrf-token" content="{{ csrf_token() }}">--}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 {{--    <link rel="stylesheet" href="vendors/select2/select2.min.css">--}}
 {{--    <link rel="stylesheet" href="vendors/select2-bootstrap-theme/select2-bootstrap.min.css">--}}
 {{--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />--}}
@@ -221,6 +221,23 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label class="col-form-label">Security Group</label>
+                                        <div class="col-sm-12">
+                                            <select class="input100 minimal" multiple id="security_categories" name="security_categories[]" required="" style="height: 150px">
+                                                @foreach ($securityCategories as $securityCategory)
+                                                    <option value="{{ $securityCategory->key }}"
+{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($securityCategory->key == 1)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $securityCategory->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" class="login100-form-btn" id="btn-save" value="create">Save
@@ -310,7 +327,7 @@
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    //alert($('#postForm').serialize());
+                    alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('EventController.store') }}",

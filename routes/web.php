@@ -24,6 +24,8 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events');
     Route::get('/event-add', [App\Http\Controllers\EventController::class, 'eventAdd'])->name('eventAdd');
     Route::get('/event-edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('eventEdit');
+    Route::get('EventController/remove/{event_security_category_id}', 'App\Http\Controllers\EventController@remove');
+    Route::get('EventController/storeEventSecurityCategory/{event_id}/{security_category_id}', 'App\Http\Controllers\EventController@storeEventSecurityCategory');
 });
 
 Route::group(['middleware' => 'role:super-admin'], function() {
@@ -44,7 +46,7 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('/contacts', [App\Http\Controllers\ContactController::class, 'index'])->name('contacts');
     Route::get('/contact-add', [App\Http\Controllers\ContactController::class, 'contactAdd'])->name('contactAdd');
     Route::get('/contact-edit/{id}', [App\Http\Controllers\ContactController::class, 'edit'])->name('contactEdit');
-    Route::get('contactController/removeContactTitle/{contact_id}/{title_id}', 'App\Http\Controllers\ContactController@removeContactTitle');
+    Route::get('contactController/removeContactTitle/{contact_title_id}', 'App\Http\Controllers\ContactController@removeContactTitle');
     Route::get('contactController/storeContactTitle/{contact_id}/{title_id}', 'App\Http\Controllers\ContactController@storeContactTitle');
 //    Route::get('contactController/storeContactTitle', 'App\Http\Controllers\ContactController@storeContactTitle');
 

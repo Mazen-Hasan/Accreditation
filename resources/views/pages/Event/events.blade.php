@@ -5,24 +5,12 @@
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
 
     <script src="{{ URL::asset('js/dataTable.js') }}"></script>
-{{--    <link  href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">--}}
-{{--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>--}}
-{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>--}}
-{{--    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>--}}
-{{--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>--}}
-{{--    <style type="text/css">--}}
-{{--        tr--}}
-{{--        {--}}
-{{--            height:80px;--}}
-{{--        }--}}
-{{--    </style>--}}
 @endsection
 @section('content')
     <div class="content-wrapper">
         <br>
         @role('super-admin')
         <a href="{{route('eventAdd')}}" class="ha_btn" id="add-new-post">Add New Event</a>
-{{--        <a href="javascript:void(0)" class="btn btn-info ml-3" id="add-new-post">Add New Evant</a>--}}
         @endrole
         <br><br>
         <div class="row">

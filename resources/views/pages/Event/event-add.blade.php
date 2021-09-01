@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
 
 <script src="{{ URL::asset('js/dataTable.js') }}"></script>
-{{--<script src="{{ URL::asset('js/jquery.validate.js') }}"></script>--}}
+
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -34,7 +34,7 @@
                                     <div class="form-group col">
                                         <label class="col-form-label">Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="name" name="name" value="" required="" placeholder="enter name"/>
+                                            <input type="text" id="name" name="name" value="" required="" placeholder="enter name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -42,7 +42,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Period</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="period" name="period" value="" required=""placeholder="enter period"/>
+                                            <input type="text" id="period" name="period" value="" required=""placeholder="enter period"/>
                                         </div>
                                     </div>
                                 </div>
@@ -52,7 +52,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Event Admin</label>
                                         <div class="col-sm-12">
-                                           <select class="input100 minimal" id="event_admin" name="event_admin" required="">
+                                           <select id="event_admin" name="event_admin" required="">
                                                 @foreach ($eventAdmins as $eventAdmin)
                                                     <option value="{{ $eventAdmin->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -69,7 +69,7 @@
                                     <div class="form-group col">
                                         <label class="col-form-label">Accreditation Period</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="accreditation_period" name="accreditation_period" value="" placeholder="enter accreditation period" required=""/>
+                                            <input type="text" id="accreditation_period" name="accreditation_period" value="" placeholder="enter accreditation period" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -79,7 +79,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Owner</label>
                                         <div class="col-sm-12">
-                                           <select class="input100 minimal" id="owner" name="owner" required="">
+                                           <select id="owner" name="owner" required="">
                                                 @foreach ($owners as $owner)
                                                     <option value="{{ $owner->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -96,7 +96,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Organizer</label>
                                         <div class="col-sm-12">
-                                           <select class="input100 minimal" id="organizer" name="organizer" required="">
+                                           <select id="organizer" name="organizer" required="">
                                                 @foreach ($organizers as $organizer)
                                                     <option value="{{ $organizer->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -118,7 +118,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Location</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="location" name="location" value="" placeholder="enter location"  required=""/>
+                                            <input type="text" id="location" name="location" value="" placeholder="enter location"  required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Size</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="size" name="size" placeholder="enter size" required=""/>
+                                            <input type="text" id="size" name="size" placeholder="enter size" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -136,7 +136,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Security Officer</label>
                                         <div class="col-sm-12">
-                                           <select class="input100 minimal" id="security_officer" name="security_officer" required="">
+                                           <select id="security_officer" name="security_officer" required="">
                                                 @foreach ($securityOfficers as $securityOfficer)
                                                     <option value="{{ $securityOfficer->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -153,7 +153,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Security Option</label>
                                         <div class="col-sm-12">
-                                           <select class="input100 minimal" id="approval_option" name="approval_option" required="">
+                                           <select id="approval_option" name="approval_option" required="">
                                                 @foreach ($approvalOptions as $approvalOption)
                                                     <option value="{{ $approvalOption->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -172,7 +172,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Event Type</label>
                                         <div class="col-sm-12">
-                                           <select class="input100 minimal" id="event_type" name="event_type" required="">
+                                           <select id="event_type" name="event_type" required="">
                                                 @foreach ($eventTypes as $eventType)
                                                     <option value="{{ $eventType->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -189,7 +189,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Status</label>
                                         <div class="col-sm-12">
-                                           <select class="input100 minimal" id="status" name="status" required="">
+                                           <select id="status" name="status" required="">
                                                 @foreach ($eventStatuss as $eventStatus)
                                                     <option value="{{ $eventStatus->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -208,7 +208,7 @@
                                     <div class="form-group col">
                                         <label class="col-form-label">Registration Form Template</label>
                                         <div class="col-sm-12">
-                                           <select class="input100 minimal" id="event_form" name="event_form" required="">
+                                           <select id="event_form" name="event_form" required="">
                                                 @foreach ($eventForms as $eventForm)
                                                     <option value="{{ $eventForm->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -225,7 +225,7 @@
                                     <div class="form-group col">
                                         <label class="col-form-label">Security Group</label>
                                         <div class="col-sm-12">
-                                            <select class="input100 minimal" multiple id="security_categories" name="security_categories[]" required="" style="height: 150px">
+                                            <select  multiple id="security_categories" name="security_categories[]" required="" style="height: 150px">
                                                 @foreach ($securityCategories as $securityCategory)
                                                     <option value="{{ $securityCategory->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -240,7 +240,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-offset-2 col-sm-2">
-                                <button type="submit" class="login100-form-btn" id="btn-save" value="create">Save
+                                <button type="submit" id="btn-save" value="create">Save
                                 </button>
                             </div>
                         </form>
@@ -327,7 +327,7 @@
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    alert($('#postForm').serialize());
+                    //alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('EventController.store') }}",

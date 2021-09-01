@@ -46,6 +46,18 @@
                         <span class="menu-title">Event Type management</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('accreditationCategories') }}">
+                        <i class="mdi mdi-grid-large menu-icon"></i>
+                        <span class="menu-title">Accreditation Category management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('participants') }}">
+                        <i class="mdi mdi-grid-large menu-icon"></i>
+                        <span class="menu-title">Participant management</span>
+                    </a>
+                </li>
                 @endrole
 {{--                <li class="nav-item nav-category">UI Elements</li>--}}
 {{--                <li class="nav-item">--}}

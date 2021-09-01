@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Company categories')
+@section('subtitle',' Accreditation Category')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
@@ -22,19 +22,19 @@
     <div class="content-wrapper">
         <br>
 {{--        <a href="{{route('eventAdd')}}" class="btn btn-info ml-3" id="add-new-Title">Add New Evant</a>--}}
-        <a href="javascript:void(0)" class="btn btn-info ml-3" id="add-new-category">Add New Company Category</a>
+        <a href="javascript:void(0)" class="btn btn-info ml-3" id="add-new-post">Add New Accreditation Category</a>
         <br><br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Company Category Table</h4>
+                        <h4 class="card-title">Accreditation Category Table</h4>
                         <div class="table-responsive">
                             <table class="table table-hover" id="laravel_datatable" style="text-align: center">
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>name</th>
+                                    <th>Accreditation Category</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -55,10 +55,10 @@
                     <h4 class="modal-title" id="postCrudModal"></h4>
                 </div>
                 <div class="modal-body">
-                    <form id="categoryForm" name="categoryForm" class="form-horizontal">
-                        <input type="hidden" name="category_id" id="category_id">
+                    <form id="postForm" name="postForm" class="form-horizontal">
+                        <input type="hidden" name="post_id" id="post_id">
                         <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">Name</label>
+                            <label for="name" class="col-sm-2 control-label">Accreditation Category</label>
                             <div class="col-sm-12">
                                 <input type="text" class="form-control" id="name" name="name" value="" required="">
                             </div>
@@ -68,7 +68,7 @@
                             <label class="col-sm-2 control-label">Status</label>
                             <div class="col-sm-12">
 {{--                                <input class="form-control" id="status" name="status" value="" required="">--}}
-                                <select class="form-control" id="status" name="status" required="">
+                                <select class="form-control" id="status" name="status" value="" required="">
                                     <option value="1">Active</option>
                                     <option value="0">InActive</option>
                                 </select>
@@ -100,7 +100,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('companyCategoryController.index') }}",
+                    url: "{{ route('accreditationCategoryController.index') }}",
                     type: 'GET',
                 },
                 columns: [
@@ -112,35 +112,36 @@
                 order: [[0, 'desc']]
             });
 
-            $('#add-new-category').click(function () {
-                $('#btn-save').val("create-category");
-                $('#category_id').val('');
+            $('#add-new-post').click(function () {
+                $('#btn-save').val("create-post");
+                $('#post_id').val('');
                 $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Category");
+                $('#postCrudModal').html("Add New Accreditation Category");
                 $('#ajax-crud-modal').modal('show');
             });
 
 
-            $('body').on('click', '.edit-category', function () {
-                var category_id = $(this).data('id');
-                $.get('companyCategoryController/'+category_id+'/edit', function (data) {
+            $('body').on('click', '.edit-post', function () {
+                var post_id = $(this).data('id');
+                //alert(post_id);
+                $.get('accreditationCategoryController/'+post_id+'/edit', function (data) {
                     $('#name-error').hide();
-                    $('#postCrudModal').html("Edit Category Name");
-                    $('#btn-save').val("edit-category");
+                    $('#email-error').hide();
+                    $('#postCrudModal').html("Edit Security Category");
+                    $('#btn-save').val("edit-post");
                     $('#ajax-crud-modal').modal('show');
-                    $('#category_id').val(data.id);
+                    $('#post_id').val(data.id);
                     $('#name').val(data.name);
                     $('#status').val(data.status);
-                    // alert($('#name').val(data.name).val());
                 })
             });
 
-            $('body').on('click', '#delete-category', function () {
-                var category_id = $(this).data("id");
+            $('body').on('click', '#delete-post', function () {
+                var post_id = $(this).data("id");
                 confirm("Are You sure want to delete !");
                 $.ajax({
                     type: "get",
-                    url: "companyCategoryController/destroy/"+ category_id,
+                    url: "accreditationCategoryController/destroy/"+post_id,
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -150,12 +151,12 @@
                     }
                 });
             });
-            $('body').on('click', '#activate-category', function () {
-                var category_id = $(this).data("id");
+            $('body').on('click', '#activate-title', function () {
+                var post_id = $(this).data("id");
                 confirm("Are You sure want to activate ?!");
                 $.ajax({
                     type: "get",
-                    url: "companyCategoryController/changeStatus/"+category_id+"/1",
+                    url: "accreditationCategoryController/changeStatus/"+post_id+"/1",
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -165,12 +166,12 @@
                     }
                 });
             });
-            $('body').on('click', '#deActivate-category', function () {
-                var category_id = $(this).data("id");
+            $('body').on('click', '#deActivate-title', function () {
+                var post_id = $(this).data("id");
                 confirm("Are You sure want to deActivate ?!");
                 $.ajax({
                     type: "get",
-                    url: "companyCategoryController/changeStatus/"+category_id+"/0",
+                    url: "accreditationCategoryController/changeStatus/"+post_id+"/0",
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -182,14 +183,16 @@
             });
         });
 
-        if ($("#categoryForm").length > 0) {
-            $("#categoryForm").validate({
+        if ($("#postForm").length > 0) {
+            $("#postForm").validate({
                 submitHandler: function(form) {
+                    //$('#post_id').val('');
+                    var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
 
                     $.ajax({
-                        data: $('#categoryForm').serialize(),
-                        url: "{{ route('companyCategoryController.store') }}",
+                        data: $('#postForm').serialize(),
+                        url: "{{ route('accreditationCategoryController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {

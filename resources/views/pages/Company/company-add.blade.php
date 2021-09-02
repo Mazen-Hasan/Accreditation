@@ -10,7 +10,7 @@
     <div class="content-wrapper">
         <div class="row">
             <div class="col-12 grid-margin">
-                <div class="card"  style="border-radius: 20px">
+                <div class="card" style="border-radius: 20px">
                     <div class="card-body">
                         <h4 class="card-title">Contact Management</h4>
                         <form class="form-sample" id="postForm" name="postForm">
@@ -33,7 +33,8 @@
                                     <div class="form-group col">
                                         <label>Middle Name</label>
                                         <div class="col-sm-9">
-                                            <input type="text" id="middle_name" name="middle_name" value="" required=""/>
+                                            <input type="text" id="middle_name" name="middle_name" value=""
+                                                   required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -51,7 +52,7 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-9">
-                                            <input type="text"  id="email" name="email" value="" required=""/>
+                                            <input type="text" id="email" name="email" value="" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -82,7 +83,7 @@
                                             <select multiple id="titles" name="titles[]" value="" required="">
                                                 @foreach ($titles as $titles)
                                                     <option value="{{ $titles->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($titles->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -99,7 +100,7 @@
                                             <select id="status" name="status" value="" required="">
                                                 @foreach ($contactStatuss as $contactStatus)
                                                     <option value="{{ $contactStatus->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($contactStatus->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -128,7 +129,7 @@
     <script src="js/typeahead.js"></script>
     <script src="js/select2.js"></script>
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -194,7 +195,7 @@
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');

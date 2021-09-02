@@ -1,7 +1,14 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar" style="background: transparent">
     <ul class="nav">
         <li class="nav-item">
-{{--                {{ Auth::user()->name }}--}}
+            <ul>
+                <li>
+                    <p class="user_name">
+                        {{ Auth::user()->name }}
+                    </p>
+                </li>
+            </ul>
+
 {{--                <br>--}}
 {{--                {{ Auth::user()->roles->first()->name }}--}}
         </li>
@@ -11,39 +18,45 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('events') }} ">
                         <i class="mdi mdi-grid-large menu-icon"></i>
-                        <span class="menu-title">Event management</span>
+                        <span class="menu-title">Events</span>
                     </a>
                 </li>
                 @endrole
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('contacts') }}">
                         <i class="mdi mdi-grid-large menu-icon"></i>
-                        <span class="menu-title">Contact management</span>
+                        <span class="menu-title">Contacts</span>
                     </a>
                 </li>
                 @role('super-admin')
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('titles') }}">
                         <i class="mdi mdi-grid-large menu-icon"></i>
-                        <span class="menu-title">Title management</span>
+                        <span class="menu-title">Titles</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('companyCategories') }}">
                         <i class="mdi mdi-grid-large menu-icon"></i>
-                        <span class="menu-title">Company category management</span>
+                        <span class="menu-title">Company categories</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('securityCategories') }}">
                         <i class="mdi mdi-grid-large menu-icon"></i>
-                        <span class="menu-title">Security Category management</span>
+                        <span class="menu-title">Security categories</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('eventTypes') }}">
                         <i class="mdi mdi-grid-large menu-icon"></i>
-                        <span class="menu-title">Event Type management</span>
+                        <span class="menu-title">Event types</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('companies') }}">
+                        <i class="mdi mdi-grid-large menu-icon"></i>
+                        <span class="menu-title">Companies</span>
                     </a>
                 </li>
                 <li class="nav-item">

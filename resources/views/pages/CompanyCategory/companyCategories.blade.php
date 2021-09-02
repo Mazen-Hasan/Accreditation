@@ -18,7 +18,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Company Category Table</h4>
                         <div class="table-responsive">
-                            <table class="table table-hover" id="laravel_datatable" style="text-align: center">
+                            <table class="table table-hover" id="laravel_datatable" style="text-align: start">
                                 <thead>
                                 <tr>
                                     <th>ID</th>

@@ -25,10 +25,8 @@ class EventController extends Controller
         {
             return datatables()->of(Event::latest()->get())
                 ->addColumn('action', function($data){
-                    //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button = '<a href="'.route('eventEdit', $data->id).'" data-toggle="tooltip"  id="edit-event" data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button .= '&nbsp;&nbsp;';
-                    //$button .= '<a href="javascript:void(0);" id="delete-post" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">   Delete</a>';
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -47,7 +45,6 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        //xdebug_break();
         $postId = $request->post_id;
         $post   =   Event::updateOrCreate(['id' => $postId],
             ['name' => $request->name,

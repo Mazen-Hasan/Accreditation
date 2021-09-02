@@ -4022,8 +4022,9 @@ input[type=button].btn-block {
   border-radius: 0.25rem;
 }
 .navbar-toggler:hover, .navbar-toggler:focus {
-  text-decoration: none;
+  text-decoration: none; !important;
 }
+
 
 .navbar-toggler-icon {
   display: inline-block;

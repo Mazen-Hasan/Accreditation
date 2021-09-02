@@ -42,6 +42,7 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::resource('companyCategoryController', 'App\Http\Controllers\CompanyCategoryController');
     Route::get('companyCategoryController/destroy/{id}', 'App\Http\Controllers\CompanyCategoryController@destroy');
     Route::get('companyCategoryController/changeStatus/{id}/{status}', 'App\Http\Controllers\CompanyCategoryController@changeStatus');
+
     Route::resource('contactController', 'App\Http\Controllers\ContactController');
     Route::get('/contacts', [App\Http\Controllers\ContactController::class, 'index'])->name('contacts');
     Route::get('/contact-add', [App\Http\Controllers\ContactController::class, 'contactAdd'])->name('contactAdd');
@@ -69,6 +70,12 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
     Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
     Route::get('/participant-edit/{id}', [App\Http\Controllers\ParticipantController::class, 'edit'])->name('participantEdit');
+
+
+    Route::resource('companyController', 'App\Http\Controllers\CompanyController');
+    Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies');
+    Route::get('/company-add', [App\Http\Controllers\CompanyController::class, 'companyAdd'])->name('companyAdd');
+    Route::get('/company-edit/{id}', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companyEdit');
 
 });
 

@@ -73,6 +73,7 @@
             });
 
             $('#add-new-post').click(function () {
+                alert('Click new');
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");

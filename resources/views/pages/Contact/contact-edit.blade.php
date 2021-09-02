@@ -291,6 +291,7 @@
                     url: "../contactController/storeContactTitle/"+contact_id+"/"+title_id,
                     success: function (data) {
                         //alert(data);
+                        $('#ajax-crud-modal').modal('hide');
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
                     },

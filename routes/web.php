@@ -59,6 +59,17 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::resource('eventTypeController', 'App\Http\Controllers\EventTypeController');
     Route::get('eventTypeController/destroy/{id}', 'App\Http\Controllers\EventTypeController@destroy');
     Route::get('eventTypeController/changeStatus/{id}/{status}', 'App\Http\Controllers\EventTypeController@changeStatus');
+
+    Route::get('/accreditationCategories', [App\Http\Controllers\AccreditationCategoryController::class, 'index'])->name('accreditationCategories');
+    Route::resource('accreditationCategoryController', 'App\Http\Controllers\AccreditationCategoryController');
+    Route::get('accreditationCategoryController/destroy/{id}', 'App\Http\Controllers\AccreditationCategoryController@destroy');
+    Route::get('accreditationCategoryController/changeStatus/{id}/{status}', 'App\Http\Controllers\AccreditationCategoryController@changeStatus');
+
+    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
+    Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
+    Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
+    Route::get('/participant-edit/{id}', [App\Http\Controllers\ParticipantController::class, 'edit'])->name('participantEdit');
+
 });
 
 Auth::routes();

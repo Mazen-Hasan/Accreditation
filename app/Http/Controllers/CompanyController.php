@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CompanyController extends Controller
@@ -17,15 +18,24 @@ class CompanyController extends Controller
     {
         if (request()->ajax()) {
 
-            $companies = Company::join('countries','companies.country_id','=','countries.id')
-                ->join('cities','companies.city_id','=','cities.id')
-                ->join('users','companies.company_admin_id','=','users.id')
-                ->join('contacts','companies.focal_point_id','=','contacts.id')
-                ->join('company_categories','companies.category_id','=','company_categories.id')
-                ->select(['companies.id', 'companies.name', 'company_categories.name as category_name', 'companies.country_id', 'countries.name as  country', 'companies.address',
-                    'companies.website', 'companies.telephone',
-                    'cities.name as city','users.name as company_admin',
-                    DB::raw("CONCAT(contacts.name,' ',contacts.middle_name,' ',contacts.last_name) AS focal_point")]);
+            $companies = DB::select('select * from companies_view where company_admin_id = ?', [Auth::user()->id]);
+
+//            $companies = Company::join('countries','companies.country_id','=','countries.id')
+//                ->join('cities','companies.city_id','=','cities.id')
+//                ->join('users','companies.company_admin_id','=','users.id')
+//                ->join('contacts','companies.focal_point_id','=','contacts.id')
+//                ->join('company_categories','companies.category_id','=','company_categories.id')
+//                ->select(['companies.id', 'companies.name', 'companies.category_id',
+//                    'companies.country_id',
+//                    'companies.city_id',
+//                    'companies.focal_point_id',
+//                    'companies.company_admin_id',
+//
+//                    'company_categories.name as category',
+//                    'countries.name as  country', 'companies.address',
+//                    'companies.website', 'companies.telephone',
+//                    'cities.name as city','users.name as company_admin',
+//                    DB::raw("CONCAT(contacts.name,' ',contacts.middle_name,' ',contacts.last_name) AS focal_point")]);
 
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {

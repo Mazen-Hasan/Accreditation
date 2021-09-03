@@ -28,9 +28,7 @@
                                     <th>Address</th>
                                     <th>Website</th>
                                     <th>Telephone</th>
-{{--                                    <th>Category</th>--}}
                                     <th>Focal point</th>
-                                    <th>Company admin</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -64,14 +62,13 @@
                 columns: [
                     { data: 'id', name: 'id', 'visible': false},
                     { data: 'name', name: 'name'},
-                    { data: 'category_name', name: 'category' },
+                    { data: 'category', name: 'category' },
                     { data: 'country', name: 'country' },
                     { data: 'city', name: 'city' },
                     { data: 'address', name: 'address'},
                     { data: 'website', name: 'website'},
                     { data: 'telephone', name: 'telephone'},
                     { data: 'focal_point', name: 'focal_point'},
-                    { data: 'company_admin', name: 'company_admin'},
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]

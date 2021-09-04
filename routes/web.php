@@ -76,7 +76,10 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies');
     Route::get('/company-add', [App\Http\Controllers\CompanyController::class, 'companyAdd'])->name('companyAdd');
     Route::get('/company-edit/{id}', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companyEdit');
-
+    Route::get('/company-accreditation-size/{id}', [App\Http\Controllers\CompanyController::class, 'companyAccreditCat'])->name('companyAccreditCat');
+    Route::get('companyController/editCompanyAccreditSize/{id}', 'App\Http\Controllers\CompanyController@editCompanyAccreditSize');
+    Route::get('companyController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}', 'App\Http\Controllers\CompanyController@storeCompanyAccrCatSize');
+    Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat');
 });
 
 Auth::routes();

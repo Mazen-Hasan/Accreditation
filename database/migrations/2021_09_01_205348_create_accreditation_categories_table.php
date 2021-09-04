@@ -20,6 +20,8 @@ class CreateAccreditationCategoriesTable extends Migration
             $table->string('creator')->nullable();
             $table->string('creation_date')->nullable();
             $table->timestamps();
+
+
         });
     }
 
@@ -33,3 +35,5 @@ class CreateAccreditationCategoriesTable extends Migration
         Schema::dropIfExists('accreditation_categories');
     }
 }
+
+

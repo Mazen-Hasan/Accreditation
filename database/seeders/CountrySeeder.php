@@ -13,8 +13,7 @@ class CountrySeeder extends Seeder
      * @return void
      */
     public function run()
-    {Country::truncate();
-
+    {
         $countries = [
             ['name' => 'Afghanistan', 'code' => 'AF'],
             ['name' => 'Åland Islands', 'code' => 'AX'],

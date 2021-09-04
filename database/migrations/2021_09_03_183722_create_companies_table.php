@@ -24,10 +24,13 @@ class CreateCompaniesTable extends Migration
             $table->unsignedBigInteger('country_id')->nullable();
             $table->unsignedBigInteger('city_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('event_id')->nullable();
+            $table->unsignedBigInteger('subCompany_id')->nullable();
+            $table->unsignedBigInteger('size')->nullable();
             $table->timestamps();
 
             $table->foreign('focal_point_id')->references('id')->on('contacts')->onDelete('set null');
-//            $table->foreign('company_admin_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('set null');
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('set null');
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('set null');
             $table->foreign('category_id')->references('id')->on('company_categories')->onDelete('set null');

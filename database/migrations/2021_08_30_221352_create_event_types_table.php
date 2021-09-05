@@ -14,11 +14,11 @@ class CreateEventTypesTable extends Migration
     public function up()
     {
         Schema::create('event_types', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name');
             $table->string('status');
             $table->string('creator')->nullable();
-            $table->string('creation_date')->nullable();
+            $table->timestamp('creation_date')->useCurrent();
             $table->timestamps();
         });
     }

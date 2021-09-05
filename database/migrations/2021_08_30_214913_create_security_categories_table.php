@@ -14,11 +14,11 @@ class CreateSecurityCategoriesTable extends Migration
     public function up()
     {
         Schema::create('security_categories', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name');
             $table->string('status');
             $table->string('creator')->nullable();
-            $table->string('creation_date')->nullable();
+            $table->timestamp('creation_date')->useCurrent();
             $table->timestamps();
         });
     }

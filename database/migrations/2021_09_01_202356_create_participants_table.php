@@ -34,7 +34,7 @@ class CreateParticipantsTable extends Migration
             $table->string('class');
             $table->string('accreditation_category');
             $table->string('creator')->nullable();
-            $table->string('creation_date')->nullable();
+            $table->timestamp('creation_date')->useCurrent();
             $table->timestamps();
         });
     }

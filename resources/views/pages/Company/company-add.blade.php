@@ -12,14 +12,12 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Company Management</h4>
+                        <h4 class="card-title">Company Management - New</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id">
-                            <p class="card-description">
-                                Company Form
-                            </p>
+                            <br>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">

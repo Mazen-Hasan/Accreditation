@@ -9,7 +9,7 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-        <a href="javascript:void(0)" class="ha_btn" id="add-new-post">Add New Title</a>
+        <a href="javascript:void(0)" class="ha_btn" id="add-new-post">Add Title</a>
         <br><br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
@@ -45,16 +45,15 @@
                     <form id="postForm" name="postForm" class="form-horizontal">
                         <input type="hidden" name="post_id" id="post_id">
                         <div class="form-group">
-                            <label for="name">Title</label>
+                            <label>Title</label>
                             <div class="col-sm-12">
-                                <input type="text" id="title_label" name="title_label" value="" required="">
+                                <input type="text" id="title_label" name="title_label" placeholder="enter title" required="">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-12">Status</label>
                             <div class="col-sm-12">
-{{--                                <input class="form-control" id="status" name="status" value="" required="">--}}
                                 <select  id="status" name="status" value="" required="">
                                     <option value="1">Active</option>
                                     <option value="0">InActive</option>
@@ -103,7 +102,7 @@
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Post");
+                $('#postCrudModal').html("New Title");
                 $('#ajax-crud-modal').modal('show');
             });
 

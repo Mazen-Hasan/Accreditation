@@ -28,8 +28,8 @@ class CreateEventsTable extends Migration
             $table->string('approval_option');
             $table->string('security_officer');
             $table->string('event_form');
-            $table->string('creation_date');
-            $table->string('creator');
+            $table->timestamp('creation_date')->useCurrent();
+            $table->string('creator')->nullable();
             $table->timestamps();
 
         });

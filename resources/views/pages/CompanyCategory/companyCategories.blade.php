@@ -8,9 +8,7 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
-        <br>
-{{--        <a href="{{route('eventAdd')}}" class="btn btn-info ml-3" id="add-new-Title">Add New Evant</a>--}}
-        <a href="javascript:void(0)" class="btn btn-info ml-3" id="add-new-category">Add New Category</a>
+        <br><a href="javascript:void(0)" class="ha_btn" id="add-new-category">Add Company Category</a>
         <br><br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
@@ -48,22 +46,21 @@
                         <div class="form-group">
                             <label for="name" class="col-sm-2 control-label">Name</label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="name" name="name" value="" required="">
+                                <input type="text" id="name" name="name" placeholder="enter name" required="">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Status</label>
                             <div class="col-sm-12">
-{{--                                <input class="form-control" id="status" name="status" value="" required="">--}}
-                                <select class="form-control" id="status" name="status" required="">
+                                <select id="status" name="status" required="">
                                     <option value="1">Active</option>
                                     <option value="0">InActive</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-primary" id="btn-save" value="create">Save
+                        <div class="col-sm-12">
+                            <button type="submit" id="btn-save" value="create">Save
                             </button>
                         </div>
                     </form>
@@ -104,7 +101,7 @@
                 $('#btn-save').val("create-category");
                 $('#category_id').val('');
                 $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Category");
+                $('#postCrudModal').html("New Company Category");
                 $('#ajax-crud-modal').modal('show');
             });
 
@@ -113,7 +110,7 @@
                 var category_id = $(this).data('id');
                 $.get('companyCategoryController/'+category_id+'/edit', function (data) {
                     $('#name-error').hide();
-                    $('#postCrudModal').html("Edit Category Name");
+                    $('#postCrudModal').html("Edit Company Category");
                     $('#btn-save').val("edit-category");
                     $('#ajax-crud-modal').modal('show');
                     $('#category_id').val(data.id);

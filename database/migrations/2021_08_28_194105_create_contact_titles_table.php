@@ -18,8 +18,8 @@ class CreateContactTitlesTable extends Migration
             $table->string('contact_id');
             $table->string('title_id');
             $table->string('status');
-            $table->string('creator');
-            $table->string('creation_date');
+            $table->string('creator')->nullable();
+            $table->timestamp('creation_date')->useCurrent();
             $table->timestamps();
         });
     }

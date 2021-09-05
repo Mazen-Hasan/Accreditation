@@ -2,18 +2,9 @@
 @section('subtitle',' Add Participant')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-{{--    <link rel="stylesheet" href="vendors/select2/select2.min.css">--}}
-{{--    <link rel="stylesheet" href="vendors/select2-bootstrap-theme/select2-bootstrap.min.css">--}}
-{{--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />--}}
-{{--    <link  href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">--}}
-{{--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>--}}
-{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>--}}
-{{--    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>--}}
-{{--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>--}}
-<link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
 
-<script src="{{ URL::asset('js/dataTable.js') }}"></script>
-{{--<script src="{{ URL::asset('js/jquery.validate.js') }}"></script>--}}
+    <script src="{{ URL::asset('js/dataTable.js') }}"></script>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -21,20 +12,18 @@
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Participant Management</h4>
+                        <h4 class="card-title">Participant Management - New</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id">
-                            <p class="card-description">
-                                Participant Form
-                            </p>
+                            <br>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">First Name</label>
+                                        <label>First Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="first_name" name="first_name" value="" required="" placeholder="enter first name"/>
+                                            <input type="text"  id="first_name" name="first_name" value="" required="" placeholder="enter first name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -42,7 +31,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Last Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="last_name" name="last_name" value="" required=""placeholder="enter last name"/>
+                                            <input type="text"  id="last_name" name="last_name" value="" required=""placeholder="enter last name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -50,9 +39,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">First Name Arabic</label>
+                                        <label >First Name Arabic</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="first_name_ar" name="first_name_ar" value="" required="" placeholder="enter first name arabic"/>
+                                            <input type="text"  id="first_name_ar" name="first_name_ar" value="" required="" placeholder="enter first name arabic"/>
                                         </div>
                                     </div>
                                 </div>
@@ -60,7 +49,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Last Name Arabic</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="last_name_ar" name="last_name_ar" value="" required=""placeholder="enter last name ar"/>
+                                            <input type="text"  id="last_name_ar" name="last_name_ar" value="" required=""placeholder="enter last name ar"/>
                                         </div>
                                     </div>
                                 </div>
@@ -68,9 +57,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Nationality</label>
+                                        <label >Nationality</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="nationality" name="nationality" value="" required="" placeholder="enter nationality"/>
+                                            <input type="text"  id="nationality" name="nationality" value="" required="" placeholder="enter nationality"/>
                                         </div>
                                     </div>
                                 </div>
@@ -78,7 +67,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="email" name="email" value="" required=""placeholder="enter email"/>
+                                            <input type="text"  id="email" name="email" value="" required=""placeholder="enter email"/>
                                         </div>
                                     </div>
                                 </div>
@@ -86,9 +75,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Mobile</label>
+                                        <label >Mobile</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="mobile" name="mobile" value="" required="" placeholder="enter mobile"/>
+                                            <input type="text"  id="mobile" name="mobile" value="" required="" placeholder="enter mobile"/>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +85,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Position</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="position" name="position" value="" required=""placeholder="enter position"/>
+                                            <input type="text"  id="position" name="position" value="" required=""placeholder="enter position"/>
                                         </div>
                                     </div>
                                 </div>
@@ -104,9 +93,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Religion</label>
+                                        <label >Religion</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="religion" name="religion" value="" required="" placeholder="enter religion"/>
+                                            <input type="text"  id="religion" name="religion" value="" required="" placeholder="enter religion"/>
                                         </div>
                                     </div>
                                 </div>
@@ -114,7 +103,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Address</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="address" name="address" value="" required=""placeholder="enter address"/>
+                                            <input type="text"  id="address" name="address" value="" required=""placeholder="enter address"/>
                                         </div>
                                     </div>
                                 </div>
@@ -122,9 +111,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Birthdate</label>
+                                        <label >Birthdate</label>
                                         <div class="col-sm-12">
-                                            <input type="date" class="input100" id="birthdate" name="birthdate" value="" required="" placeholder="enter birthdate"/>
+                                            <input type="date"  id="birthdate" name="birthdate" value="" required="" placeholder="enter birthdate"/>
                                         </div>
                                     </div>
                                 </div>
@@ -149,9 +138,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Passport Number</label>
+                                        <label >Passport Number</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="passport_number" name="passport_number" value="" required="" placeholder="enter passport number"/>
+                                            <input type="text"  id="passport_number" name="passport_number" value="" required="" placeholder="enter passport number"/>
                                         </div>
                                     </div>
                                 </div>
@@ -159,7 +148,7 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">ID Number</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="id_number" name="id_number" value="" required=""placeholder="enter ID number"/>
+                                            <input type="text"  id="id_number" name="id_number" value="" required=""placeholder="enter ID number"/>
                                         </div>
                                     </div>
                                 </div>

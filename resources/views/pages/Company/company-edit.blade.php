@@ -12,19 +12,17 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Company Management</h4>
+                        <h4 class="card-title">Company Management - Edit</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="company_Id" id="company_Id" value="{{$company->id}}">
-                            <p class="card-description">
-                                Company Form
-                            </p>
+                            <br>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Name</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-12">
                                             <input type="text" id="name" name="name" value="{{$company->name}}" required="" placeholder="enter name"/>
                                         </div>
                                     </div>
@@ -32,7 +30,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Address</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-12">
                                             <input type="text" id="address" name="address" value="{{$company->address}}" required="" placeholder="enter address"/>
                                         </div>
                                     </div>
@@ -42,7 +40,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Telephone</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-12">
                                             <input type="text" id="telephone" name="telephone" value="{{$company->telephone}}" required="" placeholder="enter telephone"/>
                                         </div>
                                     </div>
@@ -50,7 +48,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Website</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-12">
                                             <input type="text" id="website" name="website" value="{{$company->website}}" required="" placeholder="enter website"/>
                                         </div>
                                     </div>
@@ -60,7 +58,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Size</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-12">
                                             <input type="text" id="size" name="size" value="{{$company->size}}" required="" placeholder="enter size"/>
                                         </div>
                                     </div>
@@ -68,7 +66,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Focal Point</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-12">
                                             <select id="focal_point" name="focal_point" value="" required="">
                                                 @foreach ($focalPoints as $focalPoint)
                                                     <option value="{{ $focalPoint->key }}"
@@ -87,7 +85,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Country</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-12">
                                             <select id="country" name="country" value="" required="">
                                                 @foreach ($countrys as $country)
                                                     <option value="{{ $country->key }}"
@@ -104,7 +102,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>City</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-12">
                                             <select id="city" name="city" value="" required="">
                                                 @foreach ($citys as $city)
                                                     <option value="{{ $city->key }}"
@@ -123,7 +121,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Company Category</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-12">
                                             <select id="category" name="category" value="" required="">
                                                 @foreach ($categorys as $category)
                                                     <option value="{{ $category->key }}"
@@ -137,23 +135,6 @@
                                         </div>
                                     </div>
                                 </div>
-{{--                                <div class="col-md-6">--}}
-{{--                                    <div class="form-group col">--}}
-{{--                                        <label>Accreditation Category</label>--}}
-{{--                                        <div class="col-sm-9">--}}
-{{--                                            <select id="accreditationCategories" multiple name="accreditationCategories[]" value="" required="">--}}
-{{--                                                @foreach ($accreditationCategorys as $accreditationCategory)--}}
-{{--                                                    <option value="{{ $accreditationCategory->key }}"--}}
-{{--                                                            --}}{{--@if ($key == old('myselect', $model->option))--}}
-{{--                                                            @if ($accreditationCategory->key == 1)--}}
-{{--                                                            selected="selected"--}}
-{{--                                                        @endif--}}
-{{--                                                    >{{ $accreditationCategory->value }}</option>--}}
-{{--                                                @endforeach--}}
-{{--                                            </select>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
                             </div>
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" id="btn-save" value="create">Edit
@@ -167,11 +148,6 @@
     </div>
 @endsection
 @section('script')
-    <script src="vendors/typeahead.js/typeahead.bundle.min.js"></script>
-    <script src="vendors/select2/select2.min.js"></script>
-    <script src="js/file-upload.js"></script>
-    <script src="js/typeahead.js"></script>
-    <script src="js/select2.js"></script>
     <script>
         $(document).ready(function () {
             $.ajaxSetup({
@@ -179,23 +155,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
-            {{--$('#laravel_datatable').DataTable({--}}
-            {{--    processing: true,--}}
-            {{--    serverSide: true,--}}
-            {{--    ajax: {--}}
-            {{--        url: "{{ route('dtable-posts.index') }}",--}}
-            {{--        type: 'GET',--}}
-            {{--    },--}}
-            {{--    columns: [--}}
-            {{--        { data: 'id', name: 'id', 'visible': false},--}}
-            {{--        { data: 'title', name: 'title' },--}}
-            {{--        { data: 'body', name: 'body' },--}}
-            {{--        { data: 'created_at', name: 'created_at' },--}}
-            {{--        {data: 'action', name: 'action', orderable: false},--}}
-            {{--    ],--}}
-            {{--    order: [[0, 'desc']]--}}
-            {{--});--}}
 
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
@@ -205,36 +164,6 @@
                 $('#ajax-crud-modal').modal('show');
             });
 
-
-            // $('body').on('click', '.edit-post', function () {
-            //     var post_id = $(this).data('id');
-            //     $.get('dtable-posts/'+post_id+'/edit', function (data) {
-            //         $('#name-error').hide();
-            //         $('#email-error').hide();
-            //         $('#postCrudModal').html("Edit Post");
-            //         $('#btn-save').val("edit-post");
-            //         $('#ajax-crud-modal').modal('show');
-            //         $('#post_id').val(data.id);
-            //         $('#title').val(data.title);
-            //         $('#body').val(data.body);
-            //     })
-            // });
-            //
-            // $('body').on('click', '#delete-post', function () {
-            //     var post_id = $(this).data("id");
-            //     confirm("Are You sure want to delete !");
-            //     $.ajax({
-            //         type: "get",
-            //         url: "dtable-posts/destroy/"+post_id,
-            //         success: function (data) {
-            //             var oTable = $('#laravel_datatable').dataTable();
-            //             oTable.fnDraw(false);
-            //         },
-            //         error: function (data) {
-            //             console.log('Error:', data);
-            //         }
-            //     });
-            // });
         });
 
         if ($("#postForm").length > 0) {

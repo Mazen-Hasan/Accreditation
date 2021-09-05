@@ -9,7 +9,7 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-            <a href="javascript:void(0)" class="ha_btn" id="add-new-post">Add New Security Category</a>
+            <a href="javascript:void(0)" class="ha_btn" id="add-new-post">Add Security Category</a>
         <br><br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
@@ -47,15 +47,13 @@
                         <div class="form-group">
                             <label for="name">Security Category</label>
                             <div class="col-sm-12">
-                                <input type="text" id="name" name="name" value="" required="">
+                                <input type="text" id="name" name="name"  placeholder="enter name"required="">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-12">Status</label>
-                            <div class="col-sm-12">
-{{--                                <input class="form-control" id="status" name="status" value="" required="">--}}
-                                <select id="status" name="status" value="" required="">
+                            <div class="col-sm-12"><select id="status" name="status" value="" required="">
                                     <option value="1">Active</option>
                                     <option value="0">InActive</option>
                                 </select>
@@ -103,7 +101,7 @@
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Security Category");
+                $('#postCrudModal').html("New Security Category");
                 $('#ajax-crud-modal').modal('show');
             });
 

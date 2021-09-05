@@ -9,7 +9,7 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-        <a href="{{route('companyAdd')}}" class="ha_btn" id="add-new-company">Add New Company</a>
+        <a href="{{route('companyAdd')}}" class="ha_btn" id="add-new-company">Add Company</a>
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">

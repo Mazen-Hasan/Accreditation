@@ -4,8 +4,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
 
-<script src="{{ URL::asset('js/dataTable.js') }}"></script>
-
+    <script src="{{ URL::asset('js/dataTable.js') }}"></script>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -13,18 +12,16 @@
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Event Management</h4>
+                        <h4 class="card-title">Event Management - New</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id">
-                            <p class="card-description">
-                                Event Form
-                            </p>
+                            <br>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Name</label>
+                                        <label>Name</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="name" name="name" value="" required="" placeholder="enter name"/>
                                         </div>
@@ -32,7 +29,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class=" col-form-label">Period</label>
+                                        <label>Period</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="period" name="period" value="" required=""placeholder="enter period"/>
                                         </div>
@@ -42,7 +39,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class=" col-form-label">Event Admin</label>
+                                        <label>Event Admin</label>
                                         <div class="col-sm-12">
                                            <select id="event_admin" name="event_admin" required="">
                                                 @foreach ($eventAdmins as $eventAdmin)
@@ -59,7 +56,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Accreditation Period</label>
+                                        <label>Accreditation Period</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="accreditation_period" name="accreditation_period" value="" placeholder="enter accreditation period" required=""/>
                                         </div>
@@ -69,7 +66,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class=" col-form-label">Owner</label>
+                                        <label>Owner</label>
                                         <div class="col-sm-12">
                                            <select id="owner" name="owner" required="">
                                                 @foreach ($owners as $owner)
@@ -198,7 +195,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Registration Form Template</label>
+                                        <label >Registration Form Template</label>
                                         <div class="col-sm-12">
                                            <select id="event_form" name="event_form" required="">
                                                 @foreach ($eventForms as $eventForm)
@@ -215,7 +212,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Security Group</label>
+                                        <label>Security Group</label>
                                         <div class="col-sm-12">
                                             <select  multiple id="security_categories" name="security_categories[]" required="" style="height: 150px">
                                                 @foreach ($securityCategories as $securityCategory)
@@ -243,11 +240,6 @@
     </div>
 @endsection
 @section('script')
-{{--    <script src="vendors/typeahead.js/typeahead.bundle.min.js"></script>--}}
-{{--    <script src="vendors/select2/select2.min.js"></script>--}}
-{{--    <script src="js/file-upload.js"></script>--}}
-{{--    <script src="js/typeahead.js"></script>--}}
-{{--    <script src="js/select2.js"></script>--}}
     <script>
         $(document).ready( function () {
             $.ajaxSetup({
@@ -256,23 +248,6 @@
                 }
             });
 
-            {{--$('#laravel_datatable').DataTable({--}}
-            {{--    processing: true,--}}
-            {{--    serverSide: true,--}}
-            {{--    ajax: {--}}
-            {{--        url: "{{ route('dtable-posts.index') }}",--}}
-            {{--        type: 'GET',--}}
-            {{--    },--}}
-            {{--    columns: [--}}
-            {{--        { data: 'id', name: 'id', 'visible': false},--}}
-            {{--        { data: 'title', name: 'title' },--}}
-            {{--        { data: 'body', name: 'body' },--}}
-            {{--        { data: 'created_at', name: 'created_at' },--}}
-            {{--        {data: 'action', name: 'action', orderable: false},--}}
-            {{--    ],--}}
-            {{--    order: [[0, 'desc']]--}}
-            {{--});--}}
-
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
@@ -280,37 +255,6 @@
                 $('#postCrudModal').html("Add New Post");
                 $('#ajax-crud-modal').modal('show');
             });
-
-
-            // $('body').on('click', '.edit-post', function () {
-            //     var post_id = $(this).data('id');
-            //     $.get('dtable-posts/'+post_id+'/edit', function (data) {
-            //         $('#name-error').hide();
-            //         $('#email-error').hide();
-            //         $('#postCrudModal').html("Edit Post");
-            //         $('#btn-save').val("edit-post");
-            //         $('#ajax-crud-modal').modal('show');
-            //         $('#post_id').val(data.id);
-            //         $('#title').val(data.title);
-            //         $('#body').val(data.body);
-            //     })
-            // });
-            //
-            // $('body').on('click', '#delete-post', function () {
-            //     var post_id = $(this).data("id");
-            //     confirm("Are You sure want to delete !");
-            //     $.ajax({
-            //         type: "get",
-            //         url: "dtable-posts/destroy/"+post_id,
-            //         success: function (data) {
-            //             var oTable = $('#laravel_datatable').dataTable();
-            //             oTable.fnDraw(false);
-            //         },
-            //         error: function (data) {
-            //             console.log('Error:', data);
-            //         }
-            //     });
-            // });
         });
 
         if ($("#postForm").length > 0) {

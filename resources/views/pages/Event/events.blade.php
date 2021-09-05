@@ -10,7 +10,7 @@
     <div class="content-wrapper">
         <br>
         @role('super-admin')
-        <a href="{{route('eventAdd')}}" class="ha_btn" id="add-new-post">Add New Event</a>
+        <a href="{{route('eventAdd')}}" class="ha_btn" id="add-new-post">Add Event</a>
         @endrole
         <br><br>
         <div class="row">
@@ -18,9 +18,6 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Event Table</h4>
-{{--                        <p class="card-description">--}}
-{{--                            Add class <code>.table-hover</code>--}}
-{{--                        </p>--}}
                         <div class="table-responsive">
                             <table class="table table-hover" id="laravel_datatable" style="text-align: center">
                                 <thead>

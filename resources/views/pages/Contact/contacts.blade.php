@@ -9,7 +9,7 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-        <a href="{{route('contactAdd')}}" class="ha_btn" id="add-new-post">Add New Contact</a>
+        <a href="{{route('contactAdd')}}" class="ha_btn" id="add-new-post">Add Contact</a>
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
@@ -73,7 +73,6 @@
             });
 
             $('#add-new-post').click(function () {
-                alert('Click new');
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
@@ -81,70 +80,6 @@
                 //$('#ajax-crud-modal').modal('show');
 
             });
-
-
-            {{--$('body').on('click', '.edit-post', function () {--}}
-            {{--    var post_id = $(this).data('id');--}}
-            {{--    // $.get('dtable-posts/'+post_id+'/edit', function (data) {--}}
-            {{--    //     $('#name-error').hide();--}}
-            {{--    //     $('#email-error').hide();--}}
-            {{--    //     $('#postCrudModal').html("Edit Post");--}}
-            {{--    //     $('#btn-save').val("edit-post");--}}
-            {{--    //     $('#ajax-crud-modal').modal('show');--}}
-            {{--    //     $('#post_id').val(data.id);--}}
-            {{--    //     $('#title').val(data.title);--}}
-            {{--    //     $('#body').val(data.body);--}}
-            {{--    // })--}}
-            {{--    //var url = '{{ route("event-edit", ":id") }}';--}}
-            {{--    var url = '{{ route("event-edit") }}';--}}
-            {{--    //rl = url.replace(':id', post_id);--}}
-            {{--    window.location.href = url;--}}
-            {{--});--}}
-            //
-            // $('body').on('click', '#edit-event', function () {
-            //     var post_id = $(this).data("id");
-            //     confirm("Are You sure want to delete !");
-            //     $.ajax({
-            //         type: "get",
-            //         url: "dtable-posts/edit/"+ post_id,
-            //         success: function (data) {
-            //             var oTable = $('#laravel_datatable').dataTable();
-            //             oTable.fnDraw(false);
-            //         },
-            //         error: function (data) {
-            //             console.log('Error:', data);
-            //         }
-            //     });
-            // });
         });
-
-        {{--if ($("#postForm").length > 0) {--}}
-        {{--    $("#postForm").validate({--}}
-        {{--        submitHandler: function(form) {--}}
-        {{--            $('#post_id').val('');--}}
-        {{--            var actionType = $('#btn-save').val();--}}
-        {{--            $('#btn-save').html('Sending..');--}}
-        {{--            alert($('#postForm').serialize());--}}
-        {{--            $.ajax({--}}
-        {{--                data: $('#postForm').serialize(),--}}
-        {{--                url: "{{ route('dtable-posts.store') }}",--}}
-        {{--                type: "POST",--}}
-        {{--                dataType: 'json',--}}
-        {{--                success: function (data) {--}}
-        {{--                    $('#postForm').trigger("reset");--}}
-        {{--                    $('#ajax-crud-modal').modal('hide');--}}
-        {{--                    $('#btn-save').html('Add successfully');--}}
-        {{--                    window.location.href = "{{ route('home')}}";--}}
-        {{--                    // var oTable = $('#laravel_datatable').dataTable();--}}
-        {{--                    // oTable.fnDraw(false);--}}
-        {{--                },--}}
-        {{--                error: function (data) {--}}
-        {{--                    console.log('Error:', data);--}}
-        {{--                    $('#btn-save').html('Save Changes');--}}
-        {{--                }--}}
-        {{--            });--}}
-        {{--        }--}}
-        {{--    })--}}
-        {{--}--}}
     </script>
 @endsection

@@ -9,7 +9,7 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-        <a href="javascript:void(0)" class="ha_btn" id="add-new-post">Add New Event Type</a>
+        <a href="javascript:void(0)" class="ha_btn" id="add-new-post">Add Event Type</a>
         <br><br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
@@ -47,7 +47,7 @@
                         <div class="form-group">
                             <label for="name">Event Type</label>
                             <div class="col-sm-12">
-                                <input type="text" id="name" name="name" value="" required="">
+                                <input type="text" id="name" name="name" placeholder="enter name" required="">
                             </div>
                         </div>
 
@@ -102,7 +102,7 @@
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Event Type");
+                $('#postCrudModal').html("New Event Type");
                 $('#ajax-crud-modal').modal('show');
             });
 
@@ -113,7 +113,7 @@
                 $.get('eventTypeController/'+post_id+'/edit', function (data) {
                     $('#name-error').hide();
                     $('#email-error').hide();
-                    $('#postCrudModal').html("Edit Security Category");
+                    $('#postCrudModal').html("Edit Event Type");
                     $('#btn-save').val("edit-post");
                     $('#ajax-crud-modal').modal('show');
                     $('#post_id').val(data.id);

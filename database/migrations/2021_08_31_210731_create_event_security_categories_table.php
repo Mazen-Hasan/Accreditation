@@ -19,7 +19,7 @@ class CreateEventSecurityCategoriesTable extends Migration
             $table->string('security_category_id');
             $table->string('order')->nullable();
             $table->string('creator')->nullable();
-            $table->string('creation_date')->nullable();
+            $table->timestamp('creation_date')->useCurrent();
             $table->timestamps();
         });
     }

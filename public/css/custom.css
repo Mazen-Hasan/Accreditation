@@ -669,4 +669,11 @@ select {
     color: #666666;
 }
 
+.logout{
+    font-size: 22px;
+    line-height: 1;
+    margin-right: 1rem;
+    color: #484848;
+}
+
 

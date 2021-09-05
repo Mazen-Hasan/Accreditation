@@ -676,4 +676,8 @@ select {
     color: #484848;
 }
 
+#laravel_datatable_filter{
+    margin-right: 40px;
+}
+
 

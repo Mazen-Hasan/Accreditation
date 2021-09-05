@@ -695,5 +695,21 @@ button.navbar-toggler {
     width:40px;
 }
 
+@media (min-width: 990px) {
+    #sidebar{
+        background: transparent;
+    }
+}
+
+
+@media (max-width: 991px) {
+    #sidebar{
+        background: white;
+        border-radius: 17px;
+        margin-left: 10px;
+        width: 220px;
+    }
+}
+
 
 

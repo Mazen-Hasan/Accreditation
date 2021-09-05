@@ -686,6 +686,8 @@ select {
 
 #laravel_datatable_length label select{
     visibility: visible;
+    height:40px;
 }
+
 
 

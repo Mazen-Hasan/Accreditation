@@ -17,7 +17,7 @@
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Logout">
                 </i>
-                <span class="col-8 menu-title">Events</span>
+                <span class="menu-title">Events</span>
             </a>
         </li>
         <li class="nav-item">

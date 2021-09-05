@@ -680,4 +680,12 @@ select {
     margin-right: 40px;
 }
 
+#laravel_datatable_length label{
+    visibility: hidden;
+}
+
+#laravel_datatable_length label select{
+    visibility: visible;
+}
+
 

@@ -690,6 +690,7 @@ select {
 }
 button.navbar-toggler {
     background: transparent;
+    width:40px;
 }
 
 

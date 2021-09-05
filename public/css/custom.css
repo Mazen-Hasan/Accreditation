@@ -688,6 +688,9 @@ select {
     visibility: visible;
     height:40px;
 }
+button.navbar-toggler {
+    background: transparent;
+}
 
 
 

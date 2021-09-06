@@ -21,11 +21,11 @@ class CompanyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($event_id)
+    public function index()
     {
         if (request()->ajax()) {
-            var_dump($event_id);
-            exit;
+//            var_dump($event_id);
+//            exit;
             $companies = DB::select('select * from companies_view');
 
 //            $companies = DB::select('select * from companies_view where event_id = ?' ,$event_id );
@@ -41,14 +41,14 @@ class CompanyController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.company.company')->withEventId($event_id);
+        return view('pages.company.company');
     }
 
-    public function eventCompanies($event_id)
+    public function eventCompanies()
     {
         if (request()->ajax()) {
-            $companies = DB::select('select * from companies_view where event_id = ?' ,$event_id );
-
+            //$companies = DB::select('select * from companies_view where event_id = ?' ,$event_id );
+            $companies = DB::select('select * from companies_view');
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('companyEdit', $data->id) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
@@ -58,9 +58,9 @@ class CompanyController extends Controller
                     $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     return $button;
                 })
-                ->addColumn('event_id', function($event_id){
-                    return $event_id;
-                })
+//                ->addColumn('event_id', function($event_id){
+//                    return $event_id;
+//                })
                 ->rawColumns(['action'])
                 ->make(true);
         }

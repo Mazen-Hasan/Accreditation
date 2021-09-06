@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Company')
+@section('subtitle',' Event Company')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
@@ -46,6 +46,7 @@
 @section('script')
     <script>
         $(document).ready( function () {
+            //alert({{$eventid}});
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -57,7 +58,8 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('companyController.eventCompanies') }}",
+                    {{--url: "{{ route('eventAdminController.index') }}",--}}
+                    url: '../event-companies/' + {{$eventid}},
                     type: 'GET',
                 },
                 columns: [

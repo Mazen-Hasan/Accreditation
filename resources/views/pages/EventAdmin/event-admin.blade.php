@@ -16,8 +16,8 @@
                             <div class="col-sm-4">
                                 <div class="card">
                                     <div>
-                                        <a href="{{route('eventCompanies',['event_id'=> $event->id])}}">
-{{--                                        <a href="{{route('companies')}}">--}}
+                                        <a href="{{route('eventCompanies',[$event->id])}}">
+{{--                                        <a href="{{route('eventCompanies')}}">--}}
                                             <img class="card-img-top" style="border-top-left-radius: 20px; border-top-right-radius: 20px" src="{{ asset('images/event.png') }}" alt="Event">
                                         </a>
                                     </div>

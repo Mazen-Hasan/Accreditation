@@ -26,14 +26,14 @@ Route::group(['middleware' => 'role:event-admin'], function() {
 //    Route::get('/event-edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('eventEdit');
 //    Route::get('EventController/remove/{event_security_category_id}', 'App\Http\Controllers\EventController@remove');
 //    Route::get('EventController/storeEventSecurityCategory/{event_id}/{security_category_id}', 'App\Http\Controllers\EventController@storeEventSecurityCategory');
-
+    Route::resource('eventAdminController', 'App\Http\Controllers\EventAdminController');
     Route::get('/event-admin', [App\Http\Controllers\EventAdminController::class, 'index'])->name('event-admin');
+    Route::get('/event-companies/{id}', [App\Http\Controllers\EventAdminController::class, 'eventCompanies'])->name('eventCompanies');
 
     Route::resource('companyController', 'App\Http\Controllers\CompanyController');
 
-    Route::get('/companies/{event_id}', [App\Http\Controllers\CompanyController::class, 'index'])->name('eventCompanies');
-
-//    Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies');
+    //Route::get('/eventCompanies', [App\Http\Controllers\CompanyController::class, 'eventCompanies'])->name('eventCompanies');
+    Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies');
     Route::get('/company-add', [App\Http\Controllers\CompanyController::class, 'companyAdd'])->name('companyAdd');
     Route::get('/company-edit/{id}', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companyEdit');
     Route::get('/company-accreditation-size/{id}', [App\Http\Controllers\CompanyController::class, 'companyAccreditCat'])->name('companyAccreditCat');

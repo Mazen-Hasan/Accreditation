@@ -263,7 +263,7 @@
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    //alert($('#postForm').serialize());
+                    // alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('EventController.store') }}",

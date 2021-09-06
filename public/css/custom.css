@@ -669,6 +669,32 @@ select {
     color: #666666;
 }
 
+.user_role{
+    font-family: Poppins-Bold;
+    font-size: 16px;
+    color: #b8b5b5;
+}
+
+.card_event_title{
+    font-family: Poppins-Bold;
+    font-size: 16px;
+    color: #000000;
+    margin-bottom: 0.75rem;
+}
+
+.card_event_label{
+    font-family: Poppins-Regular;
+    font-size: 14px;
+    color: #b8b5b5;
+}
+
+.card_event_text{
+    font-family: Poppins-Bold;
+    font-size: 16px;
+    color: #b8b5b5;
+}
+
+
 .logout{
     font-size: 22px;
     line-height: 1;
@@ -693,6 +719,11 @@ select {
 button.navbar-toggler {
     background: transparent;
     width:40px;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
 }
 
 

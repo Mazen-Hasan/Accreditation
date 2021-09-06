@@ -20,12 +20,27 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ma
 
 Route::group(['middleware' => 'role:event-admin'], function() {
 
-    Route::resource('EventController', 'App\Http\Controllers\EventController');
-    Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events');
-    Route::get('/event-add', [App\Http\Controllers\EventController::class, 'eventAdd'])->name('eventAdd');
-    Route::get('/event-edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('eventEdit');
-    Route::get('EventController/remove/{event_security_category_id}', 'App\Http\Controllers\EventController@remove');
-    Route::get('EventController/storeEventSecurityCategory/{event_id}/{security_category_id}', 'App\Http\Controllers\EventController@storeEventSecurityCategory');
+//    Route::resource('EventController', 'App\Http\Controllers\EventController');
+//    Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events');
+//    Route::get('/event-add', [App\Http\Controllers\EventController::class, 'eventAdd'])->name('eventAdd');
+//    Route::get('/event-edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('eventEdit');
+//    Route::get('EventController/remove/{event_security_category_id}', 'App\Http\Controllers\EventController@remove');
+//    Route::get('EventController/storeEventSecurityCategory/{event_id}/{security_category_id}', 'App\Http\Controllers\EventController@storeEventSecurityCategory');
+
+    Route::get('/event-admin', [App\Http\Controllers\EventAdminController::class, 'index'])->name('event-admin');
+
+    Route::resource('companyController', 'App\Http\Controllers\CompanyController');
+
+    Route::get('/companies/{event_id}', [App\Http\Controllers\CompanyController::class, 'index'])->name('eventCompanies');
+
+//    Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies');
+    Route::get('/company-add', [App\Http\Controllers\CompanyController::class, 'companyAdd'])->name('companyAdd');
+    Route::get('/company-edit/{id}', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companyEdit');
+    Route::get('/company-accreditation-size/{id}', [App\Http\Controllers\CompanyController::class, 'companyAccreditCat'])->name('companyAccreditCat');
+    Route::get('companyController/editCompanyAccreditSize/{id}', 'App\Http\Controllers\CompanyController@editCompanyAccreditSize');
+    Route::get('companyController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}', 'App\Http\Controllers\CompanyController@storeCompanyAccrCatSize');
+    Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat');
+
 });
 
 Route::group(['middleware' => 'role:super-admin'], function() {
@@ -75,17 +90,8 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
     Route::get('/participant-edit/{id}', [App\Http\Controllers\ParticipantController::class, 'edit'])->name('participantEdit');
 
-
-    Route::resource('companyController', 'App\Http\Controllers\CompanyController');
-    Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies');
-    Route::get('/company-add', [App\Http\Controllers\CompanyController::class, 'companyAdd'])->name('companyAdd');
-    Route::get('/company-edit/{id}', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companyEdit');
-    Route::get('/company-accreditation-size/{id}', [App\Http\Controllers\CompanyController::class, 'companyAccreditCat'])->name('companyAccreditCat');
-    Route::get('companyController/editCompanyAccreditSize/{id}', 'App\Http\Controllers\CompanyController@editCompanyAccreditSize');
-    Route::get('companyController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}', 'App\Http\Controllers\CompanyController@storeCompanyAccrCatSize');
-    Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat');
 });
 
-Auth::routes();
+//Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

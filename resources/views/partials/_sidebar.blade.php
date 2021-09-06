@@ -6,6 +6,9 @@
                     <p class="user_name">
                         {{ Auth::user()->name }}
                     </p>
+                    <p class="user_role">
+                        {{ Auth::user()->roles->first()->name }}
+                    </p>
                 </li>
             </ul>
         </li>

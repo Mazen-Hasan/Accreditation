@@ -6,7 +6,8 @@ namespace App\Http\Controllers;
 use App\Models\EventSecurityCategory;
 use App\Models\EventType;
 use App\Models\SecurityCategory;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Event;
 use App\Models\SelectOption;
 use Illuminate\Http\Request;
@@ -23,7 +24,8 @@ class EventController extends Controller
     {
         if(request()->ajax())
         {
-            return datatables()->of(Event::latest()->get())
+            $events = DB::select('select * from events_view');
+            return datatables()->of($events)
                 ->addColumn('action', function($data){
                     $button = '<a href="'.route('eventEdit', $data->id).'" data-toggle="tooltip"  id="edit-event" data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button .= '&nbsp;&nbsp;';
@@ -61,7 +63,7 @@ class EventController extends Controller
                 'security_officer' => $request->security_officer,
                 'event_form' => $request->event_form,
                 'creation_date' => $request->creation_date,
-                'creator' => $request->creator
+                'creator' => Auth::user()->id
             ]);
         if($postId == null) {
             $counter = 1;
@@ -94,6 +96,7 @@ class EventController extends Controller
             $organizerSelectOption = new SelectOption($contact->id, $contact->name);
             $organizersSelectOption[] = $organizerSelectOption;
         }
+
         $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Owner")';
         $query = $sql;
         $contacts = DB::select($query);

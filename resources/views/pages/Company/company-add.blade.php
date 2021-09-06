@@ -165,11 +165,6 @@
     </div>
 @endsection
 @section('script')
-    <script src="vendors/typeahead.js/typeahead.bundle.min.js"></script>
-    <script src="vendors/select2/select2.min.js"></script>
-    <script src="js/file-upload.js"></script>
-    <script src="js/typeahead.js"></script>
-    <script src="js/select2.js"></script>
     <script>
         $(document).ready(function () {
             $.ajaxSetup({
@@ -178,23 +173,6 @@
                 }
             });
 
-            {{--$('#laravel_datatable').DataTable({--}}
-            {{--    processing: true,--}}
-            {{--    serverSide: true,--}}
-            {{--    ajax: {--}}
-            {{--        url: "{{ route('dtable-posts.index') }}",--}}
-            {{--        type: 'GET',--}}
-            {{--    },--}}
-            {{--    columns: [--}}
-            {{--        { data: 'id', name: 'id', 'visible': false},--}}
-            {{--        { data: 'title', name: 'title' },--}}
-            {{--        { data: 'body', name: 'body' },--}}
-            {{--        { data: 'created_at', name: 'created_at' },--}}
-            {{--        {data: 'action', name: 'action', orderable: false},--}}
-            {{--    ],--}}
-            {{--    order: [[0, 'desc']]--}}
-            {{--});--}}
-
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
@@ -202,37 +180,6 @@
                 $('#postCrudModal').html("Add New Contact");
                 $('#ajax-crud-modal').modal('show');
             });
-
-
-            // $('body').on('click', '.edit-post', function () {
-            //     var post_id = $(this).data('id');
-            //     $.get('dtable-posts/'+post_id+'/edit', function (data) {
-            //         $('#name-error').hide();
-            //         $('#email-error').hide();
-            //         $('#postCrudModal').html("Edit Post");
-            //         $('#btn-save').val("edit-post");
-            //         $('#ajax-crud-modal').modal('show');
-            //         $('#post_id').val(data.id);
-            //         $('#title').val(data.title);
-            //         $('#body').val(data.body);
-            //     })
-            // });
-            //
-            // $('body').on('click', '#delete-post', function () {
-            //     var post_id = $(this).data("id");
-            //     confirm("Are You sure want to delete !");
-            //     $.ajax({
-            //         type: "get",
-            //         url: "dtable-posts/destroy/"+post_id,
-            //         success: function (data) {
-            //             var oTable = $('#laravel_datatable').dataTable();
-            //             oTable.fnDraw(false);
-            //         },
-            //         error: function (data) {
-            //             console.log('Error:', data);
-            //         }
-            //     });
-            // });
         });
 
         if ($("#postForm").length > 0) {

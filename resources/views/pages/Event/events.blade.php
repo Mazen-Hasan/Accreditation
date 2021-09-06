@@ -26,6 +26,7 @@
                                     <th>Name</th>
 {{--                                    <th>Location</th>--}}
                                     <th>Size</th>
+                                    <th>Event Admin</th>
                                     <th>Organizer</th>
                                     <th>Owner</th>
                                     <th>Type</th>
@@ -67,6 +68,8 @@
                     // { data: 'event_admin', name: 'event_admin', 'visible': false},
                     // { data: 'location', name: 'location' , 'visible': false},
                     { data: 'size', name: 'size' },
+                    { data: 'event_admin', name: 'event_admin' },
+
                     { data: 'organizer', name: 'organizer' },
                     { data: 'owner', name: 'owner' },
                     { data: 'event_type', name: 'event_type' },

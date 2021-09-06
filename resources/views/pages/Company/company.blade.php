@@ -21,6 +21,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Event ID</th>
                                     <th>Name</th>
                                     <th>Category</th>
                                     <th>Country</th>
@@ -56,11 +57,12 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('companyController.index') }}",
+                    url: "{{ route('companyController.index',[$eventId]) }}",
                     type: 'GET',
                 },
                 columns: [
                     { data: 'id', name: 'id', 'visible': false},
+                    { data: 'event_id', name: 'event_id'},
                     { data: 'name', name: 'name'},
                     { data: 'category', name: 'category' },
                     { data: 'country', name: 'country' },

@@ -1,4 +1,4 @@
-<nav class="sidebar sidebar-offcanvas" id="sidebar" style="background: transparent">
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item">
             <ul>

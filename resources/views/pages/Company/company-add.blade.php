@@ -16,6 +16,7 @@
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
+                            <input style="visibility: hidden" name="event_id" id="event_id" value="{{$eventid}}" >
                             <input type="hidden" name="post_id" id="post_id">
                             <br>
                             <div class="row">
@@ -186,9 +187,11 @@
             $("#postForm").validate({
                 submitHandler: function (form) {
                     $('#post_id').val('');
+                    var $eventid = $('#event_id').val();
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
                     alert($('#postForm').serialize());
+                    $(":input,:hidden").serialize();
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('companyController.store') }}",
@@ -198,7 +201,8 @@
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
-                            window.location.href = "{{ route('companies')}}";
+                            //window.location.href = "{{ route('companies')}}";
+                            window.location.href = "../event-companies/"+$eventid;
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },

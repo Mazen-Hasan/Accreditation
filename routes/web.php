@@ -34,8 +34,8 @@ Route::group(['middleware' => 'role:event-admin'], function() {
 
     //Route::get('/eventCompanies', [App\Http\Controllers\CompanyController::class, 'eventCompanies'])->name('eventCompanies');
     Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies');
-    Route::get('/company-add', [App\Http\Controllers\CompanyController::class, 'companyAdd'])->name('companyAdd');
-    Route::get('/company-edit/{id}', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companyEdit');
+    Route::get('/company-add/{eventid}', [App\Http\Controllers\CompanyController::class, 'companyAdd'])->name('companyAdd');
+    Route::get('/company-edit/{id}/{eventid}', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companyEdit');
     Route::get('/company-accreditation-size/{id}', [App\Http\Controllers\CompanyController::class, 'companyAccreditCat'])->name('companyAccreditCat');
     Route::get('companyController/editCompanyAccreditSize/{id}', 'App\Http\Controllers\CompanyController@editCompanyAccreditSize');
     Route::get('companyController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}', 'App\Http\Controllers\CompanyController@storeCompanyAccrCatSize');

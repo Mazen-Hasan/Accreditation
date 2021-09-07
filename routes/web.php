@@ -18,6 +18,31 @@ Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('main');
 
 
+
+
+Route::group(['middleware' => 'role:company-admin'], function() {
+
+
+    Route::resource('companyAdminController', 'App\Http\Controllers\CompanyAdminController');
+    Route::get('/company-admin', [App\Http\Controllers\CompanyAdminController::class, 'index'])->name('company-admin');
+    Route::get('/company-participants/{id}', [App\Http\Controllers\CompanyAdminController::class, 'companyParticipants'])->name('companyParticipants');
+
+    Route::resource('companyController', 'App\Http\Controllers\CompanyController');
+
+    Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies');
+    Route::get('/company-add/{eventid}', [App\Http\Controllers\CompanyController::class, 'companyAdd'])->name('companyAdd');
+    Route::get('/company-edit/{id}/{eventid}', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companyEdit');
+    Route::get('/company-accreditation-size/{id}', [App\Http\Controllers\CompanyController::class, 'companyAccreditCat'])->name('companyAccreditCat');
+    Route::get('companyController/editCompanyAccreditSize/{id}', 'App\Http\Controllers\CompanyController@editCompanyAccreditSize');
+    Route::get('companyController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}', 'App\Http\Controllers\CompanyController@storeCompanyAccrCatSize');
+    Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat');
+
+    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
+    Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
+    Route::get('/participant-add/{id}', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
+    Route::get('/participant-edit/{id}', [App\Http\Controllers\ParticipantController::class, 'edit'])->name('participantEdit');
+});
+
 Route::group(['middleware' => 'role:event-admin'], function() {
 
 //    Route::resource('EventController', 'App\Http\Controllers\EventController');

@@ -2,10 +2,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\AccreditationCategory;
+use App\Models\Company;
 use App\Models\Participant;
 use DB;
 use App\Models\SelectOption;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 class ParticipantController extends Controller
@@ -18,7 +20,10 @@ class ParticipantController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            return datatables()->of(Participant::latest()->get())
+            $where = array('company_admin_id' => Auth::user()->id);
+            $company = Company::where($where)->first();
+            $participants = DB::select('select * from paticipants where company = ?' ,[$company->id]);
+            return datatables()->of($participants)
                 ->addColumn('name', function($row){
                     return $row->first_name.' '.$row->last_name;
                 })
@@ -88,7 +93,7 @@ class ParticipantController extends Controller
      * Show the form for editing the specified resource.
      *
      */
-    public function participantAdd()
+    public function participantAdd($id)
     {
 //        $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Organizer")';
 //        $query = $sql;

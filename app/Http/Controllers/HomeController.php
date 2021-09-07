@@ -35,6 +35,9 @@ class HomeController extends Controller
             case 'event-admin':
                 return Redirect::to('event-admin');
                 break;
+            case 'company-admin':
+                return Redirect::to('company-admin');
+                break;
             default:
                 return view('pages.event.events');
         }

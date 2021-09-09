@@ -20,6 +20,8 @@ class ParticipantController extends Controller
     public function index()
     {
         if (request()->ajax()) {
+            var_dump('i am heres');
+            exit;
             $where = array('company_admin_id' => Auth::user()->id);
             $company = Company::where($where)->first();
             $participants = DB::select('select * from paticipants where company = ?' ,[$company->id]);
@@ -65,8 +67,8 @@ class ParticipantController extends Controller
                 'address' => $request->address,
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
-                'company' => 1,
-                'subCompany' => 1,
+                'company' => Auth::user()->id,
+                'subCompany' => Auth::user()->id,
                 'passport_number' => $request->passport_number,
                 'id_number' => $request->id_number,
                 'class' => $request->class,
@@ -93,7 +95,7 @@ class ParticipantController extends Controller
      * Show the form for editing the specified resource.
      *
      */
-    public function participantAdd($id)
+    public function participantAdd()
     {
 //        $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Organizer")';
 //        $query = $sql;
@@ -136,24 +138,6 @@ class ParticipantController extends Controller
         $gender2 = new SelectOption(2, 'Female');
         $genders = [$gender1, $gender2];
 
-//        $securityOfficer1 = new SelectOption(1, 'securityOfficer1');
-//        $securityOfficer2 = new SelectOption(2, 'securityOfficer2');
-//        $securityOfficer3 = new SelectOption(3, 'securityOfficer3');
-//        $securityOfficers = [$securityOfficer1, $securityOfficer2, $securityOfficer3];
-//
-//        $approvalOption1 = new SelectOption(1, 'Event Admin Approval');
-//        $approvalOption2 = new SelectOption(2, 'Security Officer Approval');
-//        $approvalOption3 = new SelectOption(3, 'Both');
-//        $approvalOptions = [$approvalOption1, $approvalOption2, $approvalOption3];
-//
-//        $eventStatus1 = new SelectOption(1, 'Active');
-//        $eventStatus2 = new SelectOption(2, 'InActive');
-//        $eventStatuss = [$eventStatus1, $eventStatus2];
-//
-//        $eventForm1 = new SelectOption(1, 'Template 1');
-//        $eventForm2 = new SelectOption(2, 'Template 2');
-//        $eventForm3 = new SelectOption(3, 'Template 3');
-//        $eventForms = [$eventForm1, $eventForm2, $eventForm3];
 
         return view('pages.participant.participant-add')->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption);
     }

@@ -9,8 +9,9 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-        @role('super-admin')
-        <a href="../participant-add/{{$eventid}}" class="ha_btn" id="add-new-post">Add Participant</a>
+        @role('company-admin')
+{{--        <a href="{{route('participantAdd')}}" class="ha_btn" id="add-new-post">Add Participant</a>--}}
+        <a href="../company-participant-add" class="ha_btn" id="add-new-post">Add Participant</a>
         @endrole
         <br>
         <div class="row">
@@ -49,7 +50,6 @@
 @section('script')
     <script>
         $(document).ready( function () {
-            //alert({{$eventid}});
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -61,7 +61,7 @@
                 serverSide: true,
                 ajax: {
                     {{--url: "{{ route('participantController.index') }}",--}}
-                    url: '../company-participants/' + {{$eventid}},
+                    url: '../company-participants',
                     type: 'GET',
                 },
                 columns: [

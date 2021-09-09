@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccreditationCategory;
 use App\Models\Company;
 use App\Models\Participant;
+use App\Models\SelectOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class CompanyAdminController extends Controller
 {
@@ -38,7 +41,7 @@ class CompanyAdminController extends Controller
         return view('pages.CompanyAdmin.company-admin')->withEvents($events);
     }
 
-    public function companyParticipants($id)
+    public function companyParticipants()
     {
 //        if (request()->ajax()) {
 //            $companies = DB::select('select * from companies_view inner join companies where event_id = ?' ,[$id]);
@@ -60,20 +63,17 @@ class CompanyAdminController extends Controller
 //        }
 
         if (request()->ajax()) {
-//            var_dump('ji');
-//            exit;
             $where = array('company_admin_id' => Auth::user()->id);
-            $company = Company::where($where)->first();
-            $participants = DB::select('select * from paticipants where company = ?' ,[$company->id]);
-//            var_dump($company->id);
-//            exit;
+            $company = Company::where($where)->get()->first();
+            $participants = DB::select('select * from participants where company = ?' ,[$company->id]);
+//            $participants = DB::select('select * from participants');
             return datatables()->of($participants)
                 ->addColumn('name', function($row){
                     return $row->first_name.' '.$row->last_name;
                 })
                 ->addColumn('action', function ($data) {
                     //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                    $button = '<a href="' . route('participantEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    $button = '<a href="' . route('companyParticipantEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button .= '&nbsp;&nbsp;';
                     //$button .= '<a href="javascript:void(0);" id="delete-post" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">   Delete</a>';
                     return $button;
@@ -81,6 +81,103 @@ class CompanyAdminController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.CompanyAdmin.company-participants')->with('eventid',$id);
+        return view('pages.CompanyAdmin.company-participants');
+    }
+
+
+    public function companyParticipantAdd()
+    {
+        $accreditationCategories = AccreditationCategory::get()->all();
+        $accreditationCategoriesSelectOption = array();
+        foreach ($accreditationCategories as $accreditationCategory) {
+            $accreditationCategorySelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
+            $accreditationCategoriesSelectOption[] = $accreditationCategorySelectOption;
+        }
+        $class1 = new SelectOption(1, 'Citizen');
+        $class2 = new SelectOption(2, 'Visitor');
+        $class3 = new SelectOption(3, 'Resident');
+        $classess = [$class1, $class2, $class3];
+
+        $gender1 = new SelectOption(1, 'Male');
+        $gender2 = new SelectOption(2, 'Female');
+        $genders = [$gender1, $gender2];
+
+
+        return view('pages.CompanyAdmin.company-participant-add')->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption);
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function store(Request $request)
+    {
+        //xdebug_break();
+        $where = array('company_admin_id' => Auth::user()->id);
+        $company = Company::where($where)->get()->first();
+        $postId = $request->post_id;
+        $post = Participant::updateOrCreate(['id' => $postId],
+            ['first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'first_name_ar' => $request->first_name_ar,
+                'last_name_ar' => $request->last_name_ar,
+                'nationality' => $request->nationality,
+                'email' => $request->email,
+                'mobile' => $request->mobile,
+                'position' => $request->position,
+                'religion' => $request->religion,
+                'address' => $request->address,
+                'birthdate' => $request->birthdate,
+                'gender' => $request->gender,
+                'company' => $company->id,
+                'subCompany' => $company->id,
+                'passport_number' => $request->passport_number,
+                'id_number' => $request->id_number,
+                'class' => $request->class,
+                'accreditation_category' => $request->accreditation_category,
+                'creator' => $request->creator,
+            ]);
+//        if ($postId == null) {
+//            $counter = 1;
+//            foreach ($request->security_categories as $security_category) {
+//                $help = EventSecurityCategory::updateOrCreate(['id' => $postId],
+//                    ['event_id' => $post->id,
+//                        'security_category_id' => $security_category,
+//                        'order' => $counter,
+//                        'creation_date' => $request->creation_date,
+//                        'creator' => $request->creator
+//                    ]);
+//                $counter = $counter + 1;
+//            }
+//        }
+        return Response::json($post);
+    }
+
+    public function edit($id)
+    {
+        $where = array('id' => $id);
+        $post = Participant::where($where)->first();
+
+        $accreditationCategories = AccreditationCategory::get()->all();
+        $accreditationCategoriesSelectOption = array();
+        foreach ($accreditationCategories as $accreditationCategory) {
+            $accreditationCategorySelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
+            $accreditationCategoriesSelectOption[] = $accreditationCategorySelectOption;
+        }
+
+        $class1 = new SelectOption(1, 'Citizen');
+        $class2 = new SelectOption(2, 'Visitor');
+        $class3 = new SelectOption(3, 'Resident');
+        $classess = [$class1, $class2, $class3];
+
+        $gender1 = new SelectOption(1, 'Male');
+        $gender2 = new SelectOption(2, 'Female');
+        $genders = [$gender1, $gender2];
+
+        return view('pages.CompanyAdmin.company-participant-edit')->with('post', $post)->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption);
     }
 }

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\AccreditationCategory;
 use App\Models\Company;
+use App\Models\Gender;
+use App\Models\NationalityClass;
 use App\Models\Participant;
+use App\Models\Religion;
 use App\Models\SelectOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,29 +46,11 @@ class CompanyAdminController extends Controller
 
     public function companyParticipants()
     {
-//        if (request()->ajax()) {
-//            $companies = DB::select('select * from companies_view inner join companies where event_id = ?' ,[$id]);
-////            $companies = DB::select('select * from companies_view');
-//            return datatables()->of($companies)
-//                ->addColumn('action', function ($data) {
-//                    $button = '<a href="../company-edit/'.$data->id.'/'.$data->event_id.'" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-//                    $button .= '&nbsp;&nbsp;';
-//                    $button .= '<a href="javascript:void(0);" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-//                    $button .= '&nbsp;&nbsp;';
-//                    $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
-//                    return $button;
-//                })
-////                ->addColumn('event_id', function($event_id){
-////                    return $event_id;
-////                })
-//                ->rawColumns(['action'])
-//                ->make(true);
-//        }
-
         if (request()->ajax()) {
             $where = array('company_admin_id' => Auth::user()->id);
             $company = Company::where($where)->get()->first();
-            $participants = DB::select('select * from participants where company = ?' ,[$company->id]);
+            //$participants = DB::select('select * from company_participants_view');
+            $participants = DB::select('select * from company_participants_view where company = ?' ,[$company->id]);
 //            $participants = DB::select('select * from participants');
             return datatables()->of($participants)
                 ->addColumn('name', function($row){
@@ -93,17 +78,31 @@ class CompanyAdminController extends Controller
             $accreditationCategorySelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
             $accreditationCategoriesSelectOption[] = $accreditationCategorySelectOption;
         }
-        $class1 = new SelectOption(1, 'Citizen');
-        $class2 = new SelectOption(2, 'Visitor');
-        $class3 = new SelectOption(3, 'Resident');
-        $classess = [$class1, $class2, $class3];
+        $nationalClassess = NationalityClass::get()->all();
+        $classess = array();
+        foreach ($nationalClassess as $nationalClass) {
+            $class = new SelectOption($nationalClass->id, $nationalClass->name);
+            $classess[] = $class;
+        }
+//        $classess = [$class1, $class2, $class3];
+        $gendersItems = Gender::get()->all();
+        $genders = array();
+        foreach ($gendersItems as $gendersItem) {
+            $gender = new SelectOption($gendersItem->id, $gendersItem->name);
+            $genders[] = $gender;
+        }
+//        $gender1 = new SelectOption(1, 'Male');
+//        $gender2 = new SelectOption(2, 'Female');
+//        $genders = [$gender1, $gender2];
+        $religionsItems = Religion::get()->all();
+        $religions = array();
+        foreach ($religionsItems as $religionsItem) {
+            $religion = new SelectOption($religionsItem->id, $religionsItem->name);
+            $religions[] = $religion;
+        }
 
-        $gender1 = new SelectOption(1, 'Male');
-        $gender2 = new SelectOption(2, 'Female');
-        $genders = [$gender1, $gender2];
 
-
-        return view('pages.CompanyAdmin.company-participant-add')->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption);
+        return view('pages.CompanyAdmin.company-participant-add')->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption',$religions);
     }
 
 

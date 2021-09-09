@@ -104,9 +104,18 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Religion</label>
+                                        <label>Religion</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="religion" name="religion" value="{{$post->religion}}" required="" placeholder="enter religion"/>
+                                            <select class="input100 minimal" id="religion" name="religion" required="">
+                                                @foreach ($religionsSelectOption as $religionSelectOption)
+                                                    <option value="{{ $religionSelectOption->key }}"
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($religionSelectOption->key == $post->religion)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $religionSelectOption->value }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

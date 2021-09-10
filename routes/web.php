@@ -28,6 +28,10 @@ Route::group(['middleware' => 'role:company-admin'], function() {
     Route::get('/company-participants', [App\Http\Controllers\CompanyAdminController::class, 'companyParticipants'])->name('companyParticipants');
     Route::get('/company-participant-add', [App\Http\Controllers\CompanyAdminController::class, 'companyParticipantAdd'])->name('companyParticipantAdd');
     Route::get('/company-participant-edit/{id}', [App\Http\Controllers\CompanyAdminController::class, 'edit'])->name('companyParticipantEdit');
+    Route::get('/company-accreditation-size', [App\Http\Controllers\CompanyAdminController::class, 'companyAccreditCategories'])->name('companyAccreditCategories');
+    Route::get('companyAdminController/editCompanyAccreditSize/{id}', 'App\Http\Controllers\CompanyAdminController@editCompanyAccreditSize');
+    Route::get('companyAdminController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}', 'App\Http\Controllers\CompanyAdminController@storeCompanyAccrCatSize');
+    Route::get('companyAdminController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyAdminController@destroyCompanyAccreditCat');
 //    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
 //    Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
 //    Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');

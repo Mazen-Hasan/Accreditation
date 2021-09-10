@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AccreditationCategory;
 use App\Models\Company;
+use App\Models\CompanyAccreditaionCategory;
 use App\Models\Gender;
 use App\Models\NationalityClass;
 use App\Models\Participant;
@@ -183,5 +184,79 @@ class CompanyAdminController extends Controller
         }
 
         return view('pages.CompanyAdmin.company-participant-edit')->with('post', $post)->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption',$religions);;
+    }
+
+    public function companyAccreditCategories()
+    {
+
+        $where = array('company_admin_id' => Auth::user()->id);
+        $company = Company::where($where)->get()->first();
+
+        $where = array('status' => 1);
+        $accreditationCategorysSelectOptions = array();
+        $accreditationCategories = AccreditationCategory::where($where)->get()->all();
+
+        foreach($accreditationCategories as $accreditationCategory)
+        {
+            $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
+            $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
+        }
+//        if (request()->ajax()) {
+//            //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
+//            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?' , [$company->id]);
+//            return datatables()->of($companyAccreditationCategories)
+//                ->addColumn('action', function ($data) {
+//                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
+//                    $button .= '&nbsp;&nbsp;';
+//                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
+//                    return $button;
+//                })
+//                ->rawColumns(['action'])
+//                ->make(true);
+//        }
+        if (request()->ajax()) {
+//            var_dump('title');
+//            exit;
+            $where = array('company_admin_id' => Auth::user()->id);
+            $company = Company::where($where)->get()->first();
+            //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
+            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',[$company->id]);
+            return datatables()->of($companyAccreditationCategories)
+                ->addColumn('action', function ($data) {
+                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $company->id);
+    }
+
+    public function editCompanyAccreditSize($id){
+
+        $where = array('id' => $id);
+        $post = CompanyAccreditaionCategory::where($where)->first();
+        return Response::json($post);
+    }
+
+    public function storeCompanyAccrCatSize($id,$accredit_cat_id,$size,$company_id){
+
+        $post = CompanyAccreditaionCategory::updateOrCreate(['id' => $id],
+            ['size' => $size,
+                'accredit_cat_id' => $accredit_cat_id,
+                'company_id'=> $company_id,
+                'subcompany_id' =>$company_id,
+                'event_id' => 1,
+                'status'=> 0
+            ]);
+        return Response::json($post);
+    }
+
+    public function destroyCompanyAccreditCat($id){
+        $post = CompanyAccreditaionCategory::where('id', $id)->delete();
+        return Response::json($post);
+
     }
 }

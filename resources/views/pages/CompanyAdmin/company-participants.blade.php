@@ -27,12 +27,12 @@
                                     <th>Name</th>
                                     {{--                                    <th>Location</th>--}}
                                     <th>Nationality</th>
+                                    <th>Class</th>
                                     <th>Email</th>
                                     <th>Mobile</th>
                                     <th>Position</th>
-                                    <th>Company</th>
                                     <th>Accreditation Category</th>
-                                    <th>Class</th>
+                                    <th>Religion</th>
                                     {{--                                    <th style="color: black">Status</th>--}}
                                     <th>Action</th>
                                 </tr>
@@ -67,23 +67,13 @@
                 columns: [
                     { data: 'id', name: 'id', 'visible': false},
                     { data: 'name', name: 'name'},
-                    // { data: 'event_admin', name: 'event_admin', 'visible': false},
-                    // { data: 'location', name: 'location' , 'visible': false},
                     { data: 'nationality', name: 'nationality' },
+                    { data: 'class_name', name: 'class' },
                     { data: 'email', name: 'email' },
                     { data: 'mobile', name: 'mobile' },
                     { data: 'position', name: 'position' },
-                    { data: 'company', name: 'company'},
-                    { data: 'accreditation_category', name: 'accreditation_category' },
-                    { data: 'class', name: 'class' },
-                    // { data: 'status', render:function (data){ if(data == 1) { return "<span style='color: green'>Active</span>"} else{ return "<span style='color: red'>InActive</span>" }}},
-                    // { data: 'approval_option', name: 'approval_option' , 'visible': false},
-                    // { data: 'security_officer', name: 'security_officer' , 'visible': false},
-                    // { data: 'event_form', name: 'event_form' , 'visible': false},
-                    // { data: 'creation_date', name: 'creation_date' , 'visible': false},
-                    // { data: 'creator', name: 'creator' , 'visible': false},
-                    // { data: 'created_at', name: 'created_at' , 'visible': false},
-                    // { data: 'uploaded_at', name: 'uploaded_at' , 'visible': false},
+                    { data: 'accreditation_category_name', name: 'accreditation_category' },
+                    { data: 'religion_name', name: 'religion' },
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]

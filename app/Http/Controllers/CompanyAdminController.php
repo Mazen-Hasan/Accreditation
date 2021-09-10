@@ -84,16 +84,12 @@ class CompanyAdminController extends Controller
             $class = new SelectOption($nationalClass->id, $nationalClass->name);
             $classess[] = $class;
         }
-//        $classess = [$class1, $class2, $class3];
         $gendersItems = Gender::get()->all();
         $genders = array();
         foreach ($gendersItems as $gendersItem) {
             $gender = new SelectOption($gendersItem->id, $gendersItem->name);
             $genders[] = $gender;
         }
-//        $gender1 = new SelectOption(1, 'Male');
-//        $gender2 = new SelectOption(2, 'Female');
-//        $genders = [$gender1, $gender2];
         $religionsItems = Religion::get()->all();
         $religions = array();
         foreach ($religionsItems as $religionsItem) {
@@ -167,16 +163,25 @@ class CompanyAdminController extends Controller
             $accreditationCategorySelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
             $accreditationCategoriesSelectOption[] = $accreditationCategorySelectOption;
         }
+        $nationalClassess = NationalityClass::get()->all();
+        $classess = array();
+        foreach ($nationalClassess as $nationalClass) {
+            $class = new SelectOption($nationalClass->id, $nationalClass->name);
+            $classess[] = $class;
+        }
+        $gendersItems = Gender::get()->all();
+        $genders = array();
+        foreach ($gendersItems as $gendersItem) {
+            $gender = new SelectOption($gendersItem->id, $gendersItem->name);
+            $genders[] = $gender;
+        }
+        $religionsItems = Religion::get()->all();
+        $religions = array();
+        foreach ($religionsItems as $religionsItem) {
+            $religion = new SelectOption($religionsItem->id, $religionsItem->name);
+            $religions[] = $religion;
+        }
 
-        $class1 = new SelectOption(1, 'Citizen');
-        $class2 = new SelectOption(2, 'Visitor');
-        $class3 = new SelectOption(3, 'Resident');
-        $classess = [$class1, $class2, $class3];
-
-        $gender1 = new SelectOption(1, 'Male');
-        $gender2 = new SelectOption(2, 'Female');
-        $genders = [$gender1, $gender2];
-
-        return view('pages.CompanyAdmin.company-participant-edit')->with('post', $post)->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption);
+        return view('pages.CompanyAdmin.company-participant-edit')->with('post', $post)->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption',$religions);;
     }
 }

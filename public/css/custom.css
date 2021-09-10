@@ -215,15 +215,16 @@ iframe {
 
 .login100-form-title {
     font-family: Poppins-Regular;
-    font-size: 35px;
+    font-size: 40px;
+    font-weight: 500;
     color: #000000;
-    /*line-height: 1.2;*/
+    line-height: 60px;
     text-align: center;
     text-transform: uppercase;
 
     width: 100%;
     display: block;
-    padding-bottom: 54px;
+    padding-bottom: 38px;
 }
 
 
@@ -232,7 +233,7 @@ iframe {
     position: relative;
     width: 100%;
     z-index: 1;
-    margin-bottom: 10px;
+    margin-bottom: 21px;
 }
 
 .input100  {
@@ -245,8 +246,8 @@ iframe {
     width: 100%;
     background: #e6e6e6;
     height: 50px;
-    border-radius: 10px;
-    padding: 0 5px 0 25px;
+    border-radius: 14px;
+    padding: 0 5px 0 31px;
 }
 
 
@@ -335,6 +336,7 @@ iframe {
 .login100-form-btn {
     font-family: Poppins-Regular;
     font-size: 20px;
+    font-weight: 500;
     color: #fff;
     text-transform: uppercase;
 
@@ -485,14 +487,14 @@ iframe {
 
 .heading2 {
     font-family: Poppins-Regular;
-    font-size: 26px;
+    font-size: 20px;
     color: #000000;
-    /*line-height: 1.2;*/
+    line-height: 30px;
     text-align: start;
 
     width: 100%;
     display: block;
-    padding-bottom: 15px;
+    padding-bottom: 19px;
     padding-left: 25px;
 }
 
@@ -664,15 +666,19 @@ select {
 }
 
 .user_name{
-    font-family: Poppins-Bold;
-    font-size: 20px;
-    color: #666666;
+    font-family: Poppins-Regular;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 27px;
+    color: #000000;
 }
 
 .user_role{
-    font-family: Poppins-Bold;
-    font-size: 16px;
-    color: #b8b5b5;
+    font-family: Poppins-Regular;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 22px;
+    color: #000000;
 }
 
 .card_event_title{
@@ -696,10 +702,20 @@ select {
 
 
 .logout{
-    font-size: 22px;
-    line-height: 1;
+    font-family: Poppins-Regular;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 30px;
     margin-right: 1rem;
+    margin-left: 0rem;
     color: #484848;
+}
+
+.menu_item{
+    margin-right: 1rem;
+    margin-left: 2rem;
+    color: #484848;
+    alignment: right;
 }
 
 #laravel_datatable_filter{

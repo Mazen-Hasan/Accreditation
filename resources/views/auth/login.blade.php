@@ -5,14 +5,14 @@
         <div class="container-login100">
             <div class="wrap-login100">
                 <div class="login100-pic">
-                    <img src="images/logo-login.png" alt="IMG">
+                    <img src="{{ asset('images/logo-login.png') }}" alt="Accreditation">
                 </div>
                 <form method="POST" class="login100-form validate-form" action="{{ route('login') }}">
                     @csrf
                     <a href="{{ route('register') }}">{{ __('Register') }}</a>
                     <span class="login100-form-title">
                             Login
-                        </span>
+                    </span>
                     <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
                             <span class="heading2">
                                 Email

@@ -37,7 +37,7 @@ class ContactController extends Controller
                         $titleNames[] = $titles->title_label;
                     }
                     foreach ($titleNames as $titleName){
-                        $result = $result.'<p class="btn btn-outline-google" style="margin-bottom: 0px; cursor: auto">'.$titleName.'</p>';
+                        $result = $result.'<p class="btn btn-facebook" style="margin-bottom: 0px; cursor: auto">'.$titleName.'</p>';
                         $result .= '&nbsp;&nbsp;';
                     }
                     return $result;

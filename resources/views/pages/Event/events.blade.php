@@ -68,7 +68,7 @@
                     // { data: 'event_admin', name: 'event_admin', 'visible': false},
                     // { data: 'location', name: 'location' , 'visible': false},
                     { data: 'size', name: 'size' },
-                    { data: 'event_admin', name: 'event_admin' },
+                    { data: 'event_admin_name', name: 'event_admin_name' },
 
                     { data: 'organizer', name: 'organizer' },
                     { data: 'owner', name: 'owner' },

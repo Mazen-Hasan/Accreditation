@@ -63,14 +63,14 @@
                 <span class="menu-title">Event types</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('companies') }}">
-                <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Logout">
-                </i>
-                <span class="menu-title">Companies</span>
-            </a>
-        </li>
+{{--        <li class="nav-item">--}}
+{{--            <a class="nav-link" href="{{ route('companies') }}">--}}
+{{--                <i class="logout">--}}
+{{--                    <img src="{{ asset('images/menu.png') }}" alt="Logout">--}}
+{{--                </i>--}}
+{{--                <span class="menu-title">Companies</span>--}}
+{{--            </a>--}}
+{{--        </li>--}}
         <li class="nav-item">
             <a class="nav-link" href="{{ route('accreditationCategories') }}">
                 <i class="logout">
@@ -79,14 +79,14 @@
                 <span class="menu-title">Accreditation Category management</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('participants') }}">
-                <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Logout">
-                </i>
-                <span class="menu-title">Participant management</span>
-            </a>
-        </li>
+{{--        <li class="nav-item">--}}
+{{--            <a class="nav-link" href="{{ route('participants') }}">--}}
+{{--                <i class="logout">--}}
+{{--                    <img src="{{ asset('images/menu.png') }}" alt="Logout">--}}
+{{--                </i>--}}
+{{--                <span class="menu-title">Participant management</span>--}}
+{{--            </a>--}}
+{{--        </li>--}}
         @endrole
         <br>
         <li class="nav-item">

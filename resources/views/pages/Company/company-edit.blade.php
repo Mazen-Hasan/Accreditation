@@ -174,7 +174,7 @@
                     var actionType = $('#btn-save').val();
                     var $eventid = $('#event_id').val();
                     $('#btn-save').html('Sending..');
-                    alert($('#postForm').serialize());
+                    //alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('companyController.store') }}",

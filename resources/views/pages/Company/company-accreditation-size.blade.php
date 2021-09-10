@@ -116,7 +116,7 @@
 
             $('body').on('click', '#edit-company-accreditation', function () {
                 var post_id = $(this).data('id');
-                alert(post_id);
+                //alert(post_id);
                 $.get('../companyController/editCompanyAccreditSize/'+post_id, function (data) {
                     $('#name-error').hide();
                     $('#email-error').hide();

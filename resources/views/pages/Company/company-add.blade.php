@@ -190,7 +190,7 @@
                     var $eventid = $('#event_id').val();
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    alert($('#postForm').serialize());
+                    //alert($('#postForm').serialize());
                     $(":input,:hidden").serialize();
                     $.ajax({
                         data: $('#postForm').serialize(),

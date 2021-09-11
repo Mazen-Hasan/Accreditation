@@ -8,6 +8,7 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
+        <br><br>
         <div class="row">
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">

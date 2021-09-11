@@ -9,12 +9,11 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-{{--        <a href="{{route('companyAdd',[$eventid])}}" class="ha_btn" id="add-new-company">Add Company</a>--}}
-        <a href="../company-add/{{$eventid}}" class="ha_btn" id="add-new-company">Add Company</a>
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
+                    <a href="../company-add/{{$eventid}}" class="ha_btn" id="add-new-company" style="margin:10px">Add Company</a>
                     <div class="card-body">
                         <h4 class="card-title">Company Table</h4>
                         <div class="table-responsive">

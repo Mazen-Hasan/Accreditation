@@ -9,14 +9,13 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-        @role('company-admin')
-{{--        <a href="{{route('participantAdd')}}" class="ha_btn" id="add-new-post">Add Participant</a>--}}
-        <a href="../company-participant-add" class="ha_btn" id="add-new-post">Add Participant</a>
-        @endrole
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
+                    @role('company-admin')
+                    <a href="../company-participant-add" class="ha_btn" id="add-new-post" style="margin: 10px">Add Participant</a>
+                    @endrole
                     <div class="card-body">
                         <h4 class="card-title">Participant Table</h4>
                         <div class="table-responsive">

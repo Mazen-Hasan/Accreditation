@@ -53,7 +53,7 @@ class ContactController extends Controller
                 ->rawColumns(['titleNames','action'])
                 ->make(true);
         }
-        return view('pages.contact.contacts');
+        return view('pages.Contact.contacts');
     }
 
     public function getContactTitles($id){

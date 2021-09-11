@@ -8,14 +8,13 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
-        <br>
-        @role('super-admin')
-        <a href="{{route('eventAdd')}}" class="ha_btn" id="add-new-post">Add Event</a>
-        @endrole
-        <br><br>
+        <br> <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
+                    @role('super-admin')
+                    <a href="{{route('eventAdd')}}" class="ha_btn" id="add-new-post" style="margin:10px">Add Event</a>
+                    @endrole
                     <div class="card-body">
                         <h4 class="card-title">Event Table</h4>
                         <div class="table-responsive">

@@ -8,11 +8,12 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
-        <br><a href="javascript:void(0)" class="ha_btn" id="add-new-category">Add Company Category</a>
-        <br><br>
+        <br>
+        <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
+                    <a href="javascript:void(0)" class="ha_btn" id="add-new-category" style="margin:10px">Add Company Category</a>
                     <div class="card-body">
                         <h4 class="card-title">Company Category Table</h4>
                         <div class="table-responsive">

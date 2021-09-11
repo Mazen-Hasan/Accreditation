@@ -9,11 +9,11 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-        <a href="{{route('contactAdd')}}" class="ha_btn" id="add-new-post">Add Contact</a>
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
+                    <a href="{{route('contactAdd')}}" class="ha_btn" id="add-new-post" style="margin:10px">Add Contact</a>
                     <div class="card-body">
                         <h4 class="card-title">Contact Table</h4>
                         <div class="table-responsive">

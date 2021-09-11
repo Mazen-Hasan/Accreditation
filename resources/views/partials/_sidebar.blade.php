@@ -1,22 +1,23 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
-        <li class="nav-item">
-            <ul>
-                <li>
+        <ul>
+            <li class="nav-item">
+                <span class="nav-link">
                     <p class="user_name">
-                        {{ Auth::user()->name }}
-                    </p>
-                    <p class="user_role">
-                        {{ Auth::user()->roles->first()->name }}
-                    </p>
-                </li>
-            </ul>
-        </li>
-    </ul>
-    <ul class="nav">
+                       {{ Auth::user()->name }}
+                   </p>
+                </span>
+                <span class="nav-link">
+                   <p class="user_role">
+                       {{ Auth::user()->roles->first()->name }}
+                   </p>
+                </span>
+            </li>
+        </ul>
         @role('super-admin')
         <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'event') =="1" ? "active" : "" }}" href="{{ route('events') }} ">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'event') =="1" ? "active" : "" }}"
+               href="{{ route('events') }} ">
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Events">
                 </i>
@@ -24,7 +25,8 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'contact') =="1" ? "active" : "" }}" href="{{ route('contacts') }}">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'contact') =="1" ? "active" : "" }}"
+               href="{{ route('contacts') }}">
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Contact">
                 </i>
@@ -32,7 +34,8 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link  {{ str_contains( Request::route()->getName(),'event') =="1" ? "title" : "" }}" href="{{ route('titles') }}">
+            <a class="nav-link  {{ str_contains( Request::route()->getName(),'event') =="1" ? "title" : "" }}"
+               href="{{ route('titles') }}">
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Titles">
                 </i>
@@ -40,7 +43,8 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'companyCategories') =="1" ? "active" : "" }}" href="{{ route('companyCategories') }}">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'companyCategories') =="1" ? "active" : "" }}"
+               href="{{ route('companyCategories') }}">
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Company Categories">
                 </i>
@@ -48,7 +52,8 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'securityCategories') =="1" ? "active" : "" }}" href="{{ route('securityCategories') }}">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'securityCategories') =="1" ? "active" : "" }}"
+               href="{{ route('securityCategories') }}">
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Security Category">
                 </i>
@@ -56,41 +61,46 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'eventType') =="1" ? "active" : "" }}" href="{{ route('eventTypes') }}">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'eventType') =="1" ? "active" : "" }}"
+               href="{{ route('eventTypes') }}">
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Event Type">
                 </i>
                 <span class="menu-title">Event types</span>
             </a>
         </li>
+{{--        <li class="nav-item">--}}
+{{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'companies') =="1" ? "active" : "" }}"--}}
+{{--               href="{{ route('companies') }}">--}}
+{{--                <i class="logout">--}}
+{{--                    <img src="{{ asset('images/company.png') }}" alt="Companies">--}}
+{{--                </i>--}}
+{{--                <span class="menu-title">Companies</span>--}}
+{{--            </a>--}}
+{{--        </li>--}}
         <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'companies') =="1" ? "active" : "" }}" href="{{ route('companies') }}">
-                <i class="logout">
-                    <img src="{{ asset('images/company.png') }}" alt="Companies">
-                </i>
-                <span class="menu-title">Companies</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'accreditationCategories') =="1" ? "active" : "" }}" href="{{ route('accreditationCategories') }}">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'accreditationCategories') =="1" ? "active" : "" }}"
+               href="{{ route('accreditationCategories') }}">
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Accreditation Categories">
                 </i>
-                <span class="menu-title">Accreditation Category management</span>
+                <span class="menu-title">Accreditation Category</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'participants') =="1" ? "active" : "" }}" href="{{ route('participants') }}">
-                <i class="logout">
-                    <img src="{{ asset('images/participant.png') }}" alt="Participants">
-                </i>
-                <span class="menu-title">Participant management</span>
-            </a>
-        </li>
+{{--        <li class="nav-item">--}}
+{{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'participants') =="1" ? "active" : "" }}"--}}
+{{--               href="{{ route('participants') }}">--}}
+{{--                <i class="logout">--}}
+{{--                    <img src="{{ asset('images/participant.png') }}" alt="Participants">--}}
+{{--                </i>--}}
+{{--                <span class="menu-title">Participant management</span>--}}
+{{--            </a>--}}
+{{--        </li>--}}
         @endrole
         @role('event-admin')
         <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'event-admin') =="1" ? "active" : "" }}" href="{{ route('event-admin') }} ">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'event-admin') =="1" ? "active" : "" }}"
+               href="{{ route('event-admin') }} ">
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="My events">
                 </i>

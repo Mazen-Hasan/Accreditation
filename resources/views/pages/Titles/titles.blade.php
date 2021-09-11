@@ -9,11 +9,11 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-        <a href="javascript:void(0)" class="ha_btn" id="add-new-post">Add Title</a>
-        <br><br>
+        <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
+                    <a href="javascript:void(0)" class="ha_btn" id="add-new-post" style="margin:10px">Add Title</a>
                     <div class="card-body">
                         <h4 class="card-title">Title Table</h4>
                         <div class="table-responsive">

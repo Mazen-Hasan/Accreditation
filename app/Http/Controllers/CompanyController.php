@@ -42,7 +42,7 @@ class CompanyController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.company.company');
+        return view('pages.Company.company');
     }
 
     public function eventCompanies()
@@ -65,7 +65,7 @@ class CompanyController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.company.company');
+        return view('pages.Company.company');
     }
 
 
@@ -182,7 +182,7 @@ class CompanyController extends Controller
 //        $contactStatus2 = new SelectOption(0,'InActive');
 //        $contactStatuss = [$contactStatus1,$contactStatus2];
 
-        return view('pages.company.company-edit')->with('company',$post)->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
+        return view('pages.Company.company-edit')->with('company',$post)->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
             ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$eventid);
     }
 
@@ -274,7 +274,7 @@ class CompanyController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.company.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $Id);
+        return view('pages.Company.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $Id);
     }
 
     public function editCompanyAccreditSize($id){

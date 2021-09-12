@@ -142,7 +142,7 @@
                                     <div class="form-group col">
                                         <label>Accreditation Category</label>
                                         <div class="col-sm-9">
-                                            <select id="accreditationCategories" multiple name="accreditationCategories[]" value="" required="">
+                                            <select id="accreditationCategories" multiple name="accreditationCategories[]" value="" required="" style="height:150px">
                                                 @foreach ($accreditationCategorys as $accreditationCategory)
                                                     <option value="{{ $accreditationCategory->key }}"
 {{--@if ($key == old('myselect', $model->option))--}}

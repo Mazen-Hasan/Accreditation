@@ -79,7 +79,7 @@
                                     <div class="form-group col">
                                         <label>Title</label>
                                         <div class="col-sm-12">
-                                            <select multiple id="titles" name="titles[]" value="" required="">
+                                            <select multiple id="titles" name="titles[]" value="" required="" style="height:150px">
                                                 @foreach ($titles as $titles)
                                                     <option value="{{ $titles->key }}"
                                                             @if ($titles->key == 1)

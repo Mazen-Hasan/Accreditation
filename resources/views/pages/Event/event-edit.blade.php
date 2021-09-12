@@ -68,7 +68,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-sm-3 col-form-label">Owner</label>
+                                        <label>Owner</label>
                                         <div class="col-sm-12">
                                             <select id="owner" name="owner" required="">
                                                 @foreach ($owners as $owner)

@@ -34,7 +34,7 @@ class EventController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.event.events');
+        return view('pages.Event.events');
     }
 
 

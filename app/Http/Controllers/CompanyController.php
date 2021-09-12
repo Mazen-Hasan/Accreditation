@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AccreditationCategory;
 use App\Models\City;
 use App\Models\Company;
+use App\Models\Event;
 use App\Models\CompanyAccreditaionCategory;
 use App\Models\Country;
 use App\Models\SelectOption;
@@ -262,7 +263,7 @@ class CompanyController extends Controller
         }
         if (request()->ajax()) {
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = 1');
+            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?' ,[$Id]);
             return datatables()->of($companyAccreditationCategories)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
@@ -284,13 +285,14 @@ class CompanyController extends Controller
     }
 
     public function storeCompanyAccrCatSize($id,$accredit_cat_id,$size,$company_id){
-
+        $where = array('event_admin' => Auth::user()->id);
+        $event = Event::where($where)->get()->first();
         $post = CompanyAccreditaionCategory::updateOrCreate(['id' => $id],
             ['size' => $size,
                 'accredit_cat_id' => $accredit_cat_id,
                 'company_id'=> $company_id,
                 'subcompany_id' =>$company_id,
-                'event_id' => 1,
+                'event_id' => $event->id,
                 'status'=> 0
             ]);
         return Response::json($post);

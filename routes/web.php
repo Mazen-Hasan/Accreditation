@@ -32,6 +32,7 @@ Route::group(['middleware' => 'role:company-admin'], function() {
     Route::get('companyAdminController/editCompanyAccreditSize/{id}', 'App\Http\Controllers\CompanyAdminController@editCompanyAccreditSize');
     Route::get('companyAdminController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}', 'App\Http\Controllers\CompanyAdminController@storeCompanyAccrCatSize');
     Route::get('companyAdminController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyAdminController@destroyCompanyAccreditCat');
+    Route::get('companyAdminController/sendApproval/{id}', 'App\Http\Controllers\CompanyAdminController@sendApproval');
 //    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
 //    Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
 //    Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');

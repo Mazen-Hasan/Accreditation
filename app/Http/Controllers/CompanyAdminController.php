@@ -259,4 +259,12 @@ class CompanyAdminController extends Controller
         return Response::json($post);
 
     }
+
+    public function sendApproval($id){
+        $post = CompanyAccreditaionCategory::where('id', $id);
+        $companyAccreditCategories = CompanyAccreditaionCategory::where(['event_id'=>$post->event_id,'company_id'=> $post->company_id])
+        ->update(['status'=>1]);
+        return Response::json($post);
+
+    }
 }

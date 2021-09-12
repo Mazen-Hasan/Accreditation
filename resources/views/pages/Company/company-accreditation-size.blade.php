@@ -109,9 +109,8 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            var companyId = $('#company_id').val();
             $('#laravel_datatable').DataTable({
-
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',
@@ -124,7 +123,8 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('companyController.edit',[$companyId]) }}",
+                    {{--url: "{{ route('companyController.edit',[$companyId]) }}",--}}
+                    url: '../company-accreditation-size/'+ companyId,
                     type: 'GET',
                 },
                 columns: [
@@ -191,7 +191,7 @@
                     type: "get",
                     url: "../companyController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id,
                     success: function (data) {
-                        alert(data);
+                        //alert(data);
                         $('#ajax-crud-modal').modal('hide');
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);

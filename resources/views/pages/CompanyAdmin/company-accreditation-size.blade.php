@@ -29,6 +29,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        <a href="javascript:void(0)" class="ha_btn" id="send-approval-request">Send Approval Request</a>
                     </div>
                 </div>
             </div>
@@ -126,6 +127,7 @@
                     $('#post_id').val(data.id);
                     $('#size').val(data.size);
                     $('#accredit_cat_id').val(data.accredit_cat_id);
+                    $('#accredit_cat_id').attr('disabled', 'disabled');
                 })
             });
 
@@ -157,6 +159,23 @@
                     success: function (data) {
                         //alert(data);
                         $('#ajax-crud-modal').modal('hide');
+                        var oTable = $('#laravel_datatable').dataTable();
+                        oTable.fnDraw(false);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+            $('body').on('click', '#send-approval-request', function () {
+                var post_id = $('#id').val();
+                alert(post_id);
+                confirm("Are You sure you want to confirm Accreditation Category sizes?");
+                $.ajax({
+                    type: "get",
+                    url: "../companyAdminController/sendApproval/"+post_id,
+                    success: function (data) {
+                        alert('done');
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
                     },

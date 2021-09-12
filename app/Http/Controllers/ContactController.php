@@ -180,7 +180,7 @@ class ContactController extends Controller
         }
 
 
-        return view('pages.contact.contact-edit')->with('post',$post)->with('contactStatuss',$contactStatuss)->with('titlesSelectOptions',$titlesSelectOptions);
+        return view('pages.Contact.contact-edit')->with('post',$post)->with('contactStatuss',$contactStatuss)->with('titlesSelectOptions',$titlesSelectOptions);
     }
 
 

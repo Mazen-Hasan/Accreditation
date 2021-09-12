@@ -79,8 +79,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label class="col-form-label">Status</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="status" name="status" value="" required="">
+                                        <div class="col-sm-12">
+                                            <select id="status" name="status" value="" required="">
                                                 @foreach ($contactStatuss as $contactStatus)
                                                     <option value="{{ $contactStatus->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}

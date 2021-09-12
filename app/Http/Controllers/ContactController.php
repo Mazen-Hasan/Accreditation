@@ -129,7 +129,7 @@ class ContactController extends Controller
         $contactStatus2 = new SelectOption(0,'InActive');
         $contactStatuss = [$contactStatus1,$contactStatus2];
 
-        return view('pages.contact.contact-add')->with('titles',$titlesSelectOptions)->with('contactStatuss',$contactStatuss);
+        return view('pages.Contact.contact-add')->with('titles',$titlesSelectOptions)->with('contactStatuss',$contactStatuss);
     }
 
 

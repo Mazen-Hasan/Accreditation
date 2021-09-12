@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
 
     <script src="{{ URL::asset('js/dataTable.js') }}"></script>
+    <script src="{{ URL::asset('js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ URL::asset('js/buttons.html5.min.js') }}"></script>
+    <script src="{{ URL::asset('js/jszip.min.js') }}"></script>
+    <script src="{{ URL::asset('js/pdfmake.min.js') }}"></script>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -12,11 +16,29 @@
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
-                    @role('super-admin')
-                    <a href="{{route('eventAdd')}}" class="ha_btn" id="add-new-post" style="margin:10px">Add Event</a>
-                    @endrole
                     <div class="card-body">
-                        <h4 class="card-title">Event Table</h4>
+                        <div class="row align-content-md-center" style="height: 80px">
+                            <div class="col-md-8">
+                                <h4 class="card-title">Events</h4>
+                            </div>
+                            <div class="col-md-4 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                                    <i>
+                                        <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
+                                    </i>
+                                    <span class="dt-hbtn">Export to excel</span>
+                                </a>
+                                <span class="dt-hbtn"></span>
+                                @role('super-admin')
+                                <a href="{{route('eventAdd')}}" id="add-new-post" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">Add</span>
+                                </a>
+                                @endrole
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-hover" id="laravel_datatable" style="text-align: center">
                                 <thead>
@@ -55,6 +77,15 @@
             });
 
             $('#laravel_datatable').DataTable({
+                dom: 'lBfrtip',
+                buttons: [{
+                    extend: 'excelHtml5',
+                    title: 'Events',
+                    exportOptions: {
+                        columns: [ 1,2,3,4,5,6,7,8,9 ]
+                    }
+                }],
+
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -96,69 +127,9 @@
 
             });
 
-
-            {{--$('body').on('click', '.edit-post', function () {--}}
-            {{--    var post_id = $(this).data('id');--}}
-            {{--    // $.get('dtable-posts/'+post_id+'/edit', function (data) {--}}
-            {{--    //     $('#name-error').hide();--}}
-            {{--    //     $('#email-error').hide();--}}
-            {{--    //     $('#postCrudModal').html("Edit Post");--}}
-            {{--    //     $('#btn-save').val("edit-post");--}}
-            {{--    //     $('#ajax-crud-modal').modal('show');--}}
-            {{--    //     $('#post_id').val(data.id);--}}
-            {{--    //     $('#title').val(data.title);--}}
-            {{--    //     $('#body').val(data.body);--}}
-            {{--    // })--}}
-            {{--    //var url = '{{ route("event-edit", ":id") }}';--}}
-            {{--    var url = '{{ route("event-edit") }}';--}}
-            {{--    //rl = url.replace(':id', post_id);--}}
-            {{--    window.location.href = url;--}}
-            {{--});--}}
-            //
-            // $('body').on('click', '#edit-event', function () {
-            //     var post_id = $(this).data("id");
-            //     confirm("Are You sure want to delete !");
-            //     $.ajax({
-            //         type: "get",
-            //         url: "dtable-posts/edit/"+ post_id,
-            //         success: function (data) {
-            //             var oTable = $('#laravel_datatable').dataTable();
-            //             oTable.fnDraw(false);
-            //         },
-            //         error: function (data) {
-            //             console.log('Error:', data);
-            //         }
-            //     });
-            // });
+            $('.export-to-excel').click( function() {
+                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            });
         });
-
-        {{--if ($("#postForm").length > 0) {--}}
-        {{--    $("#postForm").validate({--}}
-        {{--        submitHandler: function(form) {--}}
-        {{--            $('#post_id').val('');--}}
-        {{--            var actionType = $('#btn-save').val();--}}
-        {{--            $('#btn-save').html('Sending..');--}}
-        {{--            alert($('#postForm').serialize());--}}
-        {{--            $.ajax({--}}
-        {{--                data: $('#postForm').serialize(),--}}
-        {{--                url: "{{ route('dtable-posts.store') }}",--}}
-        {{--                type: "POST",--}}
-        {{--                dataType: 'json',--}}
-        {{--                success: function (data) {--}}
-        {{--                    $('#postForm').trigger("reset");--}}
-        {{--                    $('#ajax-crud-modal').modal('hide');--}}
-        {{--                    $('#btn-save').html('Add successfully');--}}
-        {{--                    window.location.href = "{{ route('home')}}";--}}
-        {{--                    // var oTable = $('#laravel_datatable').dataTable();--}}
-        {{--                    // oTable.fnDraw(false);--}}
-        {{--                },--}}
-        {{--                error: function (data) {--}}
-        {{--                    console.log('Error:', data);--}}
-        {{--                    $('#btn-save').html('Save Changes');--}}
-        {{--                }--}}
-        {{--            });--}}
-        {{--        }--}}
-        {{--    })--}}
-        {{--}--}}
     </script>
 @endsection

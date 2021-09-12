@@ -3880,7 +3880,7 @@ input[type=button].btn-block {
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
-  background: #f0f0f0;
+  background: #FFFFFF;
   border-radius: 25px;
 }
 
@@ -4381,7 +4381,12 @@ input[type=button].btn-block {
 }
 
 .card-title {
-  margin-bottom: 0.75rem;
+    /*margin-bottom: 0.75rem;*/
+    font-family: Poppins-Regular;
+    font-Weight: 500;
+    font-style: normal;
+    font-size: 26px;
+    line-height: 39px;
 }
 
 .card-subtitle {

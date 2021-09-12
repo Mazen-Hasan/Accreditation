@@ -758,5 +758,33 @@ button.navbar-toggler {
     }
 }
 
+.add-hbtn {
+    font-family: Poppins-Regular;
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: 500;
+    font-style: normal;
+    color: #000000;
+    text-transform: initial;
+    text-decoration: none;
+    background: transparent;
+
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    transition: all 0.4s;
+}
+
+.add-hbtn:hover{
+    color: #000000;
+}
+
+.dt-hbtn{
+    margin-left: 11px;
+}
+
+.buttons-excel{
+    display: none;
+}
 
 

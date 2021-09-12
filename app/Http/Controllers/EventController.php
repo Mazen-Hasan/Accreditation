@@ -148,7 +148,7 @@ class EventController extends Controller
         $eventForm3 = new SelectOption(3,'Template 3');
         $eventForms = [$eventForm1,$eventForm2,$eventForm3];
 
-        return view('pages.event.event-add')->with('owners',$ownersSelectOption)->with('organizers',$organizersSelectOption)->with('eventAdmins', $eventAdmins)
+        return view('pages.Event.event-add')->with('owners',$ownersSelectOption)->with('organizers',$organizersSelectOption)->with('eventAdmins', $eventAdmins)
             ->with('securityOfficers', $securityOfficers)->with('approvalOptions',$approvalOptions)->with('eventTypes',$eventTypesSelectOption)
             ->with('eventStatuss',$eventStatuss)->with('eventForms',$eventForms)->with('securityCategories',$securityCategoriesSelectOption);
     }

@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
 
     <script src="{{ URL::asset('js/dataTable.js') }}"></script>
+    <script src="{{ URL::asset('js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ URL::asset('js/buttons.html5.min.js') }}"></script>
+    <script src="{{ URL::asset('js/jszip.min.js') }}"></script>
+    <script src="{{ URL::asset('js/pdfmake.min.js') }}"></script>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -13,9 +17,27 @@
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
-                    <a href="../company-add/{{$eventid}}" class="ha_btn" id="add-new-company" style="margin:10px">Add Company</a>
                     <div class="card-body">
-                        <h4 class="card-title">Company Table</h4>
+                        <div class="row align-content-md-center" style="height: 80px">
+                            <div class="col-md-8">
+                                <p class="card-title">Event Companies</p>
+                            </div>
+                            <div class="col-md-4 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                                    <i>
+                                        <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
+                                    </i>
+                                    <span class="dt-hbtn">Export to excel</span>
+                                </a>
+                                <span class="dt-hbtn"></span>
+                                <a href="../company-add/{{$eventid}}" id="add-new-company" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">Add</span>
+                                </a>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-hover" id="laravel_datatable" style="text-align: center">
                                 <thead>
@@ -54,6 +76,14 @@
             });
 
             $('#laravel_datatable').DataTable({
+                dom: 'lBfrtip',
+                buttons: [{
+                    extend: 'excelHtml5',
+                    title: 'Event-Companies',
+                    exportOptions: {
+                        columns: [ 2,3,4,5,6,7,8,9 ]
+                    }
+                }],
 
                 processing: true,
                 serverSide: true,
@@ -76,6 +106,10 @@
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]
+            });
+
+            $('.export-to-excel').click( function() {
+                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
             });
 
             $('#add-new-company').click(function () {

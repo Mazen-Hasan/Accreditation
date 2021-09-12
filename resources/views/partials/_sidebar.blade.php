@@ -108,6 +108,17 @@
             </a>
         </li>
         @endrole
+        @role('company-admin')
+        <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'company-admin') =="1" ? "active" : "" }}"
+               href="{{ route('company-admin') }} ">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="My events">
+                </i>
+                <span class="menu-title">Events</span>
+            </a>
+        </li>
+        @endrole
         <br>
         <li class="nav-item">
             <a class="nav-link" href="{{ route('logout') }}"

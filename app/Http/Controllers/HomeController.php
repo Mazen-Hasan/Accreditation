@@ -30,7 +30,7 @@ class HomeController extends Controller
         $role = Auth::user()->roles->first()->slug;
         switch ($role) {
             case 'super-admin':
-                return view('pages.event.events');
+                return view('pages.Event.events');
                 break;
             case 'event-admin':
                 return Redirect::to('event-admin');
@@ -38,8 +38,6 @@ class HomeController extends Controller
             case 'company-admin':
                 return Redirect::to('company-admin');
                 break;
-            default:
-                return view('pages.event.events');
         }
     }
 

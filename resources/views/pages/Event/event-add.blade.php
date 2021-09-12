@@ -106,7 +106,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class=" col-form-label">Location</label>
+                                        <label>Location</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="location" name="location" value="" placeholder="enter location"  required=""/>
                                         </div>
@@ -114,7 +114,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class=" col-form-label">Size</label>
+                                        <label>Size</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="size" name="size" placeholder="enter size" required=""/>
                                         </div>
@@ -141,7 +141,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class=" col-form-label">Security Option</label>
+                                        <label>Security Option</label>
                                         <div class="col-sm-12">
                                            <select id="approval_option" name="approval_option" required="">
                                                 @foreach ($approvalOptions as $approvalOption)
@@ -160,7 +160,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class=" col-form-label">Event Type</label>
+                                        <label>Event Type</label>
                                         <div class="col-sm-12">
                                            <select id="event_type" name="event_type" required="">
                                                 @foreach ($eventTypes as $eventType)
@@ -177,7 +177,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class=" col-form-label">Status</label>
+                                        <label>Status</label>
                                         <div class="col-sm-12">
                                            <select id="status" name="status" required="">
                                                 @foreach ($eventStatuss as $eventStatus)
@@ -196,7 +196,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label >Registration Form Template</label>
+                                        <label>Registration Form Template</label>
                                         <div class="col-sm-12">
                                            <select id="event_form" name="event_form" required="">
                                                 @foreach ($eventForms as $eventForm)

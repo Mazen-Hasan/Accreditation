@@ -78,7 +78,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class="col-form-label">Status</label>
+                                        <label>Status</label>
                                         <div class="col-sm-12">
                                             <select id="status" name="status" value="" required="">
                                                 @foreach ($contactStatuss as $contactStatus)

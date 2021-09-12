@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class=" col-form-label">Organizer</label>
+                                        <label>Organizer</label>
                                         <div class="col-sm-12">
                                            <select id="organizer" name="organizer" required="">
                                                 @foreach ($organizers as $organizer)
@@ -124,7 +124,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label class=" col-form-label">Security Officer</label>
+                                        <label>Security Officer</label>
                                         <div class="col-sm-12">
                                            <select id="security_officer" name="security_officer" required="">
                                                 @foreach ($securityOfficers as $securityOfficer)

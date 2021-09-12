@@ -203,25 +203,29 @@ class EventController extends Controller
             $securityCategoriesSelectOption[] = $securityCategorieSelectOption;
         }
 
-        $eventAdmin1 = new SelectOption(1,'eventAdmin1');
-        $eventAdmin2 = new SelectOption(2,'eventAdmin2');
-        $eventAdmin3 = new SelectOption(3,'eventAdmin3');
-        $eventAdmins = [$eventAdmin1,$eventAdmin2,$eventAdmin3];
+        $sql = 'SELECT u.id, u.name FROM users u join users_roles ur on u.id = ur.user_id join roles r on ur.role_id = r.id where r.slug = "event-admin"';
+        $eventAdminUsers = DB::select($sql);
+        $eventAdmins = array();
+        foreach($eventAdminUsers as $eventAdminUser)
+        {
+            $eventAdminSelectOption = new SelectOption($eventAdminUser->id, $eventAdminUser->name);
+            $eventAdmins[] = $eventAdminSelectOption;
+        }
 
-        $securityOfficer1 = new SelectOption(1,'securityOfficer1');
-        $securityOfficer2 = new SelectOption(2,'securityOfficer2');
-        $securityOfficer3 = new SelectOption(3,'securityOfficer3');
-        $securityOfficers = [$securityOfficer1,$securityOfficer2,$securityOfficer3];
+        $sql = 'SELECT u.id, u.name FROM users u join users_roles ur on u.id = ur.user_id join roles r on ur.role_id = r.id where r.slug = "security-officer"';
+        $securityOfficerUsers = DB::select($sql);
+
+        $securityOfficers = array();
+        foreach($securityOfficerUsers as $securityOfficerUser)
+        {
+            $securityOfficerSelectOption = new SelectOption($securityOfficerUser->id, $securityOfficerUser->name);
+            $securityOfficers[] = $securityOfficerSelectOption;
+        }
 
         $approvalOption1 = new SelectOption(1,'Event Admin Approval');
         $approvalOption2 = new SelectOption(2,'Security Officer Approval');
         $approvalOption3 = new SelectOption(3,'Both');
         $approvalOptions = [$approvalOption1,$approvalOption2,$approvalOption3];
-
-//        $eventType1 = new SelectOption(1,'Sportive');
-//        $eventType2 = new SelectOption(2,'Health');
-//        $eventType3 = new SelectOption(3,'Diplomatic');
-//        $eventTypes = [$eventType1,$eventType2,$eventType3];
 
         $eventStatus1 = new SelectOption(1,'Active');
         $eventStatus2 = new SelectOption(2,'InActive');
@@ -257,7 +261,7 @@ class EventController extends Controller
                 ->make(true);
         }
 
-        return view('pages.event.event-edit')->with('owners',$ownersSelectOption)->with('organizers',$organizersSelectOption)->with('eventAdmins', $eventAdmins)
+        return view('pages.Event.event-edit')->with('owners',$ownersSelectOption)->with('organizers',$organizersSelectOption)->with('eventAdmins', $eventAdmins)
             ->with('securityOfficers', $securityOfficers)->with('approvalOptions',$approvalOptions)->with('eventTypes',$eventTypesSelectOption)
             ->with('eventStatuss',$eventStatuss)->with('eventForms',$eventForms)->with('post',$post)->with('securityCategories',$securityCategoriesSelectOption);;
     }

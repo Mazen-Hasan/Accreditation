@@ -80,7 +80,7 @@
                                     <div class="form-group col">
                                         <label>Status</label>
                                         <div class="col-sm-12">
-                                            <select id="status" name="status" value="" required="">
+                                            <select id="status" name="status" value="" required="" style="">
                                                 @foreach ($contactStatuss as $contactStatus)
                                                     <option value="{{ $contactStatus->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}

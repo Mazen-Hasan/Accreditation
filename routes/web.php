@@ -112,6 +112,12 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
     Route::get('/participant-edit/{id}', [App\Http\Controllers\ParticipantController::class, 'edit'])->name('participantEdit');
 
+    Route::get('/templates', [App\Http\Controllers\TemplateController::class, 'index'])->name('templates');
+    Route::get('/template-add', [App\Http\Controllers\TemplateController::class, 'templateAdd'])->name('templateAdd');
+    Route::resource('templateController', 'App\Http\Controllers\TemplateController');
+    Route::get('templateController/destroy/{id}', 'App\Http\Controllers\TemplateController@destroy');
+    Route::get('templateController/changeStatus/{id}/{status}', 'App\Http\Controllers\TemplateController@changeStatus');
+
 });
 
 //Auth::routes();

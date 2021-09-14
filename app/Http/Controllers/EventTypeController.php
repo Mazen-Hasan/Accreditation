@@ -84,7 +84,5 @@ class EventTypeController extends Controller
             ]);
         return Response::json($post);
     }
-
-
 }
 

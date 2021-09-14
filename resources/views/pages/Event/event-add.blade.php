@@ -215,7 +215,7 @@
                                     <div class="form-group col">
                                         <label>Security Group</label>
                                         <div class="col-sm-12">
-                                            <select  multiple id="security_categories" name="security_categories[]" required="" style="height: 150px">
+                                            <select  multiple id="security_categories" name="security_categories[]" required="">
                                                 @foreach ($securityCategories as $securityCategory)
                                                     <option value="{{ $securityCategory->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}

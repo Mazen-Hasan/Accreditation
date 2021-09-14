@@ -89,16 +89,26 @@
                                     <div class="form-group col">
                                         <label>Country</label>
                                         <div class="col-sm-9">
-                                            <select id="country" name="country" value="" required="">
+                                            <input list="country" name="browser">
+                                            <datalist id="country">
                                                 @foreach ($countrys as $country)
-                                                    <option value="{{ $country->key }}"
-                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                    <option id="{{ $country->key }}"
                                                             @if ($country->key == 1)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $country->value }}</option>
                                                 @endforeach
-                                            </select>
+                                            </datalist>
+{{--                                            <select id="country" name="country" value="" required="">--}}
+{{--                                                @foreach ($countrys as $country)--}}
+{{--                                                    <option value="{{ $country->key }}"--}}
+{{--                                                            --}}{{--                                                            @if ($key == old('myselect', $model->option))--}}
+{{--                                                            @if ($country->key == 1)--}}
+{{--                                                            selected="selected"--}}
+{{--                                                        @endif--}}
+{{--                                                    >{{ $country->value }}</option>--}}
+{{--                                                @endforeach--}}
+{{--                                            </select>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -106,6 +116,18 @@
                                     <div class="form-group col">
                                         <label>City</label>
                                         <div class="col-sm-9">
+
+                                            <input list="country" name="browser">
+                                            <datalist id="country">
+                                                @foreach ($citys as $city)
+                                                    <option id="{{ $city->key }}"
+                                                            @if ($country->key == 1)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $city->value }}</option>
+                                                @endforeach
+                                            </datalist>
+
                                             <select id="city" name="city" value="" required="">
                                                 @foreach ($citys as $city)
                                                     <option value="{{ $city->key }}"

@@ -250,7 +250,7 @@ class CompanyController extends Controller
             ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$id);
     }
 
-    public function companyAccreditCat($Id)
+    public function companyAccreditCat($Id,$eventId)
     {
         $where = array('status' => 1);
         $accreditationCategorysSelectOptions = array();
@@ -261,9 +261,15 @@ class CompanyController extends Controller
             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
+        $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?' ,[$Id, $eventId]);
+        $status = 0;
+        foreach($companyAccreditationCategories as $companyAccreditationCategory){
+            $status = $companyAccreditationCategory->status;
+        }
+
         if (request()->ajax()) {
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?' ,[$Id]);
+            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ? and event_id = ?' ,[$Id, $eventId]);
             return datatables()->of($companyAccreditationCategories)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
@@ -274,7 +280,7 @@ class CompanyController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.Company.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $Id);
+        return view('pages.Company.company-accreditation-size-new')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $Id)->with('eventId',$eventId)->with('status',$status);
     }
 
     public function editCompanyAccreditSize($id){
@@ -284,16 +290,16 @@ class CompanyController extends Controller
         return Response::json($post);
     }
 
-    public function storeCompanyAccrCatSize($id,$accredit_cat_id,$size,$company_id){
-        $where = array('event_admin' => Auth::user()->id);
-        $event = Event::where($where)->get()->first();
+    public function storeCompanyAccrCatSize($id,$accredit_cat_id,$size,$company_id,$event_id){
+        // $where = array('event_admin' => Auth::user()->id);
+        // $event = Event::where($where)->get()->first();
         $post = CompanyAccreditaionCategory::updateOrCreate(['id' => $id],
             ['size' => $size,
                 'accredit_cat_id' => $accredit_cat_id,
                 'company_id'=> $company_id,
                 'subcompany_id' =>$company_id,
-                'event_id' => $event->id,
-                'status'=> 0
+                'event_id' => $event_id,
+                'status'=> 2
             ]);
         return Response::json($post);
     }
@@ -301,6 +307,15 @@ class CompanyController extends Controller
     public function destroyCompanyAccreditCat($id){
         $post = CompanyAccreditaionCategory::where('id', $id)->delete();
         return Response::json($post);
+
+    }
+
+    public function Approve($companyId,$eventId){
+        $where = array('company_id' => $companyId,'event_id'=>$eventId);
+        //$post = CompanyAccreditaionCategory::where($where);
+        $companyAccreditCategories = CompanyAccreditaionCategory::where($where)
+        ->update(['status'=>2]);
+        return Response::json($companyAccreditCategories);
 
     }
 

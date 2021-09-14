@@ -52,6 +52,11 @@
                                 </tbody>
                             </table>
                         </div>
+                        @if($status == 1)
+                        <a href="javascript:void(0)" class="ha_btn" id="approve">
+                                                Approve
+                                        </a>
+                                        @endif
                     </div>
                 </div>
             </div>
@@ -66,6 +71,8 @@
                 <div class="modal-body">
 {{--                    <form id="postForm" name="postForm" class="form-horizontal">--}}
                         <input type="hidden" name="company_id" id="company_id" value="{{$companyId}}">
+                        <input type="hidden" name="event_id" id="event_id" value="{{$eventId}}">
+                        <input type="hidden" name="status" id="status" value="{{$status}}">
                         <input type="hidden" name="post_id" id="post_id" value="">
                         <div class="form-group">
                             <label>Accreditation Category</label>
@@ -110,6 +117,8 @@
                 }
             });
             var companyId = $('#company_id').val();
+            var eventId = $('#event_id').val();
+            //alert(eventId);
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
@@ -124,7 +133,7 @@
                 serverSide: true,
                 ajax: {
                     {{--url: "{{ route('companyController.edit',[$companyId]) }}",--}}
-                    url: '../company-accreditation-size/'+ companyId,
+                    url: '../../company-accreditation-size-new/'+ companyId + '/' + eventId,
                     type: 'GET',
                 },
                 columns: [
@@ -153,7 +162,7 @@
             $('body').on('click', '#edit-company-accreditation', function () {
                 var post_id = $(this).data('id');
                 //alert(post_id);
-                $.get('../companyController/editCompanyAccreditSize/'+post_id, function (data) {
+                $.get('../../companyController/editCompanyAccreditSize/'+post_id, function (data) {
                     $('#name-error').hide();
                     $('#email-error').hide();
                     $('#postCrudModal').html("Edit Company Accreditation Category");
@@ -185,14 +194,34 @@
                 var size = $('#size').val();
                 var post_id = $('#post_id').val();
                 var company_id = $('#company_id').val();
+                var eventId = $('#event_id').val();
                 //alert('hey hey');
                 //confirm("Are You sure want to deActivate ?!");
                 $.ajax({
                     type: "get",
-                    url: "../companyController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id,
+                    url: "../../companyController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id+"/"+eventId,
                     success: function (data) {
                         //alert(data);
                         $('#ajax-crud-modal').modal('hide');
+                        var oTable = $('#laravel_datatable').dataTable();
+                        oTable.fnDraw(false);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+            $('body').on('click', '#approve', function () {
+                var post_id = $('#id').val();
+                //alert(post_id);
+                var company_id = $('#company_id').val();
+                var eventId = $('#event_id').val();
+                confirm("Are You sure you want to Approve Accreditation Category sizes?");
+                $.ajax({
+                    type: "get",
+                    url: "../../companyController/Approve/"+company_id+"/"+eventId,
+                    success: function (data) {
+                        alert('done');
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
                     },

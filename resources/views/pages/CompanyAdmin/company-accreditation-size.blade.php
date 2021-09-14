@@ -12,7 +12,9 @@
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
+                    @if($status == 0)
                     <a href="javascript:void(0)" class="ha_btn" id="add-new-post" style="margin: 10px">Add Accreditation Size</a>
+                    @endif
                     <div class="card-body">
                         <h4 class="card-title">Accreditation Size Table</h4>
                         <div class="table-responsive">
@@ -22,14 +24,35 @@
                                     <th>ID</th>
                                     <th>Accreditation Category</th>
                                     <th>Size</th>
+                                    @if($status == 0)
                                     <th>Action</th>
+                                    @endif
+                                    @if($status != 0)
+                                    <th>Status</th> 
+                                    @endif
+                                    <!-- <th>Action</th> -->
                                 </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                             </table>
                         </div>
-                        <a href="javascript:void(0)" class="ha_btn" id="send-approval-request">Send Approval Request</a>
+                        @if($status == 0)
+                        <a href="javascript:void(0)" class="ha_btn" id="send-approval-request">
+                        <!-- @if ($status == 1)
+                            style="background-color:green"
+                        @endif>                                        
+                            @if ($status == 0) -->
+                                                Aprroval Request
+                                            <!-- @endif
+                                            @if ($status == 1)
+                                                Waiting Event Admin Approval
+                                            @endif
+                                            @if ($status == 2)
+                                                Apprvoed
+                                            @endif -->
+                                        </a>
+                                        @endif
                     </div>
                 </div>
             </div>
@@ -44,6 +67,8 @@
                 <div class="modal-body">
 {{--                    <form id="postForm" name="postForm" class="form-horizontal">--}}
                         <input type="hidden" name="company_id" id="company_id" value="{{$companyId}}">
+                        <input type="hidden" name="event_id" id="event_id" value="{{$eventId}}">
+                        <input type="hidden" name="status" id="status" value="{{$status}}">
                         <input type="hidden" name="post_id" id="post_id" value="">
                         <div class="form-group">
                             <label>Accreditation Category</label>
@@ -87,20 +112,21 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            var eventId = $('#event_id').val();
+            var status = $('#status').val();
             $('#laravel_datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
                     {{--url: "{{ route('companyAdminController.companyAccreditCategories') }}",--}}
-                    url: '../company-accreditation-size',
+                    url: '../company-accreditation-size/' + eventId,
                     type: 'GET',
                 },
                 columns: [
                     { data: 'id', name: 'id', 'visible': false},
                     { data: 'name', name: 'name' },
                     { data: 'size', name: 'size' },
-                    {data: 'action', name: 'action', orderable: false}
+                    { data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
             });
@@ -112,6 +138,7 @@
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Accreditation Category");
                 $('#ajax-crud-modal').modal('show');
+                $('#accredit_cat_id').attr('disabled', false);
             });
 
 
@@ -151,11 +178,13 @@
                 var size = $('#size').val();
                 var post_id = $('#post_id').val();
                 var company_id = $('#company_id').val();
+                var eventId = $('#event_id').val();
                 //alert('hey hey');
                 //confirm("Are You sure want to deActivate ?!");
                 $.ajax({
                     type: "get",
-                    url: "../companyAdminController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id,
+                    url: "../companyAdminController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id+"/"+eventId,
+                    // url: "../companyAdminController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id,
                     success: function (data) {
                         //alert(data);
                         $('#ajax-crud-modal').modal('hide');
@@ -169,11 +198,13 @@
             });
             $('body').on('click', '#send-approval-request', function () {
                 var post_id = $('#id').val();
-                alert(post_id);
+                //alert(post_id);
+                var company_id = $('#company_id').val();
+                var eventId = $('#event_id').val();
                 confirm("Are You sure you want to confirm Accreditation Category sizes?");
                 $.ajax({
                     type: "get",
-                    url: "../companyAdminController/sendApproval/"+post_id,
+                    url: "../companyAdminController/sendApproval/"+company_id+"/"+eventId,
                     success: function (data) {
                         alert('done');
                         var oTable = $('#laravel_datatable').dataTable();

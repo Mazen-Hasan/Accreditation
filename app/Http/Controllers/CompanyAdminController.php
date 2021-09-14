@@ -186,11 +186,18 @@ class CompanyAdminController extends Controller
         return view('pages.CompanyAdmin.company-participant-edit')->with('post', $post)->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption',$religions);;
     }
 
-    public function companyAccreditCategories()
+    public function companyAccreditCategories($eventId)
     {
+        //$eventId = $request->eventId;
 
         $where = array('company_admin_id' => Auth::user()->id);
         $company = Company::where($where)->get()->first();
+        $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?',[$company->id,$eventId]);
+        $status = 1;
+        foreach($companyAccreditationCategories as $companyAccreditationCategory)
+        {
+            $status = $companyAccreditationCategory->status;
+        }
 
         $where = array('status' => 1);
         $accreditationCategorysSelectOptions = array();
@@ -201,26 +208,20 @@ class CompanyAdminController extends Controller
             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
-//        if (request()->ajax()) {
-//            //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-//            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?' , [$company->id]);
-//            return datatables()->of($companyAccreditationCategories)
-//                ->addColumn('action', function ($data) {
-//                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
-//                    $button .= '&nbsp;&nbsp;';
-//                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
-//                    return $button;
-//                })
-//                ->rawColumns(['action'])
-//                ->make(true);
-//        }
+
         if (request()->ajax()) {
-//            var_dump('title');
-//            exit;
-            $where = array('company_admin_id' => Auth::user()->id);
+            $where = array('company_admin_id' => Auth::user()->id,'event_id' =>$eventId);
             $company = Company::where($where)->get()->first();
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',[$company->id]);
+            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ? and event_id = ?',[$company->id,$eventId]);
+            $companyAccreditationCategoriesStatuss= DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?',[$company->id,$eventId]);
+            $status = 1;
+            foreach($companyAccreditationCategoriesStatuss as $companyAccreditationCategoriesStatus)
+            {
+                $status = $companyAccreditationCategoriesStatus->status;
+            }
+            // $status = 1;
+            if($status == 0){
             return datatables()->of($companyAccreditationCategories)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
@@ -230,8 +231,27 @@ class CompanyAdminController extends Controller
                 })
                 ->rawColumns(['action'])
                 ->make(true);
+            }else{
+                if($status == 1){
+                return datatables()->of($companyAccreditationCategories)
+                ->addColumn('action', function ($data) {
+                    $button = 'Waiting for approval';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->make(true);  
+                }else{
+                    return datatables()->of($companyAccreditationCategories)
+                    ->addColumn('action', function ($data) {
+                        $button = 'Approved';
+                        return $button;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+                }
+            }
         }
-        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $company->id);
+        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId',$eventId)->with('status',$status);
     }
 
     public function editCompanyAccreditSize($id){
@@ -241,14 +261,14 @@ class CompanyAdminController extends Controller
         return Response::json($post);
     }
 
-    public function storeCompanyAccrCatSize($id,$accredit_cat_id,$size,$company_id){
+    public function storeCompanyAccrCatSize($id,$accredit_cat_id,$size,$company_id,$event_id){
 
         $post = CompanyAccreditaionCategory::updateOrCreate(['id' => $id],
             ['size' => $size,
                 'accredit_cat_id' => $accredit_cat_id,
                 'company_id'=> $company_id,
                 'subcompany_id' =>$company_id,
-                'event_id' => 1,
+                'event_id' => $event_id,
                 'status'=> 0
             ]);
         return Response::json($post);
@@ -260,11 +280,12 @@ class CompanyAdminController extends Controller
 
     }
 
-    public function sendApproval($id){
-        $post = CompanyAccreditaionCategory::where('id', $id);
-        $companyAccreditCategories = CompanyAccreditaionCategory::where(['event_id'=>$post->event_id,'company_id'=> $post->company_id])
+    public function sendApproval($companyId,$eventId){
+        $where = array('company_id' => $companyId,'event_id'=>$eventId);
+        //$post = CompanyAccreditaionCategory::where($where);
+        $companyAccreditCategories = CompanyAccreditaionCategory::where($where)
         ->update(['status'=>1]);
-        return Response::json($post);
+        return Response::json($companyAccreditCategories);
 
     }
 }

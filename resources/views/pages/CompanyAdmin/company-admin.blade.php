@@ -84,7 +84,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <a href="{{route('companyAccreditCategories')}}" class="ha_btn">company categories</a>
+                                                <!-- <a href="{{route('companyAccreditCategories',['eventId' => $event->id])}}" class="ha_btn">company categories</a> -->
+                                                <a href='company-accreditation-size/{{$event->id}}'class="ha_btn">company categories</a>
                                             </div>
                                         </div>
                                     </div>

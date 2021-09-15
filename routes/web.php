@@ -119,8 +119,9 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('templateController/changeStatus/{id}/{status}', 'App\Http\Controllers\TemplateController@changeStatus');
 
     Route::resource('userController', 'App\Http\Controllers\UserController');
-    Route::get('/users', [App\Http\Controllers\ParticipantController::class, 'index'])->name('users');
-    Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
+    Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users');
+    Route::get('/users-add', [App\Http\Controllers\UserController::class, 'userAdd'])->name('userAdd');
+    Route::get('/users-edit/{id}', [App\Http\Controllers\UserController::class, 'userEdit'])->name('userEdit');
     // Route::get('/participant-edit/{id}', [App\Http\Controllers\ParticipantController::class, 'edit'])->name('participantEdit');
 
 });

@@ -24,7 +24,7 @@ class UserController extends Controller
             $users = DB::select('select * from users_view');
             return datatables()->of($users)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="" data-toggle="tooltip"  id="edit-event" data-id="'.$data->user_id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    $button = '<a href="' . route('userEdit', $data->user_id) . '" data-toggle="tooltip"  id="edit-event" data-id="'.$data->user_id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button .= '&nbsp;&nbsp;';
                     return $button;
                 })
@@ -68,28 +68,29 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $companyId = $request->post_id;
+        if($companyId == null){
         $company = User::updateOrCreate(['id' => $companyId],
             ['name' => $request->name,
                 'password' => Hash::make($request->password),
                 'email' => $request->email,
             ]);
+        }else{
+            $company = User::updateOrCreate(['id' => $companyId],
+            ['name' => $request->name,
+                'email' => $request->email,
+            ]); 
+        }
         if($companyId == null) {
-            // foreach ($request->accreditationCategories as $accreditationCategory) {
-            //     $help = CompanyAccreditaionCategory::updateOrCreate(['id' => 0],
-            //         ['accredit_cat_id' => $accreditationCategory,
-            //             'company_id' => $company->id,
-            //             'subcompany_id' => $company->id,
-            //             'status' => 0,
-            //             'event_id' => $request->event_id,
-            //             'size' => 0
-            //         ]);
-            // }
             DB::table('users_roles')->insert(
                 array(
                        'user_id'     =>   $company->id, 
                        'role_id'   =>   $request->role
                 )
            );
+        }else{
+           DB::table('users_roles')->where('user_id',$companyId)->update(array(
+            'role_id' =>$request->role,
+            ));
         }
 
         return Response::json($company);
@@ -106,82 +107,20 @@ class UserController extends Controller
 
     }
 
-    public function edit($id, $eventid)
+    public function userEdit($id)
     {
-        $where = array('id' => $id);
-        $post = Company::where($where)->first();
-
-        $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Focal Point")';
-        $query = $sql;
-        $contacts = DB::select($query);
-        $focalPointsOption = array();
-        foreach($contacts as $contact)
-        {
-            $focalPointSelectOption = new SelectOption($contact->id, $contact->name);
-            $focalPointsOption[] = $focalPointSelectOption;
+        //$where = array('id' => $id);
+        $users = DB::select('select * from users_view where user_id = ?', [$id]);
+        foreach($users as $row){
+            $user = $row;
         }
-
-        $countrysSelectOptions = array();
-        $countries = Country::get()->all();
-
-        foreach ($countries as $country) {
-            $countrySelectOption = new SelectOption($country->id, $country->name);
-            $countrysSelectOptions[] = $countrySelectOption;
+        $roles = DB::select('select * from roles');
+        $roleSelectOptions = array();
+        foreach($roles as $role){
+            $roleSelectOption = new SelectOption($role->id,$role->name);
+            $roleSelectOptions[] = $roleSelectOption;
         }
-
-        $citysSelectOptions = array();
-        $cities = City::get()->all();
-
-        foreach ($cities as $city) {
-            $citySelectOption = new SelectOption($city->id, $city->name);
-            $citysSelectOptions[] = $citySelectOption;
-        }
-
-        $where = array('status' => 1);
-        $categorysSelectOptions = array();
-        $categories = CompanyCategory::where($where)->get()->all();
-
-        foreach($categories as $category)
-        {
-            $categorySelectOption = new SelectOption($category->id, $category->name);
-            $categorysSelectOptions[] = $categorySelectOption;
-        }
-
-        $where = array('status' => 1);
-        $accreditationCategorysSelectOptions = array();
-        $accreditationCategories = AccreditationCategory::where($where)->get()->all();
-
-        foreach($accreditationCategories as $accreditationCategory)
-        {
-            $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
-            $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
-        }
-
-        if (request()->ajax()) {
-            //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',[$id]);
-            return datatables()->of($companyAccreditationCategories)
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
-                    return $button;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-
-
-
-//
-//
-//
-//        $contactStatus1 = new SelectOption(1,'Active');
-//        $contactStatus2 = new SelectOption(0,'InActive');
-//        $contactStatuss = [$contactStatus1,$contactStatus2];
-
-        return view('pages.Company.company-edit')->with('company',$post)->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$eventid);
+        return view('pages.Users.user-edit')->with('user',$user)->with('roles',$roleSelectOptions);
     }
 
 

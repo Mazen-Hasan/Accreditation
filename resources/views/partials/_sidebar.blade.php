@@ -69,6 +69,15 @@
                 <span class="menu-title">Event types</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'templates') =="1" ? "active" : "" }}"
+               href="{{ route('templates') }}">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="Templates">
+                </i>
+                <span class="menu-title">Templates</span>
+            </a>
+        </li>
 {{--        <li class="nav-item">--}}
 {{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'companies') =="1" ? "active" : "" }}"--}}
 {{--               href="{{ route('companies') }}">--}}

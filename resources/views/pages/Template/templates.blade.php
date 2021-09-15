@@ -21,7 +21,7 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Company Categories</p>
+                                <p class="card-title">Templates</p>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -31,7 +31,7 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                <a href="javascript:void(0)" id="add-new-category" class="add-hbtn">
+                                <a href="{{route('templateAdd')}}" id="add-new-template" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
@@ -62,11 +62,11 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="postCrudModal"></h4>
+                    <h4 class="modal-title" id="modalTitle"></h4>
                 </div>
                 <div class="modal-body">
-                    <form id="categoryForm" name="categoryForm" class="form-horizontal">
-                        <input type="hidden" name="category_id" id="category_id">
+                    <form id="templateForm" name="templateForm" class="form-horizontal">
+                        <input type="hidden" name="template_id" id="template_id">
                         <div class="form-group">
                             <label for="name" class="col-sm-2 control-label">Name</label>
                             <div class="col-sm-12">
@@ -99,13 +99,12 @@
     <div class="modal fade" id="confirmModal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-
                 <div class="modal-header">
-                            <h5 class="modal-title" id="confirmTitle"></h5>
+                    <h5 class="modal-title" id="confirmTitle"></h5>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="hidden" id="curr_category_id">
+                        <input type="hidden" id="curr_template_id">
                         <input type="hidden" id="mode_id">
                         <label class="col-sm-12 control-label" id="confirmText"></label>
                     </div>
@@ -138,7 +137,7 @@
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',
-                    title: 'Company-Categories',
+                    title: 'Templates',
                     exportOptions: {
                         columns: [ 1,2 ]
                     }
@@ -147,7 +146,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('companyCategoryController.index') }}",
+                    url: "{{ route('templateController.index') }}",
                     type: 'GET',
                 },
                 columns: [
@@ -163,34 +162,34 @@
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
-            $('#add-new-category').click(function () {
-                $('#btn-save').val("create-category");
-                $('#category_id').val('');
-                $('#postForm').trigger("reset");
-                $('#postCrudModal').html("New Company Category");
+            $('#add-new-template').click(function () {
+                $('#btn-save').val("create-template");
+                $('#template_id').val('');
+                $('#templateForm').trigger("reset");
+                $('#modalTitle').html("New template");
                 $('#ajax-crud-modal').modal('show');
             });
 
-            $('body').on('click', '.edit-category', function () {
-                var category_id = $(this).data('id');
-                $.get('companyCategoryController/'+category_id+'/edit', function (data) {
+            $('body').on('click', '.edit-template', function () {
+                var template_id = $(this).data('id');
+                $.get('templateController/'+template_id+'/edit', function (data) {
                     $('#name-error').hide();
-                    $('#postCrudModal').html("Edit Company Category");
-                    $('#btn-save').val("edit-category");
+                    $('#modalTitle').html("Edit Company template");
+                    $('#btn-save').val("edit-template");
                     $('#ajax-crud-modal').modal('show');
-                    $('#category_id').val(data.id);
+                    $('#template_id').val(data.id);
                     $('#name').val(data.name);
                     $('#status').val(data.status);
                     // alert($('#name').val(data.name).val());
                 })
             });
 
-            $('body').on('click', '#delete-category', function () {
-                var category_id = $(this).data("id");
+            $('body').on('click', '#delete-template', function () {
+                var template_id = $(this).data("id");
                 confirm("Are You sure want to delete !");
                 $.ajax({
                     type: "get",
-                    url: "companyCategoryController/destroy/"+ category_id,
+                    url: "templateController/destroy/"+ template_id,
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -201,26 +200,26 @@
                 });
             });
 
-            $('body').on('click', '#activate-category', function () {
-                var category_id = $(this).data("id");
-                $('#confirmTitle').html('Activate Category');
-                $('#curr_category_id').val(category_id);
+            $('body').on('click', '#activate-template', function () {
+                var template_id = $(this).data("id");
+                $('#confirmTitle').html('Activate template');
+                $('#curr_template_id').val(template_id);
                 $('#mode_id').val('1');
-                var confirmText =  'Are you sure you want to activate this category?';
+                var confirmText =  'Are you sure you want to activate this template?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
 
             $('#confirmModal button').on('click', function(event) {
                 var $button = $(event.target);
-                console.log($button);
+
                 $(this).closest('.modal').one('hidden.bs.modal', function() {
                     if($button[0].id === 'btn-yes'){
-                        var category_id = $('#curr_category_id').val();
+                        var template_id = $('#curr_template_id').val();
                         var mode_id = $('#mode_id').val();
                         $.ajax({
                             type: "get",
-                            url: "companyCategoryController/changeStatus/"+category_id+"/" + mode_id,
+                            url: "templateController/changeStatus/"+template_id+"/" + mode_id,
                             success: function (data) {
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);
@@ -233,29 +232,30 @@
                 });
             });
 
-            $('body').on('click', '#deActivate-category', function () {
-                var category_id = $(this).data("id");
-                $('#confirmTitle').html('Deactivate Category');
-                $('#curr_category_id').val(category_id);
+            $('body').on('click', '#deActivate-template', function () {
+                var template_id = $(this).data("id");
+                $('#confirmTitle').html('Deactivate template');
+                $('#curr_template_id').val(template_id);
                 $('#mode_id').val('0');
-                var confirmText =  'Are you sure you want to deactivate this category?';
+                var confirmText =  'Are you sure you want to deactivate this template?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
         });
 
-        if ($("#categoryForm").length > 0) {
-            $("#categoryForm").validate({
+        if ($("#templateForm").length > 0) {
+            console.log('Sending...');
+            $("#templateForm").validate({
                 submitHandler: function(form) {
                     $('#btn-save').html('Sending..');
 
                     $.ajax({
-                        data: $('#categoryForm').serialize(),
-                        url: "{{ route('companyCategoryController.store') }}",
+                        data: $('#templateForm').serialize(),
+                        url: "{{ route('templateController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
-                            $('#postForm').trigger("reset");
+                            $('#templateForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
                             var oTable = $('#laravel_datatable').dataTable();

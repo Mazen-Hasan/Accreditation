@@ -83,6 +83,7 @@ class ContactController extends Controller
 
     public function store(Request $request)
     {
+        $num = 0;
         //xdebug_break();
         $postId = $request->post_id;
         $post   =   Contact::updateOrCreate(['id' => $postId],

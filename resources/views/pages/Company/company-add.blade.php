@@ -89,26 +89,25 @@
                                     <div class="form-group col">
                                         <label>Country</label>
                                         <div class="col-sm-9">
-                                            <input list="country" name="browser">
-                                            <datalist id="country">
-                                                @foreach ($countrys as $country)
-                                                    <option id="{{ $country->key }}"
-                                                            @if ($country->key == 1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $country->value }}</option>
-                                                @endforeach
-                                            </datalist>
-{{--                                            <select id="country" name="country" value="" required="">--}}
+{{--                                            <input list="country" name="country">--}}
+{{--                                            <datalist id="country">--}}
 {{--                                                @foreach ($countrys as $country)--}}
-{{--                                                    <option value="{{ $country->key }}"--}}
-{{--                                                            --}}{{--                                                            @if ($key == old('myselect', $model->option))--}}
+{{--                                                    <option id="{{ $country->key }}"--}}
 {{--                                                            @if ($country->key == 1)--}}
 {{--                                                            selected="selected"--}}
 {{--                                                        @endif--}}
 {{--                                                    >{{ $country->value }}</option>--}}
 {{--                                                @endforeach--}}
-{{--                                            </select>--}}
+{{--                                            </datalist>--}}
+                                            <select id="country" name="country" value="" required="">
+                                                @foreach ($countrys as $country)
+                                                    <option value="{{ $country->key }}"
+                                                            @if ($country->key == 1)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $country->value }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -116,22 +115,20 @@
                                     <div class="form-group col">
                                         <label>City</label>
                                         <div class="col-sm-9">
-
-                                            <input list="country" name="browser">
-                                            <datalist id="country">
-                                                @foreach ($citys as $city)
-                                                    <option id="{{ $city->key }}"
-                                                            @if ($country->key == 1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $city->value }}</option>
-                                                @endforeach
-                                            </datalist>
+{{--                                            <input list="city-list" id="city" name="city">--}}
+{{--                                            <datalist id="city-list">--}}
+{{--                                                @foreach ($citys as $city)--}}
+{{--                                                    <option id="{{ $city->key }}" value="{{ $city->value }}"--}}
+{{--                                                            @if ($city->key == 1)--}}
+{{--                                                            selected="selected"--}}
+{{--                                                        @endif--}}
+{{--                                                    ></option>--}}
+{{--                                                @endforeach--}}
+{{--                                            </datalist>--}}
 
                                             <select id="city" name="city" value="" required="">
                                                 @foreach ($citys as $city)
                                                     <option value="{{ $city->key }}"
-                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($city->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -214,7 +211,7 @@
                     var $eventid = $('#event_id').val();
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    //alert($('#postForm').serialize());
+                    alert($('#postForm').serialize());
                     $(":input,:hidden").serialize();
                     $.ajax({
                         data: $('#postForm').serialize(),

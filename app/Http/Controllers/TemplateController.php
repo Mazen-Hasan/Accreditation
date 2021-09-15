@@ -7,6 +7,7 @@ use App\Models\SelectOption;
 use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class TemplateController extends Controller
@@ -73,6 +74,17 @@ class TemplateController extends Controller
                 'status' => $request->status,
                 'creator' => Auth::user()->id
             ]);
+
+        $query =  'select p.label_ar, p.label_en, p.mandatory, p.min_char, p.max_char, p.field_type_id  from pre_defined_fields  p';
+        $pre_defined_fields_res = DB::select($query);
+
+//        foreach($pre_defined_fields_res as $row){
+//            echo $row['label_en'];
+//        }
+//
+//        exit();
+//
+//        DB::insert('insert into template_fields(label_ar, label_en, mandatory, min_char,  max_char, field_type_id)');
         return Response::json($post);
     }
 

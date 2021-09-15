@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\EventSecurityCategory;
 use App\Models\EventType;
 use App\Models\SecurityCategory;
+use App\Models\Template;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Event;
@@ -107,7 +108,7 @@ class EventController extends Controller
             $ownersSelectOption[] = $ownerSelectOption;
         }
 
-        $securityCategories = SecurityCategory::get()->all();
+        $securityCategories = SecurityCategory::get()->where('status','=','1');
         $securityCategoriesSelectOption = array();
         foreach($securityCategories as $securityCategory)
         {
@@ -115,7 +116,7 @@ class EventController extends Controller
             $securityCategoriesSelectOption[] = $securityCategorieSelectOption;
         }
 
-        $eventTypes = EventType::get()->all();
+        $eventTypes = EventType::get()->where('status','=','1');
         $eventTypesSelectOption = array();
         foreach($eventTypes as $eventType)
         {
@@ -151,14 +152,17 @@ class EventController extends Controller
         $eventStatus2 = new SelectOption(2,'InActive');
         $eventStatuss = [$eventStatus1,$eventStatus2];
 
-        $eventForm1 = new SelectOption(1,'Template 1');
-        $eventForm2 = new SelectOption(2,'Template 2');
-        $eventForm3 = new SelectOption(3,'Template 3');
-        $eventForms = [$eventForm1,$eventForm2,$eventForm3];
+        $templates = Template::get()->where('status','=','1');
+        $templatesSelectOption = array();
+        foreach($templates as $template)
+        {
+            $templateSelectOption = new SelectOption($template->id, $template->name);
+            $templatesSelectOption[] = $templateSelectOption;
+        }
 
         return view('pages.Event.event-add')->with('owners',$ownersSelectOption)->with('organizers',$organizersSelectOption)->with('eventAdmins', $eventAdmins)
             ->with('securityOfficers', $securityOfficers)->with('approvalOptions',$approvalOptions)->with('eventTypes',$eventTypesSelectOption)
-            ->with('eventStatuss',$eventStatuss)->with('eventForms',$eventForms)->with('securityCategories',$securityCategoriesSelectOption);
+            ->with('eventStatuss',$eventStatuss)->with('eventForms',$templatesSelectOption)->with('securityCategories',$securityCategoriesSelectOption);
     }
 
 
@@ -187,7 +191,7 @@ class EventController extends Controller
             $ownersSelectOption[] = $ownerSelectOption;
         }
 
-        $eventTypes = EventType::get()->all();
+        $eventTypes = EventType::get()->where('status','=','1');
         $eventTypesSelectOption = array();
         foreach($eventTypes as $eventType)
         {
@@ -195,7 +199,7 @@ class EventController extends Controller
             $eventTypesSelectOption[] = $eventTypeSelectOption;
         }
 
-        $securityCategories = SecurityCategory::get()->all();
+        $securityCategories = SecurityCategory::get()->where('status','=','1');
         $securityCategoriesSelectOption = array();
         foreach($securityCategories as $securityCategory)
         {
@@ -231,10 +235,14 @@ class EventController extends Controller
         $eventStatus2 = new SelectOption(2,'InActive');
         $eventStatuss = [$eventStatus1,$eventStatus2];
 
-        $eventForm1 = new SelectOption(1,'Template 1');
-        $eventForm2 = new SelectOption(2,'Template 2');
-        $eventForm3 = new SelectOption(3,'Template 3');
-        $eventForms = [$eventForm1,$eventForm2,$eventForm3];
+
+        $templates = Template::get()->where('status','=','1');
+        $templatesSelectOption = array();
+        foreach($templates as $template)
+        {
+            $templateSelectOption = new SelectOption($template->id, $template->name);
+            $templatesSelectOption[] = $templateSelectOption;
+        }
 
         if(request()->ajax())
         {
@@ -263,7 +271,7 @@ class EventController extends Controller
 
         return view('pages.Event.event-edit')->with('owners',$ownersSelectOption)->with('organizers',$organizersSelectOption)->with('eventAdmins', $eventAdmins)
             ->with('securityOfficers', $securityOfficers)->with('approvalOptions',$approvalOptions)->with('eventTypes',$eventTypesSelectOption)
-            ->with('eventStatuss',$eventStatuss)->with('eventForms',$eventForms)->with('post',$post)->with('securityCategories',$securityCategoriesSelectOption);;
+            ->with('eventStatuss',$eventStatuss)->with('eventForms',$templatesSelectOption)->with('post',$post)->with('securityCategories',$securityCategoriesSelectOption);;
     }
 
     public function remove($event_security_category_id){

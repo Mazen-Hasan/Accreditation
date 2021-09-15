@@ -118,7 +118,7 @@ class ContactController extends Controller
     {
         $where = array('status' => 1);
         $titlesSelectOptions = array();
-        $titles = Title::where($where)->get()->all();
+        $titles = Title::where($where)->get()->where('status','=','1');
         foreach($titles as $title)
         {
             $titlesSelectOption = new SelectOption($title->id, $title->title_label);
@@ -146,7 +146,7 @@ class ContactController extends Controller
 
         $where = array('status' => 1);
         $titlesSelectOptions = array();
-        $titles = Title::where($where)->get()->all();
+        $titles = Title::where($where)->get()->where('status','=','1');
 
         foreach($titles as $title)
         {

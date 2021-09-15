@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\FieldType;
+use App\Models\PreDefinedFieldElement;
 use App\Models\SelectOption;
 use App\Models\Template;
+use App\Models\TemplateField;
+use App\Models\TemplateFieldElement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,20 +52,19 @@ class TemplateController extends Controller
 //        var_dump($fieldTypes);
 //        exit;
         $fieldTypesArray = array();
-        foreach($fieldTypes as $fieldType)
-        {
+        foreach ($fieldTypes as $fieldType) {
             $fieldTypesSelectOption = new SelectOption($fieldType->id, $fieldType->name);
             $fieldTypesArray[] = $fieldTypesSelectOption;
         }
 
-        return view('pages.Template.template-add')->with('filedTypes',$fieldTypesArray);
+        return view('pages.Template.template-add')->with('filedTypes', $fieldTypesArray);
     }
 
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
 
@@ -75,16 +77,41 @@ class TemplateController extends Controller
                 'creator' => Auth::user()->id
             ]);
 
-        $query =  'select p.label_ar, p.label_en, p.mandatory, p.min_char, p.max_char, p.field_type_id  from pre_defined_fields  p';
+        $query = 'select p.id, p.label_ar, p.label_en, p.mandatory, p.min_char, p.max_char, p.field_type_id  from pre_defined_fields  p';
         $pre_defined_fields_res = DB::select($query);
 
-//        foreach($pre_defined_fields_res as $row){
-//            echo $row['label_en'];
-//        }
-//
-//        exit();
-//
-//        DB::insert('insert into template_fields(label_ar, label_en, mandatory, min_char,  max_char, field_type_id)');
+
+        foreach ($pre_defined_fields_res as $row) {
+            $templateField = TemplateField::updateOrCreate(['id' => 0],
+                ['template_id' => $post->id,
+                    'label_ar' => $row->label_ar,
+                    'label_en' => $row->label_en,
+                    'mandatory' => $row->mandatory,
+                    'min_char' => $row->min_char,
+                    'max_char' => $row->max_char,
+                    'field_type_id' => $row->field_type_id,
+                ]);
+
+//            var_dump($row);
+//            exit;
+
+                $where = array('predefined_field_id' => $row->id);
+                $pre_defined_field_elements_res = PreDefinedFieldElement::where($where)->get()->all();
+
+//            $query = 'select *  from pre_defined_field_elements where predefined_field_id = ' + $row->id;
+//            $pre_defined_field_elements_res = DB::select($query);
+
+                foreach ($pre_defined_field_elements_res as $row_filed_elements) {
+                    $templateFieldElement = TemplateFieldElement::updateOrCreate(['id' => 0],
+                        ['value_ar' => $row_filed_elements->value_ar	,
+                            'value_en' => $row_filed_elements->value_en,
+                            'value_id' => $row_filed_elements->value_id,
+                            'order' => $row_filed_elements->order,
+                            'template_field_id' => $templateField->id,
+                        ]);
+                }
+        }
+
         return Response::json($post);
     }
 

@@ -19,7 +19,7 @@ class CreatePreDefinedFieldElementsTable extends Migration
             $table->string('value_en');
             $table->string('value_id');
             $table->string('order');
-            $table->bigInteger('predefined_field_type_id');
+            $table->bigInteger('predefined_field_id');
             $table->timestamps();
         });
     }

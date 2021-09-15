@@ -61,6 +61,37 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="ajax-crud-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="postCrudModal">Reset Password</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="user_id" id="user_id" value="">
+                    <div class="form-group">
+                            <label for="name">Password</label>
+                            <div class="col-sm-12">
+                                <input type="password" id="password" name="password" placeholder="enter passsword" required="">
+                            </div>
+                    </div>
+                    <div class="form-group">
+                            <label for="name">Confirm Password</label>
+                            <div class="col-sm-12">
+                                <input type="password" id="confirm_password" name="confirm_password" placeholder="confirm password" required="">
+                            </div>
+                    </div>
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button id="reset-password-btn" value="create">Reset Password
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -99,12 +130,48 @@
                 order: [[0, 'desc']]
             });
 
-            $('#add-new-user').click(function () {
-                $('#btn-save').val("create-company");
-                $('#company_id').val('');
-                $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Company");
-                //$('#ajax-crud-modal').modal('show');
+            // $('#reset_password').click(function () {
+            //     alert('iam here');
+            //     //$('#btn-save').val("create-company");
+            //     $('#user_id').val($(this).data('id'));
+            //     //$('#postForm').trigger("reset");
+            //     $('#postCrudModal').html("Reset Password");
+            //     $('#ajax-crud-modal').modal('show');
+            // });
+
+            $('body').on('click', '#reset_password', function () {
+                //alert('iam here');
+                //$('#btn-save').val("create-company");
+                $('#user_id').val($(this).data('id'));
+                //$('#postForm').trigger("reset");
+                $('#postCrudModal').html("Reset Password");
+                $('#ajax-crud-modal').modal('show');
+            });
+
+            $('body').on('click', '#reset-password-btn', function () {
+                //alert('iam here');
+                //$('#btn-save').val("create-company");
+                var userId = $('#user_id').val();
+                var password = $('#password').val();
+                $.ajax({
+                    type: "get",
+                    url: "userController/reset_password/"+userId+"/"+password,
+                    success: function (data) {
+                        //alert(data);
+                        $('#ajax-crud-modal').modal('hide');
+                        // var oTable = $('#laravel_datatable').dataTable();
+                        // oTable.fnDraw(false);
+                        //alert('done');
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                        //alert('failure');
+                    }
+                });
+            });
+
+            $('.export-to-excel').click( function() {
+                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
             });
         });
     </script>

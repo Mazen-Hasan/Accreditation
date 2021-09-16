@@ -124,6 +124,8 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('/users-edit/{id}', [App\Http\Controllers\UserController::class, 'userEdit'])->name('userEdit');
     Route::get('userController/reset_password/{id}/{password}', 'App\Http\Controllers\UserController@resetPassword');
 
+    Route::get('/template-fields/{id}', [App\Http\Controllers\TemplateFieldController::class, 'index'])->name('templateFields');
+
 });
 
 //Auth::routes();

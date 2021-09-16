@@ -21,7 +21,7 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Templates</p>
+                                <p class="card-title">Template Fields</p>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -44,7 +44,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
+                                    <th>Label (Arabic)</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -146,12 +146,12 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('templateController.index') }}",
+                    url: '../../template-fields/'+ 1 ,
                     type: 'GET',
                 },
                 columns: [
                     { data: 'id', name: 'id', 'visible': false},
-                    { data: 'name', name: 'name' },
+                    { data: 'label_ar', name: 'label_ar' },
                     { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ return "<p style='color: red'>InActive</p>" }}},
                     {data: 'action', name: 'action', orderable: false}
                 ],
@@ -170,9 +170,9 @@
                 $('#ajax-crud-modal').modal('show');
             });
 
-            $('body').on('click', '.edit-template', function () {
+            $('body').on('click', '.edit-fields', function () {
                 var template_id = $(this).data('id');
-                $.get('templateController/'+template_id+'/edit', function (data) {
+                $.get('templateFieldsController/'+template_id+'/edit', function (data) {
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit template");
                     $('#btn-save').val("edit-template");
@@ -184,12 +184,12 @@
                 })
             });
 
-            $('body').on('click', '#delete-template', function () {
+            $('body').on('click', '#delete-field', function () {
                 var template_id = $(this).data("id");
                 confirm("Are You sure want to delete !");
                 $.ajax({
                     type: "get",
-                    url: "templateController/destroy/"+ template_id,
+                    url: "templateFieldsController/destroy/"+ template_id,
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -200,7 +200,7 @@
                 });
             });
 
-            $('body').on('click', '#activate-template', function () {
+            $('body').on('click', '#activate-field', function () {
                 var template_id = $(this).data("id");
                 $('#confirmTitle').html('Activate template');
                 $('#curr_template_id').val(template_id);
@@ -219,7 +219,7 @@
                         var mode_id = $('#mode_id').val();
                         $.ajax({
                             type: "get",
-                            url: "templateController/changeStatus/"+template_id+"/" + mode_id,
+                            url: "templateFieldController/changeStatus/"+template_id+"/" + mode_id,
                             success: function (data) {
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);

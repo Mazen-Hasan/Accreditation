@@ -173,15 +173,6 @@ class CompanyController extends Controller
                 ->make(true);
         }
 
-
-
-//
-//
-//
-//        $contactStatus1 = new SelectOption(1,'Active');
-//        $contactStatus2 = new SelectOption(0,'InActive');
-//        $contactStatuss = [$contactStatus1,$contactStatus2];
-
         return view('pages.Company.company-edit')->with('company',$post)->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
             ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$eventid);
     }

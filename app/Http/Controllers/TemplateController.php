@@ -25,7 +25,9 @@ class TemplateController extends Controller
         if (request()->ajax()) {
             return datatables()->of(Template::latest()->get())
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-template">Edit</a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('templateFields', $data->id) . '" id="template-fields" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="fields">Fields<i class="mdi mdi-grid-large menu-items"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     if ($data->status == 1) {
                         $button .= '<a href="javascript:void(0);" id="deActivate-template" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger">  Deactivate</a>';
@@ -46,11 +48,8 @@ class TemplateController extends Controller
      */
     public function templateAdd()
     {
-
         $fieldTypes = FieldType::get()->all();
 
-//        var_dump($fieldTypes);
-//        exit;
         $fieldTypesArray = array();
         foreach ($fieldTypes as $fieldType) {
             $fieldTypesSelectOption = new SelectOption($fieldType->id, $fieldType->name);
@@ -92,14 +91,9 @@ class TemplateController extends Controller
                     'field_type_id' => $row->field_type_id,
                 ]);
 
-//            var_dump($row);
-//            exit;
-
                 $where = array('predefined_field_id' => $row->id);
                 $pre_defined_field_elements_res = PreDefinedFieldElement::where($where)->get()->all();
 
-//            $query = 'select *  from pre_defined_field_elements where predefined_field_id = ' + $row->id;
-//            $pre_defined_field_elements_res = DB::select($query);
 
                 foreach ($pre_defined_field_elements_res as $row_filed_elements) {
                     $templateFieldElement = TemplateFieldElement::updateOrCreate(['id' => 0],

@@ -22,9 +22,9 @@ class ContactController extends Controller
         if(request()->ajax())
         {
             return datatables()->of(Contact::latest()->get())
-                ->addColumn('name', function($row){
-                    return $row->name.' '.$row->middle_name.' '.$row->last_name;
-                })
+                // ->addColumn('name', function($row){
+                //     return $row->name.' '.$row->middle_name.' '.$row->last_name;
+                // })
                 ->addColumn('titleNames', function($data){
                     $result = '';
                     $titleNames = array();

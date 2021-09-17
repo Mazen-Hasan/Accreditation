@@ -14,23 +14,31 @@
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">User - New</h4>
+                        <h4 class="card-title">User - Edit</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id" value="{{$user->user_id}}">
                             <br>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Name</label>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                             <input type="text" id="name" name="name" placeholder="enter name" required="" value="{{$user->user_name}}"/>
                                         </div>
                                     </div>
                                 </div>
-</div>
-<div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Email</label>
+                                        <div class="col-sm-12">
+                                            <input type="text"  id="email" name="email" placeholder="enter email" required="" value="{{$user->email}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">
                                         <label>Email</label>
@@ -39,18 +47,26 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row" style="display:none">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Password</label>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                             <input type="password" id="password" name="password" placeholder="enter password" required="" value="{{$user->password}}"/>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Confirm Password</label>
+                                        <div class="col-sm-12">
+                                            <input type="password" id="confirm_password" name="confirm_password" placeholder="confirm password" required=""/>
+                                        </div>
+                                    </div>
                                 </div>
-                            <div class="row" style="display:none">
+                            </div>
+                            <!-- <div class="row" style="display:none">
                                 <div class="col-md-12">
                                     <div class="form-group col">
                                         <label>Confirm Password</label>
@@ -59,7 +75,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">

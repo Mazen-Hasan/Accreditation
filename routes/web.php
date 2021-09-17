@@ -51,6 +51,15 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::get('/event-admin', [App\Http\Controllers\EventAdminController::class, 'index'])->name('event-admin');
     Route::get('/event-companies/{id}', [App\Http\Controllers\EventAdminController::class, 'eventCompanies'])->name('eventCompanies');
 
+    Route::resource('focalpointController', 'App\Http\Controllers\FocalPointController');
+    Route::get('/focalpoints', [App\Http\Controllers\FocalPointController::class, 'index'])->name('focalpoints');
+    Route::get('/focalpoint-add', [App\Http\Controllers\FocalPointController::class, 'focalpointAdd'])->name('focalpointAdd');
+    Route::get('/focalpoint-edit/{id}', [App\Http\Controllers\FocalPointController::class, 'edit'])->name('focalpointEdit');
+    Route::get('focalpointController/reset_password/{id}/{password}', 'App\Http\Controllers\FocalPointController@resetPassword');
+
+    // Route::resource('userController', 'App\Http\Controllers\UserController');
+    // Route::get('userController/reset_password/{id}/{password}', 'App\Http\Controllers\UserController@resetPassword');
+
     Route::resource('companyController', 'App\Http\Controllers\CompanyController');
 
     //Route::get('/eventCompanies', [App\Http\Controllers\CompanyController::class, 'eventCompanies'])->name('eventCompanies');
@@ -62,6 +71,8 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::get('companyController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}/{event_id}', 'App\Http\Controllers\CompanyController@storeCompanyAccrCatSize');
     Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat');
     Route::get('companyController/Approve/{companyId}/{eventId}', 'App\Http\Controllers\CompanyController@Approve');
+
+
 
 });
 
@@ -131,6 +142,8 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('/field-elements/{field_id}', [App\Http\Controllers\FieldElementController::class, 'index'])->name('fieldElements');
     Route::resource('fieldElementController', 'App\Http\Controllers\FieldElementController');
     Route::get('fieldElementController/destroy/{element_id}', 'App\Http\Controllers\fieldElementController@destroy');
+
+
 
 });
 

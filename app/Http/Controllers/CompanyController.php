@@ -91,6 +91,8 @@ class CompanyController extends Controller
                 'city_id' => $request->city,
                 'category_id' => $request->category,
                 'size' => $request->size,
+                'need_management' => $request->need_management,
+                'status' => 0
             ]);
         if($companyId == null) {
             foreach ($request->accreditationCategories as $accreditationCategory) {
@@ -110,6 +112,9 @@ class CompanyController extends Controller
 
     public function edit($id, $eventid)
     {
+        $where = array('id' => $eventid);
+        $event  = Event::where($where)->first();
+
         $where = array('id' => $id);
         $post = Company::where($where)->first();
 
@@ -174,7 +179,7 @@ class CompanyController extends Controller
         }
 
         return view('pages.Company.company-edit')->with('company',$post)->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$eventid);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$eventid)->with('event_name',$event->name)->with('company_name',$post->name);
     }
 
 
@@ -191,6 +196,8 @@ class CompanyController extends Controller
 
     public function companyAdd($id)
     {
+        $where = array('id' => $id);
+        $event  = Event::where($where)->first();
         $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Focal Point")';
         $query = $sql;
         $contacts = DB::select($query);
@@ -237,12 +244,18 @@ class CompanyController extends Controller
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
 
-        return view('pages.company.company-add')->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$id);
+        return view('pages.Company.company-add')->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$id)->with('event_name',$event->name);
     }
 
     public function companyAccreditCat($Id,$eventId)
     {
+        $where = array('id' => $eventId);
+        $event  = Event::where($where)->first();
+
+        $where = array('id' => $Id);
+        $company = Company::where($where)->first();
+
         $where = array('status' => 1);
         $accreditationCategorysSelectOptions = array();
         $accreditationCategories = AccreditationCategory::where($where)->get()->all();
@@ -271,7 +284,7 @@ class CompanyController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.Company.company-accreditation-size-new')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $Id)->with('eventId',$eventId)->with('status',$status);
+        return view('pages.Company.company-accreditation-size-new')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $Id)->with('eventId',$eventId)->with('status',$status)->with('event_name',$event->name)->with('company_name',$company->name);
     }
 
     public function editCompanyAccreditSize($id){

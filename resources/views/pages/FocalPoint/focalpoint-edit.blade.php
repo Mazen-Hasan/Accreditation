@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Add Contact')
+@section('subtitle',' Edit Focal Point')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
@@ -14,18 +14,36 @@
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Contact - New</h4>
+                        <h4 class="card-title">{{$focalpoint->name.' '.$focalpoint->middle_name.' '.$focalpoint->last_name}} (Focal Point) - Edit</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
-                            <input type="hidden" name="post_id" id="post_id">
+                            <input type="hidden" name="post_id" id="post_id" value="{{$focalpoint->id}}">
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" placeholder="enter name" required=""/>
+                                            <input type="text" id="name" name="name" placeholder="enter name" required="" value="{{$focalpoint->name}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group col">
+                                        <label>Middle Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="middle_name" name="middle_name" placeholder="enter middle name" required="" value="{{$focalpoint->middle_name}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Last Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="last_name" name="last_name" placeholder="enter last name" required="" value="{{$focalpoint->last_name}}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -33,25 +51,7 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="email" name="email" placeholder="enter email" required=""/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6" style="display:none">
-                                    <div class="form-group col">
-                                        <label>Last Name</label>
-                                        <div class="col-sm-12">
-                                            <input type="text" id="last_name" name="last_name" placeholder="enter last name" required=""/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6" style="display:none">
-                                    <div class="form-group col">
-                                        <label>Middle Name</label>
-                                        <div class="col-sm-12">
-                                            <input type="text" id="middle_name" name="middle_name" placeholder="enter middle name" required=""/>
+                                            <input type="text"  id="email" name="email" placeholder="enter email" required="" value="{{$focalpoint->email}}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                                     <div class="form-group col">
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="telephone" name="telephone" placeholder="enter telephone" required=""/>
+                                            <input type="text" id="telephone" name="telephone" placeholder="enter telephone" required="" value="{{$focalpoint->telephone}}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -69,25 +69,35 @@
                                     <div class="form-group col">
                                         <label>Mobile</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="mobile" name="mobile" placeholder="enter mobile" required=""/>
+                                            <input type="text" id="mobile" name="mobile" placeholder="enter mobile" required="" value="{{$focalpoint->mobile}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="display: none;">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Account Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="account_name" name="account_name" placeholder="enter account name" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Account Email</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="account_email" name="account_email" placeholder="enter account email" required=""/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-6" style="display:none;">
                                     <div class="form-group col">
-                                        <label>Title</label>
+                                        <label>Account Pasword</label>
                                         <div class="col-sm-12">
-                                            <select multiple id="titles" name="titles[]" value="" required="" style="height:150px">
-                                                @foreach ($titles as $titles)
-                                                    <option value="{{ $titles->key }}"
-                                                            @if ($titles->key == 1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $titles->value }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" id="password" name="password" placeholder="enter account password" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -98,7 +108,7 @@
                                             <select id="status" name="status" value="" required="">
                                                 @foreach ($contactStatuss as $contactStatus)
                                                     <option value="{{ $contactStatus->key }}"
-                                                            @if ($contactStatus->key == 1)
+                                                            @if ($contactStatus->key == $focalpoint->status)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $contactStatus->value }}</option>
@@ -140,20 +150,20 @@
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 submitHandler: function(form) {
-                    $('#post_id').val('');
+                    //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
                     // alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
-                        url: "{{ route('contactController.store') }}",
+                        url: "{{ route('focalpointController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
-                            window.location.href = "{{ route('contacts')}}";
+                            window.location.href = "{{ route('focalpoints')}}";
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },

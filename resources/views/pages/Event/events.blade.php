@@ -47,12 +47,14 @@
                                     <th>Name</th>
 {{--                                    <th>Location</th>--}}
                                     <th>Size</th>
-                                    <th>Event Admin</th>
+                                    <!-- <th>Event Admin</th> -->
                                     <th>Organizer</th>
                                     <th>Owner</th>
                                     <th>Type</th>
-                                    <th>period</th>
-                                    <th>Accreditation Period</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Accredit Start</th>
+                                    <th>Accredit End</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -98,13 +100,15 @@
                     // { data: 'event_admin', name: 'event_admin', 'visible': false},
                     // { data: 'location', name: 'location' , 'visible': false},
                     { data: 'size', name: 'size' },
-                    { data: 'event_admin_name', name: 'event_admin_name' },
-
+                    // { data: 'event_admin_name', name: 'event_admin_name' },
                     { data: 'organizer', name: 'organizer' },
                     { data: 'owner', name: 'owner' },
                     { data: 'event_type', name: 'event_type' },
-                    { data: 'period', name: 'period'},
-                    { data: 'accreditation_period', name: 'accreditation_period' },
+                    { data: 'event_start_date', name: 'event_start_date'},
+                    { data: 'event_end_date', name: 'event_end_date'},
+                    { data: 'accreditation_start_date', name: 'accreditation_start_date'},
+                    { data: 'accreditation_end_date', name: 'accreditation_end_date'},
+                    // { data: 'accreditation_period', name: 'accreditation_period' },
                     { data: 'status', render:function (data){ if(data == 1) { return "<span style='color: green'>Active</span>"} else{ return "<span style='color: red'>InActive</span>" }}},
                     // { data: 'approval_option', name: 'approval_option' , 'visible': false},
                     // { data: 'security_officer', name: 'security_officer' , 'visible': false},

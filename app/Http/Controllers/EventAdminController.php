@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Event;
 
 class EventAdminController extends Controller
 {
@@ -38,6 +39,8 @@ class EventAdminController extends Controller
 
     public function eventCompanies($id)
     {
+        $where = array('id' => $id);
+        $event  = Event::where($where)->first();
         if (request()->ajax()) {
             $companies = DB::select('select * from companies_view where event_id = ?' ,[$id]);
 //            $companies = DB::select('select * from companies_view');
@@ -56,6 +59,6 @@ class EventAdminController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.EventAdmin.event-companies')->with('eventid',$id);
+        return view('pages.EventAdmin.event-companies')->with('eventid',$id)->with('event_name',$event->name);
     }
 }

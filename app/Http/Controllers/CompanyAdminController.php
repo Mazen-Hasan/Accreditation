@@ -38,7 +38,7 @@ class CompanyAdminController extends Controller
                 ->make(true);
         }
 
-        $events = DB::select('select c.* from events_view c inner join companies cc on c.id = cc.event_id where cc.company_admin_id = ?', [Auth::user()->id]);
+        $events = DB::select('select c.* , cc.need_management need_management , cc.name company_name from events_view c inner join companies cc on c.id = cc.event_id where cc.company_admin_id = ? and cc.status = ?', [Auth::user()->id,0]);
 //        var_dump($events);
 //        exit;
 //        $events = DB::select('select * from events_view  , events_view v');
@@ -215,7 +215,7 @@ class CompanyAdminController extends Controller
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
             $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ? and event_id = ?',[$company->id,$eventId]);
             $companyAccreditationCategoriesStatuss= DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?',[$company->id,$eventId]);
-            $status = 1;
+            $status = 0;
             foreach($companyAccreditationCategoriesStatuss as $companyAccreditationCategoriesStatus)
             {
                 $status = $companyAccreditationCategoriesStatus->status;

@@ -57,12 +57,16 @@ class EventController extends Controller
                 'organizer' => $request->organizer,
                 'owner' => $request->owner,
                 'event_type' => $request->event_type,
-                'period' => $request->period,
-                'accreditation_period' => $request->accreditation_period,
+                // 'period' => $request->period,
+                // 'accreditation_period' => $request->accreditation_period,
                 'status' => $request->status,
                 'approval_option' => $request->approval_option,
                 'security_officer' => $request->security_officer,
                 'event_form' => $request->event_form,
+                'event_start_date' => $request->event_start_date,
+                'event_end_date' => $request->event_end_date,
+                'accreditation_start_date' => $request->accreditation_start_date,
+                'accreditation_end_date' => $request->accreditation_end_date,
                 'creation_date' => $request->creation_date,
                 'creator' => Auth::user()->id
             ]);
@@ -170,7 +174,7 @@ class EventController extends Controller
     public function edit($id)
     {
         $where = array('id' => $id);
-        $post  = Event::where($where)->first();
+        $event  = Event::where($where)->first();
 
         $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Organizer")';
         $query = $sql;
@@ -271,7 +275,7 @@ class EventController extends Controller
 
         return view('pages.Event.event-edit')->with('owners',$ownersSelectOption)->with('organizers',$organizersSelectOption)->with('eventAdmins', $eventAdmins)
             ->with('securityOfficers', $securityOfficers)->with('approvalOptions',$approvalOptions)->with('eventTypes',$eventTypesSelectOption)
-            ->with('eventStatuss',$eventStatuss)->with('eventForms',$templatesSelectOption)->with('post',$post)->with('securityCategories',$securityCategoriesSelectOption);;
+            ->with('eventStatuss',$eventStatuss)->with('eventForms',$templatesSelectOption)->with('event',$event)->with('securityCategories',$securityCategoriesSelectOption);;
     }
 
     public function remove($event_security_category_id){

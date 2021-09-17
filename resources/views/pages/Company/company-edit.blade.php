@@ -14,11 +14,12 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Company Management - Edit</h4>
+                        <h4 class="card-title">{{$event_name}} / {{$company_name}} - Edit</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="event_id" id="event_id" value="{{$eventid}}">
+                            <input type="hidden" name="need_management" id="need_management" value="{{$company->need_management}}">
                             <input type="hidden" name="company_Id" id="company_Id" value="{{$company->id}}">
                             <br>
                             <div class="row">
@@ -139,6 +140,21 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group col">
+                                        <div class="col-sm-12">
+                                            <label for="needManagmentCheckbox"  style="word-wrap:break-word;font-size:20px">
+                                                <input type="checkbox" 
+                                                @if ($company->need_management == 1)
+                                                    checked="checked"
+                                                @endif
+                                                id="needManagmentCheckbox" name="needManagmentCheckbox" value="0" style="width:20px;display: inline-block;vertical-align: middle" />    Need Company Admin Accreditation Category Zise Management
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" id="btn-save" value="create">Edit
                                 </button>
@@ -175,6 +191,11 @@
                     //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     var $eventid = $('#event_id').val();
+                    if($('#needManagmentCheckbox').is(':checked')){
+                        $('#need_management').val('1');
+                    }else{
+                        $('#need_management').val('0');
+                    }
                     $('#btn-save').html('Sending..');
                     //alert($('#postForm').serialize());
                     $.ajax({

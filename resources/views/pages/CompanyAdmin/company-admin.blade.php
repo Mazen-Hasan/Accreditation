@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <h4 class="card-title">
                             @if ($events != null)
-                            $events[0]->company_name
+                            {{$events[0]->company_name}}
                             @endif
                             / My events</h4>
                         <div class="row">

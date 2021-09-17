@@ -19,7 +19,7 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Company / Accreditation Size</p>
+                                <p class="card-title">{{$event_name}} / {{$company_name}} / Accreditation Size Management</p>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">

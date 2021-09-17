@@ -21,16 +21,24 @@
                             <input type="hidden" name="post_id" id="post_id">
                             <br>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Name</label>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                             <input type="text" id="name" name="name" placeholder="enter name" required=""/>
                                         </div>
                                     </div>
                                 </div>
-</div>
-<div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Email</label>
+                                        <div class="col-sm-12">
+                                            <input type="text"  id="email" name="email" placeholder="enter email" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">
                                         <label>Email</label>
@@ -39,18 +47,26 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Password</label>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                             <input type="password" id="password" name="password" placeholder="enter password" required=""/>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Confirm Password</label>
+                                        <div class="col-sm-12">
+                                            <input type="password" id="confirm_password" name="confirm_password" placeholder="confirm password" required=""/>
+                                        </div>
+                                    </div>
                                 </div>
-<div class="row">
+                            </div>
+                            <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">
                                         <label>Confirm Password</label>
@@ -59,7 +75,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">

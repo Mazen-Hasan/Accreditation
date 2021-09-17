@@ -91,6 +91,8 @@ class CompanyController extends Controller
                 'city_id' => $request->city,
                 'category_id' => $request->category,
                 'size' => $request->size,
+                'need_management' => $request->need_management,
+                'status' => 0
             ]);
         if($companyId == null) {
             foreach ($request->accreditationCategories as $accreditationCategory) {

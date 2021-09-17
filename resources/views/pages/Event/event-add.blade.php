@@ -30,9 +30,45 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Period</label>
+                                        <label>Size</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="period" name="period" value="" required=""placeholder="enter period"/>
+                                            <input type="text" id="size" name="size" placeholder="enter size" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Event Start Date</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" id="event_start_date" name="event_start_date" value="" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Event End Date</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" id="event_end_date" name="event_end_date"  required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Accreditation Start Date</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" id="accreditation_start_date" name="accreditation_start_date" value="" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Accreditation End Date</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" id="accreditation_end_date" name="accreditation_end_date"  required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -57,9 +93,18 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Accreditation Period</label>
+                                        <label>Registration Form Template</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="accreditation_period" name="accreditation_period" value="" placeholder="enter accreditation period" required=""/>
+                                           <select id="event_form" name="event_form" required="">
+                                                @foreach ($eventForms as $eventForm)
+                                                    <option value="{{ $eventForm->key }}"
+{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($eventForm->key == 1)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $eventForm->value }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -114,9 +159,18 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Size</label>
+                                        <label>Event Type</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="size" name="size" placeholder="enter size" required=""/>
+                                           <select id="event_type" name="event_type" required="">
+                                                @foreach ($eventTypes as $eventType)
+                                                    <option value="{{ $eventType->key }}"
+{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($eventType->key == 1)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $eventType->value }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -160,23 +214,6 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Event Type</label>
-                                        <div class="col-sm-12">
-                                           <select id="event_type" name="event_type" required="">
-                                                @foreach ($eventTypes as $eventType)
-                                                    <option value="{{ $eventType->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($eventType->key == 1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $eventType->value }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group col">
                                         <label>Status</label>
                                         <div class="col-sm-12">
                                            <select id="status" name="status" required="">
@@ -187,25 +224,6 @@
                                                             selected="selected"
                                                         @endif
                                                     >{{ $eventStatus->value }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Registration Form Template</label>
-                                        <div class="col-sm-12">
-                                           <select id="event_form" name="event_form" required="">
-                                                @foreach ($eventForms as $eventForm)
-                                                    <option value="{{ $eventForm->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($eventForm->key == 1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $eventForm->value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

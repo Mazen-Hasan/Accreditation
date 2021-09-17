@@ -32,15 +32,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Middle Name</label>
+                                        <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="middle_name" name="middle_name" value="{{$post->middle_name}}" required=""/>
+                                            <input type="text" id="email" name="email" value="{{$post->email}}" required=""/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-6" style="display:none">
                                     <div class="form-group col">
                                         <label>Last Name</label>
                                         <div class="col-sm-12">
@@ -48,11 +48,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6" style="display:none">
                                     <div class="form-group col">
-                                        <label>Email</label>
+                                        <label>Middle Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="email" name="email" value="{{$post->email}}" required=""/>
+                                            <input type="text" id="middle_name" name="middle_name" value="{{$post->middle_name}}" required=""/>
                                         </div>
                                     </div>
                                 </div>

@@ -12,7 +12,7 @@
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">My events</h4>
+                        <h4 class="card-title">{{$events[0]->company_name}} / My events</h4>
                         <div class="row">
                             @foreach($events as $event)
                             <div class="col-sm-4">
@@ -82,7 +82,11 @@
                                                 <p class="card_event_text">{{ $event->event_form}}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row"
+                                        @if ($event->need_management == 0)
+                                            style="display:none"
+                                        @endif
+                                        >
                                             <div class="col-12">
                                                 <!-- <a href="{{route('companyAccreditCategories',['eventId' => $event->id])}}" class="ha_btn">company categories</a> -->
                                                 <a href='company-accreditation-size/{{$event->id}}'class="ha_btn">company categories</a>

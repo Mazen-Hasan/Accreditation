@@ -55,6 +55,10 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::get('/focalpoints', [App\Http\Controllers\FocalPointController::class, 'index'])->name('focalpoints');
     Route::get('/focalpoint-add', [App\Http\Controllers\FocalPointController::class, 'focalpointAdd'])->name('focalpointAdd');
     Route::get('/focalpoint-edit/{id}', [App\Http\Controllers\FocalPointController::class, 'edit'])->name('focalpointEdit');
+    Route::get('focalpointController/reset_password/{id}/{password}', 'App\Http\Controllers\FocalPointController@resetPassword');
+
+    // Route::resource('userController', 'App\Http\Controllers\UserController');
+    // Route::get('userController/reset_password/{id}/{password}', 'App\Http\Controllers\UserController@resetPassword');
 
     Route::resource('companyController', 'App\Http\Controllers\CompanyController');
 

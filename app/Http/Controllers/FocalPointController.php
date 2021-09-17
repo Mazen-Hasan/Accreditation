@@ -53,6 +53,7 @@ class FocalPointController extends Controller
                     //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button = '<a href="'.route('focalpointEdit', $data->id).'" data-toggle="tooltip"  id="edit-event" data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="javascript:void(0);" id="reset_password" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->account_id . '" class="delete btn btn-google">Reset Password</a>';
                     //$button .= '<a href="javascript:void(0);" id="delete-post" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">   Delete</a>';
                     return $button;
                 })
@@ -216,5 +217,14 @@ class FocalPointController extends Controller
             ]);
         return Response::json($post);
     }
+
+    public function resetPassword($id,$password){
+        $user = User::updateOrCreate(['id' => $id],
+        ['password' => Hash::make($password),
+        ]); 
+        return Response::json($user);
+    }
+
+
 }
 

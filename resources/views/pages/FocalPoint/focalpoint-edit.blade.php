@@ -14,7 +14,7 @@
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">{{$focalpoint->name.' '.$focalpoint->middle_name.' '.$focalpoint->last_name}} Focal Point - Edit</h4>
+                        <h4 class="card-title">{{$focalpoint->name.' '.$focalpoint->middle_name.' '.$focalpoint->last_name}} (Focal Point) - Edit</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">

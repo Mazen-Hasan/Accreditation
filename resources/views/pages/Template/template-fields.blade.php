@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Company categories')
+@section('subtitle',' Template fields')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
@@ -21,7 +21,7 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Template Fields</p>
+                                <p class="card-title">Template / Fields</p>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -31,7 +31,7 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                <a href="javascript:void(0)" id="add-new-template" class="add-hbtn">
+                                <a href="javascript:void(0)" id="add-new-field" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
@@ -45,7 +45,12 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Label (Arabic)</th>
-                                    <th style="color: black">Status</th>
+                                    <th>Label (English)</th>
+                                    <th>Mandatory</th>
+                                    <th>Min Char</th>
+                                    <th>Max Char</th>
+                                    <th>Type</th>
+                                    <th>Slug</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -58,31 +63,83 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="ajax-crud-modal" aria-hidden="true">
+
+    <!-- add new field modal-->
+    <div class="modal fade" id="field-modal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="modalTitle"></h4>
                 </div>
                 <div class="modal-body">
-                    <form id="templateForm" name="templateForm" class="form-horizontal">
-                        <input type="hidden" name="template_id" id="template_id">
-                        <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">Name</label>
-                            <div class="col-sm-12">
-                                <input type="text" id="name" name="name" placeholder="enter name" required="">
+                    <form id="fieldForm" name="fieldForm" class="form-horizontal">
+                        <input style="visibility: hidden" type="text" name="template_id" id="template_id" value="{{$template_id}}">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group col">
+                                    <label>Label (Arabic)</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" id="label_ar" name="label_ar" placeholder="enter arabic label" required="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group col">
+                                    <label>Label (English)</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" id="label_en" name="label_en" placeholder="enter english label" required="">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Status</label>
-                            <div class="col-sm-12">
-                                <select id="status" name="status" required="">
-                                    <option value="1">Active</option>
-                                    <option value="0">InActive</option>
-                                </select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group col">
+                                    <label>Min char</label>
+                                    <div class="col-sm-12">
+                                        <input type="number" id="min_char" min="1" max="500" name="min_char" placeholder="enter min char" required="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group col">
+                                    <label>Max char</label>
+                                    <div class="col-sm-12">
+                                        <input type="number" id="max_char" min="1" max="500" name="max_char" placeholder="enter max char" required="">
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group col">
+                                    <label>Mandatory</label>
+                                    <div class="col-sm-12">
+                                        <input type="checkbox" id="mandatory" name="mandatory">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group col">
+                                    <label>Type</label>
+                                    <div class="col-sm-12">
+                                        <select id="field_type" name="field_type" required="">
+                                            @foreach ($fieldTypes as $fieldType)
+                                                <option value="{{ $fieldType->id }}"
+                                                   @if ($fieldType->key == 1)
+                                                        selected="selected"
+                                                    @endif
+                                                >{{ $fieldType->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="modal-footer">
                             <div class="col-sm-12">
                                 <button type="submit" id="btn-save" value="create">Save
@@ -94,19 +151,17 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="confirmModal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <!-- delete confirm modal -->
+    <div class="modal fade" id="delete-field-confirm-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmTitle"></h5>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <input type="hidden" id="curr_template_id">
-                        <input type="hidden" id="mode_id">
-                        <label class="col-sm-12 control-label" id="confirmText"></label>
+                    <div>
+                        <input type="hidden" id="curr_field_id">
+                        <label class="col-sm-12 confirm-text" id="confirmText"></label>
                     </div>
 
                     <div class="row">
@@ -132,6 +187,8 @@
                 }
             });
 
+            var templateId = $('#template_id').val();
+
             $('#laravel_datatable').DataTable({
 
                 dom: 'lBfrtip',
@@ -146,13 +203,18 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../../template-fields/'+ 1 ,
+                    url: '../../template-fields/'+ templateId,
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
+                    { data: 'id', name: 'id'},
                     { data: 'label_ar', name: 'label_ar' },
-                    { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ return "<p style='color: red'>InActive</p>" }}},
+                    { data: 'label_en', name: 'label_en' },
+                    { data: 'mandatory', name: 'mandatory' },
+                    { data: 'min_char', name: 'min_char' },
+                    { data: 'max_char', name: 'max_char' },
+                    { data: 'name', name: 'name' },
+                    { data: 'slug', name: 'slug'},
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
@@ -162,64 +224,51 @@
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
-            $('#add-new-template').click(function () {
-                $('#btn-save').val("create-template");
-                $('#template_id').val('');
-                $('#templateForm').trigger("reset");
-                $('#modalTitle').html("New template");
-                $('#ajax-crud-modal').modal('show');
+            $('#add-new-field').click(function () {
+                $('#btn-save').val("create-field");
+                $('#field_id').val('');
+                $('#fieldForm').trigger("reset");
+                $('#modalTitle').html("New Field");
+                $('#field-modal').modal('show');
             });
 
-            $('body').on('click', '.edit-fields', function () {
-                var template_id = $(this).data('id');
-                $.get('templateFieldsController/'+template_id+'/edit', function (data) {
+            $('body').on('click', '#edit-field', function () {
+                var field_id = $(this).data('id');
+                $.get('../templateFieldController/' + field_id + '/edit', function (data) {
                     $('#name-error').hide();
-                    $('#modalTitle').html("Edit template");
-                    $('#btn-save').val("edit-template");
-                    $('#ajax-crud-modal').modal('show');
-                    $('#template_id').val(data.id);
-                    $('#name').val(data.name);
-                    $('#status').val(data.status);
-                    // alert($('#name').val(data.name).val());
-                })
-            });
+                    $('#modalTitle').html("Edit Field");
+                    $('#btn-save').val("edit-field");
+                    $('#field-modal').modal('show');
+                    $('#field_id').val(data.id);
+                    $('#label_ar').val(data.label_ar);
+                    $('#label_en').val(data.label_en);
+                    $('#min_char').val(data.min_char);
+                    $('#max_char').val(data.max_char);
+                    $('#mandatory').val(data.mandatory);
+                    // $('#field_type').prop('disabled', true);
 
-            $('body').on('click', '#delete-field', function () {
-                var template_id = $(this).data("id");
-                confirm("Are You sure want to delete !");
-                $.ajax({
-                    type: "get",
-                    url: "templateFieldsController/destroy/"+ template_id,
-                    success: function (data) {
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
                 });
             });
 
-            $('body').on('click', '#activate-field', function () {
-                var template_id = $(this).data("id");
-                $('#confirmTitle').html('Activate template');
-                $('#curr_template_id').val(template_id);
+            $('body').on('click', '#delete-field', function () {
+                var field_id = $(this).data("id");
+                $('#confirmTitle').html('Delete field');
+                $('#curr_field_id').val(field_id);
                 $('#mode_id').val('1');
-                var confirmText =  'Are you sure you want to activate this template?';
+                var confirmText =  'Are you sure you want to delete this field?';
                 $('#confirmText').html(confirmText);
-                $('#confirmModal').modal('show');
+                $('#delete-field-confirm-modal').modal('show');
             });
 
-            $('#confirmModal button').on('click', function(event) {
+            $('#delete-field-confirm-modal button').on('click', function(event) {
                 var $button = $(event.target);
 
                 $(this).closest('.modal').one('hidden.bs.modal', function() {
                     if($button[0].id === 'btn-yes'){
-                        var template_id = $('#curr_template_id').val();
-                        var mode_id = $('#mode_id').val();
+                        var field_id = $('#curr_field_id').val();
                         $.ajax({
                             type: "get",
-                            url: "templateFieldController/changeStatus/"+template_id+"/" + mode_id,
+                            url: "../templateFieldController/destroy/" + field_id,
                             success: function (data) {
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);
@@ -231,32 +280,21 @@
                     }
                 });
             });
-
-            $('body').on('click', '#deActivate-template', function () {
-                var template_id = $(this).data("id");
-                $('#confirmTitle').html('Deactivate template');
-                $('#curr_template_id').val(template_id);
-                $('#mode_id').val('0');
-                var confirmText =  'Are you sure you want to deactivate this template?';
-                $('#confirmText').html(confirmText);
-                $('#confirmModal').modal('show');
-            });
         });
 
-        if ($("#templateForm").length > 0) {
-            console.log('Sending...');
-            $("#templateForm").validate({
+        if ($("#fieldForm").length > 0) {
+            $("#fieldForm").validate({
                 submitHandler: function(form) {
                     $('#btn-save').html('Sending..');
 
                     $.ajax({
-                        data: $('#templateForm').serialize(),
-                        url: "{{ route('templateController.store') }}",
+                        data: $('#fieldForm').serialize(),
+                        url: "{{ route('templateFieldController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
-                            $('#templateForm').trigger("reset");
-                            $('#ajax-crud-modal').modal('hide');
+                            $('#fieldForm').trigger("reset");
+                            $('#field-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
                             var oTable = $('#laravel_datatable').dataTable();
                             oTable.fnDraw(false);

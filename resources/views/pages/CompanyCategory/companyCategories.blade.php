@@ -185,21 +185,21 @@
                 })
             });
 
-            $('body').on('click', '#delete-category', function () {
-                var category_id = $(this).data("id");
-                confirm("Are You sure want to delete !");
-                $.ajax({
-                    type: "get",
-                    url: "companyCategoryController/destroy/"+ category_id,
-                    success: function (data) {
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
+            // $('body').on('click', '#delete-category', function () {
+            //     var category_id = $(this).data("id");
+            //     confirm("Are You sure want to delete !");
+            //     $.ajax({
+            //         type: "get",
+            //         url: "companyCategoryController/destroy/"+ category_id,
+            //         success: function (data) {
+            //             var oTable = $('#laravel_datatable').dataTable();
+            //             oTable.fnDraw(false);
+            //         },
+            //         error: function (data) {
+            //             console.log('Error:', data);
+            //         }
+            //     });
+            // });
 
             $('body').on('click', '#activate-category', function () {
                 var category_id = $(this).data("id");

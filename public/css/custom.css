@@ -761,6 +761,7 @@ select[multiple]{
     height:40px;
     width:70px;
 }
+
 button.navbar-toggler {
     background: transparent;
     width:40px;
@@ -816,4 +817,19 @@ button.navbar-toggler {
     display: none;
 }
 
+.confirm-text {
+    font-family: Poppins-Regular;
+    font-size: 20px;
+    color: #000000;
+    text-align: start;
 
+    width: 100%;
+    display: block;
+    padding-bottom: 15px;
+    padding-left: 25px;
+}
+
+input[type=checkbox]{
+    width: 20px;
+    margin-left: 20px;
+}

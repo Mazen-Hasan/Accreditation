@@ -53,10 +53,10 @@
                             </table>
                         </div>
                         @if($status == 1)
-                        <a href="javascript:void(0)" class="ha_btn" id="approve">
-                                                Approve
-                                        </a>
-                                        @endif
+                            <a href="javascript:void(0)" class="ha_btn" id="approve">
+                                Approve
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -69,37 +69,38 @@
                     <h4 class="modal-title" id="postCrudModal"></h4>
                 </div>
                 <div class="modal-body">
-{{--                    <form id="postForm" name="postForm" class="form-horizontal">--}}
-                        <input type="hidden" name="company_id" id="company_id" value="{{$companyId}}">
-                        <input type="hidden" name="event_id" id="event_id" value="{{$eventId}}">
-                        <input type="hidden" name="status" id="status" value="{{$status}}">
-                        <input type="hidden" name="post_id" id="post_id" value="">
-                        <div class="form-group">
-                            <label>Accreditation Category</label>
-                            <div class="col-sm-12">
-                                <select class="form-control" id="accredit_cat_id" name="accredit_cat_id" value="" required="">
-                                    @foreach ($accreditationCategorys as $accreditationCategory)
-                                        <option value="{{ $accreditationCategory->key }}"
-                                                {{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                @if ($accreditationCategory->key == 1)
-                                                selected="selected"
-                                            @endif
-                                        >{{ $accreditationCategory->value }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Size</label>
-                            <div class="col-sm-12">
-                                <input type="text" id="size" name="size" value="" required="">
-                            </div>
-                        </div>
+                    {{--                    <form id="postForm" name="postForm" class="form-horizontal">--}}
+                    <input type="hidden" name="company_id" id="company_id" value="{{$companyId}}">
+                    <input type="hidden" name="event_id" id="event_id" value="{{$eventId}}">
+                    <input type="hidden" name="status" id="status" value="{{$status}}">
+                    <input type="hidden" name="post_id" id="post_id" value="">
+                    <div class="form-group">
+                        <label>Accreditation Category</label>
                         <div class="col-sm-12">
-                            <button id="edit-size" value="create">Save
-                            </button>
+                            <select class="form-control" id="accredit_cat_id" name="accredit_cat_id" value=""
+                                    required="">
+                                @foreach ($accreditationCategorys as $accreditationCategory)
+                                    <option value="{{ $accreditationCategory->key }}"
+                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                            @if ($accreditationCategory->key == 1)
+                                            selected="selected"
+                                        @endif
+                                    >{{ $accreditationCategory->value }}</option>
+                                @endforeach
+                            </select>
                         </div>
-{{--                    </form>--}}
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Size</label>
+                        <div class="col-sm-12">
+                            <input type="text" id="size" name="size" value="" required="">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <button id="edit-size" value="create">Save
+                        </button>
+                    </div>
+                    {{--                    </form>--}}
                 </div>
                 <div class="modal-footer">
 
@@ -110,7 +111,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -125,7 +126,7 @@
                     extend: 'excelHtml5',
                     title: 'Company-Participants',
                     exportOptions: {
-                        columns: [ 1,2]
+                        columns: [1, 2]
                     }
                 }],
 
@@ -133,20 +134,20 @@
                 serverSide: true,
                 ajax: {
                     {{--url: "{{ route('companyController.edit',[$companyId]) }}",--}}
-                    url: '../../company-accreditation-size-new/'+ companyId + '/' + eventId,
+                    url: '../../company-accreditation-size-new/' + companyId + '/' + eventId,
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'name', name: 'name' },
-                    { data: 'size', name: 'size' },
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'name', name: 'name'},
+                    {data: 'size', name: 'size'},
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
             $('#add-new-post').click(function () {
@@ -162,7 +163,7 @@
             $('body').on('click', '#edit-company-accreditation', function () {
                 var post_id = $(this).data('id');
                 //alert(post_id);
-                $.get('../../companyController/editCompanyAccreditSize/'+post_id, function (data) {
+                $.get('../../companyController/editCompanyAccreditSize/' + post_id, function (data) {
                     $('#name-error').hide();
                     $('#email-error').hide();
                     $('#postCrudModal').html("Edit Company Accreditation Category");
@@ -179,7 +180,7 @@
                 confirm("Are You sure want to delete Accreditation Category!");
                 $.ajax({
                     type: "get",
-                    url: "../companyController/destroyCompanyAccreditCat/"+post_id,
+                    url: "../companyController/destroyCompanyAccreditCat/" + post_id,
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -199,7 +200,7 @@
                 //confirm("Are You sure want to deActivate ?!");
                 $.ajax({
                     type: "get",
-                    url: "../../companyController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id+"/"+eventId,
+                    url: "../../companyController/storeCompanyAccrCatSize/" + post_id + "/" + accredit_cat_id + "/" + size + "/" + company_id + "/" + eventId,
                     success: function (data) {
                         //alert(data);
                         $('#ajax-crud-modal').modal('hide');
@@ -219,7 +220,7 @@
                 confirm("Are You sure you want to Approve Accreditation Category sizes?");
                 $.ajax({
                     type: "get",
-                    url: "../../companyController/Approve/"+company_id+"/"+eventId,
+                    url: "../../companyController/Approve/" + company_id + "/" + eventId,
                     success: function (data) {
                         alert('done');
                         var oTable = $('#laravel_datatable').dataTable();

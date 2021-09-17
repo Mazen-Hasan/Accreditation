@@ -12,7 +12,11 @@
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">{{$events[0]->company_name}} / My events</h4>
+                        <h4 class="card-title">
+                            @if ($events != null)
+                            $events[0]->company_name
+                            @endif
+                            / My events</h4>
                         <div class="row">
                             @foreach($events as $event)
                             <div class="col-sm-4">

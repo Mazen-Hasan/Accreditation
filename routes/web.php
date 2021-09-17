@@ -51,6 +51,11 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::get('/event-admin', [App\Http\Controllers\EventAdminController::class, 'index'])->name('event-admin');
     Route::get('/event-companies/{id}', [App\Http\Controllers\EventAdminController::class, 'eventCompanies'])->name('eventCompanies');
 
+    Route::resource('focalpointController', 'App\Http\Controllers\FocalPointController');
+    Route::get('/focalpoints', [App\Http\Controllers\FocalPointController::class, 'index'])->name('focalpoints');
+    Route::get('/focalpoint-add', [App\Http\Controllers\FocalPointController::class, 'focalpointAdd'])->name('focalpointAdd');
+    Route::get('/focalpoint-edit/{id}', [App\Http\Controllers\FocalPointController::class, 'edit'])->name('focalpointEdit');
+
     Route::resource('companyController', 'App\Http\Controllers\CompanyController');
 
     //Route::get('/eventCompanies', [App\Http\Controllers\CompanyController::class, 'eventCompanies'])->name('eventCompanies');
@@ -62,6 +67,8 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::get('companyController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}/{event_id}', 'App\Http\Controllers\CompanyController@storeCompanyAccrCatSize');
     Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat');
     Route::get('companyController/Approve/{companyId}/{eventId}', 'App\Http\Controllers\CompanyController@Approve');
+
+
 
 });
 
@@ -125,6 +132,8 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('userController/reset_password/{id}/{password}', 'App\Http\Controllers\UserController@resetPassword');
 
     Route::get('/template-fields/{id}', [App\Http\Controllers\TemplateFieldController::class, 'index'])->name('templateFields');
+
+
 
 });
 

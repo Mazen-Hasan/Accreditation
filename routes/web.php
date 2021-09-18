@@ -50,6 +50,7 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::resource('eventAdminController', 'App\Http\Controllers\EventAdminController');
     Route::get('/event-admin', [App\Http\Controllers\EventAdminController::class, 'index'])->name('event-admin');
     Route::get('/event-companies/{id}', [App\Http\Controllers\EventAdminController::class, 'eventCompanies'])->name('eventCompanies');
+    Route::get('eventAdminController/Invite/{companyId}', 'App\Http\Controllers\EventAdminController@Invite');
 
     Route::resource('focalpointController', 'App\Http\Controllers\FocalPointController');
     Route::get('/focalpoints', [App\Http\Controllers\FocalPointController::class, 'index'])->name('focalpoints');

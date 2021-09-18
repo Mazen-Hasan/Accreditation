@@ -10,6 +10,7 @@ use App\Models\CompanyAccreditaionCategory;
 use App\Models\Country;
 use App\Models\SelectOption;
 use App\Models\CompanyCategory;
+use App\Models\FocalPoint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -79,6 +80,7 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $companyId = $request->company_Id;
+        if($companyId == null) {
         $company = Company::updateOrCreate(['id' => $companyId],
             ['name' => $request->name,
                 'event_id' => $request->event_id,
@@ -94,7 +96,7 @@ class CompanyController extends Controller
                 'need_management' => $request->need_management,
                 'status' => 0
             ]);
-        if($companyId == null) {
+
             foreach ($request->accreditationCategories as $accreditationCategory) {
                 $help = CompanyAccreditaionCategory::updateOrCreate(['id' => 0],
                     ['accredit_cat_id' => $accreditationCategory,
@@ -105,6 +107,33 @@ class CompanyController extends Controller
                         'size' => 0
                     ]);
             }
+        }else{
+            
+            $where = array('id'=>$companyId);
+            $company = Company::where($where)->first();
+            $status = $company->status;
+            if($request->status == 0){
+                $status = 0;
+            }else{
+                if($company->status != 3){
+                    $status = $request->status;
+                }
+            }
+            $company = Company::updateOrCreate(['id' => $companyId],
+            ['name' => $request->name,
+                'event_id' => $request->event_id,
+                'address' => $request->address,
+                'telephone' => $request->telephone,
+                'website' => $request->website,
+                'focal_point_id' => $request->focal_point,
+                'company_admin_id' => Auth::user()->id,
+                'country_id' => $request->country,
+                'city_id' => $request->city,
+                'category_id' => $request->category,
+                'size' => $request->size,
+                'need_management' => $request->need_management,
+                'status' => $status
+            ]);
         }
 
         return Response::json($company);
@@ -118,13 +147,12 @@ class CompanyController extends Controller
         $where = array('id' => $id);
         $post = Company::where($where)->first();
 
-        $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Focal Point")';
-        $query = $sql;
-        $contacts = DB::select($query);
+        $where = array('event_admin_id' => Auth::user()->id);
+        $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
         foreach($contacts as $contact)
         {
-            $focalPointSelectOption = new SelectOption($contact->id, $contact->name);
+            $focalPointSelectOption = new SelectOption($contact->id, $contact->name .' '.$contact->middle_name.' '.$contact->last_name);
             $focalPointsOption[] = $focalPointSelectOption;
         }
 
@@ -164,6 +192,11 @@ class CompanyController extends Controller
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
 
+        $companyStatus1 = new SelectOption(1,'Active');
+        $companyStatus2 = new SelectOption(0,'InActive');
+        //$companyStatus3 = new SelectOption(3,'Invited');
+        $companyStatuss = [$companyStatus1,$companyStatus2];
+
         if (request()->ajax()) {
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
             $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',[$id]);
@@ -179,7 +212,7 @@ class CompanyController extends Controller
         }
 
         return view('pages.Company.company-edit')->with('company',$post)->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$eventid)->with('event_name',$event->name)->with('company_name',$post->name);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$eventid)->with('event_name',$event->name)->with('company_name',$post->name)->with('statuss',$companyStatuss);
     }
 
 
@@ -198,13 +231,14 @@ class CompanyController extends Controller
     {
         $where = array('id' => $id);
         $event  = Event::where($where)->first();
-        $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Focal Point")';
-        $query = $sql;
-        $contacts = DB::select($query);
+        // $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Focal Point")';
+        // $query = $sql;
+        $where = array('event_admin_id' => Auth::user()->id);
+        $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
         foreach($contacts as $contact)
         {
-            $focalPointSelectOption = new SelectOption($contact->id, $contact->name);
+            $focalPointSelectOption = new SelectOption($contact->id, $contact->name .' '.$contact->middle_name.' '.$contact->last_name);
             $focalPointsOption[] = $focalPointSelectOption;
         }
 

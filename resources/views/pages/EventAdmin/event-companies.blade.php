@@ -48,16 +48,42 @@
                                     <th>Category</th>
                                     <th>Country</th>
                                     <th>City</th>
-                                    <th>Address</th>
+                                    <!-- <th>Address</th> -->
                                     <th>Website</th>
                                     <th>Telephone</th>
                                     <th>Focal point</th>
+                                    <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="hidden" id="curr_element_id">
+                        <label class="col-sm-12 confirm-text" id="confirmText"></label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel</button>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
                         </div>
                     </div>
                 </div>
@@ -98,10 +124,11 @@
                     { data: 'category', name: 'category' },
                     { data: 'country', name: 'country' },
                     { data: 'city', name: 'city' },
-                    { data: 'address', name: 'address'},
+                    // { data: 'address', name: 'address'},
                     { data: 'website', name: 'website'},
                     { data: 'telephone', name: 'telephone'},
                     { data: 'focal_point', name: 'focal_point'},
+                    { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ if(data == 0){return "<p style='color: red'>InActive</p>"}else{return "<p style='color: orange'>Invited</p>" }}}},
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]
@@ -117,6 +144,38 @@
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Company");
                 //$('#ajax-crud-modal').modal('show');
+            });
+
+            $('body').on('click', '#invite-company', function () {
+                //alert('helo');
+                var company_id = $(this).data("id");
+                var company_name = $(this).data("name");
+                var company_focalpoint = $(this).data("focalpoint");
+                $('#confirmTitle').html('Company Invitation');
+                $('#curr_element_id').val(company_id);
+                var confirmText =  'Are you sure you want to invite Company: ' + company_name + ' to focal point: '+company_focalpoint+'?';
+                $('#confirmText').html(confirmText);
+                $('#delete-element-confirm-modal').modal('show');
+            });
+
+            $('#delete-element-confirm-modal button').on('click', function(event) {
+                var $button = $(event.target);
+                $(this).closest('.modal').one('hidden.bs.modal', function() {
+                    if($button[0].id === 'btn-yes'){
+                        var company_id = $('#curr_element_id').val();
+                        $.ajax({
+                            type: "get",
+                            url: "../eventAdminController/Invite/" + company_id,
+                            success: function (data) {
+                                var oTable = $('#laravel_datatable').dataTable();
+                                oTable.fnDraw(false);
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>

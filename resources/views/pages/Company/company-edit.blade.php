@@ -139,6 +139,23 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Status</label>
+                                        <div class="col-sm-12">
+                                            <select id="status" name="status" value="" required="">
+                                                @foreach ($statuss as $status)
+                                                    <option value="{{ $status->key }}"
+{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($status->key == $company->status)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $status->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">

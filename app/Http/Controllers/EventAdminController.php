@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Event;
+use App\Models\Company;
+use App\Models\FocalPoint;
+use Illuminate\Support\Facades\Response;
 
 class EventAdminController extends Controller
 {
@@ -18,7 +21,7 @@ class EventAdminController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('companyEdit', $data->id) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     return $button;
@@ -48,7 +51,7 @@ class EventAdminController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<a href="../company-edit/'.$data->id.'/'.$data->event_id.'" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="'.$data->name.'" data-focalpoint="'.$data->focal_point.'" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('companyAccreditCat',[$data->id , $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     return $button;
@@ -61,4 +64,22 @@ class EventAdminController extends Controller
         }
         return view('pages.EventAdmin.event-companies')->with('eventid',$id)->with('event_name',$event->name);
     }
+
+    public function Invite($companyId){
+        $where = array('id' => $companyId);
+        $company = Company::where($where)->first();
+        $where = array('id' => $company->focal_point_id);
+        $focalpoint = FocalPoint::where($where)->first();
+        $post = Company::updateOrCreate(['id' => $companyId],
+        [
+            'company_admin_id' => $focalpoint->account_id,
+            'status' => 3
+        ]);
+        $focalpointUpdate = FocalPoint::updateOrCreate(['id' => $focalpoint->id],
+        [
+            'company_id' => $companyId
+        ]);
+        return Response::json($post);
+    }
+
 }

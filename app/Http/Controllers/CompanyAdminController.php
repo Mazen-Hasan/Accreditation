@@ -38,7 +38,7 @@ class CompanyAdminController extends Controller
                 ->make(true);
         }
 
-        $events = DB::select('select c.* , cc.need_management need_management , cc.name company_name from events_view c inner join companies cc on c.id = cc.event_id where cc.company_admin_id = ? and cc.status = ?', [Auth::user()->id,0]);
+        $events = DB::select('select c.* , cc.need_management need_management , cc.name company_name from events_view c inner join companies cc on c.id = cc.event_id where cc.company_admin_id = ? and cc.status <> ?', [Auth::user()->id,0]);
 //        var_dump($events);
 //        exit;
 //        $events = DB::select('select * from events_view  , events_view v');

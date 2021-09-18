@@ -179,23 +179,6 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Security Officer</label>
-                                        <div class="col-sm-12">
-                                           <select id="security_officer" name="security_officer" required="">
-                                                @foreach ($securityOfficers as $securityOfficer)
-                                                    <option value="{{ $securityOfficer->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($securityOfficer->key == $event->security_officer_id)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $securityOfficer->value }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group col">
                                         <label>Security Option</label>
                                         <div class="col-sm-12">
                                            <select id="approval_option" name="approval_option" required="">
@@ -206,6 +189,27 @@
                                                             selected="selected"
                                                         @endif
                                                     >{{ $approvalOption->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Security Officer</label>
+                                        <div class="col-sm-12">
+                                           <select id="security_officer" 
+                                           @if ($event->approval_option == 1)
+                                                disabled = true
+                                           @endif
+                                           name="security_officer" required="">
+                                                @foreach ($securityOfficers as $securityOfficer)
+                                                    <option value="{{ $securityOfficer->key }}"
+{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($securityOfficer->key == $event->security_officer_id)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $securityOfficer->value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -359,6 +363,15 @@
                         console.log('Error:', data);
                     }
                 });
+            });
+            $(document).on('change','#approval_option',function(){
+               var choosed = $('#approval_option').find(":selected").val();
+               //alert(choosed);
+               if(choosed == 1){
+                    $("#security_officer").prop('disabled', true);                                                       
+               }else{
+                    $('#security_officer').prop('disabled', false);
+               }
             });
         });
 

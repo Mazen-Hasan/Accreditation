@@ -143,11 +143,11 @@ Route::group(['middleware' => 'role:super-admin'], function() {
 
     Route::get('/template-fields/{template_id}', [App\Http\Controllers\TemplateFieldController::class, 'index'])->name('templateFields');
     Route::resource('templateFieldController', 'App\Http\Controllers\TemplateFieldController');
-    Route::get('templateFieldController/destroy/{field_id}', 'App\Http\Controllers\templateFieldController@destroy');
+    Route::get('templateFieldController/destroy/{field_id}', 'App\Http\Controllers\TemplateFieldController@destroy');
 
     Route::get('/field-elements/{field_id}', [App\Http\Controllers\FieldElementController::class, 'index'])->name('fieldElements');
     Route::resource('fieldElementController', 'App\Http\Controllers\FieldElementController');
-    Route::get('fieldElementController/destroy/{element_id}', 'App\Http\Controllers\fieldElementController@destroy');
+    Route::get('fieldElementController/destroy/{element_id}', 'App\Http\Controllers\FieldElementController@destroy');
 
 });
 

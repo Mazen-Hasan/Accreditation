@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\companyCategory;
+use App\Models\CompanyCategory;
 use Illuminate\Http\Request;
 use Redirect,Response;
 
@@ -17,7 +17,7 @@ class CompanyCategoryController extends Controller
     {
         if(request()->ajax())
         {
-            return datatables()->of(companyCategory::latest()->get())
+            return datatables()->of(CompanyCategory::latest()->get())
                 ->addColumn('action', function($data) {
                     $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-category">Edit</a>';
                     $button .= '&nbsp;&nbsp;';
@@ -45,7 +45,7 @@ class CompanyCategoryController extends Controller
     public function store(Request $request)
     {
         $categoryId = $request->category_id;
-        $category   =   companyCategory::updateOrCreate(['id' => $categoryId],
+        $category   =   CompanyCategory::updateOrCreate(['id' => $categoryId],
             ['name' => $request->name,
                 'status' => $request->status
             ]);
@@ -62,7 +62,7 @@ class CompanyCategoryController extends Controller
     public function edit($id)
     {
         $where = array('id' => $id);
-        $category  = companyCategory::where($where)->first();
+        $category  = CompanyCategory::where($where)->first();
         return Response::json($category);
     }
 
@@ -73,14 +73,14 @@ class CompanyCategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = companyCategory::where('id',$id)->delete();
+        $category = CompanyCategory::where('id',$id)->delete();
 
         return Response::json($category);
     }
 
     public function changeStatus($id,$status)
     {
-        $category  =   companyCategory::updateOrCreate(['id' => $id],
+        $category  =   CompanyCategory::updateOrCreate(['id' => $id],
             [
                 'status' => $status
             ]);

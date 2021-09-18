@@ -31,7 +31,7 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('company-admin')
-                                <a href="../company-participant-add" id="add-new-post" class="add-hbtn">
+                                <a href="{{route('templateForm',27)}}" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>

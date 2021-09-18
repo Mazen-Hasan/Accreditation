@@ -662,6 +662,27 @@ input::placeholder{
     text-transform: capitalize;
 }
 
+textarea {
+    outline: none;
+    border: none;
+
+    font-family: Poppins-Regular;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #666666;
+
+    display: block;
+    width: 100%;
+    background: #e6e6e6;
+    height: 200px;
+    border-radius: 10px;
+    padding: 10px 5px 0 25px;
+}
+
+textarea::placeholder{
+    text-transform: capitalize;
+}
+
 select {
     font-family: Poppins-Regular;
     font-size: 15px;

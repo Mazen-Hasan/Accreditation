@@ -33,7 +33,12 @@ Route::group(['middleware' => 'role:company-admin'], function() {
     Route::get('companyAdminController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}/{event_id}', 'App\Http\Controllers\CompanyAdminController@storeCompanyAccrCatSize');
     Route::get('companyAdminController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyAdminController@destroyCompanyAccreditCat');
     Route::get('companyAdminController/sendApproval/{companyId}/{eventId}', 'App\Http\Controllers\CompanyAdminController@sendApproval');
-//    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
+
+    Route::resource('templateFormController', 'App\Http\Controllers\TemplateFormController');
+    Route::get('/template-form/{template_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
+
+
+    //    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
 //    Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
 //    Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
 //    Route::get('/participant-edit/{id}', [App\Http\Controllers\ParticipantController::class, 'edit'])->name('participantEdit');
@@ -143,8 +148,6 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('/field-elements/{field_id}', [App\Http\Controllers\FieldElementController::class, 'index'])->name('fieldElements');
     Route::resource('fieldElementController', 'App\Http\Controllers\FieldElementController');
     Route::get('fieldElementController/destroy/{element_id}', 'App\Http\Controllers\fieldElementController@destroy');
-
-
 
 });
 

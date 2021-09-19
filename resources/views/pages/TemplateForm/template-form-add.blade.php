@@ -45,11 +45,12 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
-                            $('#templateForm').trigger("reset");
-                            $('#template-modal').modal('hide');
-                            $('#btn-save').html('Save Changes');
-                            var oTable = $('#laravel_datatable').dataTable();
-                            oTable.fnDraw(false);
+                            // $('#templateForm').trigger("reset");
+                            // $('#template-modal').modal('hide');
+                            // $('#btn-save').html('Save Changes');
+                            // var oTable = $('#laravel_datatable').dataTable();
+                            // oTable.fnDraw(false);
+                            window.location.href = "{{ route('companyParticipants')}}";
                         },
                         error: function (data) {
                             console.log('Error:', data);

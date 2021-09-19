@@ -20,8 +20,6 @@ class ParticipantController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            var_dump('i am heres');
-            exit;
             $where = array('company_admin_id' => Auth::user()->id);
             $company = Company::where($where)->first();
             $participants = DB::select('select * from paticipants where company = ?' ,[$company->id]);

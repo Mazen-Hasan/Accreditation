@@ -16,6 +16,7 @@
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
+                <input type="hidden" id="data_values" name ="data_values" value=""/>
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
@@ -31,7 +32,7 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('company-admin')
-                                <a href="{{route('templateForm',27)}}" id="add-new-post" class="add-hbtn">
+                                <a href="{{route('templateForm',0)}}" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
@@ -45,6 +46,10 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
+                                    @foreach ($dataTableColumns as $dataTableColumn)
+                                        <th><?php echo $dataTableColumn ?></th>
+                                    @endforeach
+                                    <!-- <th>ID</th>
                                     <th>Name</th>
                                     {{--                                    <th>Location</th>--}}
                                     <th>Nationality</th>
@@ -54,7 +59,7 @@
                                     <th>Position</th>
                                     <th>Accreditation Category</th>
                                     <th>Religion</th>
-                                    {{--                                    <th style="color: black">Status</th>--}}
+                                    {{--                                    <th style="color: black">Status</th>--}} -->
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -76,9 +81,17 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
+            var myColumns = [];
+            var i =0;
+            myColumns.push({data: "id",name: "id", 'visible': false});
+            while(i< jqueryarray.length){
+                myColumns.push({data: jqueryarray[i].replace(/ /g,"_") ,name: jqueryarray[i].replace(/ /g,"_")});
+                i++;
+            }
+            myColumns.push({data: "action",name: "action" , orderable: "false"});
+            //alert("val---" + JSON.stringify(myColumns));
             $('#laravel_datatable').DataTable({
-
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',
@@ -95,18 +108,19 @@
                     url: '../company-participants',
                     type: 'GET',
                 },
-                columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'name', name: 'name'},
-                    { data: 'nationality', name: 'nationality' },
-                    { data: 'class_name', name: 'class' },
-                    { data: 'email', name: 'email' },
-                    { data: 'mobile', name: 'mobile' },
-                    { data: 'position', name: 'position' },
-                    { data: 'accreditation_category_name', name: 'accreditation_category' },
-                    { data: 'religion_name', name: 'religion' },
-                    {data: 'action', name: 'action', orderable: false},
-                ],
+                // columns: [myColumns
+                //     { data: 'id', name: 'id', 'visible': false},
+                //     { data: 'name', name: 'name'},
+                //     { data: 'nationality', name: 'nationality' },
+                //     { data: 'class_name', name: 'class' },
+                //     { data: 'email', name: 'email' },
+                //     { data: 'mobile', name: 'mobile' },
+                //     { data: 'position', name: 'position' },
+                //     { data: 'accreditation_category_name', name: 'accreditation_category' },
+                //     { data: 'religion_name', name: 'religion' },
+                //     { data: 'action', name: 'action', orderable: false},
+                // ],
+                columns: myColumns,
                 order: [[0, 'desc']]
             });
 

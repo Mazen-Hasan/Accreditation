@@ -4,16 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\AccreditationCategory;
 use App\Models\Company;
+use App\Models\CompanyStaff;
+use App\Models\Event;
+use App\Models\TemplateField;
 use App\Models\CompanyAccreditaionCategory;
+use App\Models\CompanyStaffData;
 use App\Models\Gender;
 use App\Models\NationalityClass;
 use App\Models\Participant;
 use App\Models\Religion;
 use App\Models\SelectOption;
+use App\Models\StaffData;
+use App\Models\TemplateFieldElement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Schema;
 
 class CompanyAdminController extends Controller
 {
@@ -47,27 +54,89 @@ class CompanyAdminController extends Controller
 
     public function companyParticipants()
     {
+        $dataTableColumuns = array();
+
+        $where = array('company_admin_id' => Auth::user()->id);
+        $company = Company::where($where)->get()->first();
+
+        $where = array('id' => $company->event_id);
+        $event = Event::where($where)->get()->first();
+
+        $where = array('template_id' => $event->event_form);
+        $templateFields = TemplateField::where($where)->get()->all();
+
+        foreach($templateFields as $templateField){
+            $dataTableColumuns[] = $templateField->label_en;
+        }
+        Schema::dropIfExists('temp'.Auth::user()->id);
+        Schema::create('temp'.Auth::user()->id, function ($table) use($templateFields) {
+            $table->string('id');
+            foreach($templateFields as $templateField){
+                $dataTableColumuns[] = $templateField->label_en;
+                $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
+            }
+        });
+        $where = array('company_admin_id' => Auth::user()->id);
+        $company = Company::where($where)->get()->first();
+
+        $where = array('event_id' => $company->event_id,'company_id' => $company->id);
+        $companyStaffs = CompanyStaff::where($where)->get()->all();
+        $alldata = array();
+        foreach($companyStaffs as $companyStaff){
+            $where = array('staff_id' => $companyStaff->id);
+            // $staffDatas = StaffData::where($where)->get()->all();
+            $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ?',[$companyStaff->id]);
+            $staffDataValues = array();
+            $staffDataValues[] = $companyStaff->id;
+            foreach($staffDatas as $staffData){
+                if($staffData->slug == 'select' ){
+                    $where = array('template_field_id' =>$staffData->template_field_id , 'value_id' => $staffData->value);
+                    $value = TemplateFieldElement::where($where)->first();
+                    $staffDataValues[] = $value->value_en;
+                }else{
+                    $staffDataValues[] = $staffData->value;
+                }
+            }
+            $alldata[] = $staffDataValues;
+        }        
+        // var_dump($alldata);
+        // exit;
+        $query = '';
+        foreach($alldata as $data){
+            $query = 'insert into temp'.Auth::user()->id.' (id';
+            foreach($templateFields as $templateField){
+                $query = $query .',' . preg_replace('/\s+/', '_', $templateField->label_en);
+            }
+            $query = $query . ') values (';
+            foreach($data as $staffDataValue){
+                $query = $query . '"' . $staffDataValue . '",';
+            }
+            $query = substr($query,0, strlen($query)-1);
+            $query = $query . ')';
+            DB::insert($query);
+        }
+        //DB::insert($query);
+        // var_dump($query);
+        // exit;
         if (request()->ajax()) {
-            $where = array('company_admin_id' => Auth::user()->id);
-            $company = Company::where($where)->get()->first();
-            //$participants = DB::select('select * from company_participants_view');
-            $participants = DB::select('select * from company_participants_view where company = ?' ,[$company->id]);
-//            $participants = DB::select('select * from participants');
+            $participants = DB::select('select t.* , c.* from temp'.Auth::user()->id. ' t inner join company_staff c on t.id = c.id');
             return datatables()->of($participants)
-                ->addColumn('name', function($row){
-                    return $row->first_name.' '.$row->last_name;
-                })
+                // ->addColumn('name', function($row){
+                //     return $row->first_name.' '.$row->last_name;
+                // })
                 ->addColumn('action', function ($data) {
                     //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                    $button = '<a href="' . route('companyParticipantEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    $button = '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button .= '&nbsp;&nbsp;';
-                    //$button .= '<a href="javascript:void(0);" id="delete-post" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">   Delete</a>';
+                    if ($data->status == 0){
+                        $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">Send Request</a>';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.CompanyAdmin.company-participants');
+        return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns',$dataTableColumuns);
     }
 
 
@@ -281,6 +350,15 @@ class CompanyAdminController extends Controller
     }
 
     public function sendApproval($companyId,$eventId){
+        $where = array('company_id' => $companyId,'event_id'=>$eventId);
+        //$post = CompanyAccreditaionCategory::where($where);
+        $companyAccreditCategories = CompanyAccreditaionCategory::where($where)
+        ->update(['status'=>1]);
+        return Response::json($companyAccreditCategories);
+
+    }
+
+    public function sendRequest($companyId,$eventId){
         $where = array('company_id' => $companyId,'event_id'=>$eventId);
         //$post = CompanyAccreditaionCategory::where($where);
         $companyAccreditCategories = CompanyAccreditaionCategory::where($where)

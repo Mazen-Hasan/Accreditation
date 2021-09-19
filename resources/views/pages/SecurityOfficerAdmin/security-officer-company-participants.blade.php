@@ -17,6 +17,8 @@
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <input type="hidden" id="data_values" name ="data_values" value=""/>
+                <input type="hidden" id="company_id" name ="company_id" value="{{$company_id}}"/>
+                <input type="hidden" id="event_id" name ="event_id" value="{{$event_id}}"/>
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
@@ -124,6 +126,7 @@
             </div>
         </div>
     </div>
+    
 @endsection
 @section('script')
     <script>
@@ -144,6 +147,8 @@
             myColumns.push({data: "status",name: "status"});
             myColumns.push({data: "action",name: "action" , orderable: "false"});
             //alert("val---" + JSON.stringify(myColumns));
+            var companyId = $('#company_id').val();
+            var eventId = $('#event_id').val();
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
@@ -158,7 +163,7 @@
                 serverSide: true,
                 ajax: {
                     {{--url: "{{ route('participantController.index') }}",--}}
-                    url: '../company-participants',
+                    url: '../../security-officer-company-participants/'+companyId +'/'+eventId,
                     type: 'GET',
                 },
                 // columns: [myColumns
@@ -189,17 +194,41 @@
                 //$('#ajax-crud-modal').modal('show');
             });
 
-            $('body').on('click', '#send_request', function () {
+            $('body').on('click', '#approve', function () {
                 var post_id = $(this).data("id");
                 //alert(post_id);
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
-                $('#confirmTitle').html('Send Participation Request');
+                $('#confirmTitle').html('Approve Participation Request');
                 $('#curr_element_id').val(post_id);
-                $('#action_button').val('sendRequest');
-                var confirmText =  "Are You sure you want to Send Event participation?";
+                $('#action_button').val('approve');
+                var confirmText =  "Are You sure you want to Approve Event participation Request?";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
+            });
+            $('body').on('click', '#reject', function () {
+                var post_id = $(this).data("id");
+                //alert(post_id);
+                var company_id = $('#company_id').val();
+                var eventId = $('#event_id').val();
+                $('#confirmTitle').html('Reject Participation Request');
+                $('#curr_element_id').val(post_id);
+                $('#action_button').val('reject');
+                var confirmText =  "Are You sure you want to reject Event participation Request?";
+                $('#confirmText').html(confirmText);
+                $('#delete-element-confirm-modal').modal('show');
+            });
+            $('body').on('click', '#reject_with_correction', function () {
+                var post_id = $(this).data("id");
+                var company_id = $('#company_id').val();
+                var eventId = $('#event_id').val();
+                $('#confirmTitle-new').html('Reject Participation Request To Correct');
+                $('#curr_element_id-new').val(post_id);
+                // $('#action_button').val('approve');
+                $('#reason').val('');
+                var confirmText =  "Insert Reason:";
+                $('#confirmText-new').html(confirmText);
+                $('#delete-element-confirm-modal-new').modal('show');
             });
             $('body').on('click', '#show_reason', function () {
                 var post_id = $(this).data("id");
@@ -222,25 +251,26 @@
                     if($button[0].id === 'btn-yes'){
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
-                        // if(action_button == 'delete'){
-                        //     $.ajax({
-                        //         type: "get",
-                        //         url: "../companyAdminController/destroyCompanyAccreditCat/"+post_id,
-                        //         success: function (data) {
-                        //             var oTable = $('#laravel_datatable').dataTable();
-                        //             oTable.fnDraw(false);
-                        //         },
-                        //         error: function (data) {
-                        //             console.log('Error:', data);
-                        //         }
-                        //     });
-                        // }
-                        if(action_button == 'sendRequest'){
+                        if(action_button == 'approve'){
+                            var staffId = $('#curr_element_id').val();
+                            $.ajax({
+                                type: "get",
+                                url: "../../securityOfficerAdminController/Approve/"+staffId,
+                                success: function (data) {
+                                    var oTable = $('#laravel_datatable').dataTable();
+                                    oTable.fnDraw(false);
+                                },
+                                error: function (data) {
+                                    console.log('Error:', data);
+                                }
+                            });
+                        }
+                        if(action_button == 'reject'){
                             // var company_id = $('#company_id').val();
                             var staffId = $('#curr_element_id').val();
                             $.ajax({
                                 type: "get",
-                                url: "../companyAdminController/sendRequest/"+staffId,
+                                url: "../../securityOfficerAdminController/Reject/"+staffId,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
@@ -263,7 +293,7 @@
                         var reason = $('#reason').val();
                         $.ajax({
                                 type: "get",
-                                url: "../../eventAdminController/RejectToCorrect/"+staffId+"/"+reason,
+                                url: "../../securityOfficerAdminController/RejectToCorrect/"+staffId+"/"+reason,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);

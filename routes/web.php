@@ -33,6 +33,7 @@ Route::group(['middleware' => 'role:company-admin'], function() {
     Route::get('companyAdminController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}/{event_id}', 'App\Http\Controllers\CompanyAdminController@storeCompanyAccrCatSize');
     Route::get('companyAdminController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyAdminController@destroyCompanyAccreditCat');
     Route::get('companyAdminController/sendApproval/{companyId}/{eventId}', 'App\Http\Controllers\CompanyAdminController@sendApproval');
+    Route::get('companyAdminController/sendRequest/{staffId}', 'App\Http\Controllers\CompanyAdminController@sendRequest');
 
     Route::resource('templateFormController', 'App\Http\Controllers\TemplateFormController');
     Route::get('/template-form/{template_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
@@ -46,16 +47,14 @@ Route::group(['middleware' => 'role:company-admin'], function() {
 
 Route::group(['middleware' => 'role:event-admin'], function() {
 
-//    Route::resource('EventController', 'App\Http\Controllers\EventController');
-//    Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events');
-//    Route::get('/event-add', [App\Http\Controllers\EventController::class, 'eventAdd'])->name('eventAdd');
-//    Route::get('/event-edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('eventEdit');
-//    Route::get('EventController/remove/{event_security_category_id}', 'App\Http\Controllers\EventController@remove');
-//    Route::get('EventController/storeEventSecurityCategory/{event_id}/{security_category_id}', 'App\Http\Controllers\EventController@storeEventSecurityCategory');
     Route::resource('eventAdminController', 'App\Http\Controllers\EventAdminController');
     Route::get('/event-admin', [App\Http\Controllers\EventAdminController::class, 'index'])->name('event-admin');
     Route::get('/event-companies/{id}', [App\Http\Controllers\EventAdminController::class, 'eventCompanies'])->name('eventCompanies');
+    Route::get('/event-company-participants/{id}/{companyId}', [App\Http\Controllers\EventAdminController::class, 'eventCompanyParticipants'])->name('eventCompanyParticipants');
     Route::get('eventAdminController/Invite/{companyId}', 'App\Http\Controllers\EventAdminController@Invite');
+    Route::get('eventAdminController/Approve/{staffId}', 'App\Http\Controllers\EventAdminController@Approve');
+    Route::get('eventAdminController/Reject/{staffId}', 'App\Http\Controllers\EventAdminController@Reject');
+    Route::get('eventAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\EventAdminController@RejectToCorrect');
 
     Route::resource('focalpointController', 'App\Http\Controllers\FocalPointController');
     Route::get('/focalpoints', [App\Http\Controllers\FocalPointController::class, 'index'])->name('focalpoints');
@@ -63,8 +62,6 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::get('/focalpoint-edit/{id}', [App\Http\Controllers\FocalPointController::class, 'edit'])->name('focalpointEdit');
     Route::get('focalpointController/reset_password/{id}/{password}', 'App\Http\Controllers\FocalPointController@resetPassword');
 
-    // Route::resource('userController', 'App\Http\Controllers\UserController');
-    // Route::get('userController/reset_password/{id}/{password}', 'App\Http\Controllers\UserController@resetPassword');
 
     Route::resource('companyController', 'App\Http\Controllers\CompanyController');
 
@@ -151,6 +148,16 @@ Route::group(['middleware' => 'role:super-admin'], function() {
 
 });
 
+Route::group(['middleware' => 'role:security-officer'], function() {
+
+    Route::resource('securityOfficerAdminController', 'App\Http\Controllers\SecurityOfficerAdminController');
+    Route::get('/security-officer-admin', [App\Http\Controllers\SecurityOfficerAdminController::class, 'index'])->name('security-officer-admin');
+    Route::get('/security-officer-companies/{id}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'securityOfficerCompanies'])->name('securityOfficerCompanies');
+    Route::get('/security-officer-company-participants/{id}/{companyId}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'securityOfficerCompanyParticipants'])->name('securityOfficerCompanyParticipants');
+    Route::get('securityOfficerAdminController/Approve/{staffId}', 'App\Http\Controllers\SecurityOfficerAdminController@Approve');
+    Route::get('securityOfficerAdminController/Reject/{staffId}', 'App\Http\Controllers\SecurityOfficerAdminController@Reject');
+    Route::get('securityOfficerAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\SecurityOfficerAdminController@RejectToCorrect');
+});
 //Auth::routes();
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

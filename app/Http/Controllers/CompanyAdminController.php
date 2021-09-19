@@ -85,7 +85,7 @@ class CompanyAdminController extends Controller
         foreach($companyStaffs as $companyStaff){
             $where = array('staff_id' => $companyStaff->id);
             // $staffDatas = StaffData::where($where)->get()->all();
-            $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ?',[$companyStaff->id]);
+            $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?',[$companyStaff->id,$event->event_form]);
             $staffDataValues = array();
             $staffDataValues[] = $companyStaff->id;
             foreach($staffDatas as $staffData){
@@ -121,19 +121,65 @@ class CompanyAdminController extends Controller
         if (request()->ajax()) {
             $participants = DB::select('select t.* , c.* from temp'.Auth::user()->id. ' t inner join company_staff c on t.id = c.id');
             return datatables()->of($participants)
-                // ->addColumn('name', function($row){
-                //     return $row->first_name.' '.$row->last_name;
-                // })
+                ->addColumn('status', function($data){
+                    $status_value = "initaited";
+                    switch($data->status){
+                        case 0:
+                            $status_value =  "Initaited";
+                            break;
+                        case 1:
+                            $status_value =  "waiting Security Officer Approval";
+                            break;
+                        case 2:
+                            $status_value =  "waiting Event Admin Approval";
+                            break;
+                        case 3:
+                            $status_value =  "approved by security officer";
+                            break;
+                        case 4:
+                            $status_value =  "rejected by security officer";
+                            break;
+                        case 5:
+                            $status_value =  "rejected by event admin";
+                            break;
+                        case 6:
+                            $status_value =  "approved by event admin";
+                            break;
+                        case 7:
+                            $status_value =  "rejected with correction by security officer";                                
+                            break;
+                        case 8:
+                            $status_value =  "rejected with correction by event admin";                                
+                            break;   
+                    }
+                    return $status_value;
+                    //return $row->first_name.' '.$row->last_name;
+                })
                 ->addColumn('action', function ($data) {
+                    $button = '';
                     //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                    $button = '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                    $button .= '&nbsp;&nbsp;';
-                    if ($data->status == 0){
-                        $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">Send Request</a>';
+                    // $button = '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    // $button .= '&nbsp;&nbsp;';
+                    switch($data->status){
+                        case 0:
+                            $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                            $button .= '&nbsp;&nbsp;';
+                            $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">Send Request</a>';
+                            break;
+                        case 7:
+                            $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                            $button .= '&nbsp;&nbsp;';
+                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->security_officer_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
+                            break;
+                        case 8:
+                            $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                            $button .= '&nbsp;&nbsp;';
+                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->event_admin_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
+                            break;
                     }
                     return $button;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['status','action'])
                 ->make(true);
         }
         return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns',$dataTableColumuns);
@@ -358,12 +404,39 @@ class CompanyAdminController extends Controller
 
     }
 
-    public function sendRequest($companyId,$eventId){
-        $where = array('company_id' => $companyId,'event_id'=>$eventId);
-        //$post = CompanyAccreditaionCategory::where($where);
-        $companyAccreditCategories = CompanyAccreditaionCategory::where($where)
-        ->update(['status'=>1]);
-        return Response::json($companyAccreditCategories);
+    public function sendRequest($staffId){
+        $where = array('id' => $staffId);
+        $companyStaff = CompanyStaff::where($where)->first();
+        $companyId = $companyStaff->company_id;
+        $eventId = $companyStaff->event_id;
+
+        $eventWhere = array('id'=> $eventId);
+        $event = Event::where($eventWhere)->first();
+
+        $approval = $event->approval_option;
+        if($approval == 1){
+            $updateQuery = 'update company_staff set security_officer_id = '.$event->security_officer.' where id = '.$staffId;
+            // var_dump($updateQuery);
+            // exit;
+            DB::update($updateQuery);
+            DB::update('update company_staff set status = ? where id = ?',[1,$staffId]);
+            // $compamyStaff = CompanyStaff::where($where)
+            // ->update(['status'=>1,'security_officer_id'=> $event->security_officer]);
+
+        }else{
+            if($approval == 2){
+                DB::update('update company_staff set event_admin_id = ? where id = ?',[$event->event_admin,$staffId]);
+                DB::update('update company_staff set status = ? where id = ?',[2,$staffId]);
+                // $compamyStaff = CompanyStaff::where($where)
+                // ->update(['status'=>2,'event_admin_id'=> $event->event_admin]);
+            }else{
+                DB::update('update company_staff set security_officer_id = ? where id = ?',[$event->security_officer,$staffId]);
+                DB::update('update company_staff set status = ? where id = ?',[1,$staffId]);
+                // $compamyStaff = CompanyStaff::where($where)
+                // ->update(['status'=>1,'security_officer_id'=> $event->security_officer]);
+            }
+        }
+        return Response::json($event);
 
     }
 }

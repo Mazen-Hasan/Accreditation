@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schema;
 use App\Models\TemplateField;
 use App\Models\TemplateFieldElement;
 
-class EventAdminController extends Controller
+class SecurityOfficerAdminController extends Controller
 {
 
     public function index()
@@ -37,14 +37,14 @@ class EventAdminController extends Controller
                 ->make(true);
         }
 
-        $events = DB::select('select * from events_view where event_admin_id = ?', [Auth::user()->id]);
+        $events = DB::select('select * from events_view where security_officer_id = ? and approval_option in (1,3) ', [Auth::user()->id]);
 //        var_dump($events);
 //        exit;
 //        $events = DB::select('select * from events_view  , events_view v');
-        return view('pages.EventAdmin.event-admin')->withEvents($events);
+        return view('pages.SecurityOfficerAdmin.security-officer-admin')->withEvents($events);
     }
 
-    public function eventCompanies($id)
+    public function securityOfficerCompanies($id)
     {
         $where = array('id' => $id);
         $event  = Event::where($where)->first();
@@ -53,13 +53,13 @@ class EventAdminController extends Controller
 //            $companies = DB::select('select * from companies_view');
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="../company-edit/'.$data->id.'/'.$data->event_id.'" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="'.$data->name.'" data-focalpoint="'.$data->focal_point.'" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('companyAccreditCat',[$data->id , $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('eventCompanyParticipants',[$data->id , $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook" title="Company Participants"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    // $button = '<a href="../company-edit/'.$data->id.'/'.$data->event_id.'" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    // $button .= '&nbsp;&nbsp;';
+                    // $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="'.$data->name.'" data-focalpoint="'.$data->focal_point.'" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    // $button .= '&nbsp;&nbsp;';
+                    // $button .= '<a href="' . route('companyAccreditCat',[$data->id , $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    // $button .= '&nbsp;&nbsp;';
+                    $button = '<a href="' . route('securityOfficerCompanyParticipants',[$data->id , $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook" title="Company Participants"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     return $button;
                 })
 //                ->addColumn('event_id', function($event_id){
@@ -68,7 +68,7 @@ class EventAdminController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.EventAdmin.event-companies')->with('eventid',$id)->with('event_name',$event->name);
+        return view('pages.SecurityOfficerAdmin.security-officer-companies')->with('eventid',$id)->with('event_name',$event->name);
     }
 
     public function Invite($companyId){
@@ -88,7 +88,7 @@ class EventAdminController extends Controller
         return Response::json($post);
     }
 
-    public function eventCompanyParticipants($companyId,$eventId){
+    public function securityOfficerCompanyParticipants($companyId,$eventId){
         $dataTableColumuns = array();
 
         $where = array('id' => $companyId);
@@ -114,7 +114,7 @@ class EventAdminController extends Controller
         // $where = array('company_admin_id' => Auth::user()->id);
         // $company = Company::where($where)->get()->first();
 
-        $where = array('event_id' => $company->event_id,'company_id' => $company->id);
+        $where = array('event_id' => $company->event_id,'company_id' => $company->id,'status' => 1);
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach($companyStaffs as $companyStaff){
@@ -193,7 +193,7 @@ class EventAdminController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '';
                     switch($data->status){
-                        case 2:
+                        case 1:
                             $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Aprrove</a>';
                             $button .= '&nbsp;&nbsp;';
                             $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject</a>';
@@ -203,16 +203,16 @@ class EventAdminController extends Controller
                         case 7:
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->security_officer_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
                             break;
-                        case 8:
-                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->event_admin_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
-                            break;
+                        // case 8:
+                        //     $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->event_admin_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
+                        //     break;
                     }
                     return $button;
                 })
                 ->rawColumns(['status','action'])
                 ->make(true);
         }
-        return view('pages.EventAdmin.event-company-participants')->with('dataTableColumns',$dataTableColumuns)->with('company_id',$companyId)->with('event_id',$eventId);
+        return view('pages.SecurityOfficerAdmin.security-officer-company-participants')->with('dataTableColumns',$dataTableColumuns)->with('company_id',$companyId)->with('event_id',$eventId);
     }
 
     public function Approve($staffId){
@@ -225,13 +225,13 @@ class EventAdminController extends Controller
         $event = Event::where($eventWhere)->first();
 
         $approval = $event->approval_option;
-        if($approval == 2){
-            DB::update('update company_staff set status = ? where id = ?',[6,$staffId]);
+        if($approval == 1){
+            DB::update('update company_staff set status = ? where id = ?',[3,$staffId]);
 
-        }
-        else{
+        }else{
             if($approval == 3){
-                DB::update('update company_staff set status = ? where id = ?',[6,$staffId]);
+                DB::update('update company_staff set event_admin_id = ? where id = ?',[$event->event_admin,$staffId]);
+                DB::update('update company_staff set status = ? where id = ?',[2,$staffId]);
             }
         }
         return Response::json($event);
@@ -246,13 +246,13 @@ class EventAdminController extends Controller
         $event = Event::where($eventWhere)->first();
 
         $approval = $event->approval_option;
-        if($approval == 2){
-            DB::update('update company_staff set status = ? where id = ?',[5,$staffId]);
+        if($approval == 1){
+            DB::update('update company_staff set status = ? where id = ?',[4,$staffId]);
 
         }else{
             if($approval == 3){
                 //DB::update('update company_staff set security_officer_id = ? where id = ?',[$event->security_officer,$staffId]);
-                DB::update('update company_staff set status = ? where id = ?',[5,$staffId]);
+                DB::update('update company_staff set status = ? where id = ?',[4,$staffId]);
             }
         }
         return Response::json($event);
@@ -268,14 +268,14 @@ class EventAdminController extends Controller
         $event = Event::where($eventWhere)->first();
 
         $approval = $event->approval_option;
-        if($approval == 2){
-            DB::update('update company_staff set status = ? where id = ?',[8,$staffId]);
-            DB::update('update company_staff set event_admin_reject_reason = ? where id = ?',[$reason,$staffId]);
+        if($approval == 1){
+            DB::update('update company_staff set status = ? where id = ?',[7,$staffId]);
+            DB::update('update company_staff set security_officer_reject_reason = ? where id = ?',[$reason,$staffId]);
 
         }else{
             if($approval == 3){
-                DB::update('update company_staff set status = ? where id = ?',[8,$staffId]);
-                DB::update('update company_staff set event_admin_reject_reason = ? where id = ?',[$reason,$staffId]);
+                DB::update('update company_staff set status = ? where id = ?',[7,$staffId]);
+                DB::update('update company_staff set security_officer_reject_reason = ? where id = ?',[$reason,$staffId]);
             }
         }
         return Response::json($event);

@@ -25,7 +25,7 @@ class TemplateFormController extends Controller
     
     	$template_id = $event->event_form;
         if($participant_id != 0){
-            $templateFields = DB::select('select * from staff_data_template_fields_view v where v.staff_id = ?',[$participant_id]);
+            $templateFields = DB::select('select * from staff_data_template_fields_view v where v.staff_id = ? and template_id = ?',[$participant_id,$event->event_form]);
         }else{
             $templateFields = DB::select('select * from template_fields_view v where v.template_id = ?',[$template_id]);
         }
@@ -217,6 +217,14 @@ class TemplateFormController extends Controller
         $companyStaff   =   CompanyStaff::updateOrCreate(['id' => $participant_id],
             ['event_id'  => $company->event_id,
                 'company_id' => $company->id,
+                'security_officer_id' => '0',
+                'security_officer_decision' => '0',
+                'security_officer_decision_date' => null,
+                'security_officer_reject_reason' => '',
+                'event_admin_id' => '0',
+                'event_admin_decision' => '0',
+                'event_admin_decision_date' => null,
+                'event_admin_reject_reason' => '',
                 'status' => '0'
             ]);
         // var_dump($participant_id);

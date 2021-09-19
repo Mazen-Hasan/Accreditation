@@ -38,6 +38,9 @@ class HomeController extends Controller
             case 'company-admin':
                 return Redirect::to('company-admin');
                 break;
+            case 'security-officer':
+                return Redirect::to('security-officer-admin');
+                break;
         }
     }
 

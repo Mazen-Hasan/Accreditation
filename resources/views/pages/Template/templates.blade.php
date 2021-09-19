@@ -150,7 +150,7 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id'},
+                    { data: 'id', name: 'id', 'visible': false},
                     { data: 'name', name: 'name' },
                     { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ return "<p style='color: red'>InActive</p>" }}},
                     {data: 'action', name: 'action', orderable: false}

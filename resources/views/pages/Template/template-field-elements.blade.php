@@ -165,7 +165,7 @@
                     extend: 'excelHtml5',
                     title: 'Templates',
                     exportOptions: {
-                        columns: [ 1,2 ]
+                        columns: [ 1,2,3,4 ]
                     }
                 }],
 
@@ -176,7 +176,7 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id'},
+                    { data: 'id', name: 'id', 'visible': false},
                     { data: 'value_ar', name: 'value_ar' },
                     { data: 'value_en', name: 'value_en' },
                     { data: 'value_id', name: 'value_id' },

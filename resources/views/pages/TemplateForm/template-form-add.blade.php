@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Participant - New</h4>
                         <form class="form-sample" id="templateForm" name="templateForm">
-                            <? echo $form ?>
+                            <?php echo $form ?>
                         </form>
                         <div class="col-sm-offset-2 col-sm-2">
                             <button type="submit" id="btn-save" value="create">Save

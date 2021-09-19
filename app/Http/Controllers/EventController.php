@@ -13,6 +13,7 @@ use App\Models\Event;
 use App\Models\SelectOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use DateTime;
 
 class EventController extends Controller
 {
@@ -49,6 +50,18 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $postId = $request->post_id;
+        $event_end_date = $request->event_end_date;
+        $event_start_date = $request->event_start_date;
+        $datetime1 = new DateTime($event_end_date);
+        $datetime2 = new DateTime($event_start_date);
+        $interval = $datetime1->diff($datetime2);
+        $period_days = $interval->format('%a');
+        $accreditation_end_date = $request->accreditation_end_date;
+        $accreditation_start_date = $request->accreditation_start_date;
+        $datetime1 = new DateTime($accreditation_end_date);
+        $datetime2 = new DateTime($accreditation_start_date);
+        $interval = $datetime1->diff($datetime2);
+        $accredition_period_days = $interval->format('%a');
         $post   =   Event::updateOrCreate(['id' => $postId],
             ['name' => $request->name,
                 'event_admin' => $request->event_admin,
@@ -57,8 +70,8 @@ class EventController extends Controller
                 'organizer' => $request->organizer,
                 'owner' => $request->owner,
                 'event_type' => $request->event_type,
-                // 'period' => $request->period,
-                // 'accreditation_period' => $request->accreditation_period,
+                'period' => $period_days,
+                'accreditation_period' => $accredition_period_days,
                 'status' => $request->status,
                 'approval_option' => $request->approval_option,
                 'security_officer' => $request->security_officer,

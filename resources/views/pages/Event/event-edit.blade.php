@@ -1,4 +1,3 @@
-
 @extends('main')
 @section('subtitle',' Edit Event')
 @section('style')

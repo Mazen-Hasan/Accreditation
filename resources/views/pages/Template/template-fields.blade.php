@@ -50,7 +50,6 @@
                                     <th>Min Char</th>
                                     <th>Max Char</th>
                                     <th>Type</th>
-                                    <th>Slug</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -74,7 +73,7 @@
                 <div class="modal-body">
                     <form id="fieldForm" name="fieldForm" class="form-horizontal">
                         <input style="visibility: hidden" type="text" name="template_id" id="template_id" value="{{$template_id}}">
-
+                        <input type="hidden" name="field_id" id="field_id">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group col">
@@ -128,7 +127,7 @@
                                     <div class="col-sm-12">
                                         <select id="field_type" name="field_type" required="">
                                             @foreach ($fieldTypes as $fieldType)
-                                                <option value="{{ $fieldType->id }}"
+                                                <option value="{{ $fieldType->id }}" data-slug="{{$fieldType->slug}}"
                                                    @if ($fieldType->key == 1)
                                                         selected="selected"
                                                     @endif
@@ -196,7 +195,7 @@
                     extend: 'excelHtml5',
                     title: 'Templates',
                     exportOptions: {
-                        columns: [ 1,2 ]
+                        columns: [ 1,2,3,4,5,6 ]
                     }
                 }],
 
@@ -207,14 +206,13 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id'},
+                    { data: 'id', name: 'id', 'visible': false},
                     { data: 'label_ar', name: 'label_ar' },
                     { data: 'label_en', name: 'label_en' },
                     { data: 'mandatory', name: 'mandatory' },
                     { data: 'min_char', name: 'min_char' },
                     { data: 'max_char', name: 'max_char' },
                     { data: 'name', name: 'name' },
-                    { data: 'slug', name: 'slug'},
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
@@ -306,6 +304,19 @@
                     });
                 }
             })
-        }
+        };
+
+        $('select').on('change', function() {
+            var selected = $(this).find('option:selected');
+            var slug = selected.data('slug');
+            if(slug === 'text' || slug ==='textarea') {
+                $('#min_char').prop('disabled', false);
+                $('#max_char').prop('disabled', false);
+            }
+           else{
+                $('#min_char').prop('disabled', true);
+                $('#max_char').prop('disabled', true);
+            }
+        });
     </script>
 @endsection

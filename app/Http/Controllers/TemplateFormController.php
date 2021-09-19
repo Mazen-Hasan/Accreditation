@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
-use App\Models\Event;
 use App\Models\CompanyStaff;
 use App\Models\SelectOption;
 use App\Models\StaffData;
@@ -16,21 +14,21 @@ class TemplateFormController extends Controller
 {
     public function index($participant_id)
     {
-    	
+
         $where = array('company_admin_id' => Auth::user()->id);
         $company = Company::where($where)->get()->first();
 
         $where = array('id' => $company->event_id);
         $event = Event::where($where)->first();
-    
+
     	$template_id = $event->event_form;
         if($participant_id != 0){
             $templateFields = DB::select('select * from staff_data_template_fields_view v where v.staff_id = ? and template_id = ?',[$participant_id,$event->event_form]);
         }else{
             $templateFields = DB::select('select * from template_fields_view v where v.template_id = ?',[$template_id]);
         }
-        
-    
+
+
     //var_dump($templateFields);
         $fieldsCount =  0;
 
@@ -58,7 +56,7 @@ class TemplateFormController extends Controller
                         $templateField->mandatory,$templateField->min_char,$templateField->max_char,'');
                     }else{
                         $form .= $this->createTextField($templateField->label_en,$templateField->label_en,
-                        $templateField->mandatory,$templateField->min_char,$templateField->max_char,$templateField->value); 
+                        $templateField->mandatory,$templateField->min_char,$templateField->max_char,$templateField->value);
                     }
                     break;
 
@@ -249,7 +247,7 @@ class TemplateFormController extends Controller
                 //     'key'  => $key,
                 //     'value' => $value
                 // ]);
-                
+
                 if($key != 'participant_id'){
                     if($participant_id != null){
                         // $staffData   =   StaffData::updateOrCreate(['staff_id'=>$participant_id,'key' => $key],

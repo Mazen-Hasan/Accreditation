@@ -38,6 +38,8 @@ Route::group(['middleware' => 'role:company-admin'], function() {
     Route::resource('templateFormController', 'App\Http\Controllers\TemplateFormController');
     Route::get('/template-form/{template_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
 
+//    Route::post('templateFormController/uploadFile', 'App\Http\Controllers\templateFormController@uploadFile');
+
 
     //    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
 //    Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');

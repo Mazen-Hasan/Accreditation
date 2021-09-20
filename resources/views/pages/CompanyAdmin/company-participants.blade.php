@@ -98,6 +98,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="delete-element-confirm-modal-new" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -124,6 +125,25 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="badge-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="badgeTitle"></h5>
+                    <div class="col-sm-4">
+                        <button type="button" data-dismiss="modal" id="btn-print">Print</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <img id="badge" src="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 @section('script')
     <script>
@@ -189,6 +209,11 @@
                 //$('#ajax-crud-modal').modal('show');
             });
 
+            $('.generate-badge').click(function () {
+                alert('ddd');
+                $('#badge-modal').modal('show');
+            });
+
             $('body').on('click', '#send_request', function () {
                 var post_id = $(this).data("id");
                 //alert(post_id);
@@ -201,6 +226,7 @@
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
+
             $('body').on('click', '#show_reason', function () {
                 var post_id = $(this).data("id");
                 var reason = $(this).data("reason");

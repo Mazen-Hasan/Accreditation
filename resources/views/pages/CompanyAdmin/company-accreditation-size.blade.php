@@ -92,6 +92,7 @@
                         <input type="hidden" name="company_id" id="company_id" value="{{$companyId}}">
                         <input type="hidden" name="event_id" id="event_id" value="{{$eventId}}">
                         <input type="hidden" name="status" id="status" value="{{$status}}">
+                        <input type="hidden" name="company_size" id="company_size" value="{{$company_size}}">
                         <input type="hidden" name="post_id" id="post_id" value="">
                         <div class="form-group">
                             <label>Accreditation Category</label>
@@ -111,7 +112,7 @@
                         <div class="form-group">
                             <label for="name">Size</label>
                             <div class="col-sm-12">
-                                <input type="text" id="size" name="size" value="" required="">
+                                <input type="number" id="size" name="size" value="" required="">
                             </div>
                         </div>
                         <div class="col-sm-12">

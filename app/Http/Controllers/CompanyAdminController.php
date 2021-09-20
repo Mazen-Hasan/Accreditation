@@ -371,7 +371,7 @@ class CompanyAdminController extends Controller
                 }
             }
         }
-        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId',$eventId)->with('status',$status)->with('event_name',$event->name)->with('company_name',$company->name);
+        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId',$eventId)->with('status',$status)->with('event_name',$event->name)->with('company_name',$company->name)->with('company_size',$company->size);
     }
 
     public function editCompanyAccreditSize($id){

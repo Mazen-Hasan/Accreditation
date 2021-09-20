@@ -8,13 +8,11 @@ use App\Models\CompanyStaff;
 use App\Models\Event;
 use App\Models\TemplateField;
 use App\Models\CompanyAccreditaionCategory;
-use App\Models\CompanyStaffData;
 use App\Models\Gender;
 use App\Models\NationalityClass;
 use App\Models\Participant;
 use App\Models\Religion;
 use App\Models\SelectOption;
-use App\Models\StaffData;
 use App\Models\TemplateFieldElement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -307,6 +305,9 @@ class CompanyAdminController extends Controller
 
         $where = array('company_admin_id' => Auth::user()->id);
         $company = Company::where($where)->get()->first();
+
+        $where = array('id' => $eventId);
+        $event = Event::where($where)->get()->first();
         $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?',[$company->id,$eventId]);
         $status = 1;
         foreach($companyAccreditationCategories as $companyAccreditationCategory)
@@ -366,7 +367,7 @@ class CompanyAdminController extends Controller
                 }
             }
         }
-        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId',$eventId)->with('status',$status);
+        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId',$eventId)->with('status',$status)->with('event_name',$event->name)->with('company_name',$company->name);
     }
 
     public function editCompanyAccreditSize($id){

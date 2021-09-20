@@ -12,11 +12,34 @@
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
+<!--                     
                     @if($status == 0)
                     <a href="javascript:void(0)" class="ha_btn" id="add-new-post" style="margin: 10px">Add Accreditation Size</a>
-                    @endif
+                    @endif -->
                     <div class="card-body">
-                        <h4 class="card-title">Accreditation Size Table</h4>
+                        <div class="row align-content-md-center" style="height: 80px">
+                            <div class="col-md-8">
+                                <p class="card-title">{{$event_name}} / {{$company_name}} / Accreditation Size Management</p>
+                            </div>
+                            <div class="col-md-4 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                                    <i>
+                                        <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
+                                    </i>
+                                    <span class="dt-hbtn">Export to excel</span>
+                                </a>
+                                <span class="dt-hbtn"></span>
+                                @if($status == 0)
+                                <a href="javascript:void(0)" id="add-new-post" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">Add</span>
+                                </a>
+                                @endif
+                            </div>
+                        </div>
+                        <!-- <h4 class="card-title">Accreditation Size Table</h4> -->
                         <div class="table-responsive">
                             <table class="table table-hover" id="laravel_datatable" style="text-align: center">
                                 <thead>

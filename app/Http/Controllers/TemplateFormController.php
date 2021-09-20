@@ -6,6 +6,8 @@ use App\Models\CompanyStaff;
 use App\Models\SelectOption;
 use App\Models\StaffData;
 use Illuminate\Http\Request;
+use App\Models\Company;
+use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;

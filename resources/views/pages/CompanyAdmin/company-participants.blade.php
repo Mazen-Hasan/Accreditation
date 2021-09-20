@@ -209,8 +209,22 @@
                 //$('#ajax-crud-modal').modal('show');
             });
 
-            $('.generate-badge').click(function () {
-                alert('ddd');
+            // $('.generate-badge').click(function () {
+            //     alert('ddd');
+            //     $('#badge-modal').modal('show');
+            // });
+
+            $('body').on('click', '#generate-badge', function () {
+                // var post_id = $(this).data("id");
+                // //alert(post_id);
+                // var company_id = $('#company_id').val();
+                // var eventId = $('#event_id').val();
+                // $('#confirmTitle').html('Send Participation Request');
+                // $('#curr_element_id').val(post_id);
+                // $('#action_button').val('sendRequest');
+                // var confirmText =  "Are You sure you want to Send Event participation?";
+                // $('#confirmText').html(confirmText);
+                // $('#delete-element-confirm-modal').modal('show');
                 $('#badge-modal').modal('show');
             });
 

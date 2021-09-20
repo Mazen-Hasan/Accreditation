@@ -148,6 +148,14 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::resource('fieldElementController', 'App\Http\Controllers\FieldElementController');
     Route::get('fieldElementController/destroy/{element_id}', 'App\Http\Controllers\FieldElementController@destroy');
 
+    Route::get('/template-badge/{template_id}', [App\Http\Controllers\TemplateBadgeController::class, 'index'])->name('templateBadge');
+    Route::resource('templateBadgeController', 'App\Http\Controllers\TemplateBadgeController');
+
+    Route::get('/template-badge-fields/{badge_id}', [App\Http\Controllers\TemplateBadgeFieldController::class, 'index'])->name('templateBadgeFields');
+
+    Route::resource('templateBadgeFieldController', 'App\Http\Controllers\TemplateBadgeFieldController');
+    Route::get('templateBadgeFieldController/destroy/{field_id}', 'App\Http\Controllers\TemplateBadgeFieldController@destroy');
+
 });
 
 Route::group(['middleware' => 'role:security-officer'], function() {

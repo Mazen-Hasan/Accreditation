@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
+use App\Models\Event;
 use App\Models\CompanyStaff;
 use App\Models\SelectOption;
 use App\Models\StaffData;

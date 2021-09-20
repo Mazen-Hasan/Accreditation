@@ -96,7 +96,7 @@ class CompanyAdminController extends Controller
                 }
             }
             $alldata[] = $staffDataValues;
-        }        
+        }
         // var_dump($alldata);
         // exit;
         $query = '';
@@ -144,11 +144,11 @@ class CompanyAdminController extends Controller
                             $status_value =  "approved by event admin";
                             break;
                         case 7:
-                            $status_value =  "rejected with correction by security officer";                                
+                            $status_value =  "rejected with correction by security officer";
                             break;
                         case 8:
-                            $status_value =  "rejected with correction by event admin";                                
-                            break;   
+                            $status_value =  "rejected with correction by event admin";
+                            break;
                     }
                     return $status_value;
                     //return $row->first_name.' '.$row->last_name;
@@ -158,7 +158,11 @@ class CompanyAdminController extends Controller
                     //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     // $button = '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     // $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Generate" class="edit btn btn-facebook generate-badge">Generate</a>';
+                    $button .= '&nbsp;&nbsp;';
+
                     switch($data->status){
+
                         case 0:
                             $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                             $button .= '&nbsp;&nbsp;';
@@ -355,7 +359,7 @@ class CompanyAdminController extends Controller
                     return $button;
                 })
                 ->rawColumns(['action'])
-                ->make(true);  
+                ->make(true);
                 }else{
                     return datatables()->of($companyAccreditationCategories)
                     ->addColumn('action', function ($data) {

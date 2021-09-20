@@ -67,6 +67,24 @@
 
                                         <div class="row">
                                             <div class="col-6">
+                                                <p class="card_event_label">From:</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <p class="card_event_text">{{ $event->event_start_date}}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p class="card_event_label">To:</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <p class="card_event_text">{{ $event->event_end_date}}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-6">
                                                 <p class="card_event_label">Accreditation period:</p>
                                             </div>
                                             <div class="col-6">

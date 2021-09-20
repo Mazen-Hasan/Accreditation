@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTemplateFieldsTable extends Migration
+class CreateTemplateBadgesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreateTemplateFieldsTable extends Migration
      */
     public function up()
     {
-        Schema::create('template_fields', function (Blueprint $table) {
+        Schema::create('template_badges', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('template_id');
-            $table->string('label_ar');
-            $table->string('label_en');
-            $table->boolean('mandatory')->default(false);
-            $table->integer('min_char')->default(1);
-            $table->integer('max_char')->default(100);
-            $table->bigInteger('field_type_id');
+            $table->String('width');
+            $table->String('high');
+            $table->String('bg_color');
+            $table->string('creator')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ class CreateTemplateFieldsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('template_fields');
+        Schema::dropIfExists('template_badges');
     }
 }

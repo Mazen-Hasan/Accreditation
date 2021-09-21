@@ -124,7 +124,6 @@
                     { data: 'category', name: 'category' },
                     { data: 'country', name: 'country' },
                     { data: 'city', name: 'city' },
-                    // { data: 'address', name: 'address'},
                     { data: 'website', name: 'website'},
                     { data: 'telephone', name: 'telephone'},
                     { data: 'focal_point', name: 'focal_point'},

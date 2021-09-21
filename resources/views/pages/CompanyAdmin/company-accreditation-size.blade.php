@@ -19,7 +19,7 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">{{$event_name}} / {{$company_name}} / Accreditation Size Management</p>
+                                <p class="card-title">{{$event_name}} / {{$company_name}} : Size ({{$company_size}}) / Accreditation Size Management</p>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -92,12 +92,13 @@
                         <input type="hidden" name="company_id" id="company_id" value="{{$companyId}}">
                         <input type="hidden" name="event_id" id="event_id" value="{{$eventId}}">
                         <input type="hidden" name="status" id="status" value="{{$status}}">
-                        <input type="hidden" name="company_size" id="company_size" value="{{$company_size}}">
+                        <input type="hidden" name="remaining_size" id="remaining_size" value="{{$remaining_size}}">
                         <input type="hidden" name="post_id" id="post_id" value="">
+                        <input type="hidden" name="prev_size" id="prev_size" value="0">
                         <div class="form-group">
                             <label>Accreditation Category</label>
                             <div class="col-sm-12">
-                                <select class="form-control" id="accredit_cat_id" name="accredit_cat_id" value="" required="">
+                                <select id="accredit_cat_id" name="accredit_cat_id" value="" required="">
                                     @foreach ($accreditationCategorys as $accreditationCategory)
                                         <option value="{{ $accreditationCategory->key }}"
                                                 {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -112,7 +113,8 @@
                         <div class="form-group">
                             <label for="name">Size</label>
                             <div class="col-sm-12">
-                                <input type="number" id="size" name="size" value="" required="">
+                                <input type="number" min="1" id="size" name="size" value="" required="">
+                                <p style="color:red" id=error_message></p>
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -136,6 +138,7 @@
                 <div class="modal-body">
                     <div>
                         <input type="hidden" id="curr_element_id">
+                        <input type="hidden" id="curr_size" name="curr_size">
                         <input type="hidden" id="action_button">
                         <label class="col-sm-12 confirm-text" id="confirmText"></label>
                     </div>
@@ -168,7 +171,6 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    {{--url: "{{ route('companyAdminController.companyAccreditCategories') }}",--}}
                     url: '../company-accreditation-size/' + eventId,
                     type: 'GET',
                 },
@@ -182,16 +184,22 @@
             });
 
             $('#add-new-post').click(function () {
-                $('#btn-save').val("create-post");
-                $('#post_id').val('0');
-                $('#size').val('0');
-                $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Accreditation Category");
-                $('#ajax-crud-modal').modal('show');
-                $('#accredit_cat_id').attr('disabled', false);
+                remaining_size = parseInt($('#remaining_size').val());
+                if(remaining_size > 0){
+                    $('#error_message').text('');
+                    $('#error_message').hide();
+                    $('#btn-save').val("create-post");
+                    $('#post_id').val('0');
+                    $('#size').val('0');
+                    $('#prev_size').val('0');
+                    $('#postForm').trigger("reset");
+                    $('#postCrudModal').html("Add New Accreditation Category");
+                    $('#ajax-crud-modal').modal('show');
+                    $('#accredit_cat_id').attr('disabled', false);
+                }else{
+                    alert('you reached the max size');
+                }
             });
-
-
             $('body').on('click', '#edit-company-accreditation', function () {
                 var post_id = $(this).data('id');
                 //alert(post_id);
@@ -200,9 +208,12 @@
                     $('#email-error').hide();
                     $('#postCrudModal').html("Edit Company Accreditation Category");
                     $('#btn-save').val("edit-post");
+                    $('#error_message').text('');
+                    $('#error_message').hide();
                     $('#ajax-crud-modal').modal('show');
                     $('#post_id').val(data.id);
                     $('#size').val(data.size);
+                    $('#prev_size').val(data.size);
                     $('#accredit_cat_id').val(data.accredit_cat_id);
                     $('#accredit_cat_id').attr('disabled', 'disabled');
                 })
@@ -210,47 +221,54 @@
 
             $('body').on('click', '#delete-company-accreditation', function () {
                 var post_id = $(this).data("id");
+                var prev_size = $(this).data("size");
+                $('#curr_size').val(prev_size);
+                //alert(prev_size);
                 $('#confirmTitle').html('Delete Company Accreditation');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('delete');
                 var confirmText =  'Are You sure want to delete ?';
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
-                // confirm("Are You sure want to delete Accreditation Category!");
-                // $.ajax({
-                //     type: "get",
-                //     url: "../companyAdminController/destroyCompanyAccreditCat/"+post_id,
-                //     success: function (data) {
-                //         var oTable = $('#laravel_datatable').dataTable();
-                //         oTable.fnDraw(false);
-                //     },
-                //     error: function (data) {
-                //         console.log('Error:', data);
-                //     }
-                // });
             });
             $('body').on('click', '#edit-size', function () {
+                $('#error_message').text('');
+                $('#error_message').hide();
                 var accredit_cat_id = $('#accredit_cat_id').val();
                 var size = $('#size').val();
                 var post_id = $('#post_id').val();
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
-                //alert('hey hey');
-                //confirm("Are You sure want to deActivate ?!");
-                $.ajax({
-                    type: "get",
-                    url: "../companyAdminController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id+"/"+eventId,
-                    // url: "../companyAdminController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id,
-                    success: function (data) {
-                        //alert(data);
-                        $('#ajax-crud-modal').modal('hide');
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
+                var prevsize = parseInt($('#prev_size').val());
+                var remaining_size = parseInt($('#remaining_size').val());
+                remaining_size = remaining_size + prevsize;
+                if(parseInt(size) > parseInt(remaining_size) || parseInt(size) <= 0 ){
+                    $('#error_message').text('Size has to be more than 0 and less than '+remaining_size);
+                    $('#error_message').show();
+                }else{
+                    $.ajax({
+                        type: "get",
+                        url: "../companyAdminController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id+"/"+eventId,
+                        success: function (data) {
+                            $('#ajax-crud-modal').modal('hide');
+                            var oTable = $('#laravel_datatable').dataTable();
+                            oTable.fnDraw(false);
+                            var remaining_size = parseInt($('#remaining_size').val());
+                            var prev_size = parseInt($('#prev_size').val());
+                            var inserted_size = data.size;
+                            var new_remaining_size = remaining_size + prev_size - inserted_size;
+                            $('#remaining_size').val(new_remaining_size);
+                            $('#prev_size').val('0');
+                            $('#error_message').text('');
+                            $('#error_message').hide();
+                        },
+                        error: function (data) {
+                            $('#ajax-crud-modal').modal('hide');
+                            alert('Cant insert duplicate accreditation category size');
+                            console.log('Error:', data);
+                        }
+                    });
+                }
             });
             $('body').on('click', '#send-approval-request', function () {
                 var post_id = $('#id').val();
@@ -263,19 +281,6 @@
                 var confirmText =  "Are You sure you want to confirm Accreditation Category sizes?";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
-                // confirm("Are You sure you want to confirm Accreditation Category sizes?");
-                // $.ajax({
-                //     type: "get",
-                //     url: "../companyAdminController/sendApproval/"+company_id+"/"+eventId,
-                //     success: function (data) {
-                //         alert('done');
-                //         var oTable = $('#laravel_datatable').dataTable();
-                //         oTable.fnDraw(false);
-                //     },
-                //     error: function (data) {
-                //         console.log('Error:', data);
-                //     }
-                // });
             });
             $('#delete-element-confirm-modal button').on('click', function(event) {
                 var $button = $(event.target);
@@ -290,6 +295,12 @@
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
+                                    var remaining_size = parseInt($('#remaining_size').val());
+                                    var inserted_size = parseInt($('#curr_size').val());
+                                    alert(inserted_size);
+                                    var new_remaining_size = remaining_size + inserted_size;
+                                    $('#remaining_size').val(new_remaining_size);
+                                    $('#curr_size').val('0');
                                 },
                                 error: function (data) {
                                     console.log('Error:', data);
@@ -313,19 +324,6 @@
                                 }
                             });
                         }
-                        // if(action_button == 'deactivate'){
-                        //     $.ajax({
-                        //         type: "get",
-                        //         url: "eventTypeController/changeStatus/"+post_id+"/0",
-                        //         success: function (data) {
-                        //             var oTable = $('#laravel_datatable').dataTable();
-                        //             oTable.fnDraw(false);
-                        //         },
-                        //         error: function (data) {
-                        //             console.log('Error:', data);
-                        //         }
-                        //     });
-                        // }
                     }
                 });
             });

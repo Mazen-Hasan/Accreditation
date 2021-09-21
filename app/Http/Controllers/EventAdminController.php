@@ -41,7 +41,7 @@ class EventAdminController extends Controller
 //        var_dump($events);
 //        exit;
 //        $events = DB::select('select * from events_view  , events_view v');
-        return view('pages.EventAdmin.event-admin')->withEvents($events);
+        return view('pages.EventAdmin.event-admin')->with('events',$events);
     }
 
     public function eventCompanies($id)

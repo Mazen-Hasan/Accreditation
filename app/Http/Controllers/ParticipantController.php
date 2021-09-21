@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\AccreditationCategory;
 use App\Models\Company;
 use App\Models\Participant;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\SelectOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

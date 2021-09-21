@@ -41,7 +41,7 @@ class SecurityOfficerAdminController extends Controller
 //        var_dump($events);
 //        exit;
 //        $events = DB::select('select * from events_view  , events_view v');
-        return view('pages.SecurityOfficerAdmin.security-officer-admin')->withEvents($events);
+        return view('pages.SecurityOfficerAdmin.security-officer-admin')->with('events',$events);
     }
 
     public function securityOfficerCompanies($id)

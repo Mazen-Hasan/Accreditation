@@ -176,7 +176,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">
                                         <div class="col-sm-12">
@@ -186,12 +186,39 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-offset-2 col-sm-2">
-                                <button type="submit" id="btn-save" value="create">Save
+                            </div> -->
+                        </form>
+                        <div class="col-sm-offset-2 col-sm-2">
+                                <button id="btn-save" value="create">Save
                                 </button>
                             </div>
-                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="hidden" id="curr_element_id">
+                        <input type="hidden" id="curr_size" name="curr_size">
+                        <input type="hidden" id="action_button">
+                        <label class="col-sm-12 confirm-text" id="confirmText"></label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">No, Manage them myself</button>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -215,28 +242,43 @@
             //     }
             // });
         });
-        $('#add-new-post').click(function () {
-                $('#btn-save').val("create-post");
-                $('#post_id').val('');
-                $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Contact");
-                $('#ajax-crud-modal').modal('show');
+        $('#btn-save').click(function () {
+                $('#confirmTitle').html('Add Compnay');
+                $('#curr_element_id').val(post_id);
+                $('#action_button').val('approve');
+                var confirmText =  "Give permisson to company admin to manage accrediation categories sizes?";
+                $('#confirmText').html(confirmText);
+                $('#delete-element-confirm-modal').modal('show');
             });
 
+            $('#delete-element-confirm-modal button').on('click', function(event) {
+                var $button = $(event.target);
+                $(this).closest('.modal').one('hidden.bs.modal', function() {
+                    if($button[0].id === 'btn-yes'){
+                        $('#need_management').val('1');
+                        $("#postForm").submit();
+                    }else{
+                        $('#need_management').val('0');
+                        $("#postForm").submit();
+                    }
+                });
+            });
 
+            // .length > 0
         if ($("#postForm").length > 0) {
+            //$('#ajax-crud-modal').modal('show');
             $("#postForm").validate({
                 submitHandler: function (form) {
                     $('#post_id').val('');
                     var $eventid = $('#event_id').val();
                     var actionType = $('#btn-save').val();
-                    if($('#needManagmentCheckbox').is(':checked')){
-                        $('#need_management').val('1');
-                    }else{
-                        $('#need_management').val('0');
-                    }
-                    $('#btn-save').html('Sending..');
-                    alert($('#postForm').serialize());
+                    // if($('#needManagmentCheckbox').is(':checked')){
+                    //     $('#need_management').val('1');
+                    // }else{
+                    //     $('#need_management').val('0');
+                    // }
+                    // $('#btn-save').html('Sending..');
+                    //alert($('#postForm').serialize());
                     $(":input,:hidden").serialize();
                     $.ajax({
                         data: $('#postForm').serialize(),
@@ -248,7 +290,15 @@
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
                             //window.location.href = "{{ route('companies')}}";
-                            window.location.href = "../event-companies/"+$eventid;
+                            // alert(data);
+                            // alert(data.id);
+                            if(data.need_management == '1'){
+                                window.location.href = "../event-companies/"+$eventid;
+                            }
+                            if(data.need_management == '0'){
+                                // window.location.href = "../event-companies/"+$eventid;
+                                window.location.href= "../company-accreditation-size-new/" + data.id+"/"+data.event_id
+                            }
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },

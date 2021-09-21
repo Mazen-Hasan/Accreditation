@@ -226,23 +226,6 @@
                 }
             });
 
-            {{--$('#laravel_datatable').DataTable({--}}
-            {{--    processing: true,--}}
-            {{--    serverSide: true,--}}
-            {{--    ajax: {--}}
-            {{--        url: "{{ route('dtable-posts.index') }}",--}}
-            {{--        type: 'GET',--}}
-            {{--    },--}}
-            {{--    columns: [--}}
-            {{--        { data: 'id', name: 'id', 'visible': false},--}}
-            {{--        { data: 'title', name: 'title' },--}}
-            {{--        { data: 'body', name: 'body' },--}}
-            {{--        { data: 'created_at', name: 'created_at' },--}}
-            {{--        {data: 'action', name: 'action', orderable: false},--}}
-            {{--    ],--}}
-            {{--    order: [[0, 'desc']]--}}
-            {{--});--}}
-
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');

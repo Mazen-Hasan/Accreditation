@@ -162,22 +162,9 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    {{--url: "{{ route('participantController.index') }}",--}}
                     url: '../../security-officer-company-participants/'+companyId +'/'+eventId,
                     type: 'GET',
                 },
-                // columns: [myColumns
-                //     { data: 'id', name: 'id', 'visible': false},
-                //     { data: 'name', name: 'name'},
-                //     { data: 'nationality', name: 'nationality' },
-                //     { data: 'class_name', name: 'class' },
-                //     { data: 'email', name: 'email' },
-                //     { data: 'mobile', name: 'mobile' },
-                //     { data: 'position', name: 'position' },
-                //     { data: 'accreditation_category_name', name: 'accreditation_category' },
-                //     { data: 'religion_name', name: 'religion' },
-                //     { data: 'action', name: 'action', orderable: false},
-                // ],
                 columns: myColumns,
                 order: [[0, 'desc']]
             });

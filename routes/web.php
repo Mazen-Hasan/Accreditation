@@ -39,6 +39,9 @@ Route::group(['middleware' => 'role:company-admin'], function() {
     Route::resource('templateFormController', 'App\Http\Controllers\TemplateFormController');
     Route::get('/template-form/{template_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
 
+    Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate');
+
+
 //    Route::post('templateFormController/uploadFile', 'App\Http\Controllers\templateFormController@uploadFile');
 
 
@@ -77,8 +80,6 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::get('companyController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}/{event_id}', 'App\Http\Controllers\CompanyController@storeCompanyAccrCatSize');
     Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat');
     Route::get('companyController/Approve/{companyId}/{eventId}', 'App\Http\Controllers\CompanyController@Approve');
-
-
 
 });
 
@@ -156,7 +157,6 @@ Route::group(['middleware' => 'role:super-admin'], function() {
 
     Route::resource('templateBadgeFieldController', 'App\Http\Controllers\TemplateBadgeFieldController');
     Route::get('templateBadgeFieldController/destroy/{field_id}', 'App\Http\Controllers\TemplateBadgeFieldController@destroy');
-
 });
 
 Route::group(['middleware' => 'role:security-officer'], function() {

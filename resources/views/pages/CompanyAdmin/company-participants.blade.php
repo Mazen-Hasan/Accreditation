@@ -137,6 +137,10 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
+                        <input type="text" id="lbl_data">
+                        <?php var_dump(gd_info());  ?>
+                    </div>
+                    <div class="row">
                         <img id="badge" src="">
                     </div>
                 </div>
@@ -196,23 +200,21 @@
                 //$('#ajax-crud-modal').modal('show');
             });
 
-            // $('.generate-badge').click(function () {
-            //     alert('ddd');
-            //     $('#badge-modal').modal('show');
-            // });
 
             $('body').on('click', '#generate-badge', function () {
-                // var post_id = $(this).data("id");
-                // //alert(post_id);
-                // var company_id = $('#company_id').val();
-                // var eventId = $('#event_id').val();
-                // $('#confirmTitle').html('Send Participation Request');
-                // $('#curr_element_id').val(post_id);
-                // $('#action_button').val('sendRequest');
-                // var confirmText =  "Are You sure you want to Send Event participation?";
-                // $('#confirmText').html(confirmText);
-                // $('#delete-element-confirm-modal').modal('show');
-                $('#badge-modal').modal('show');
+                var staff_id = $(this).data("id");
+                $.ajax({
+                    type: "get",
+                    url: "../badge-generate/" + staff_id,
+                    success: function (data) {
+                        $('#badge-modal').modal('show');
+                        console.log(data);
+                        $('#lbl_data').val(data);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
             });
 
             $('body').on('click', '#send_request', function () {

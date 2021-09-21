@@ -157,7 +157,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">
                                         <div class="col-sm-12">
@@ -171,7 +171,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" id="btn-save" value="create">Edit
                                 </button>
@@ -208,11 +208,11 @@
                     //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     var $eventid = $('#event_id').val();
-                    if($('#needManagmentCheckbox').is(':checked')){
-                        $('#need_management').val('1');
-                    }else{
-                        $('#need_management').val('0');
-                    }
+                    // if($('#needManagmentCheckbox').is(':checked')){
+                    //     $('#need_management').val('1');
+                    // }else{
+                    //     $('#need_management').val('0');
+                    // }
                     $('#btn-save').html('Sending..');
                     //alert($('#postForm').serialize());
                     $.ajax({
@@ -225,7 +225,6 @@
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Edited successfully');
                             window.location.href = "../../event-companies/"+$eventid;
-                            {{--window.location.href = "{{ route('companies')}}";--}}
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },

@@ -212,8 +212,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-4"></div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-8">
                             <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">No, Manage them myself</button>
                         </div>
                         <div class="col-sm-4">

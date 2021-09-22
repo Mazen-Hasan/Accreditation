@@ -136,10 +136,15 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            var company_id = $('#company_id').val();
             var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
             var myColumns = [];
             var i =0;
             myColumns.push({data: "id",name: "id", 'visible': false});
+            // if(company_id == 0){
+            //     myColumns.push({data: "company",name: "company"});    
+            // }
+            //myColumns.push({data: "company",name: "company"}); 
             while(i< jqueryarray.length){
                 myColumns.push({data: jqueryarray[i].replace(/ /g,"_") ,name: jqueryarray[i].replace(/ /g,"_")});
                 i++;

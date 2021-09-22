@@ -81,8 +81,7 @@
                                            <select id="event_admin" name="event_admin" required="">
                                                 @foreach ($eventAdmins as $eventAdmin)
                                                     <option value="{{ $eventAdmin->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($eventAdmin->key == $event->event_admin_id)
+                                                            @if ($eventAdmin->key == $event->event_admin)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $eventAdmin->value }}</option>
@@ -118,7 +117,7 @@
                                                 @foreach ($owners as $owner)
                                                     <option value="{{ $owner->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                                @if ($owner->key == $event->owner_id)
+                                                                @if ($owner->key == $event->owner)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $owner->value }}</option>
@@ -135,7 +134,7 @@
                                                 @foreach ($organizers as $organizer)
                                                     <option value="{{ $organizer->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($organizer->key == $event->organizer_id)
+                                                            @if ($organizer->key == $event->organizer)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $organizer->value }}</option>
@@ -165,7 +164,7 @@
                                                 @foreach ($eventTypes as $eventType)
                                                     <option value="{{ $eventType->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($eventType->key == $event->type)
+                                                            @if ($eventType->key == $event->event_type)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $eventType->value }}</option>
@@ -205,7 +204,7 @@
                                                 @foreach ($securityOfficers as $securityOfficer)
                                                     <option value="{{ $securityOfficer->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($securityOfficer->key == $event->security_officer_id)
+                                                            @if ($securityOfficer->key == $event->security_officer)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $securityOfficer->value }}</option>

@@ -114,7 +114,7 @@ class SecurityOfficerAdminController extends Controller
         // $where = array('company_admin_id' => Auth::user()->id);
         // $company = Company::where($where)->get()->first();
 
-        $where = array('event_id' => $company->event_id,'company_id' => $company->id,'status' => 1);
+        $where = array('event_id' => $company->event_id,'company_id' => $company->id);
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach($companyStaffs as $companyStaff){
@@ -230,8 +230,8 @@ class SecurityOfficerAdminController extends Controller
 
         }else{
             if($approval == 3){
-                DB::update('update company_staff set event_admin_id = ? where id = ?',[$event->event_admin,$staffId]);
-                DB::update('update company_staff set status = ? where id = ?',[2,$staffId]);
+                //DB::update('update company_staff set event_admin_id = ? where id = ?',[$event->event_admin,$staffId]);
+                DB::update('update company_staff set status = ? where id = ?',[3,$staffId]);
             }
         }
         return Response::json($event);

@@ -233,7 +233,7 @@ class CompanyController extends Controller
         $event  = Event::where($where)->first();
         // $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Focal Point")';
         // $query = $sql;
-        $where = array('event_admin_id' => Auth::user()->id);
+        $where = array('event_admin_id' => Auth::user()->id,'company_id' => null);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
         foreach($contacts as $contact)

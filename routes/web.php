@@ -56,7 +56,7 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::resource('eventAdminController', 'App\Http\Controllers\EventAdminController');
     Route::get('/event-admin', [App\Http\Controllers\EventAdminController::class, 'index'])->name('event-admin');
     Route::get('/event-companies/{id}', [App\Http\Controllers\EventAdminController::class, 'eventCompanies'])->name('eventCompanies');
-    Route::get('/event-company-participants/{id}/{companyId}', [App\Http\Controllers\EventAdminController::class, 'eventCompanyParticipants'])->name('eventCompanyParticipants');
+    Route::get('/event-company-participants/{companyId}/{eventId}', [App\Http\Controllers\EventAdminController::class, 'eventCompanyParticipants'])->name('eventCompanyParticipants');
     Route::get('eventAdminController/Invite/{companyId}', 'App\Http\Controllers\EventAdminController@Invite');
     Route::get('eventAdminController/Approve/{staffId}', 'App\Http\Controllers\EventAdminController@Approve');
     Route::get('eventAdminController/Reject/{staffId}', 'App\Http\Controllers\EventAdminController@Reject');

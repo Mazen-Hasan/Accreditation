@@ -38,9 +38,6 @@ class EventAdminController extends Controller
         }
 
         $events = DB::select('select * from events_view where event_admin_id = ?', [Auth::user()->id]);
-//        var_dump($events);
-//        exit;
-//        $events = DB::select('select * from events_view  , events_view v');
         return view('pages.EventAdmin.event-admin')->with('events',$events);
     }
 
@@ -89,13 +86,21 @@ class EventAdminController extends Controller
     }
 
     public function eventCompanyParticipants($companyId,$eventId){
-        $dataTableColumuns = array();
 
-        $where = array('id' => $companyId);
-        $company = Company::where($where)->get()->first();
-        $company_admin_id = $company->company_admin_id;
+
+        $dataTableColumuns = array();
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
+
+        if($companyId != 0){
+            $where = array('id' => $companyId);
+            $company = Company::where($where)->get()->first();
+            $company_admin_id = $company->company_admin_id;
+        }else{
+            $company_admin_id = '_Event'.$event->event_admin;
+            $dataTableColumuns[] = 'Company';
+        }
+
 
         $where = array('template_id' => $event->event_form);
         $templateFields = TemplateField::where($where)->get()->all();
@@ -104,26 +109,42 @@ class EventAdminController extends Controller
             $dataTableColumuns[] = $templateField->label_en;
         }
         Schema::dropIfExists('temp'.$company_admin_id);
-        Schema::create('temp'.$company_admin_id, function ($table) use($templateFields) {
+        Schema::create('temp'.$company_admin_id, function ($table) use($templateFields, $companyId) {
             $table->string('id');
+            if($companyId == 0){
+                $table->string('Company'); 
+            }
             foreach($templateFields as $templateField){
-                $dataTableColumuns[] = $templateField->label_en;
+                //$dataTableColumuns[] = $templateField->label_en;
                 $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
             }
         });
         // $where = array('company_admin_id' => Auth::user()->id);
         // $company = Company::where($where)->get()->first();
-
-        $where = array('event_id' => $company->event_id,'company_id' => $company->id);
+        if($companyId == 0){
+            $where = array('event_id' => $eventId);
+        }else{
+            $where = array('event_id' => $eventId,'company_id' => $company->id);
+        }
+        
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach($companyStaffs as $companyStaff){
             $where = array('staff_id' => $companyStaff->id);
             // $staffDatas = StaffData::where($where)->get()->all();
-            $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?',[$companyStaff->id,$event->event_form]);
+            if($companyId != 0){
+                $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?',[$companyStaff->id,$event->event_form]);
+            }else{
+                $staffDatas = DB::select('select * from event_staff_data_view where staff_id = ? and template_id = ?',[$companyStaff->id,$event->event_form]);
+            }
             $staffDataValues = array();
             $staffDataValues[] = $companyStaff->id;
+            $count = 0;
             foreach($staffDatas as $staffData){
+                if($count == 0 && $companyId == 0){
+                    $staffDataValues[] = $staffData->company_name;
+                    $count = 1;
+                }
                 if($staffData->slug == 'select' ){
                     $where = array('template_field_id' =>$staffData->template_field_id , 'value_id' => $staffData->value);
                     $value = TemplateFieldElement::where($where)->first();
@@ -138,7 +159,12 @@ class EventAdminController extends Controller
         // exit;
         $query = '';
         foreach($alldata as $data){
-            $query = 'insert into temp'.$company_admin_id.' (id';
+            $query = '';
+            if($companyId == 0){
+                $query = $query . 'insert into temp'.$company_admin_id.' (id, company';
+            }else{
+                $query = $query . 'insert into temp'.$company_admin_id.' (id';
+            }
             foreach($templateFields as $templateField){
                 $query = $query .',' . preg_replace('/\s+/', '_', $templateField->label_en);
             }
@@ -231,7 +257,8 @@ class EventAdminController extends Controller
         }
         else{
             if($approval == 3){
-                DB::update('update company_staff set status = ? where id = ?',[6,$staffId]);
+                DB::update('update company_staff set security_officer_id = ? where id = ?',[$event->security_officer,$staffId]);
+                DB::update('update company_staff set status = ? where id = ?',[1,$staffId]);
             }
         }
         return Response::json($event);

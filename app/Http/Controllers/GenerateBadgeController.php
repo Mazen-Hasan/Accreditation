@@ -62,7 +62,7 @@ class GenerateBadgeController extends Controller
 
         $text_color = imagecolorallocate($img, $r, $g, $b);
 
-//        imagefttext($img, $text_size, 0, $position_x, $position_y, $text_color, $fontPath, $text);
+        //imagefttext($img, $text_size, 0, $position_x, $position_y, $text_color, $fontPath, $text);
     }
 
 }

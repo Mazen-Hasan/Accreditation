@@ -138,7 +138,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <input type="text" id="lbl_data">
-                        <?php var_dump(gd_info());  ?>
+                        <!-- <?php var_dump(phpinfo());  ?> -->
                     </div>
                     <div class="row">
                         <img id="badge" src="">

@@ -444,8 +444,8 @@ class CompanyAdminController extends Controller
                 // $compamyStaff = CompanyStaff::where($where)
                 // ->update(['status'=>2,'event_admin_id'=> $event->event_admin]);
             }else{
-                DB::update('update company_staff set security_officer_id = ? where id = ?',[$event->security_officer,$staffId]);
-                DB::update('update company_staff set status = ? where id = ?',[1,$staffId]);
+                DB::update('update company_staff set event_admin_id = ? where id = ?',[$event->event_admin,$staffId]);
+                DB::update('update company_staff set status = ? where id = ?',[2,$staffId]);
                 // $compamyStaff = CompanyStaff::where($where)
                 // ->update(['status'=>1,'security_officer_id'=> $event->security_officer]);
             }

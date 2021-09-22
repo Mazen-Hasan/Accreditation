@@ -100,11 +100,15 @@
                                                 <p class="card_event_text">{{ $event->event_form}}</p>
                                             </div>
                                         </div>
-{{--                                        <div class="row">--}}
-{{--                                            <div class="col-12">--}}
-{{--                                                <a href="{{route('companies',['event_id'=> $event->id])}}" class="ha_btn">view</a>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
+                                        <div>
+                                            <div class="col-12">
+                                                <!-- <a href="{{route('companyAccreditCategories',['eventId' => $event->id])}}" class="ha_btn">company categories</a> -->
+                                                <a href='event-company-participants/0/{{$event->id}}'class="ha_btn">Event Participants</a>
+                                            </div>
+                                        </div>
+
+
+                                        
                                     </div>
                                 </div>
                                 <br>

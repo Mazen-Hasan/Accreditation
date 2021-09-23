@@ -2,14 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CompanyStaff;
 use App\Models\Event;
 use App\Models\TemplateBadge;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
 
 class GenerateBadgeController extends Controller
 {
+
+    public function getBadgePath($staff_id){
+
+        $where = array('id' => $staff_id);
+        $badge = CompanyStaff::where($where)->first();
+
+        $badgePath = URL::to('/') . '/Badges/' . $badge->badge_path;
+
+        return Response::json($badgePath);
+    }
+
+    public function printBadge($staff_id){
+        DB::update('update company_staff set print_status = ? where id = ?',['2', $staff_id]);
+
+        return Response::json(true);
+    }
 
     public function generate($staff_id){
 
@@ -22,25 +41,23 @@ class GenerateBadgeController extends Controller
         $where = array('event_form' => $staffs[0]->template_id);
         $event = Event::where($where)->first();
 
+        $badgeImg =  $this->imgGenerate($badge->width, $badge->high, $badge->bg_color,  $badge->bg_image);
 
-        $badgeImg =  $this->imgGenerate($badge->width, $badge->high, $badge->bg_color);
-
-        $fontPath = public_path('fonts/poppins/Poppins-Regular.tff');
+        $fontPath = public_path('fonts/poppins/Poppins-Regular');
 
         foreach ($staffs as $staff){
                 $this->addTextTooImg($badgeImg, $staff->position_x, $staff->position_x, $staff->size, $staff->text_color, $staff->value, $fontPath);
             }
 
-        $path = public_path('Badges/');
-        $path .= $event->id . '_'. $template_id . '_' . $staff_id . '.png';
+        $path = $event->id . '_'. $template_id . '_' . $staff_id . '.png';
 
         $res = imagepng($badgeImg, $path );
         if($res){
             DB::update('update company_staff set badge_path = ?, print_status = ? where id = ?',[$path,'1', $staff_id]);
         }
 
+        imagedestroy($badgeImg);
         return Response::json($path);
-
     }
 
     private function imgGenerate($width, $high, $bg_color){
@@ -52,6 +69,8 @@ class GenerateBadgeController extends Controller
         $color = imagecolorallocate($img, $r, $g, $b);
 
         imagefilledrectangle($img, 0, 0, $width, $high, $color);
+
+        imagescale($img, $width, $high);
 
         return $img;
     }

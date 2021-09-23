@@ -180,7 +180,6 @@
                     $('#template_id').val(data.id);
                     $('#name').val(data.name);
                     $('#status').val(data.status);
-                    // alert($('#name').val(data.name).val());
                 })
             });
 

@@ -40,6 +40,8 @@ Route::group(['middleware' => 'role:company-admin'], function() {
     Route::get('/template-form/{template_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
 
     Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate');
+    Route::get('badge-preview/{staffId}', 'App\Http\Controllers\GenerateBadgeController@getBadgePath');
+    Route::get('badge-print/{staffId}', 'App\Http\Controllers\GenerateBadgeController@printBadge');
 
 
 //    Route::post('templateFormController/uploadFile', 'App\Http\Controllers\templateFormController@uploadFile');
@@ -150,8 +152,10 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::resource('fieldElementController', 'App\Http\Controllers\FieldElementController');
     Route::get('fieldElementController/destroy/{element_id}', 'App\Http\Controllers\FieldElementController@destroy');
 
-    Route::get('/template-badge/{template_id}', [App\Http\Controllers\TemplateBadgeController::class, 'index'])->name('templateBadge');
+    Route::get('/template-badge', [App\Http\Controllers\TemplateBadgeController::class, 'index'])->name('templateBadge');
     Route::resource('templateBadgeController', 'App\Http\Controllers\TemplateBadgeController');
+
+    Route::post('store-file', 'App\Http\Controllers\FileUploadController@store');
 
     Route::get('/template-badge-fields/{badge_id}', [App\Http\Controllers\TemplateBadgeFieldController::class, 'index'])->name('templateBadgeFields');
 

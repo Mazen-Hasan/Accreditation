@@ -10,6 +10,6 @@ class TemplateBadge extends Model
     use HasFactory;
 
     protected $fillable = [
-        'template_id','width','high','bg_color','creator'
+        'template_id','width','high','bg_color','bg_image','creator'
     ];
 }

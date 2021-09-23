@@ -158,8 +158,16 @@ class CompanyAdminController extends Controller
                     //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     // $button = '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     // $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="'.$data->id.'" class="delete btn btn-facebook generate-badge">Generate</a>';
-                    $button .= '&nbsp;&nbsp;';
+                    if($data->print_status == 0){
+                        $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="'.$data->id.'" class="delete btn btn-reddit generate-badge">Generate</a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
+                    else{
+                        $printed = $data->print_status == 2 ? 'printed' : '';
+                        $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="'.$data->id.'" class="delete btn btn-facebook preview-badge"' . $printed  .'">Preview</a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
+
 
                     switch($data->status){
 
@@ -184,6 +192,7 @@ class CompanyAdminController extends Controller
                 ->rawColumns(['status','action'])
                 ->make(true);
         }
+
         return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns',$dataTableColumuns);
     }
 

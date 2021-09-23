@@ -46,9 +46,10 @@
                                     <th>ID</th>
                                     <th>Label (Arabic)</th>
                                     <th>Label (English)</th>
+                                    <th>Order</th>
                                     <th>Mandatory</th>
-                                    <th>Min Char</th>
-                                    <th>Max Char</th>
+                                    <th>Min</th>
+                                    <th>Max</th>
                                     <th>Type</th>
                                     <th>Action</th>
                                 </tr>
@@ -96,7 +97,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group col">
-                                    <label>Min char</label>
+                                    <label>Min</label>
                                     <div class="col-sm-12">
                                         <input type="number" id="min_char" min="1" max="500" name="min_char" placeholder="enter min char" required="">
                                     </div>
@@ -104,7 +105,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group col">
-                                    <label>Max char</label>
+                                    <label>Max</label>
                                     <div class="col-sm-12">
                                         <input type="number" id="max_char" min="1" max="500" name="max_char" placeholder="enter max char" required="">
                                     </div>
@@ -115,9 +116,9 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group col">
-                                    <label>Mandatory</label>
+                                    <label>Order</label>
                                     <div class="col-sm-12">
-                                        <input type="checkbox" id="mandatory" name="mandatory">
+                                        <input type="number" id="field_order" name="field_order" min="1" max="500" name="max_char" placeholder="enter field order" required="">
                                     </div>
                                 </div>
                             </div>
@@ -139,6 +140,21 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group col">
+                                    <label>Mandatory</label>
+                                    <div class="col-sm-12">
+                                        <input type="checkbox" id="mandatory" name="mandatory">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group col">
+
+                                </div>
+                            </div>
+                        </div>
                         <div class="modal-footer">
                             <div class="col-sm-12">
                                 <button type="submit" id="btn-save" value="create">Save
@@ -195,7 +211,7 @@
                     extend: 'excelHtml5',
                     title: 'Templates',
                     exportOptions: {
-                        columns: [ 1,2,3,4,5,6 ]
+                        columns: [ 1,2,3,4,5,6,7 ]
                     }
                 }],
 
@@ -209,6 +225,7 @@
                     { data: 'id', name: 'id', 'visible': false},
                     { data: 'label_ar', name: 'label_ar' },
                     { data: 'label_en', name: 'label_en' },
+                    { data: 'field_order', name: 'field_order' },
                     { data: 'mandatory', name: 'mandatory' },
                     { data: 'min_char', name: 'min_char' },
                     { data: 'max_char', name: 'max_char' },
@@ -228,6 +245,7 @@
                 $('#fieldForm').trigger("reset");
                 $('#modalTitle').html("New Field");
                 $('#field-modal').modal('show');
+                // $('#field_type').removeAttr('disabled');
             });
 
             $('body').on('click', '#edit-field', function () {
@@ -242,9 +260,16 @@
                     $('#label_en').val(data.label_en);
                     $('#min_char').val(data.min_char);
                     $('#max_char').val(data.max_char);
-                    $('#mandatory').val(data.mandatory);
-                    // $('#field_type').prop('disabled', true);
+                    $('#field_order').val(data.field_order);
+                    console.log(data.mandatory)
+                    if(data.mandatory === 1){
+                        $('#mandatory').attr('checked','checked');
+                    }
+                    else {
+                        $('#mandatory').removeAttr('checked');
+                    }
 
+                    $('#field_type').val(data.field_type_id);
                 });
             });
 
@@ -309,13 +334,13 @@
         $('select').on('change', function() {
             var selected = $(this).find('option:selected');
             var slug = selected.data('slug');
-            if(slug === 'text' || slug ==='textarea') {
-                $('#min_char').prop('disabled', false);
-                $('#max_char').prop('disabled', false);
-            }
-           else{
+            if(slug === 'select') {
                 $('#min_char').prop('disabled', true);
                 $('#max_char').prop('disabled', true);
+            }
+           else{
+                $('#min_char').prop('disabled', false);
+                $('#max_char').prop('disabled', false);
             }
         });
     </script>

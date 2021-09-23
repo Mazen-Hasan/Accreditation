@@ -3,12 +3,14 @@
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/print.min.css') }}">
 
     <script src="{{ URL::asset('js/dataTable.js') }}"></script>
     <script src="{{ URL::asset('js/dataTables.buttons.min.js') }}"></script>
     <script src="{{ URL::asset('js/buttons.html5.min.js') }}"></script>
     <script src="{{ URL::asset('js/jszip.min.js') }}"></script>
     <script src="{{ URL::asset('js/pdfmake.min.js') }}"></script>
+    <script src="{{ URL::asset('js/print.min.js') }}"></script>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -137,11 +139,10 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <input type="text" id="lbl_data">
-                        <!-- <?php var_dump(phpinfo());  ?> -->
+<!--                        --><?php //var_dump(gd_info());  ?>
                     </div>
                     <div class="row">
-                        <img id="badge" src="">
+                        <img id="badge" src="" alt="Badge">
                     </div>
                 </div>
             </div>
@@ -210,6 +211,38 @@
                         $('#badge-modal').modal('show');
                         console.log(data);
                         $('#lbl_data').val(data);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+
+            $('body').on('click', '#preview-badge', function () {
+                var staff_id = $(this).data("id");
+                $.ajax({
+                    type: "get",
+                    url: "../badge-preview/" + staff_id,
+                    success: function (data) {
+                        console.log($('#btn-print').attr('class'));
+                        $('#badge-modal').modal('show');
+                         console.log(data);
+                        $('#badge').attr("src",data);
+                    },
+                    error: function (data) {
+                         console.log('Error:', data);
+                    }
+                });
+            });
+
+            $('body').on('click', '#btn-print', function () {
+                var staff_id = $(this).data("id");
+                $.ajax({
+                    type: "get",
+                    url: "../badge-print/" + staff_id,
+                    success: function (data) {
+                        $('#badge-modal').modal('show');
+                        printJS($('#badge').attr('src'), 'image');return false;
                     },
                     error: function (data) {
                         console.log('Error:', data);

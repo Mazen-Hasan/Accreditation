@@ -21,6 +21,7 @@ class CreateTemplateFieldsTable extends Migration
             $table->boolean('mandatory')->default(false);
             $table->integer('min_char')->default(1);
             $table->integer('max_char')->default(100);
+            $table->integer('field_order');
             $table->bigInteger('field_type_id');
             $table->timestamps();
         });

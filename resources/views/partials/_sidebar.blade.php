@@ -10,6 +10,8 @@
                 <span class="nav-link">
                    <p class="user_role">
                        {{ Auth::user()->roles->first()->name }}
+                       <br>
+                       {{Request::route()->getName()}}
                    </p>
                 </span>
             </li>
@@ -78,6 +80,17 @@
                 <span class="menu-title">Templates</span>
             </a>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'adges') =="1" ? "active" : "" }}"
+               href="{{ route('templateBadge') }}">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="Badges">
+                </i>
+                <span class="menu-title">Badges</span>
+            </a>
+        </li>
+
 {{--        <li class="nav-item">--}}
 {{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'companies') =="1" ? "active" : "" }}"--}}
 {{--               href="{{ route('companies') }}">--}}

@@ -48,6 +48,7 @@
                                     <th>Width</th>
                                     <th>High</th>
                                     <th>Background Color</th>
+                                    <th>Background Image</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -153,6 +154,7 @@
                     { data: 'width', name: 'width' },
                     { data: 'high', name: 'high' },
                     { data: 'bg_color', name: 'bg_color' },
+                    { data: 'bg_image', name: 'bg_image' },
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
@@ -181,6 +183,7 @@
                     $('#width').val(data.width);
                     $('#high').val(data.high);
                     $('#bg_color').val(data.bg_color);
+                    $('#bg_image').val(data.bg_image);
                 });
             });
         });

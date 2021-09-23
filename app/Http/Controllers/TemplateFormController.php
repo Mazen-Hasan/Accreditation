@@ -62,6 +62,16 @@ class TemplateFormController extends Controller
                     }
                     break;
 
+                case 'number':
+                    if($participant_id == 0){
+                        $form .= $this->createNumberField($templateField->label_en,$templateField->label_en,
+                            $templateField->mandatory,$templateField->min_char,$templateField->max_char,'');
+                    }else{
+                        $form .= $this->createNumberField($templateField->label_en,$templateField->label_en,
+                            $templateField->mandatory,$templateField->min_char,$templateField->max_char,$templateField->value);
+                    }
+                    break;
+
                 case 'textarea':
                     $form .= $this->createTextArea($templateField->label_en,$templateField->label_en,
                         $templateField->mandatory);
@@ -122,7 +132,21 @@ class TemplateFormController extends Controller
 
         $textfield = '<div class="col-md-6"><div class="form-group col">';
         $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
-        $textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label .  '"'. $required. ' value="'.$value.'" />';
+        $textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
+        $textfield .= '</div></div></div>';
+
+        return $textfield;
+    }
+
+    public function createNumberField($id, $label, $mandatory, $min_value, $max_value, $value){
+        $required = '';
+        if($mandatory == '1'){
+            $required =  'required=""';
+        }
+
+        $textfield = '<div class="col-md-6"><div class="form-group col">';
+        $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $textfield .= '<input type="number" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_value . '"maxlength="' . $max_value .  '"'. $required. ' value="'.$value.'" />';
         $textfield .= '</div></div></div>';
 
         return $textfield;

@@ -19,6 +19,7 @@ class CreateTemplateBadgesTable extends Migration
             $table->String('width');
             $table->String('high');
             $table->String('bg_color');
+            $table->String('bg_image')->nullable();
             $table->string('creator')->nullable();
             $table->timestamps();
         });

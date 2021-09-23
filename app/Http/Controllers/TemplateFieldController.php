@@ -42,6 +42,7 @@ class TemplateFieldController extends Controller
     {
         $fieldId = $request->field_id;
 
+
         $templateField   =   TemplateField::updateOrCreate(['id' => $fieldId],
             ['template_id'  => $request->template_id,
                 'label_ar' => $request->label_ar,
@@ -49,7 +50,8 @@ class TemplateFieldController extends Controller
                 'mandatory'  =>  $request->has('mandatory'),
                 'min_char' => $request->min_char,
                 'max_char' => $request->max_char,
-                'field_type_id' => $request->field_type
+                'field_type_id' => $request->field_type,
+                'field_order' => $request->field_order
             ]);
         return Response::json($templateField);
     }

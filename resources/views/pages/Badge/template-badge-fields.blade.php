@@ -50,6 +50,7 @@
                                     <th>Position (Y)</th>
                                     <th>Size</th>
                                     <th>Text color</th>
+                                    <th>Background color color</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -197,7 +198,7 @@
                     extend: 'excelHtml5',
                     title: 'Templates',
                     exportOptions: {
-                        columns: [ 2,3,4,5,6,7 ]
+                        columns: [ 1,2,3,4,5,6 ]
                     }
                 }],
 
@@ -208,13 +209,14 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id','visible': false},
-                    { data: 'template_field_id', name: 'template_field_id','visible': false },
+                    { data: 'id', name: 'id'},
+                    { data: 'template_field_id', name: 'template_field_id' },
                     { data: 'template_field_name', name: 'template_field_name' },
                     { data: 'position_x', name: 'position_x' },
                     { data: 'position_y', name: 'position_y' },
                     { data: 'size', name: 'size' },
                     { data: 'text_color', name: 'text_color' },
+                    { data: 'bg_color', name: 'bg_color' },
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
@@ -234,19 +236,19 @@
 
             $('body').on('click', '.edit-field', function () {
                 var field_id = $(this).data('id');
+                alert(field_id);
                 $.get('../templateBadgeFieldController/' + field_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Field");
                     $('#btn-save').val("edit-field");
                     $('#field-modal').modal('show');
                     $('#field_id').val(data.id);
+
                     $('#position_x').val(data.position_x);
                     $('#position_y').val(data.position_y);
                     $('#size').val(data.size);
                     $('#text_color').val(data.text_color);
                     $('#bg_color').val(data.bg_color);
-                    console.log(data.template_field_id);
-                    // $('#template_field_id').val(data.template_field_id);
                 });
             });
 

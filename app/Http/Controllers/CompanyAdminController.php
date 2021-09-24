@@ -61,7 +61,7 @@ class CompanyAdminController extends Controller
         $event = Event::where($where)->get()->first();
 
         $where = array('template_id' => $event->event_form);
-        $templateFields = TemplateField::where($where)->get()->all();
+        $templateFields = TemplateField::where($where)->orderBy('field_order', 'ASC')->get()->all();
 
         foreach($templateFields as $templateField){
             $dataTableColumuns[] = $templateField->label_en;

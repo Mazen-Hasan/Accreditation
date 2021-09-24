@@ -160,6 +160,24 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
+                                        <label>Status</label>
+                                        <div class="col-sm-12">
+                                            <select id="status" name="status" value="" required="">
+                                                @foreach ($statuss as $status)
+                                                    <option value="{{ $status->key }}"
+{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($status->key == 1)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $status->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                <!-- <div class="col-md-6">
+                                    <div class="form-group col">
                                         <label>Accreditation Category</label>
                                         <div class="col-sm-12">
                                             <select id="accreditationCategories" multiple name="accreditationCategories[]" value="" required="" style="height:150px">
@@ -175,7 +193,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">
@@ -191,7 +209,7 @@
                         <div class="col-sm-offset-2 col-sm-2">
                                 <button id="btn-save" value="create">Save
                                 </button>
-                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -253,13 +271,16 @@
             $('#delete-element-confirm-modal button').on('click', function(event) {
                 var $button = $(event.target);
                 $(this).closest('.modal').one('hidden.bs.modal', function() {
+                    $('#need_management').val('0');
                     if($button[0].id === 'btn-yes'){
                         $('#need_management').val('1');
-                        $("#postForm").submit();
-                    }else{
-                        $('#need_management').val('0');
-                        $("#postForm").submit();
+                        
                     }
+                    // else{
+                    //     $('#need_management').val('0');
+                    //     $("#postForm").submit();
+                    // }
+                    $("#postForm").submit();
                 });
             });
 
@@ -277,7 +298,7 @@
                     //     $('#need_management').val('0');
                     // }
                     // $('#btn-save').html('Sending..');
-                    //alert($('#postForm').serialize());
+                    alert($('#postForm').serialize());
                     $(":input,:hidden").serialize();
                     $.ajax({
                         data: $('#postForm').serialize(),

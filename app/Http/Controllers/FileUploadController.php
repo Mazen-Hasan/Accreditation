@@ -8,32 +8,25 @@ class FileUploadController extends Controller
 {
     public function store(Request $request)
     {
-        request()->validate([
-            'file'  => 'required|mimes:png|max:2048',
-        ]);
+        if ($files = $request->allFiles()) {
+            foreach ($files as $file){
 
-        if ($files = $request->file('file')) {
+                $extension = $file->extension();
 
-            //store file into document folder
-//            $path = public_path('/docs');
-//            $file = $request->file->store('docs');
-//            $file = $request->file->put($path);
+//            $fileName = 'badge-'.$request->template_id;
+                $fileName = now();
+                $fileName = str_replace(':','_',$fileName);
+                $fileName = str_replace(' ', '_', $fileName) . '.' . $extension;
 
-            $extension = $request->file->extension();
+                $stored_file = $file->storeAs(
+                    'public/badges', $fileName);
 
-            $fileName = now();
-            $fileName = str_replace(' ', '_', $fileName) . '.' . $extension;
-
-//            $app_path = storage_path('app');
-
-            $file = $request->file->storeAs(
-                'public/badges', $fileName);
-
-            return Response()->json([
-                "success" => true,
-                "fileName" =>$fileName,
-                "filePath" => $file
-            ]);
+                return Response()->json([
+                    "success" => true,
+                    "fileName" =>$fileName,
+                    "filePath" => $stored_file
+                ]);
+            }
         }
 
         return Response()->json([

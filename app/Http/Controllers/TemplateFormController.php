@@ -36,6 +36,7 @@ class TemplateFormController extends Controller
 
         $options = array();
         $form = '<div class="row">';
+        $attachmentForm ='';
         if($participant_id == 0){
             $form .= $this->createHiddenField('participant_id','participant_id','');
         }else{
@@ -103,25 +104,26 @@ class TemplateFormController extends Controller
                 }
                     break;
 
-                case 'multiple':
-                    $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?',[$templateField->id]);
-
-                    foreach ($fieldElements as $fieldElement){
-                        $option = new SelectOption($fieldElement->value_id,$fieldElement->value_en);
-                        $options [] = $option;
+                case 'file':
+                    if($participant_id == 0){
+                        $attachmentForm .= $this->createAttachment($templateField->label_en,$templateField->label_en,0,'');
+                        $form .= $this->createHiddenField($templateField->label_en,$templateField->label_en, '');
                     }
-                    $form .= $this->createMultiSelect($templateField->label_en,$templateField->label_en, $options);
-                    break;
+                    else{
+                        $attachmentForm .= $this->createAttachment($templateField->label_en,$templateField->label_en,0,$templateField->value);
+                        $form .= $this->createHiddenField($templateField->label_en,$templateField->label_en, $templateField->value);
+                    }
 
+
+                    break;
             }
         }
-
         if($fieldsCount % 2 == 1){
             $form .= '<div class="col-md-6"><div class="form-group col"></div></div>';
         }
 
     //var_dump($form);
-        return view('pages.TemplateForm.template-form-add')->with('form',$form);
+        return view('pages.TemplateForm.template-form-add')->with('form',$form)->with('attachmentForm', $attachmentForm);
     }
 
     public function createTextField($id, $label, $mandatory, $min_char, $max_char, $value){
@@ -214,21 +216,21 @@ class TemplateFormController extends Controller
         return $datefield;
     }
 
-    public function createAttachment($id, $label, $mandatory){
+    public function createAttachment($id, $label, $mandatory, $value){
         $required = '';
         if($mandatory == '1'){
             $required =  'required=""';
         }
 
-        $attachmentfield = '<form id="upload-form" method="post">';
-        $attachmentfield .= '<div class="col-md-6"><div class="form-group col">';
-        $attachmentfield .= '<label>' . $label . '</label><div class="col-sm-12">';
-        $attachmentfield .= '<input type="file" id="'. $id  .  '" name="'. $id .  '"'. $required. '/>';
-        $attachmentfield .='<button type="submit" id="upload-file">Upload</button>';
-        $attachmentfield .= '</div></div></div>';
-        $attachmentfield .= '</form>';
+        $attachmentField = '<form id=form_' . $id . '" name="badgeForm" class="form-horizontal  img-upload" enctype="multipart/form-data" action="javascript:void(0)">';
+        $attachmentField .= '<div class="row"><div class="col-md-5"><label>'. $label . '</label></div>';
+        $attachmentField .= '<div class="col-md-4"><div class="col-sm-12"><input type="file" id="file_'. $id .'" name=file_"'. $id .'"></div></div>';
+        $attachmentField .= '<div class="col-md-3"><button type="submit" id="btn-upload_'. $id .'" value="Upload">Upload</button></div></div>';
+        $attachmentField .= '<div class="row"><div class="col-md-12"><div class="form-group col">';
+        $attachmentField .= '<label id="file_type_error_'. $id .'"></label><div style="background-color: #ffffff00!important;" class="progress">';
+        $attachmentField .= '<div id="file-progress-bar_'. $id .'" class="progress-bar"></div></div></div></div></div></form>';
 
-        return $attachmentfield;
+        return $attachmentField;
     }
 
 

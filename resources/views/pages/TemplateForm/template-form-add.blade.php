@@ -14,6 +14,8 @@
                         <form class="form-sample" id="templateForm" name="templateForm">
                             <?php echo $form ?>
                         </form>
+                        <br>
+                        <?php echo $attachmentForm ?>
                         <div class="col-sm-offset-2 col-sm-2">
                             <button type="submit" id="btn-save" value="create">Save
                             </button>
@@ -60,5 +62,54 @@
                 }
             })
         }
-    </script>
+
+        $('.img-upload').submit(function(e) {
+            $('#btn-upload').html('Sending..');
+            e.preventDefault();
+            var formData = new FormData(this);
+            formData.append('template_id', $('#h_template_id').val());
+            $.ajax({
+                xhr: function () {
+                    let xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function (element) {
+                        if (element.lengthComputable) {
+                            var percentComplete = ((element.loaded / element.total) * 100);
+                            $("#file-progress-bar").width(percentComplete + '%');
+                            $("#file-progress-bar").html(percentComplete + '%');
+                        }
+                    }, false);
+                    return xhr;
+                },
+
+                type:'POST',
+                url: "{{ url('upload-file')}}",
+                data: formData,
+                cache:false,
+                contentType: false,
+                processData: false,
+
+                beforeSend: function () {
+                    $("#file-progress-bar").width('0%');
+                },
+
+                success: (data) => {
+                    this.reset();
+                    $("#file_type_error").html('File uploaded successfully');
+                    $('#btn-upload').html('Upload');
+                    $("#bg_image").val(data.fileName);
+
+                    var btnID = this.id;
+                    btnID =  btnID.substring(5,btnID.length -1);
+                    btnID = "#" + btnID;
+                    $(btnID).val(data.fileName);
+                    console.log(data);
+
+                },
+
+                error: function(data){
+                    $("#file_type_error").html('Error uploading file');
+                    console.log(data);
+                }
+            });
+        });    </script>
 @endsection

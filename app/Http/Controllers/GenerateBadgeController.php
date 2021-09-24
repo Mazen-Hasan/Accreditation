@@ -19,7 +19,7 @@ class GenerateBadgeController extends Controller
         $where = array('id' => $staff_id);
         $badge = CompanyStaff::where($where)->first();
 
-        $badgePath = URL::to('/') . '/Badges/' . $badge->badge_path;
+        $badgePath = $badge->badge_path;
 
         return Response::json($badgePath);
     }
@@ -41,33 +41,39 @@ class GenerateBadgeController extends Controller
         $where = array('event_form' => $staffInfo[0]->template_id);
         $event = Event::where($where)->first();
 
-        $bg_image = 'storage/badges/'  . $badge->bg_image;
 
-//        var_dump($bg_image);
-//        exit;
-        $badgeImg =  $this->imgGenerate($badge->width, $badge->high, $badge->bg_color,  $bg_image);
+        $bg_image_path = public_path('storage/badges/' . $badge->bg_image);
+
+        $badgeImg =  $this->imgGenerate($badge->width, $badge->high, $badge->bg_color,  $bg_image_path);
+
 
         $fontPath = public_path('fonts/poppins/Poppins-Regular');
 
         foreach ($staffInfo as $staff){
+            if(str_contains($staff->value,'.png')){
+                $image_path = public_path('storage/badges/' . $staff->value);
+                $this->addImageTooImg($badgeImg, $staff->position_x, $staff->position_x, 150,150, $image_path);
+            }
+            else{
                 $this->addTextTooImg($badgeImg, $staff->position_x, $staff->position_x, $staff->size, $staff->text_color, $staff->value, $fontPath);
             }
+        }
 
-        $path = public_path('Badges/');
-        $path .=  $event->id . '_'. $template_id . '_' . $staff_id . '.png';
-
-//        return Response::json($path);
+        $path = public_path('badges');
+        $path .=  '/'.$event->id . '_'. $template_id . '_' . $staff_id . '.png';
 
         $res = imagepng($badgeImg, $path );
-//        if($res){
-//            DB::update('update company_staff set badge_path = ?, print_status = ? where id = ?',[$path,'1', $staff_id]);
-//        }
+
+        $path = $event->id . '_'. $template_id . '_' . $staff_id . '.png';
+        if($res){
+            DB::update('update company_staff set badge_path = ?, print_status = ? where id = ?',[$path,'1', $staff_id]);
+        }
 
         imagedestroy($badgeImg);
         return Response::json($path);
     }
 
-    private function imgGenerate($width, $high, $bg_color, $bg_image){
+    private function imgGenerate($width, $high, $bg_color, $bg_image_path){
         // Create the image
         $img = imagecreatetruecolor($width, $high);
 
@@ -77,12 +83,18 @@ class GenerateBadgeController extends Controller
 
         imagefilledrectangle($img, 0, 0, $width, $high, $color);
 
-        if($bg_image){
-            $bg_img = $this->loadImage($bg_image);
+        if($bg_image_path){
+            $bg_img = $this->loadImage($bg_image_path);
 
-            imagescale($bg_img, $width, $high);
+            if($bg_img){
+                $bg_img = imagescale($bg_img, $width, $high);
 
-            imagecopymerge($img, $bg_img, 0, 0, 0, 0, $width, $high, 100);
+                imagecopymerge($img, $bg_img, 0, 0, 0, 0, $width, $high, 100);
+            }
+            else {
+                var_dump('false');
+                exit;
+            }
         }
 
         return $img;
@@ -97,10 +109,20 @@ class GenerateBadgeController extends Controller
         //imagefttext($img, $text_size, 0, $position_x, $position_y, $text_color, $fontPath, $text);
     }
 
+    private function addImageTooImg($img, $position_x, $position_y, $width, $high,  $img_path){
+
+        $bg_img = $this->loadImage($img_path);
+
+        if($bg_img){
+            $bg_img = imagescale($bg_img, $width, $high);
+
+            imagecopymerge($img, $bg_img, $position_x, $position_y, 0, 0, $width, $high, 100);
+        }
+    }
+
     function loadImage($img_path)
     {
         $im = @imagecreatefrompng($img_path);
         return $im;
     }
-
 }

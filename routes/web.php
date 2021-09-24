@@ -44,6 +44,8 @@ Route::group(['middleware' => 'role:company-admin'], function() {
     Route::get('badge-print/{staffId}', 'App\Http\Controllers\GenerateBadgeController@printBadge');
 
 
+    Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
+
 //    Route::post('templateFormController/uploadFile', 'App\Http\Controllers\templateFormController@uploadFile');
 
 

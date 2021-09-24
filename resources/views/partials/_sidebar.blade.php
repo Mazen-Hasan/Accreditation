@@ -1,4 +1,5 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
+<!--    --><?php //phpinfo(); ?>
     <ul class="nav">
         <ul>
             <li class="nav-item">
@@ -183,8 +184,6 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
             </form>
-
-
         </li>
     </ul>
 </nav>

@@ -73,20 +73,19 @@
                 <div class="modal-body">
                     <form id="bg_imgForm" name="badgeForm" class="form-horizontal  img-upload" enctype="multipart/form-data" action="javascript:void(0)">
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group col">
+                            <div class="col-md-5">
                                     <label>Background image</label>
+                            </div>
+
+                            <div class="col-md-4">
                                     <div class="col-sm-12">
                                         <input type="file" id="file" name="file">
                                     </div>
-                                </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group col">
+                            <div class="col-md-3">
                                     <button type="submit" id="btn-upload" value="Upload">Upload
                                     </button>
-                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -103,8 +102,10 @@
                     <hr>
                     <form id="badgeForm" name="badgeForm" class="form-horizontal">
 {{--                        <input style="visibility: hidden" type="text" name="bg_image" id="bg_image">--}}
+                        <input style="visibility: hidden" type="text" name="h_template_id" id="h_template_id">
                         <input type="text" name="bg_image" id="bg_image">
-                        <img src="{{asset('storage/badges/2021-09-24_09:18:00.png')}}" alt="im" style="width:200px;height:200px;">
+{{--                        <img src="{{asset('storage/badges/2021-09-24_09:18:00.png')}}" alt="im" style="width:200px;height:200px;">--}}
+                        <img id="badge_bg" src="{{URL::asset('storage/badges/')}}" alt="im" style="width:200px;height:200px;">
                         <input type="hidden" name="badge_id" id="badge_id">
                         <div class="row">
                             <div class="col-md-6">
@@ -244,6 +245,10 @@
                 $('#badge_id').val('');
                 $('#badgeForm').trigger("reset");
                 $('#modalTitle').html("New Badge");
+                $('#badge_bg').attr('src', '' );
+                $('#badge_bg').hide();
+
+
                 $('#field-modal').modal('show');
             });
 
@@ -260,8 +265,16 @@
                     $('#bg_color').val(data.bg_color);
                     $('#field-modal').modal('show');
                     $('#template_id').val(data.template_id);
+                    $('#h_template_id').val(data.template_id);
                     $("#file-progress-bar").width('0%');
                     $("#file_type_error").html('');
+
+                    var imag = data.bg_image;
+                    var image_path = "{{URL::asset('storage/badges/')}}/";
+
+                    $('#badge_bg').attr('src', image_path + imag );
+                    $('#badge_bg').show();
+
                     // if(data){
                     //     $('#template_id').attr('disabled', 'disabled');
                     // }
@@ -321,6 +334,7 @@
             $('#btn-upload').html('Sending..');
             e.preventDefault();
             var formData = new FormData(this);
+            formData.append('template_id', $('#h_template_id').val());
             $.ajax({
                 xhr: function () {
                     let xhr = new window.XMLHttpRequest();
@@ -351,6 +365,7 @@
                     $('#btn-upload').html('Upload');
                     $("#bg_image").val(data.fileName);
                     console.log(data);
+
                 },
 
                 error: function(data){

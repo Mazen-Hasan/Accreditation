@@ -209,8 +209,12 @@
                     url: "../badge-generate/" + staff_id,
                     success: function (data) {
                         $('#badge-modal').modal('show');
-                        console.log(data);
-                        $('#lbl_data').val(data);
+                        var imag = data;
+                        var image_path = "{{URL::asset('badges/')}}/";
+
+                        $('#badge').attr('src', image_path + imag );
+                        var oTable = $('#laravel_datatable').dataTable();
+                        oTable.fnDraw(false);
                     },
                     error: function (data) {
                         console.log('Error:', data);
@@ -226,8 +230,11 @@
                     success: function (data) {
                         console.log($('#btn-print').attr('class'));
                         $('#badge-modal').modal('show');
-                         console.log(data);
-                        $('#badge').attr("src",data);
+
+                        var imag = data;
+                        var image_path = "{{URL::asset('badges/')}}/";
+
+                        $('#badge').attr('src', image_path + imag );
                     },
                     error: function (data) {
                          console.log('Error:', data);

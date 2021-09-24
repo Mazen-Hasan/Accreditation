@@ -15,17 +15,30 @@ class FileUploadController extends Controller
         if ($files = $request->file('file')) {
 
             //store file into document folder
-            $path = public_path('/docs');
-            $file = $request->file->store($path);
+//            $path = public_path('/docs');
+//            $file = $request->file->store('docs');
+//            $file = $request->file->put($path);
+
+            $extension = $request->file->extension();
+
+            $fileName = now();
+            $fileName = str_replace(' ', '_', $fileName) . '.' . $extension;
+
+//            $app_path = storage_path('app');
+
+            $file = $request->file->storeAs(
+                'public/badges', $fileName);
 
             return Response()->json([
                 "success" => true,
-                "file" => $file
+                "fileName" =>$fileName,
+                "filePath" => $file
             ]);
         }
 
         return Response()->json([
             "success" => false,
+            "fileName" =>'',
             "file" => ''
         ]);
     }

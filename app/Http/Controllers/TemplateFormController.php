@@ -146,7 +146,7 @@ class TemplateFormController extends Controller
 
         $textfield = '<div class="col-md-6"><div class="form-group col">';
         $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
-        $textfield .= '<input type="number" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_value . '"maxlength="' . $max_value .  '"'. $required. ' value="'.$value.'" />';
+        $textfield .= '<input type="number" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" min="' . $min_value . '"max="' . $max_value .  '"'. $required. ' value="'.$value.'" />';
         $textfield .= '</div></div></div>';
 
         return $textfield;

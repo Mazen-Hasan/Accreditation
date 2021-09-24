@@ -71,7 +71,7 @@
                     <h4 class="modal-title" id="modalTitle"></h4>
                 </div>
                 <div class="modal-body">
-                    <form id="bg_imgForm" name="badgeForm" class="form-horizontal" enctype="multipart/form-data" action="javascript:void(0)">
+                    <form id="bg_imgForm" name="badgeForm" class="form-horizontal  img-upload" enctype="multipart/form-data" action="javascript:void(0)">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group col">
@@ -93,6 +93,9 @@
                             <div class="col-md-12">
                                 <div class="form-group col">
                                     <label id="file_type_error"></label>
+                                    <div style="background-color: #ffffff00!important;" class="progress">
+                                        <div id="file-progress-bar" class="progress-bar"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -101,13 +104,14 @@
                     <form id="badgeForm" name="badgeForm" class="form-horizontal">
 {{--                        <input style="visibility: hidden" type="text" name="bg_image" id="bg_image">--}}
                         <input type="text" name="bg_image" id="bg_image">
+                        <img src="{{asset('storage/badges/2021-09-24_09:18:00.png')}}" alt="im" style="width:200px;height:200px;">
                         <input type="hidden" name="badge_id" id="badge_id">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group col">
                                     <label>Width</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="width" name="width" placeholder="enter width" required="">
+                                        <input type="number" id="width" min="300" name="width" placeholder="enter width" required="">
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +119,7 @@
                                 <div class="form-group col">
                                     <label>High</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="high" name="high" placeholder="enter high" required="">
+                                        <input type="number" id="high" name="high" min="300" placeholder="enter high" required="">
                                     </div>
                                 </div>
                             </div>
@@ -256,6 +260,8 @@
                     $('#bg_color').val(data.bg_color);
                     $('#field-modal').modal('show');
                     $('#template_id').val(data.template_id);
+                    $("#file-progress-bar").width('0%');
+                    $("#file_type_error").html('');
                     // if(data){
                     //     $('#template_id').attr('disabled', 'disabled');
                     // }
@@ -273,6 +279,7 @@
             let fileType = file.type;
             if (!allowedTypes.includes(fileType)) {
                 // $('#fileErrorModal').modal('show');
+                $("#file-progress-bar").width('0%');
                 $("#file_type_error").html('Please choose a valid file (png)');
                 $("#file").val('');
                 $("#btn-upload").attr('disabled',true);
@@ -280,6 +287,7 @@
             } else {
                 $("button").removeAttr('disabled');
                 $("#file_type_error").html('');
+                $("#file-progress-bar").width('0%');
             }
         });
 
@@ -309,24 +317,42 @@
         };
 
 
-        $('#bg_imgForm').submit(function(e) {
+        $('.img-upload').submit(function(e) {
             $('#btn-upload').html('Sending..');
             e.preventDefault();
             var formData = new FormData(this);
             $.ajax({
+                xhr: function () {
+                    let xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function (element) {
+                        if (element.lengthComputable) {
+                            var percentComplete = ((element.loaded / element.total) * 100);
+                            $("#file-progress-bar").width(percentComplete + '%');
+                            $("#file-progress-bar").html(percentComplete + '%');
+                        }
+                    }, false);
+                    return xhr;
+                },
+
                 type:'POST',
                 url: "{{ url('store-file')}}",
                 data: formData,
                 cache:false,
                 contentType: false,
                 processData: false,
+
+                beforeSend: function () {
+                    $("#file-progress-bar").width('0%');
+                },
+
                 success: (data) => {
                     this.reset();
                     $("#file_type_error").html('File uploaded successfully');
                     $('#btn-upload').html('Upload');
-                    $("#bg_image").val(data.file);
+                    $("#bg_image").val(data.fileName);
                     console.log(data);
                 },
+
                 error: function(data){
                     $("#file_type_error").html('Error uploading file');
                     console.log(data);

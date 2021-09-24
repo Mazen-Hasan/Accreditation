@@ -94,19 +94,19 @@ class CompanyController extends Controller
                 'category_id' => $request->category,
                 'size' => $request->size,
                 'need_management' => $request->need_management,
-                'status' => 0
+                'status' => $request->status,
             ]);
 
-            foreach ($request->accreditationCategories as $accreditationCategory) {
-                $help = CompanyAccreditaionCategory::updateOrCreate(['id' => 0],
-                    ['accredit_cat_id' => $accreditationCategory,
-                        'company_id' => $company->id,
-                        'subcompany_id' => $company->id,
-                        'status' => 0,
-                        'event_id' => $request->event_id,
-                        'size' => 0
-                    ]);
-            }
+            // foreach ($request->accreditationCategories as $accreditationCategory) {
+            //     $help = CompanyAccreditaionCategory::updateOrCreate(['id' => 0],
+            //         ['accredit_cat_id' => $accreditationCategory,
+            //             'company_id' => $company->id,
+            //             'subcompany_id' => $company->id,
+            //             'status' => 0,
+            //             'event_id' => $request->event_id,
+            //             'size' => 0
+            //         ]);
+            // }
         }else{
             
             $where = array('id'=>$companyId);
@@ -278,8 +278,13 @@ class CompanyController extends Controller
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
 
+        $companyStatus1 = new SelectOption(1,'Active');
+        $companyStatus2 = new SelectOption(0,'InActive');
+        //$companyStatus3 = new SelectOption(3,'Invited');
+        $companyStatuss = [$companyStatus1,$companyStatus2];
+
         return view('pages.Company.company-add')->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$id)->with('event_name',$event->name);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$id)->with('event_name',$event->name)->with('statuss',$companyStatuss);
     }
 
     public function companyAccreditCat($Id,$eventId)

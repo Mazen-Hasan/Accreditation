@@ -27,7 +27,7 @@ class TemplateFormController extends Controller
         if($participant_id != 0){
             $templateFields = DB::select('select * from staff_data_template_fields_view v where v.staff_id = ? and template_id = ?',[$participant_id,$event->event_form]);
         }else{
-            $templateFields = DB::select('select * from template_fields_view v where v.template_id = ?',[$template_id]);
+            $templateFields = DB::select('select * from template_fields_view v where v.template_id = ? order by v.field_order',[$template_id]);
         }
 
 

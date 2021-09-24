@@ -18,7 +18,7 @@ class TemplateBadgeFieldController extends Controller
         $where = array('id' => $badge_id);
         $templateBadge = TemplateBadge::where($where)->get()->first();
 
-        var_dump($templateBadge->template_id);
+//        var_dump($templateBadge->template_id);
         $templateFields = DB::select('select * from template_fields_view v where v.template_id = ?',[$templateBadge->template_id]);
 
 //        var_dump($templateFields);

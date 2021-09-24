@@ -31,7 +31,8 @@ class TemplateBadgeController extends Controller
                 ->make(true);
         }
 
-        $templates = DB::select('select * from templates where id not in (select template_id  from template_badges)');
+//        $templates = DB::select('select * from templates where id not in (select template_id  from template_badges)');
+        $templates = DB::select('select * from templates ');
         return view('pages.Badge.template-badge')->with('templates', $templates);
     }
 

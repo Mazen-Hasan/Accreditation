@@ -64,7 +64,13 @@
         }
 
         $('.img-upload').submit(function(e) {
-            $('#btn-upload').html('Sending..');
+            var btnID = this.id;
+            btnID =  btnID.substring(5,btnID.length -1);
+            var btn_upl = '#btn-upload_' + btnID;
+
+            $(btn_upl).html('Sending..');
+
+            // $('#btn-upload').html('Sending..');
             e.preventDefault();
             var formData = new FormData(this);
             formData.append('template_id', $('#h_template_id').val());
@@ -74,8 +80,11 @@
                     xhr.upload.addEventListener("progress", function (element) {
                         if (element.lengthComputable) {
                             var percentComplete = ((element.loaded / element.total) * 100);
-                            $("#file-progress-bar").width(percentComplete + '%');
-                            $("#file-progress-bar").html(percentComplete + '%');
+
+                            var file_progress_bar = '#file-progress-bar_' + btnID;
+
+                            $(file_progress_bar).width(percentComplete + '%');
+                            $(file_progress_bar).html(percentComplete + '%');
                         }
                     }, false);
                     return xhr;
@@ -89,14 +98,22 @@
                 processData: false,
 
                 beforeSend: function () {
-                    $("#file-progress-bar").width('0%');
+                    var file_progress_bar = '#file-progress-bar_' + btnID;
+                    $(file_progress_bar).width('0%');
                 },
 
                 success: (data) => {
                     this.reset();
-                    $("#file_type_error").html('File uploaded successfully');
-                    $('#btn-upload').html('Upload');
-                    $("#bg_image").val(data.fileName);
+                    var file_type_error = '#file_type_error_' + btnID;
+                    $(file_type_error).html('File uploaded successfully');
+
+                    $(btn_upl).html('Upload');
+                    // $('#btn-upload').html('Upload');
+
+                    var bg_image = '#bg_image_' + btnID;
+                    $(bg_image).val(data.fileName);
+
+                    // $("#bg_image").val(data.fileName);
 
                     var btnID = this.id;
                     btnID =  btnID.substring(5,btnID.length -1);

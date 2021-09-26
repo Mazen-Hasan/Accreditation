@@ -112,7 +112,7 @@ class EventAdminController extends Controller
         Schema::create('temp'.$company_admin_id, function ($table) use($templateFields, $companyId) {
             $table->string('id');
             if($companyId == 0){
-                $table->string('Company'); 
+                $table->string('Company');
             }
             foreach($templateFields as $templateField){
                 //$dataTableColumuns[] = $templateField->label_en;
@@ -126,7 +126,7 @@ class EventAdminController extends Controller
         }else{
             $where = array('event_id' => $eventId,'company_id' => $company->id);
         }
-        
+
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach($companyStaffs as $companyStaff){
@@ -154,7 +154,7 @@ class EventAdminController extends Controller
                 }
             }
             $alldata[] = $staffDataValues;
-        }        
+        }
         // var_dump($alldata);
         // exit;
         $query = '';
@@ -207,17 +207,34 @@ class EventAdminController extends Controller
                             $status_value =  "approved by event admin";
                             break;
                         case 7:
-                            $status_value =  "rejected with correction by security officer";                                
+                            $status_value =  "rejected with correction by security officer";
                             break;
                         case 8:
-                            $status_value =  "rejected with correction by event admin";                                
-                            break;   
+                            $status_value =  "rejected with correction by event admin";
+                            break;
+                        case 9:
+                            $status_value =  "badge generated";
+                            break;
+                        case 10:
+                            $status_value =  "badge printed";
+                            break;
                     }
                     return $status_value;
                     //return $row->first_name.' '.$row->last_name;
                 })
                 ->addColumn('action', function ($data) {
                     $button = '';
+
+                    if($data->print_status == 0){
+                        $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="'.$data->id.'" class="delete btn btn-reddit generate-badge">Generate</a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
+                    else{
+                        $printed = $data->print_status == 2 ? 'printed' : '';
+                        $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="'.$data->id.'" class="delete btn btn-facebook preview-badge"' . $printed  .'">Preview</a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
+
                     switch($data->status){
                         case 2:
                             $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Aprrove</a>';

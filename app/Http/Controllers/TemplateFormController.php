@@ -37,6 +37,7 @@ class TemplateFormController extends Controller
         $options = array();
         $form = '<div class="row">';
         $attachmentForm ='';
+        $attachmentFormHidden ='';
         if($participant_id == 0){
             $form .= $this->createHiddenField('participant_id','participant_id','');
         }else{
@@ -105,22 +106,24 @@ class TemplateFormController extends Controller
                     break;
 
                 case 'file':
+                    $fieldsCount --;
                     if($participant_id == 0){
                         $attachmentForm .= $this->createAttachment($templateField->label_en,$templateField->label_en,0,'');
-                        $form .= $this->createHiddenField($templateField->label_en,$templateField->label_en, '');
+                        $attachmentFormHidden .= $this->createHiddenField($templateField->label_en,$templateField->label_en, '');
                     }
                     else{
                         $attachmentForm .= $this->createAttachment($templateField->label_en,$templateField->label_en,0,$templateField->value);
-                        $form .= $this->createHiddenField($templateField->label_en,$templateField->label_en, $templateField->value);
+                        $attachmentFormHidden .= $this->createHiddenField($templateField->label_en,$templateField->label_en, $templateField->value);
                     }
-
-
                     break;
             }
         }
+
         if($fieldsCount % 2 == 1){
             $form .= '<div class="col-md-6"><div class="form-group col"></div></div>';
         }
+
+        $form .= $attachmentFormHidden;
 
     //var_dump($form);
         return view('pages.TemplateForm.template-form-add')->with('form',$form)->with('attachmentForm', $attachmentForm);

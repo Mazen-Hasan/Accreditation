@@ -25,15 +25,22 @@ class GenerateBadgeController extends Controller
     }
 
     public function printBadge($staff_id){
-        DB::update('update company_staff set print_status = ? where id = ?',['2', $staff_id]);
+        DB::update('update company_staff set print_status = ?, status =? where id = ?',['2','10', $staff_id]);
 
         return Response::json(true);
     }
 
     public function generate($staff_id){
 
-        $staffInfo = DB::select('select * from staff_badges_view where staff_id = ?', [$staff_id]);
-        $template_id = $staffInfo[0]->template_id;
+        $where = array('id' => $staff_id);
+        $eventID = CompanyStaff::where($where)->first()->event_id;
+
+        $where = array('event_id' => $eventID);
+        $template_id = Event::where($where)->first()->event_form;
+
+
+        $staffInfo = DB::select('select * from staff_badges_view where staff_id = ? and template_id = ?', [$staff_id,$template_id]);
+//        $template_id = $staffInfo[0]->template_id;
 
         $where = array('template_id' => $template_id);
         $badge = TemplateBadge::where($where)->first();
@@ -66,7 +73,7 @@ class GenerateBadgeController extends Controller
 
         $path = $event->id . '_'. $template_id . '_' . $staff_id . '.png';
         if($res){
-            DB::update('update company_staff set badge_path = ?, print_status = ? where id = ?',[$path,'1', $staff_id]);
+            DB::update('update company_staff set badge_path = ?, print_status = ?, status =? where id = ?',[$path,'1','9', $staff_id]);
         }
 
         imagedestroy($badgeImg);

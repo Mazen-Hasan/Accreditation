@@ -149,6 +149,12 @@ class CompanyAdminController extends Controller
                         case 8:
                             $status_value =  "rejected with correction by event admin";
                             break;
+                        case 9:
+                            $status_value =  "badge generated";
+                            break;
+                        case 10:
+                            $status_value =  "badge printed";
+                            break;
                     }
                     return $status_value;
                     //return $row->first_name.' '.$row->last_name;

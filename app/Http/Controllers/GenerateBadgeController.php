@@ -59,10 +59,10 @@ class GenerateBadgeController extends Controller
         foreach ($staffInfo as $staff){
             if(str_contains($staff->value,'.png')){
                 $image_path = public_path('storage/badges/' . $staff->value);
-                $this->addImageTooImg($badgeImg, $staff->position_x, $staff->position_x, 150,150, $image_path);
+                $this->addImageTooImg($badgeImg, $staff->position_x, $staff->position_y, $staff->width,$staff->width, $image_path);
             }
             else{
-                $this->addTextTooImg($badgeImg, $staff->position_x, $staff->position_x, $staff->size, $staff->text_color, $staff->value, $fontPath);
+                $this->addTextTooImg($badgeImg, $staff->position_x, $staff->position_y, $staff->size, $staff->text_color, $staff->value, $fontPath);
             }
         }
 

@@ -190,34 +190,34 @@ class EventAdminController extends Controller
                             $status_value =  "Initiated";
                             break;
                         case 1:
-                            $status_value =  "waiting Security Officer Approval";
+                            $status_value =  "Waiting Security Officer Approval";
                             break;
                         case 2:
-                            $status_value =  "waiting Event Admin Approval";
+                            $status_value =  "Waiting Event Admin Approval";
                             break;
                         case 3:
-                            $status_value =  "approved by security officer";
+                            $status_value =  "Approved by security officer";
                             break;
                         case 4:
-                            $status_value =  "rejected by security officer";
+                            $status_value =  "Rejected by security officer";
                             break;
                         case 5:
-                            $status_value =  "rejected by event admin";
+                            $status_value =  "Rejected by event admin";
                             break;
                         case 6:
-                            $status_value =  "approved by event admin";
+                            $status_value =  "Approved by event admin";
                             break;
                         case 7:
-                            $status_value =  "rejected with correction by security officer";
+                            $status_value =  "Rejected with correction by security officer";
                             break;
                         case 8:
-                            $status_value =  "rejected with correction by event admin";
+                            $status_value =  "Rejected with correction by event admin";
                             break;
                         case 9:
-                            $status_value =  "badge generated";
+                            $status_value =  "Badge generated";
                             break;
                         case 10:
-                            $status_value =  "badge printed";
+                            $status_value =  "Badge printed";
                             break;
                     }
                     return $status_value;
@@ -226,7 +226,7 @@ class EventAdminController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '';
                     $button .= '<a href="' . route('participantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
-                    $button .= '&nbsp;&nbsp;';        
+                    $button .= '&nbsp;&nbsp;';
                     if($data->print_status == 0){
                         $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="'.$data->id.'" class="delete btn btn-reddit generate-badge">Generate</a>';
                         $button .= '&nbsp;&nbsp;';
@@ -334,8 +334,8 @@ class EventAdminController extends Controller
 
         $where = array('id' => $participant_id);
         $participant = CompanyStaff::where($where)->first();
-    
-    
+
+
         $where = array('id' => $participant->event_id);
         $event = Event::where($where)->first();
 
@@ -392,16 +392,16 @@ class EventAdminController extends Controller
         $fieldsCount =  0;
         $form = '';
         $options = array();
-        $form .= '<div class="row">';       
+        $form .= '<div class="row">';
         $form .= $this->createStatusFieldLabel("status","Status",0,1,1,$status_value);
         $form .= '</div>';
         if($status == 8){
-            $form .= '<div class="row">';       
+            $form .= '<div class="row">';
             $form .= $this->createStatusFieldLabel("reject_reason","Reject Reason",0,1,1, $event_reject_reason);
             $form .= '</div>';
         }
         if($status == 7){
-            $form = '<div class="row">';       
+            $form = '<div class="row">';
             $form .= $this->createStatusFieldLabel("reject_reason","Reject Reason",0,1,1, $security_officer_reject_reason);
             $form .= '</div>';
         }
@@ -507,7 +507,7 @@ class EventAdminController extends Controller
     return view('pages.EventAdmin.event-participant-details')->with('form',$form)->with('attachmentForm', $attachmentForm)->with('companyId',$participant->company_id)->with('eventId',$participant->event_id)->with('buttons',$buttons);
     }
 
-    
+
 
     public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_char, $value){
         $required = '';

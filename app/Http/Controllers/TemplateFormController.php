@@ -56,9 +56,21 @@ class TemplateFormController extends Controller
             switch ($templateField->slug){
                 case 'text':
                     if($participant_id == 0){
+                        if(strtolower($templateField->label_en) ==  'company' or strtolower($templateField->label_en) ==  'event'){
+                            if(strtolower($templateField->label_en) ==  'company') {
+                                $form .= $this->createHiddenField($templateField->label_en, $templateField->label_en, $company->name);
+                            }else{
+                                $form .= $this->createHiddenField($templateField->label_en, $templateField->label_en, $event->name);
+                            }
+                            break;
+                        }
                     $form .= $this->createTextField($templateField->label_en,$templateField->label_en,
                         $templateField->mandatory,$templateField->min_char,$templateField->max_char,'');
                     }else{
+                        if(strtolower($templateField->label_en) ==  'company' or strtolower($templateField->label_en) ==  'event'){
+                            $form .= $this->createHiddenField($templateField->label_en, $templateField->label_en, $templateField->value);
+                            break;
+                        }
                         $form .= $this->createTextField($templateField->label_en,$templateField->label_en,
                         $templateField->mandatory,$templateField->min_char,$templateField->max_char,$templateField->value);
                     }
@@ -196,16 +208,16 @@ class TemplateFormController extends Controller
         $fieldsCount =  0;
 
         $options = array();
-        $form = '<div class="row">';       
+        $form = '<div class="row">';
         $form .= $this->createStatusFieldLabel("status","Status",0,1,1,$status_value);
         $form .= '</div>';
         if($status == 8){
-            $form = '<div class="row">';       
+            $form = '<div class="row">';
             $form .= $this->createStatusFieldLabel("reject_reason","Reject Reason",0,1,1, $event_reject_reason);
             $form .= '</div>';
         }
         if($status == 7){
-            $form = '<div class="row">';       
+            $form = '<div class="row">';
             $form .= $this->createStatusFieldLabel("reject_reason","Reject Reason",0,1,1, $security_officer_reject_reason);
             $form .= '</div>';
         }
@@ -318,7 +330,7 @@ class TemplateFormController extends Controller
     //var_dump($form);
         return view('pages.TemplateForm.template-form-details')->with('form',$form)->with('attachmentForm', $attachmentForm)->with('buttons',$buttons);
     }
-    
+
 
 
     public function createTextField($id, $label, $mandatory, $min_char, $max_char, $value){
@@ -669,8 +681,6 @@ class TemplateFormController extends Controller
         //     $fileName = time().'.'.$request->file->extension();
         //     $request->file->move(public_path('uploads'), $fileName);
         // }
-
-
 
         foreach ($data as $key => $value) {
 //            DB::insert('insert  into staff_data values');

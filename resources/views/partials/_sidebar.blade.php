@@ -11,8 +11,6 @@
                 <span class="nav-link">
                    <p class="user_role">
                        {{ Auth::user()->roles->first()->name }}
-                       <br>
-                       {{Request::route()->getName()}}
                    </p>
                 </span>
             </li>

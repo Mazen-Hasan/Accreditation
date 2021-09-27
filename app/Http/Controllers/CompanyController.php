@@ -108,7 +108,7 @@ class CompanyController extends Controller
             //         ]);
             // }
         }else{
-            
+
             $where = array('id'=>$companyId);
             $company = Company::where($where)->first();
             $status = $company->status;
@@ -356,7 +356,7 @@ class CompanyController extends Controller
                 'event_id' => $event_id,
                 'status'=> 0
             ]);
-          
+
           } catch (\Exception $e) {
             return Response::json(array(
                 'code'      =>  400,

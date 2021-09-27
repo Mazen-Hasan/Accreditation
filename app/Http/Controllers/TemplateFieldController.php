@@ -21,12 +21,20 @@ class TemplateFieldController extends Controller
             $templateFields = DB::select('select * from template_fields_view v where v.template_id = ?',[$template_id]);
             return datatables()->of($templateFields)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="edit-field"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-feild">Edit</a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-field">Delete</a>';
-                    $button .= '&nbsp;&nbsp;';
+                    $button ='';
+                    if(strtolower($data->label_en) != 'company' and strtolower($data->label_en) != 'event'){
+                        $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="edit-field"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-feild">Edit</a>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-field">Delete</a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
+//                    else{
+//                        $button .= '<p class="btn btn-facebook" style="margin-bottom: 0px; cursor: auto">Mandatory</p>';
+//                        $button .= '&nbsp;&nbsp;';
+//                    }
+
                     if ($data->slug == 'select') {
-                        $button .= '<a href="' . route('fieldElements', $data->id) . '" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook"> Elements</a>';
+                        $button .= '<a href="' . route('fieldElements', $data->label_en) . '" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook"> Elements</a>';
                     }
                     return $button;
                 })

@@ -225,11 +225,8 @@ class EventAdminController extends Controller
                 })
                 ->addColumn('action', function ($data) {
                     $button = '';
-<<<<<<< HEAD
                     $button .= '<a href="' . route('participantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
-                    $button .= '&nbsp;&nbsp;';
-=======
-
+                    $button .= '&nbsp;&nbsp;';        
                     if($data->print_status == 0){
                         $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="'.$data->id.'" class="delete btn btn-reddit generate-badge">Generate</a>';
                         $button .= '&nbsp;&nbsp;';
@@ -239,8 +236,6 @@ class EventAdminController extends Controller
                         $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="'.$data->id.'" class="delete btn btn-facebook preview-badge"' . $printed  .'">Preview</a>';
                         $button .= '&nbsp;&nbsp;';
                     }
-
->>>>>>> b516ffa9dade850e7adc118b19b3b11452e5954e
                     switch($data->status){
                         case 2:
                             $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Aprrove</a>';

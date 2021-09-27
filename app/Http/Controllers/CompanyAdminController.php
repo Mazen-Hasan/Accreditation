@@ -123,7 +123,7 @@ class CompanyAdminController extends Controller
                     $status_value = "initaited";
                     switch($data->status){
                         case 0:
-                            $status_value =  "Initaited";
+                            $status_value =  "Initiated";
                             break;
                         case 1:
                             $status_value =  "waiting Security Officer Approval";
@@ -167,6 +167,9 @@ class CompanyAdminController extends Controller
                         $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="'.$data->id.'" class="delete btn btn-facebook preview-badge"' . $printed  .'">Preview</a>';
                         $button .= '&nbsp;&nbsp;';
                     }
+
+                    $button .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
+                    $button .= '&nbsp;&nbsp;';
 
 
                     switch($data->status){

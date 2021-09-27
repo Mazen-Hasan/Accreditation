@@ -249,7 +249,10 @@
                     url: "../badge-print/" + staff_id,
                     success: function (data) {
                         $('#badge-modal').modal('show');
-                        printJS($('#badge').attr('src'), 'image');return false;
+                        printJS($('#badge').attr('src'), 'image');
+                        var oTable = $('#laravel_datatable').dataTable();
+                        oTable.fnDraw(false);
+                        return false;
                     },
                     error: function (data) {
                         console.log('Error:', data);

@@ -103,7 +103,7 @@
                     <form id="badgeForm" name="badgeForm" class="form-horizontal">
 {{--                        <input style="visibility: hidden" type="text" name="bg_image" id="bg_image">--}}
                         <input style="visibility: hidden" type="text" name="h_template_id" id="h_template_id">
-                        <input type="text" name="bg_image" id="bg_image">
+                        <input style="visibility: hidden" type="text" name="bg_image" id="bg_image">
 {{--                        <img src="{{asset('storage/badges/2021-09-24_09:18:00.png')}}" alt="im" style="width:200px;height:200px;">--}}
                         <img id="badge_bg" src="{{URL::asset('storage/badges/')}}" alt="im" style="width:200px;height:200px;">
                         <input type="hidden" name="badge_id" id="badge_id">
@@ -137,7 +137,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group col">
-                                    <label>Type</label>
+                                    <label>Template</label>
                                     <div class="col-sm-12">
                                         <select id="template_id" name="template_id" required="">
                                             @foreach ($templates as $template)
@@ -270,7 +270,7 @@
                     $("#file_type_error").html('');
 
                     var imag = data.bg_image;
-                    var image_path = "{{URL::asset('storage/badges/')}}/";
+                    var image_path = "{{URL::asset('badges/')}}/";
 
                     $('#badge_bg').attr('src', image_path + imag );
                     $('#badge_bg').show();

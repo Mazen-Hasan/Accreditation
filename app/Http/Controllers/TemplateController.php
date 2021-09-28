@@ -76,6 +76,7 @@ class TemplateController extends Controller
                 'creator' => Auth::user()->id
             ]);
 
+        if($template_id == null){
         $query = 'select p.id, p.label_ar, p.label_en, p.mandatory, p.min_char, p.max_char, p.field_type_id  from pre_defined_fields  p';
         $pre_defined_fields_res = DB::select($query);
 
@@ -105,6 +106,7 @@ class TemplateController extends Controller
                         ]);
                 }
         }
+    }
 
         return Response::json($post);
     }

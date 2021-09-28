@@ -165,6 +165,11 @@ Route::group(['middleware' => 'role:super-admin'], function() {
 
     Route::resource('templateBadgeFieldController', 'App\Http\Controllers\TemplateBadgeFieldController');
     Route::get('templateBadgeFieldController/destroy/{field_id}', 'App\Http\Controllers\TemplateBadgeFieldController@destroy');
+
+    Route::resource('fullFillmentController', 'App\Http\Controllers\FullFillmentController');
+    Route::get('/selections', [App\Http\Controllers\FullFillmentController::class, 'index'])->name('Selections');
+    Route::get('fullFillmentController/getCompanies/{field_id}', [App\Http\Controllers\FullFillmentController::class, 'getCompanies'])->name('getCompanies');
+    Route::get('/all-participants/{event_id}/{company_id}/{accredit_id}/{checked}', [App\Http\Controllers\FullFillmentController::class, 'allParticipants'])->name('allParticipants');
 });
 
 Route::group(['middleware' => 'role:security-officer'], function() {

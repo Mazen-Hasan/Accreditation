@@ -117,6 +117,15 @@
                 <span class="menu-title">Users</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'fullFillment') =="1" ? "active" : "" }}"
+               href="{{ route('Selections')}}">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="Users">
+                </i>
+                <span class="menu-title">FullFillment</span>
+            </a>
+        </li>
 {{--        <li class="nav-item">--}}
 {{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'participants') =="1" ? "active" : "" }}"--}}
 {{--               href="{{ route('participants') }}">--}}

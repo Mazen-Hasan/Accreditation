@@ -58,44 +58,44 @@ class TemplateFormController extends Controller
                     if($participant_id == 0){
                         if(strtolower($templateField->label_en) ==  'company' or strtolower($templateField->label_en) ==  'event'){
                             if(strtolower($templateField->label_en) ==  'company') {
-                                $form .= $this->createHiddenField($templateField->label_en, $templateField->label_en, $company->name);
+                                $form .= $this->createHiddenField(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $company->name);
                             }else{
-                                $form .= $this->createHiddenField($templateField->label_en, $templateField->label_en, $event->name);
+                                $form .= $this->createHiddenField(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $event->name);
                             }
                             break;
                         }
-                    $form .= $this->createTextField($templateField->label_en,$templateField->label_en,
+                    $form .= $this->createTextField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,
                         $templateField->mandatory,$templateField->min_char,$templateField->max_char,'');
                     }else{
                         if(strtolower($templateField->label_en) ==  'company' or strtolower($templateField->label_en) ==  'event'){
-                            $form .= $this->createHiddenField($templateField->label_en, $templateField->label_en, $templateField->value);
+                            $form .= $this->createHiddenField(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $templateField->value);
                             break;
                         }
-                        $form .= $this->createTextField($templateField->label_en,$templateField->label_en,
+                        $form .= $this->createTextField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,
                         $templateField->mandatory,$templateField->min_char,$templateField->max_char,$templateField->value);
                     }
                     break;
 
                 case 'number':
                     if($participant_id == 0){
-                        $form .= $this->createNumberField($templateField->label_en,$templateField->label_en,
+                        $form .= $this->createNumberField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,
                             $templateField->mandatory,$templateField->min_char,$templateField->max_char,'');
                     }else{
-                        $form .= $this->createNumberField($templateField->label_en,$templateField->label_en,
+                        $form .= $this->createNumberField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,
                             $templateField->mandatory,$templateField->min_char,$templateField->max_char,$templateField->value);
                     }
                     break;
 
                 case 'textarea':
-                    $form .= $this->createTextArea($templateField->label_en,$templateField->label_en,
+                    $form .= $this->createTextArea(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,
                         $templateField->mandatory);
                     break;
 
                 case 'date':
                     if($participant_id == 0){
-                        $form .= $this->createDate($templateField->label_en,$templateField->label_en, $templateField->mandatory,'');
+                        $form .= $this->createDate(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, $templateField->mandatory,'');
                     }else{
-                        $form .= $this->createDate($templateField->label_en,$templateField->label_en, $templateField->mandatory,$templateField->value);
+                        $form .= $this->createDate(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, $templateField->mandatory,$templateField->value);
                     }
                     break;
 
@@ -106,26 +106,26 @@ class TemplateFormController extends Controller
                         $option = new SelectOption($fieldElement->value_id,$fieldElement->value_en);
                         $options [] = $option;
                     }
-                    $form .= $this->createSelect($templateField->label_en,$templateField->label_en, $options,'');
+                    $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, $options,'');
                 }else{
                     $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?',[$templateField->template_field_id]);
                     foreach ($fieldElements as $fieldElement){
                         $option = new SelectOption($fieldElement->value_id,$fieldElement->value_en);
                         $options [] = $option;
                     }
-                    $form .= $this->createSelect($templateField->label_en,$templateField->label_en, $options,$templateField->value);
+                    $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, $options,$templateField->value);
                 }
                     break;
 
                 case 'file':
                     $fieldsCount --;
                     if($participant_id == 0){
-                        $attachmentForm .= $this->createAttachment($templateField->label_en,$templateField->label_en,0,'');
-                        $attachmentFormHidden .= $this->createHiddenField($templateField->label_en,$templateField->label_en, '');
+                        $attachmentForm .= $this->createAttachment(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,0,'');
+                        $attachmentFormHidden .= $this->createHiddenField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, '');
                     }
                     else{
-                        $attachmentForm .= $this->createAttachment($templateField->label_en,$templateField->label_en,0,$templateField->value);
-                        $attachmentFormHidden .= $this->createHiddenField($templateField->label_en,$templateField->label_en, $templateField->value);
+                        $attachmentForm .= $this->createAttachment(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,0,$templateField->value);
+                        $attachmentFormHidden .= $this->createHiddenField(str_replace(' ', '_', $templateField->label_en) ,$templateField->label_en, $templateField->value);
                     }
                     break;
             }

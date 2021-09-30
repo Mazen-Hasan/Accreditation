@@ -236,7 +236,6 @@
 
             $('body').on('click', '.edit-field', function () {
                 var field_id = $(this).data('id');
-                alert(field_id);
                 $.get('../templateBadgeFieldController/' + field_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Field");

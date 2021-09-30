@@ -47,9 +47,6 @@ Route::group(['middleware' => 'role:company-admin'], function() {
 
     Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
 
-//    Route::post('templateFormController/uploadFile', 'App\Http\Controllers\templateFormController@uploadFile');
-
-
     //    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
 //    Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
 //    Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
@@ -166,10 +163,15 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::resource('templateBadgeFieldController', 'App\Http\Controllers\TemplateBadgeFieldController');
     Route::get('templateBadgeFieldController/destroy/{field_id}', 'App\Http\Controllers\TemplateBadgeFieldController@destroy');
 
+    Route::get('badge-design-generate/{badgeId}', 'App\Http\Controllers\GenerateBadgeController@generatePreview');
+
+
     Route::resource('fullFillmentController', 'App\Http\Controllers\FullFillmentController');
     Route::get('/selections', [App\Http\Controllers\FullFillmentController::class, 'index'])->name('Selections');
     Route::get('fullFillmentController/getCompanies/{field_id}', [App\Http\Controllers\FullFillmentController::class, 'getCompanies'])->name('getCompanies');
     Route::get('/all-participants/{event_id}/{company_id}/{accredit_id}/{checked}', [App\Http\Controllers\FullFillmentController::class, 'allParticipants'])->name('allParticipants');
+
+    Route::post('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
 });
 
 Route::group(['middleware' => 'role:security-officer'], function() {
@@ -182,7 +184,7 @@ Route::group(['middleware' => 'role:security-officer'], function() {
     Route::get('securityOfficerAdminController/Reject/{staffId}', 'App\Http\Controllers\SecurityOfficerAdminController@Reject');
     Route::get('securityOfficerAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\SecurityOfficerAdminController@RejectToCorrect');
     Route::get('/security-officer-participant-details/{participant_id}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'details'])->name('securityParticipantDetails');
-    
+
 });
 
 // Route::group(['middleware' => ['role:event-admin|security-officer|company-admin']], function() {

@@ -99,7 +99,7 @@
                                 <div class="form-group col">
                                     <label>Min</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="min_char" min="1" max="500" name="min_char" placeholder="enter min char" required="">
+                                        <input type="number" id="min_char" min="1" max="500" name="min_char" placeholder="enter min">
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
                                 <div class="form-group col">
                                     <label>Max</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="max_char" min="1" max="500" name="max_char" placeholder="enter max char" required="">
+                                        <input type="number" id="max_char" min="1" max="500" name="max_char" placeholder="enter max">
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                                 <div class="form-group col">
                                     <label>Order</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="field_order" name="field_order" min="1" max="500" name="max_char" placeholder="enter field order" required="">
+                                        <input type="number" id="field_order" name="field_order" min="1" max="500" placeholder="enter field order">
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +145,7 @@
                                 <div class="form-group col">
                                     <label>Mandatory</label>
                                     <div class="col-sm-12">
-                                        <input type="checkbox" id="mandatory" name="mandatory">
+                                        <input type="checkbox" id="mandatory" name="mandatory" checked>
                                     </div>
                                 </div>
                             </div>
@@ -334,13 +334,13 @@
         $('select').on('change', function() {
             var selected = $(this).find('option:selected');
             var slug = selected.data('slug');
-            if(slug === 'select') {
-                $('#min_char').prop('disabled', true);
-                $('#max_char').prop('disabled', true);
-            }
-           else{
+            if(slug === 'text' || slug === 'number') {
                 $('#min_char').prop('disabled', false);
                 $('#max_char').prop('disabled', false);
+            }
+           else{
+                $('#min_char').prop('disabled', true);
+                $('#max_char').prop('disabled', true);
             }
         });
     </script>

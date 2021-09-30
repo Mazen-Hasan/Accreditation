@@ -35,6 +35,13 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
+
+                                <a href="javascript:void(0)" id="generate" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">Generate</span>
+                                </a>
                                 @role('company-admin')
                                 <a href="{{route('templateForm',0)}}" id="add-new-post" class="add-hbtn">
                                     <i>
@@ -55,39 +62,19 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                     @endforeach
-                                    <!-- <th>ID</th>
-                                    <th>Name</th>
-                                    {{--                                    <th>Location</th>--}}
-                                    <th>Nationality</th>
-                                    <th>Class</th>
-                                    <th>Email</th>
-                                    <th>Mobile</th>
-                                    <th>Position</th>
-                                    <th>Accreditation Category</th>
-                                    <th>Religion</th>--}} -->
-
-                                    
                                 </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                             </table>
                         </div>
-                        <!-- <div class="row">
-                        <div class="col-sm-4"></div> -->
-                        <!-- <div class="col-sm-4">
-                            <button type="button" id="checkAll">Check All</button>
-                        </div> -->
-                        <!-- <div class="col-sm-4">
-                            <button type="button" data-dismiss="modal" id="btn-yes-new">Reject</button>
-                        </div> -->
-                    </div> -->
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
 </div>
-    
+
 @endsection
 @section('script')
     <script>
@@ -107,9 +94,9 @@
             myColumns.push({data: "action",name: "action" , orderable: false});
             myColumns.push({data: "status",name: "status"});
             // if(company_id == 0){
-            //     myColumns.push({data: "company",name: "company"});    
+            //     myColumns.push({data: "company",name: "company"});
             // }
-            //myColumns.push({data: "company",name: "company"}); 
+            //myColumns.push({data: "company",name: "company"});
             while(i< jqueryarray.length){
                 myColumns.push({data: jqueryarray[i].replace(/ /g,"_") ,name: jqueryarray[i].replace(/ /g,"_")});
                 i++;
@@ -138,10 +125,14 @@
                     type: 'GET',
                 },
                 columns: myColumns,
-                order: [[2, 'desc']]
-                // "fnInitComplete" : function (oSettings, json) {
-                //     alert('DataTables has finished its initialisation.');
-                // }
+                order: [[2, 'desc']],
+
+                "fnInitComplete" : function (oSettings, json) {
+                    checkedItems =[];
+                    selected = 0;
+                    $('#checkAll').prop('checked',false);
+                    // alert('DataTables has finished its initialisation.');
+                }
             }).on('search.dt', function() {
                     checkedItems =[];
                     selected = 0;
@@ -158,7 +149,7 @@
                     $('#checkAll').prop('checked',false);
                     //alert('data has changed page')
                 });
-            
+
 
             $('.export-to-excel').click( function() {
                 $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
@@ -191,6 +182,26 @@
                 }
                     //alert(checkedItems);
             });
+
+            $('body').on('click', '#generate', function () {
+                var staff = checkedItems;
+                if(staff.length > 0){
+                    $.ajax({
+                        type: "post",
+                        data:  {staff: staff} ,
+                        dataType: "json",
+                        url: "{{ url('pdf-generate')}}",
+                        success: function (data) {
+                            console.log(data);
+                            window.location.href = data.file;
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                        }
+                    });
+                }
+            });
+
             $('body').on('click', '.select', function () {
                     //alert($(this).data("id"));
                     var count = 0;

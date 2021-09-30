@@ -112,7 +112,7 @@
             <a class="nav-link {{ str_contains( Request::route()->getName(),'users') =="1" ? "active" : "" }}"
                href="{{ route('users') }}">
                 <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Users">
+                    <img src="{{ asset('images/user_mng.png') }}" alt="Users">
                 </i>
                 <span class="menu-title">Users</span>
             </a>

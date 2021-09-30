@@ -250,6 +250,8 @@ class FullFillmentController extends Controller
                     //         break;
                     // }
                     $button = '';
+                    // var_dump($checked);
+                    // exit;
                     if($checked == 1){
                         $button .= '<input type="checkbox" class="select" data-id="'.$data->id.'" checked />';
                     }else{

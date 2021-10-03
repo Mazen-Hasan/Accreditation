@@ -28,13 +28,8 @@ class TemplateFieldController extends Controller
                         $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-field">Delete</a>';
                         $button .= '&nbsp;&nbsp;';
                     }
-//                    else{
-//                        $button .= '<p class="btn btn-facebook" style="margin-bottom: 0px; cursor: auto">Mandatory</p>';
-//                        $button .= '&nbsp;&nbsp;';
-//                    }
-
                     if ($data->slug == 'select') {
-                        $button .= '<a href="' . route('fieldElements', $data->label_en) . '" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook"> Elements</a>';
+                        $button .= '<a href="' . route('fieldElements', $data->id) . '" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook"> Elements</a>';
                     }
                     return $button;
                 })

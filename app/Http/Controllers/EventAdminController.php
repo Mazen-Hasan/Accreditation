@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Event;
 use App\Models\Company;
 use App\Models\FocalPoint;
-use App\Models\CompanyStaff;
 use App\Models\SelectOption;
+use App\Models\CompanyStaff;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
 use App\Models\TemplateField;
@@ -99,7 +99,7 @@ class EventAdminController extends Controller
             $company_admin_id = $company->company_admin_id;
         }else{
             $company_admin_id = '_Event'.$event->event_admin;
-            $dataTableColumuns[] = 'Company';
+            //$dataTableColumuns[] = 'Company Name';
         }
 
 
@@ -112,9 +112,9 @@ class EventAdminController extends Controller
         Schema::dropIfExists('temp'.$company_admin_id);
         Schema::create('temp'.$company_admin_id, function ($table) use($templateFields, $companyId) {
             $table->string('id');
-            if($companyId == 0){
-                $table->string('Company');
-            }
+            // if($companyId == 0){
+            //     $table->string('company_name'); 
+            // }
             foreach($templateFields as $templateField){
                 //$dataTableColumuns[] = $templateField->label_en;
                 $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
@@ -127,7 +127,7 @@ class EventAdminController extends Controller
         }else{
             $where = array('event_id' => $eventId,'company_id' => $company->id);
         }
-
+        
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach($companyStaffs as $companyStaff){
@@ -142,10 +142,10 @@ class EventAdminController extends Controller
             $staffDataValues[] = $companyStaff->id;
             $count = 0;
             foreach($staffDatas as $staffData){
-                if($count == 0 && $companyId == 0){
-                    $staffDataValues[] = $staffData->company_name;
-                    $count = 1;
-                }
+                // if($count == 0 && $companyId == 0){
+                //     $staffDataValues[] = $staffData->company_name;
+                //     $count = 1;
+                // }
                 if($staffData->slug == 'select' ){
                     $where = array('template_field_id' =>$staffData->template_field_id , 'value_id' => $staffData->value);
                     $value = TemplateFieldElement::where($where)->first();
@@ -155,14 +155,14 @@ class EventAdminController extends Controller
                 }
             }
             $alldata[] = $staffDataValues;
-        }
+        }        
         // var_dump($alldata);
         // exit;
         $query = '';
         foreach($alldata as $data){
             $query = '';
             if($companyId == 0){
-                $query = $query . 'insert into temp'.$company_admin_id.' (id, company';
+                $query = $query . 'insert into temp'.$company_admin_id.' (id';
             }else{
                 $query = $query . 'insert into temp'.$company_admin_id.' (id';
             }
@@ -208,15 +208,15 @@ class EventAdminController extends Controller
                             $status_value =  "Approved by event admin";
                             break;
                         case 7:
-                            $status_value =  "Rejected with correction by security officer";
+                            $status_value =  "Rejected with correction by security officer";                                
                             break;
                         case 8:
-                            $status_value =  "Rejected with correction by event admin";
+                            $status_value =  "Rejected with correction by event admin";                                
                             break;
-                        case 9:
+                    	 case 9:
                             $status_value =  "Badge generated";
                             break;
-                        case 10:
+                    	 case 10:
                             $status_value =  "Badge printed";
                             break;
                     }
@@ -227,7 +227,7 @@ class EventAdminController extends Controller
                     $button = '';
                     $button .= '<a href="' . route('participantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
                     $button .= '&nbsp;&nbsp;';
-                    if($data->print_status == 0){
+                	if($data->print_status == 0){
                         $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="'.$data->id.'" class="delete btn btn-reddit generate-badge">Generate</a>';
                         $button .= '&nbsp;&nbsp;';
                     }
@@ -236,6 +236,7 @@ class EventAdminController extends Controller
                         $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="'.$data->id.'" class="delete btn btn-facebook preview-badge"' . $printed  .'">Preview</a>';
                         $button .= '&nbsp;&nbsp;';
                     }
+                
                     switch($data->status){
                         case 2:
                             $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Aprrove</a>';
@@ -326,16 +327,13 @@ class EventAdminController extends Controller
         return Response::json($event);
     }
 
-
-
-
-    public function details($participant_id)
+public function details($participant_id)
     {
 
         $where = array('id' => $participant_id);
         $participant = CompanyStaff::where($where)->first();
-
-
+    
+    
         $where = array('id' => $participant->event_id);
         $event = Event::where($where)->first();
 
@@ -384,6 +382,12 @@ class EventAdminController extends Controller
                         case 8:
                             $status_value =  "rejected with correction by event admin";
                             break;
+                        case 9:
+                            $status_value =  "Badge generated";
+                            break;
+                    	 case 10:
+                            $status_value =  "Badge printed";
+                            break;
                     }
                 }
 
@@ -392,16 +396,16 @@ class EventAdminController extends Controller
         $fieldsCount =  0;
         $form = '';
         $options = array();
-        $form .= '<div class="row">';
+        $form .= '<div class="row">';       
         $form .= $this->createStatusFieldLabel("status","Status",0,1,1,$status_value);
         $form .= '</div>';
         if($status == 8){
-            $form .= '<div class="row">';
+            $form .= '<div class="row">';       
             $form .= $this->createStatusFieldLabel("reject_reason","Reject Reason",0,1,1, $event_reject_reason);
             $form .= '</div>';
         }
         if($status == 7){
-            $form = '<div class="row">';
+            $form = '<div class="row">';       
             $form .= $this->createStatusFieldLabel("reject_reason","Reject Reason",0,1,1, $security_officer_reject_reason);
             $form .= '</div>';
         }
@@ -507,7 +511,7 @@ class EventAdminController extends Controller
     return view('pages.EventAdmin.event-participant-details')->with('form',$form)->with('attachmentForm', $attachmentForm)->with('companyId',$participant->company_id)->with('eventId',$participant->event_id)->with('buttons',$buttons);
     }
 
-
+    
 
     public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_char, $value){
         $required = '';

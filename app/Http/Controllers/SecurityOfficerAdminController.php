@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Event;
 use App\Models\Company;
 use App\Models\FocalPoint;
-use App\Models\CompanyStaff;
 use App\Models\SelectOption;
+use App\Models\CompanyStaff;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
 use App\Models\TemplateField;
@@ -161,7 +161,7 @@ class SecurityOfficerAdminController extends Controller
                     $status_value = "initaited";
                     switch($data->status){
                         case 0:
-                            $status_value =  "Initaited";
+                            $status_value =  "Initiated";
                             break;
                         case 1:
                             $status_value =  "waiting Security Officer Approval";
@@ -186,7 +186,13 @@ class SecurityOfficerAdminController extends Controller
                             break;
                         case 8:
                             $status_value =  "rejected with correction by event admin";                                
-                            break;   
+                            break;
+                        case 9:
+                            $status_value =  "Badge generated";
+                            break;
+                    	 case 10:
+                            $status_value =  "Badge printed";
+                            break;
                     }
                     return $status_value;
                     //return $row->first_name.' '.$row->last_name;
@@ -284,9 +290,7 @@ class SecurityOfficerAdminController extends Controller
         return Response::json($event);
     }
 
-
-
-    public function details($participant_id)
+public function details($participant_id)
     {
 
         $where = array('id' => $participant_id);
@@ -343,6 +347,12 @@ class SecurityOfficerAdminController extends Controller
                             break;
                         case 8:
                             $status_value =  "rejected with correction by event admin";
+                            break;
+                       	case 9:
+                            $status_value =  "Badge generated";
+                            break;
+                    	 case 10:
+                            $status_value =  "Badge printed";
                             break;
                     }
                 }

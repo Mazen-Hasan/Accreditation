@@ -99,7 +99,7 @@
                                 <div class="form-group col">
                                     <label>Min</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="min_char" min="1" max="500" name="min_char" placeholder="enter min char" required="">
+                                        <input type="number" id="min_char" min="1" max="500" name="min_char" placeholder="enter min">
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
                                 <div class="form-group col">
                                     <label>Max</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="max_char" min="1" max="500" name="max_char" placeholder="enter max char" required="">
+                                        <input type="number" id="max_char" min="1" max="500" name="max_char" placeholder="enter max">
                                     </div>
                                 </div>
                             </div>
@@ -218,7 +218,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../../template-fields/'+ templateId,
+                    url: '../template-fields/'+ templateId,
                     type: 'GET',
                 },
                 columns: [
@@ -334,13 +334,13 @@
         $('select').on('change', function() {
             var selected = $(this).find('option:selected');
             var slug = selected.data('slug');
-            if(slug === 'select') {
-                $('#min_char').prop('disabled', true);
-                $('#max_char').prop('disabled', true);
-            }
-           else{
+            if(slug === 'text' || slug === 'number') {
                 $('#min_char').prop('disabled', false);
                 $('#max_char').prop('disabled', false);
+            }
+           else{
+                $('#min_char').prop('disabled', true);
+                $('#max_char').prop('disabled', true);
             }
         });
     </script>

@@ -9,6 +9,7 @@
     <script src="{{ URL::asset('js/buttons.html5.min.js') }}"></script>
     <script src="{{ URL::asset('js/jszip.min.js') }}"></script>
     <script src="{{ URL::asset('js/pdfmake.min.js') }}"></script>
+	<script src="{{ URL::asset('js/print.min.js') }}"></script>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -74,6 +75,29 @@
             </div>
         </div>
     </div>
+	
+	<div class="modal fade" id="badge-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="badgeTitle"></h5>
+                	<input type="hidden" id="print_staff_id">
+                    <div class="col-sm-4">
+                        <button type="button" data-dismiss="modal" id="btn-print">Print</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+<!--                        --><?php //var_dump(gd_info());  ?>
+                    </div>
+                    <div class="row">
+                        <img id="badge" src="" alt="Badge">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -235,6 +259,66 @@
                 var confirmText =  "Reason:";
                 $('#confirmText-new').html(confirmText);
                 $('#delete-element-confirm-modal-new').modal('show');
+            });
+        
+        	$('body').on('click', '#generate-badge', function () {
+                var staff_id = $(this).data("id");
+            	$('#print_staff_id').val(staff_id);
+                $.ajax({
+                    type: "get",
+                    url: "../../badge-generate/" + staff_id,
+                    success: function (data) {
+                        $('#badge-modal').modal('show');
+                        var imag = data;
+                        var image_path = "{{URL::asset('badges/')}}/";
+
+                        $('#badge').attr('src', image_path + imag );
+                        var oTable = $('#laravel_datatable').dataTable();
+                        oTable.fnDraw(false);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+
+            $('body').on('click', '#preview-badge', function () {
+                var staff_id = $(this).data("id");
+            	$('#print_staff_id').val(staff_id);
+            	console.log(staff_id);
+                $.ajax({
+                    type: "get",
+                    url: "../../badge-preview/" + staff_id,
+                    success: function (data) {
+                        console.log($('#btn-print').attr('class'));
+                        $('#badge-modal').modal('show');
+                        var imag = data;
+                        var image_path = "{{URL::asset('badges/')}}/";
+
+                        $('#badge').attr('src', image_path + imag );
+                    },
+                    error: function (data) {
+                         console.log('Error:', data);
+                    }
+                });
+            });
+
+            $('body').on('click', '#btn-print', function () {
+                var staff_id = $('#print_staff_id').val();
+                $.ajax({
+                    type: "get",
+                    url: "../../badge-print/" + staff_id,
+                    success: function (data) {
+                        $('#badge-modal').modal('show');
+                        printJS($('#badge').attr('src'), 'image');
+                    	var oTable = $('#laravel_datatable').dataTable();
+                        oTable.fnDraw(false);
+                    	return false;
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
             });
 
             $('#delete-element-confirm-modal button').on('click', function(event) {

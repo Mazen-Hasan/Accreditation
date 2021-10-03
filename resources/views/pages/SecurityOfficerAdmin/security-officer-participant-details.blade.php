@@ -113,7 +113,7 @@
                 var label = $(this).data("label")
                 $('#badge-modal').modal('show');
                 $('#badgeTitle').html(label);
-                var image_path = "{{URL::asset('storage/badges/')}}/";
+                var image_path = "{{URL::asset('badges/')}}/";
                 $('#badge').attr('src', image_path + src );
             });
             $('body').on('click', '#approve', function () {
@@ -164,7 +164,7 @@
                             var event_id = $('#event_id').val();
                             $.ajax({
                                 type: "get",
-                                url: "../../securityOfficerAdminController/Approve/"+staffId,
+                                url: "../securityOfficerAdminController/Approve/"+staffId,
                                 success: function (data) {
                                     // var oTable = $('#laravel_datatable').dataTable();
                                     // oTable.fnDraw(false);
@@ -182,7 +182,7 @@
                             var staffId = $('#curr_element_id').val();
                             $.ajax({
                                 type: "get",
-                                url: "../../securityOfficerAdminController/Reject/"+staffId,
+                                url: "../securityOfficerAdminController/Reject/"+staffId,
                                 success: function (data) {
                                     // var oTable = $('#laravel_datatable').dataTable();
                                     // $('#send-approval-request').hide();
@@ -209,7 +209,7 @@
                         var event_id = $('#event_id').val();
                         $.ajax({
                                 type: "get",
-                                url: "../../securityOfficerAdminController/RejectToCorrect/"+staffId+"/"+reason,
+                                url: "../securityOfficerAdminController/RejectToCorrect/"+staffId+"/"+reason,
                                 success: function (data) {
                                     // var oTable = $('#laravel_datatable').dataTable();
                                     // oTable.fnDraw(false);

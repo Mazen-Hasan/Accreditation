@@ -205,7 +205,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../../template-badge-fields/'+ badge_id,
+                    url: 'template-badge-fields/'+ badge_id,
                     type: 'GET',
                 },
                 columns: [

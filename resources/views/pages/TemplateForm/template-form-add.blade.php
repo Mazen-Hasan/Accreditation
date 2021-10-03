@@ -63,7 +63,7 @@
             })
         }
 
-        $('.img-upload').submit(function(e) {
+    $('.img-upload').submit(function(e) {
             var btnID = this.id;
             btnID =  btnID.substring(5,btnID.length -1);
             var btn_upl = '#btn-upload_' + btnID;
@@ -128,5 +128,6 @@
                     console.log(data);
                 }
             });
-        });    </script>
+        });
+   </script>
 @endsection

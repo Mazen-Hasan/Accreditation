@@ -84,7 +84,7 @@
                 var label = $(this).data("label")
                 $('#badge-modal').modal('show');
                 $('#badgeTitle').html(label);
-                var image_path = "{{URL::asset('storage/badges/')}}/";
+                var image_path = "{{URL::asset('badges/')}}/";
                 $('#badge').attr('src', image_path + src );
             });
         $('body').on('click', '#send_request', function () {

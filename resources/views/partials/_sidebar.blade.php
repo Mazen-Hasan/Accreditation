@@ -1,5 +1,4 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
-<!--    --><?php //phpinfo(); ?>
     <ul class="nav">
         <ul>
             <li class="nav-item">
@@ -12,6 +11,7 @@
                    <p class="user_role">
                        {{ Auth::user()->roles->first()->name }}
                    </p>
+                   <br>
                 </span>
             </li>
         </ul>
@@ -25,16 +25,7 @@
                 <span class="menu-title">Event Management</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'contact') =="1" ? "active" : "" }}"
-               href="{{ route('contacts') }}">
-                <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Contact">
-                </i>
-                <span class="menu-title">Contacts</span>
-            </a>
-        </li>
-        <li class="nav-item">
+<!--         <li class="nav-item">
             <a class="nav-link  {{ str_contains( Request::route()->getName(),'event') =="1" ? "title" : "" }}"
                href="{{ route('titles') }}">
                 <i class="logout">
@@ -42,7 +33,7 @@
                 </i>
                 <span class="menu-title">Titles</span>
             </a>
-        </li>
+        </li> -->
         <li class="nav-item">
             <a class="nav-link {{ str_contains( Request::route()->getName(),'companyCategories') =="1" ? "active" : "" }}"
                href="{{ route('companyCategories') }}">
@@ -109,10 +100,19 @@
             </a>
         </li>
         <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'contact') =="1" ? "active" : "" }}"
+               href="{{ route('contacts') }}">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="Contact">
+                </i>
+                <span class="menu-title">Event Organizer/Owner</span>
+            </a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link {{ str_contains( Request::route()->getName(),'users') =="1" ? "active" : "" }}"
                href="{{ route('users') }}">
                 <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Users">
+                    <img src="{{ asset('images/user_mng.png') }}" alt="Users">
                 </i>
                 <span class="menu-title">Users</span>
             </a>
@@ -191,6 +191,8 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
             </form>
+
+
         </li>
     </ul>
 </nav>

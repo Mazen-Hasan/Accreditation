@@ -57,44 +57,44 @@ class TemplateFormController extends Controller
                     if($participant_id == 0){
                         if(strtolower($templateField->label_en) ==  'company' or strtolower($templateField->label_en) ==  'event'){
                             if(strtolower($templateField->label_en) ==  'company') {
-                                $form .= $this->createHiddenField(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $company->name);
+                                $form .= $this->createHiddenField($templateField->label_en, $templateField->label_en, $company->name);
                             }else{
-                                $form .= $this->createHiddenField(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $event->name);
+                                $form .= $this->createHiddenField($templateField->label_en, $templateField->label_en, $event->name);
                             }
                             break;
                         }
-                    $form .= $this->createTextField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,
+                    $form .= $this->createTextField($templateField->label_en,$templateField->label_en,
                         $templateField->mandatory,$templateField->min_char,$templateField->max_char,'');
                     }else{
                         if(strtolower($templateField->label_en) ==  'company' or strtolower($templateField->label_en) ==  'event'){
-                            $form .= $this->createHiddenField(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $templateField->value);
+                            $form .= $this->createHiddenField($templateField->label_en, $templateField->label_en, $templateField->value);
                             break;
                         }
-                        $form .= $this->createTextField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,
+                        $form .= $this->createTextField($templateField->label_en,$templateField->label_en,
                         $templateField->mandatory,$templateField->min_char,$templateField->max_char,$templateField->value);
                     }
                     break;
 
                 case 'number':
                     if($participant_id == 0){
-                        $form .= $this->createNumberField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,
+                        $form .= $this->createNumberField($templateField->label_en,$templateField->label_en,
                             $templateField->mandatory,$templateField->min_char,$templateField->max_char,'');
                     }else{
-                        $form .= $this->createNumberField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,
+                        $form .= $this->createNumberField($templateField->label_en,$templateField->label_en,
                             $templateField->mandatory,$templateField->min_char,$templateField->max_char,$templateField->value);
                     }
                     break;
 
                 case 'textarea':
-                    $form .= $this->createTextArea(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,
+                    $form .= $this->createTextArea($templateField->label_en,$templateField->label_en,
                         $templateField->mandatory);
                     break;
 
                 case 'date':
                     if($participant_id == 0){
-                        $form .= $this->createDate(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, $templateField->mandatory,'');
+                        $form .= $this->createDate($templateField->label_en,$templateField->label_en, $templateField->mandatory,'');
                     }else{
-                        $form .= $this->createDate(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, $templateField->mandatory,$templateField->value);
+                        $form .= $this->createDate($templateField->label_en,$templateField->label_en, $templateField->mandatory,$templateField->value);
                     }
                     break;
 
@@ -105,26 +105,26 @@ class TemplateFormController extends Controller
                         $option = new SelectOption($fieldElement->value_id,$fieldElement->value_en);
                         $options [] = $option;
                     }
-                    $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, $options,'');
+                    $form .= $this->createSelect($templateField->label_en,$templateField->label_en, $options,'');
                 }else{
                     $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?',[$templateField->template_field_id]);
                     foreach ($fieldElements as $fieldElement){
                         $option = new SelectOption($fieldElement->value_id,$fieldElement->value_en);
                         $options [] = $option;
                     }
-                    $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, $options,$templateField->value);
+                    $form .= $this->createSelect($templateField->label_en,$templateField->label_en, $options,$templateField->value);
                 }
                     break;
 
                 case 'file':
             		$fieldsCount --;
                     if($participant_id == 0){
-                        $attachmentForm .= $this->createAttachment(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,0,'');
-                        $form .= $this->createHiddenField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, '');
+                        $attachmentForm .= $this->createAttachment($templateField->label_en,$templateField->label_en,0,'');
+                        $form .= $this->createHiddenField($templateField->label_en,$templateField->label_en, '');
                     }
                     else{
-                        $attachmentForm .= $this->createAttachment(str_replace(' ', '_', $templateField->label_en),$templateField->label_en,0,$templateField->value);
-                        $form .= $this->createHiddenField(str_replace(' ', '_', $templateField->label_en),$templateField->label_en, $templateField->value);
+                        $attachmentForm .= $this->createAttachment($templateField->label_en,$templateField->label_en,0,$templateField->value);
+                        $form .= $this->createHiddenField($templateField->label_en,$templateField->label_en, $templateField->value);
                     }
 
 
@@ -139,23 +139,15 @@ class TemplateFormController extends Controller
         return view('pages.TemplateForm.template-form-add')->with('form',$form)->with('attachmentForm', $attachmentForm);
     }
 
-     public function createTextField($id, $label, $mandatory, $min_char, $max_char, $value){
+    public function createTextField($id, $label, $mandatory, $min_char, $max_char, $value){
         $required = '';
         if($mandatory == '1'){
             $required =  'required=""';
         }
-        $minChar = '';
-        $maxChar = '';
-        if($min_char){
-            $minChar = '" minlength="' . $min_char;
-        }
-        if($max_char){
-            $maxChar = '"maxlength="' . $max_char;
-        }
 
         $textfield = '<div class="col-md-6"><div class="form-group col">';
         $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
-        $textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . $minChar . $maxChar . '"'. $required. ' value="'.$value.'" />';
+        $textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
         $textfield .= '</div></div></div>';
 
         return $textfield;
@@ -166,18 +158,10 @@ class TemplateFormController extends Controller
         if($mandatory == '1'){
             $required =  'required=""';
         }
-        $minChar = '';
-        $maxChar = '';
-        if($min_value){
-            $minChar = '" min="' . $min_value;
-        }
-        if($max_value){
-            $maxChar = '"max="' . $max_value;
-        }
 
         $textfield = '<div class="col-md-6"><div class="form-group col">';
         $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
-        $textfield .= '<input type="number" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . $minChar . $maxChar. '"'. $required. ' value="'.$value.'" />';
+        $textfield .= '<input type="number" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" min="' . $min_value . '"max="' . $max_value .  '"'. $required. ' value="'.$value.'" />';
         $textfield .= '</div></div></div>';
 
         return $textfield;

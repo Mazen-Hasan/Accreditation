@@ -18,9 +18,13 @@ class FileUploadController extends Controller
                 $fileName = str_replace(':','_',$fileName);
                 $fileName = str_replace(' ', '_', $fileName) . '.' . $extension;
 
-                $stored_file = $file->storeAs(
-                    'public/badges', $fileName);
+                 //$path = public_path() . '/images';
+            $path = 'badges/';
+                
+                $stored_file = $file->move(
+                    $path, $fileName);
 
+            chmod($stored_file, 0777);
                 return Response()->json([
                     "success" => true,
                     "fileName" =>$fileName,

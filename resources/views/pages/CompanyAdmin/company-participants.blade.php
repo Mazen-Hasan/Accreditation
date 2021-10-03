@@ -133,6 +133,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="badgeTitle"></h5>
+                	<input type="hidden" id="print_staff_id">
                     <div class="col-sm-4">
                         <button type="button" data-dismiss="modal" id="btn-print">Print</button>
                     </div>
@@ -182,7 +183,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../company-participants',
+                    url: 'company-participants',
                     type: 'GET',
                 },
                 columns: myColumns,
@@ -204,9 +205,10 @@
 
             $('body').on('click', '#generate-badge', function () {
                 var staff_id = $(this).data("id");
+            	$('#print_staff_id').val(staff_id);
                 $.ajax({
                     type: "get",
-                    url: "../badge-generate/" + staff_id,
+                    url: "badge-generate/" + staff_id,
                     success: function (data) {
                         $('#badge-modal').modal('show');
                         var imag = data;
@@ -224,13 +226,13 @@
 
             $('body').on('click', '#preview-badge', function () {
                 var staff_id = $(this).data("id");
+            	$('#print_staff_id').val(staff_id);
                 $.ajax({
                     type: "get",
-                    url: "../badge-preview/" + staff_id,
+                    url: "badge-preview/" + staff_id,
                     success: function (data) {
                         console.log($('#btn-print').attr('class'));
                         $('#badge-modal').modal('show');
-
                         var imag = data;
                         var image_path = "{{URL::asset('badges/')}}/";
 
@@ -243,16 +245,16 @@
             });
 
             $('body').on('click', '#btn-print', function () {
-                var staff_id = $(this).data("id");
+                var staff_id = $('#print_staff_id').val();
                 $.ajax({
                     type: "get",
-                    url: "../badge-print/" + staff_id,
+                    url: "badge-print/" + staff_id,
                     success: function (data) {
                         $('#badge-modal').modal('show');
                         printJS($('#badge').attr('src'), 'image');
-                        var oTable = $('#laravel_datatable').dataTable();
+                    	var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
-                        return false;
+                    	return false;
                     },
                     error: function (data) {
                         console.log('Error:', data);
@@ -312,7 +314,7 @@
                             var staffId = $('#curr_element_id').val();
                             $.ajax({
                                 type: "get",
-                                url: "../companyAdminController/sendRequest/"+staffId,
+                                url: "companyAdminController/sendRequest/"+staffId,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();

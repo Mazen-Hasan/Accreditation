@@ -298,7 +298,7 @@
                     //     $('#need_management').val('0');
                     // }
                     // $('#btn-save').html('Sending..');
-                    alert($('#postForm').serialize());
+                    //alert($('#postForm').serialize());
                     $(":input,:hidden").serialize();
                     $.ajax({
                         data: $('#postForm').serialize(),

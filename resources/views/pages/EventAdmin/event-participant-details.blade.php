@@ -115,7 +115,7 @@
                 var label = $(this).data("label")
                 $('#badge-modal').modal('show');
                 $('#badgeTitle').html(label);
-                var image_path = "{{URL::asset('storage/badges/')}}/";
+                var image_path = "{{URL::asset('badges/')}}/";
                 $('#badge').attr('src', image_path + src );
             });
             $('body').on('click', '#approve', function () {
@@ -166,7 +166,7 @@
                             var staffId = $('#curr_element_id').val();
                             $.ajax({
                                 type: "get",
-                                url: "../../eventAdminController/Approve/"+staffId,
+                                url: "../eventAdminController/Approve/"+staffId,
                                 success: function (data) {
                                     // var oTable = $('#laravel_datatable').dataTable();
                                     // oTable.fnDraw(false);
@@ -184,7 +184,7 @@
                             var staffId = $('#curr_element_id').val();
                             $.ajax({
                                 type: "get",
-                                url: "../../eventAdminController/Reject/"+staffId,
+                                url: "../eventAdminController/Reject/"+staffId,
                                 success: function (data) {
                                     // var oTable = $('#laravel_datatable').dataTable();
                                     // $('#send-approval-request').hide();
@@ -210,7 +210,7 @@
                         var event_id = $('#event_id').val();
                         $.ajax({
                                 type: "get",
-                                url: "../../eventAdminController/RejectToCorrect/"+staffId+"/"+reason,
+                                url: "../eventAdminController/RejectToCorrect/"+staffId+"/"+reason,
                                 success: function (data) {
                                     // var oTable = $('#laravel_datatable').dataTable();
                                     // oTable.fnDraw(false);

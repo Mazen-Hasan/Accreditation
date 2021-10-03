@@ -46,7 +46,7 @@
                                     <th>ID</th>
                                     <th>Field ID</th>
                                     <th>Field Name</th>
-                                    <th>Position (Y)</th>
+                                    <th>Position (X)</th>
                                     <th>Position (Y)</th>
                                     <th>Size</th>
                                     <th>Text color</th>
@@ -204,7 +204,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../../template-badge-fields/'+ badge_id,
+                    url: '../template-badge-fields/'+ badge_id,
                     type: 'GET',
                 },
                 columns: [

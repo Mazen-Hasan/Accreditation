@@ -123,7 +123,7 @@ class CompanyAdminController extends Controller
                     $status_value = "initaited";
                     switch($data->status){
                         case 0:
-                            $status_value =  "Initiated";
+                            $status_value =  "Initaited";
                             break;
                         case 1:
                             $status_value =  "waiting Security Officer Approval";
@@ -149,10 +149,10 @@ class CompanyAdminController extends Controller
                         case 8:
                             $status_value =  "rejected with correction by event admin";
                             break;
-                        case 9:
+                    	 case 9:
                             $status_value =  "badge generated";
                             break;
-                        case 10:
+                    	 case 10:
                             $status_value =  "badge printed";
                             break;
                     }
@@ -164,20 +164,19 @@ class CompanyAdminController extends Controller
                     //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     // $button = '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     // $button .= '&nbsp;&nbsp;';
-                    if($data->print_status == 0){
-                        $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="'.$data->id.'" class="delete btn btn-reddit generate-badge">Generate</a>';
-                        $button .= '&nbsp;&nbsp;';
-                    }
-                    else{
-                        $printed = $data->print_status == 2 ? 'printed' : '';
-                        $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="'.$data->id.'" class="delete btn btn-facebook preview-badge"' . $printed  .'">Preview</a>';
-                        $button .= '&nbsp;&nbsp;';
-                    }
+                
+                    // if($data->print_status == 0){
+                    //     $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="'.$data->id.'" class="delete btn btn-reddit generate-badge">Generate</a>';
+                    //     $button .= '&nbsp;&nbsp;';
+                    // }
+                    // else{
+                    //     $printed = $data->print_status == 2 ? 'printed' : '';
+                    //     $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="'.$data->id.'" class="delete btn btn-facebook preview-badge"' . $printed  .'">Preview</a>';
+                    //     $button .= '&nbsp;&nbsp;';
+                    // }
 
-                    $button .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
+					$button .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
                     $button .= '&nbsp;&nbsp;';
-
-
                     switch($data->status){
 
                         case 0:

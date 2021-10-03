@@ -194,6 +194,21 @@
             </div>
         </div>
     </div>
+
+	<div class="modal fade" id="badge-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="badgeTitle">Badge preview</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <img id="badge" src="" alt="Badge">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -220,7 +235,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '/template-badge',
+                    url: 'template-badge',
                     type: 'GET',
                 },
                 columns: [
@@ -255,7 +270,7 @@
             $('body').on('click', '.edit-badge', function () {
                 var badge_id = $(this).data('id');
                 console.log(badge_id);
-                $.get('../templateBadgeController/' + badge_id + '/edit', function (data) {
+                $.get('templateBadgeController/' + badge_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Badge");
                     $('#btn-save').val("edit-badge");
@@ -270,7 +285,8 @@
                     $("#file_type_error").html('');
 
                     var imag = data.bg_image;
-                    var image_path = "{{URL::asset('badges/')}}/";
+                    //var image_path = "{{URL::asset('storage/badges/')}}/";
+                	var image_path = "{{URL::asset('badges/')}}/";
 
                     $('#badge_bg').attr('src', image_path + imag );
                     $('#badge_bg').show();
@@ -283,6 +299,26 @@
                     // }
 
                 });
+            });
+        });
+    
+    	$('body').on('click', '.preview-badge', function () {
+            var badge_id = $(this).data("id");
+            console.log(badge_id);
+            $.ajax({
+                type: "get",
+                url: "badge-design-generate/" + badge_id,
+                success: function (data) {
+                    $('#badge-modal').modal('show');
+
+                    var imag = data;
+                    var image_path = "{{URL::asset('preview/')}}/";
+
+                    $('#badge').attr('src', image_path + imag );
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
             });
         });
 

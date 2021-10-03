@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CompanyStaff;
 use App\Models\Event;
 use App\Models\TemplateBadge;
+use App\Models\TemplateBadgeFields;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
@@ -61,8 +62,7 @@ class GenerateBadgeController extends Controller
 
         $badgeImg =  $this->imgGenerate($badge->width, $badge->high, $badge->bg_color,  $bg_image_path);
 
-
-        $fontPath = 'fonts/Poppins/Poppins-Regular.ttf';
+        $fontPath = public_path('fonts/poppins/Poppins-Regular');
 
     
         foreach ($staffInfo as $staff){
@@ -183,10 +183,51 @@ class GenerateBadgeController extends Controller
         }
     }
 
-    function loadImage($img_path)
+    private function loadImage($img_path)
     {
         $im = @imagecreatefrompng($img_path);
     
         return $im;
     }
+
+    // public function generatePreview($badge_id){
+
+    //     $where = array('id' => $badge_id);
+    //     $badge = TemplateBadge::where($where)->first();
+
+    //     $bg_image_path = public_path('storage/badges/' . $badge->bg_image);
+
+    //     $badgeImg =  $this->imgGenerate($badge->width, $badge->high, $badge->bg_color,  $bg_image_path);
+
+    //     $fontPath = public_path('fonts/poppins/Poppins-Regular');
+
+    //     $template_badge_fields = DB::select('select * from badge_design_view where badge_id = ?', [$badge_id]);
+
+    //     $image_place_holder_path = public_path('preview');
+    //     $image_place_holder_path .= '/img.png';
+
+    //     foreach ($template_badge_fields as $template_badge_field){
+    //         if($template_badge_field->slug == 'file'){
+    //             $i = $template_badge_field->slug;
+    //             $this->addImageTooImg($badgeImg, $template_badge_field->position_x, $template_badge_field->position_y,
+    //                 $template_badge_field->size, $template_badge_field->size, $image_place_holder_path);
+
+    //         }
+    //         else{
+    //             $i = 'text';
+    //             $this->addTextTooImg($badgeImg, $template_badge_field->position_x, $template_badge_field->position_y,
+    //                 $template_badge_field->size, $template_badge_field->text_color, $template_badge_field->label_en, $fontPath);
+    //         }
+    //     }
+
+    //     $path = public_path('preview');
+    //     $path .=  '/' . $badge_id . '.png';
+
+    //     $res = imagepng($badgeImg, $path );
+
+    //     imagedestroy($badgeImg);
+
+    //     $path = '/' . $badge_id . '.png';
+    //     return Response::json($path);
+    // }
 }

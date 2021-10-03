@@ -49,9 +49,6 @@ Route::group(['middleware' => 'role:company-admin'], function() {
 
     Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
 
-//    Route::post('templateFormController/uploadFile', 'App\Http\Controllers\templateFormController@uploadFile');
-
-
     //    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
 //    Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
 //    Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
@@ -172,17 +169,15 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::resource('templateBadgeFieldController', 'App\Http\Controllers\TemplateBadgeFieldController');
     Route::get('templateBadgeFieldController/destroy/{field_id}', 'App\Http\Controllers\TemplateBadgeFieldController@destroy');
 
-	Route::get('badge-design-generate/{badgeId}', 'App\Http\Controllers\GenerateBadgeController@generatePreview');
+    Route::get('badge-design-generate/{badgeId}', 'App\Http\Controllers\GenerateBadgeController@generatePreview');
 
-	Route::resource('fullFillmentController', 'App\Http\Controllers\FullFillmentController');
+
+    Route::resource('fullFillmentController', 'App\Http\Controllers\FullFillmentController');
     Route::get('/selections', [App\Http\Controllers\FullFillmentController::class, 'index'])->name('Selections');
     Route::get('fullFillmentController/getCompanies/{field_id}', [App\Http\Controllers\FullFillmentController::class, 'getCompanies'])->name('getCompanies');
     Route::get('/all-participants/{event_id}/{company_id}/{accredit_id}/{checked}', [App\Http\Controllers\FullFillmentController::class, 'allParticipants'])->name('allParticipants');
-    Route::get('fullFillmentController/getParticipants/{event_id}/{company_id}/{accredit_id}', [App\Http\Controllers\FullFillmentController::class, 'getParticipants'])->name('getParticipants');
+
     Route::post('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
-    Route::post('/fullFillment', [App\Http\Controllers\FullFillmentController::class, 'fullFillment'])->name('fullFillment');
-
-
 });
 
 Route::group(['middleware' => 'role:security-officer'], function() {

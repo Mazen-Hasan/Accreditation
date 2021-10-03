@@ -45,7 +45,6 @@ class TemplateFieldController extends Controller
     {
         $fieldId = $request->field_id;
 
-
         $templateField   =   TemplateField::updateOrCreate(['id' => $fieldId],
             ['template_id'  => $request->template_id,
                 'label_ar' => $request->label_ar,

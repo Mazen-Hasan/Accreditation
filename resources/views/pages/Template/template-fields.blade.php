@@ -118,7 +118,7 @@
                                 <div class="form-group col">
                                     <label>Order</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="field_order" name="field_order" min="1" max="500" name="max_char" placeholder="enter field order" required="">
+                                        <input type="number" id="field_order" name="field_order" min="1" max="500" placeholder="enter field order">
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +145,7 @@
                                 <div class="form-group col">
                                     <label>Mandatory</label>
                                     <div class="col-sm-12">
-                                        <input type="checkbox" id="mandatory" name="mandatory">
+                                        <input type="checkbox" id="mandatory" name="mandatory" checked>
                                     </div>
                                 </div>
                             </div>

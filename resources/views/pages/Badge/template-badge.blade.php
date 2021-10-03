@@ -195,7 +195,7 @@
         </div>
     </div>
 
-	<div class="modal fade" id="badge-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="badge-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -263,6 +263,10 @@
                 $('#badge_bg').attr('src', '' );
                 $('#badge_bg').hide();
 
+                $("#file-progress-bar").width('0%');
+                $("#file_type_error").html('');
+                $("#file").val('');
+                $("#btn-upload").attr('disabled',true);
 
                 $('#field-modal').modal('show');
             });
@@ -290,15 +294,27 @@
 
                     $('#badge_bg').attr('src', image_path + imag );
                     $('#badge_bg').show();
-
-                    // if(data){
-                    //     $('#template_id').attr('disabled', 'disabled');
-                    // }
-                    // else {
-                    //     $('#template_id').removeAttr('disabled');
-                    // }
-
                 });
+            });
+        });
+
+        $('body').on('click', '.preview-badge', function () {
+            var badge_id = $(this).data("id");
+            console.log(badge_id);
+            $.ajax({
+                type: "get",
+                url: "../badge-design-generate/" + badge_id,
+                success: function (data) {
+                    $('#badge-modal').modal('show');
+
+                    var imag = data;
+                    var image_path = "{{URL::asset('preview/')}}/";
+
+                    $('#badge').attr('src', image_path + imag );
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
             });
         });
     
@@ -327,7 +343,6 @@
             let file = this.files[0];
             let fileType = file.type;
             if (!allowedTypes.includes(fileType)) {
-                // $('#fileErrorModal').modal('show');
                 $("#file-progress-bar").width('0%');
                 $("#file_type_error").html('Please choose a valid file (png)');
                 $("#file").val('');
@@ -365,7 +380,6 @@
             })
         };
 
-
         $('.img-upload').submit(function(e) {
             $('#btn-upload').html('Sending..');
             e.preventDefault();
@@ -401,7 +415,6 @@
                     $('#btn-upload').html('Upload');
                     $("#bg_image").val(data.fileName);
                     console.log(data);
-
                 },
 
                 error: function(data){

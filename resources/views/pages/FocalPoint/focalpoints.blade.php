@@ -166,10 +166,15 @@
                     type: "get",
                     url: "focalpointController/reset_password/"+userId+"/"+password,
                     success: function (data) {
+                        //alert(data);
                         $('#ajax-crud-modal').modal('hide');
+                        // var oTable = $('#laravel_datatable').dataTable();
+                        // oTable.fnDraw(false);
+                        alert('done');
                     },
                     error: function (data) {
                         console.log('Error:', data);
+                        //alert('failure');
                     }
                 });
             });

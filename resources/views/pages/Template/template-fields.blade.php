@@ -95,41 +95,14 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group col">
-                                    <label>Min</label>
-                                    <div class="col-sm-12">
-                                        <input type="number" id="min_char" min="1" max="500" name="min_char" placeholder="enter min">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group col">
-                                    <label>Max</label>
-                                    <div class="col-sm-12">
-                                        <input type="number" id="max_char" min="1" max="500" name="max_char" placeholder="enter max">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group col">
-                                    <label>Order</label>
-                                    <div class="col-sm-12">
-                                        <input type="number" id="field_order" name="field_order" min="1" max="500" placeholder="enter field order">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group col">
                                     <label>Type</label>
                                     <div class="col-sm-12">
                                         <select id="field_type" name="field_type" required="">
                                             @foreach ($fieldTypes as $fieldType)
                                                 <option value="{{ $fieldType->id }}" data-slug="{{$fieldType->slug}}"
-                                                   @if ($fieldType->key == 1)
+                                                        @if ($fieldType->key == 1)
                                                         selected="selected"
                                                     @endif
                                                 >{{ $fieldType->name }}</option>
@@ -140,21 +113,46 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group col">
-                                    <label>Mandatory</label>
-                                    <div class="col-sm-12">
-                                        <input type="checkbox" id="mandatory" name="mandatory" checked>
+                        <div id="option">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Min</label>
+                                        <div class="col-sm-12">
+                                            <input type="number" id="min_char" min="1" max="500" name="min_char" placeholder="enter min">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Max</label>
+                                        <div class="col-sm-12">
+                                            <input type="number" id="max_char" min="1" max="500" name="max_char" placeholder="enter max">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group col">
 
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Order</label>
+                                        <div class="col-sm-12">
+                                            <input type="number" id="field_order" name="field_order" min="1" max="500" name="max_char" placeholder="enter field order">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Mandatory</label>
+                                        <div class="col-sm-12">
+                                            <input type="checkbox" id="mandatory" name="mandatory">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="modal-footer">
                             <div class="col-sm-12">
                                 <button type="submit" id="btn-save" value="create">Save
@@ -226,7 +224,13 @@
                     { data: 'label_ar', name: 'label_ar' },
                     { data: 'label_en', name: 'label_en' },
                     { data: 'field_order', name: 'field_order' },
-                    { data: 'mandatory', name: 'mandatory' },
+                    // { data: 'mandatory', name: 'mandatory' },
+                    {
+                        "data": "mandatory",
+                        "render": function (val, type, row) {
+                            return val == 1 ? "Yes" : "No";
+                        }
+                    },
                     { data: 'min_char', name: 'min_char' },
                     { data: 'max_char', name: 'max_char' },
                     { data: 'name', name: 'name' },
@@ -334,11 +338,14 @@
         $('select').on('change', function() {
             var selected = $(this).find('option:selected');
             var slug = selected.data('slug');
-            if(slug === 'text' || slug === 'number') {
+            console.log(slug);
+            if(slug === 'text' || slug === 'number' || slug === 'textarea') {
+                $('#option').show();
                 $('#min_char').prop('disabled', false);
                 $('#max_char').prop('disabled', false);
             }
            else{
+                $('#option').hide();
                 $('#min_char').prop('disabled', true);
                 $('#max_char').prop('disabled', true);
             }

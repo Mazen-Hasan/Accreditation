@@ -42,7 +42,7 @@ class pdfController extends Controller
             $staffs = DB::table('company_staff')->whereIn('id', $staffIDs)->get();
 
             foreach ($staffs as $staff){
-                $path = public_path('badges/') . $staff->badge_path;
+                $path = 'badges/' . $staff->badge_path;
                 $pdf->AddPage();
                 $pdf->Image($path,0,0);
             }

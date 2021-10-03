@@ -47,6 +47,11 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            // $('#templateForm').trigger("reset");
+                            // $('#template-modal').modal('hide');
+                            // $('#btn-save').html('Save Changes');
+                            // var oTable = $('#laravel_datatable').dataTable();
+                            // oTable.fnDraw(false);
                             window.location.href = "{{ route('companyParticipants')}}";
                         },
                         error: function (data) {
@@ -65,6 +70,7 @@
 
             $(btn_upl).html('Sending..');
 
+            // $('#btn-upload').html('Sending..');
             e.preventDefault();
             var formData = new FormData(this);
             formData.append('template_id', $('#h_template_id').val());
@@ -102,20 +108,26 @@
                     $(file_type_error).html('File uploaded successfully');
 
                     $(btn_upl).html('Upload');
+                    // $('#btn-upload').html('Upload');
 
                     var bg_image = '#bg_image_' + btnID;
                     $(bg_image).val(data.fileName);
+
+                    // $("#bg_image").val(data.fileName);
 
                     var btnID = this.id;
                     btnID =  btnID.substring(5,btnID.length -1);
                     btnID = "#" + btnID;
                     $(btnID).val(data.fileName);
+                    console.log(data);
+
                 },
 
                 error: function(data){
                     $("#file_type_error").html('Error uploading file');
+                    console.log(data);
                 }
             });
         });
-    </script>
+   </script>
 @endsection

@@ -51,6 +51,16 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                     @endforeach
+                                    <!-- <th>ID</th>
+                                    <th>Name</th>
+                                    {{--                                    <th>Location</th>--}}
+                                    <th>Nationality</th>
+                                    <th>Class</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Position</th>
+                                    <th>Accreditation Category</th>
+                                    <th>Religion</th>--}} -->
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -130,6 +140,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
+<!--                        --><?php //var_dump(gd_info());  ?>
                     </div>
                     <div class="row">
                         <img id="badge" src="" alt="Badge">
@@ -253,6 +264,7 @@
 
             $('body').on('click', '#send_request', function () {
                 var post_id = $(this).data("id");
+                //alert(post_id);
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
                 $('#confirmTitle').html('Send Participation Request');

@@ -18,13 +18,14 @@ class TemplateBadgeController extends Controller
 
             $templateBadge = DB::select('select *  from template_badges_view tb');
 
+
             return datatables()->of($templateBadge)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Edit" class="edit btn btn-success edit-badge">Edit</a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('templateBadgeFields', $data->id) . '" id="template-badge-fields" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="fields">Fields<i class="mdi mdi-grid-large menu-items"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Preview" class="edit btn btn-facebook preview-badge">Preview</a>';
+                	$button .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Preview" class="edit btn btn-facebook preview-badge">Preview</a>';
                     $button .= '&nbsp;&nbsp;';
                     return $button;
                 })

@@ -75,26 +75,23 @@ class TemplateController extends Controller
                 'status' => $request->status,
                 'creator' => Auth::user()->id
             ]);
-    
-    	// if($template_id == null){
 
-        // if($template_id == null){
-        if($template_id == null){
+    	if($template_id == null){
 
-            $query = 'select p.id, p.label_ar, p.label_en, p.mandatory, p.min_char, p.max_char, p.field_type_id  from pre_defined_fields  p';
-            $pre_defined_fields_res = DB::select($query);
+        $query = 'select p.id, p.label_ar, p.label_en, p.mandatory, p.min_char, p.max_char, p.field_type_id  from pre_defined_fields  p';
+        $pre_defined_fields_res = DB::select($query);
 
 
-            foreach ($pre_defined_fields_res as $row) {
-                $templateField = TemplateField::updateOrCreate(['id' => 0],
-                    ['template_id' => $post->id,
-                        'label_ar' => $row->label_ar,
-                        'label_en' => $row->label_en,
-                        'mandatory' => $row->mandatory,
-                        'min_char' => $row->min_char,
-                        'max_char' => $row->max_char,
-                        'field_type_id' => $row->field_type_id,
-                    ]);
+        foreach ($pre_defined_fields_res as $row) {
+            $templateField = TemplateField::updateOrCreate(['id' => 0],
+                ['template_id' => $post->id,
+                    'label_ar' => $row->label_ar,
+                    'label_en' => $row->label_en,
+                    'mandatory' => $row->mandatory,
+                    'min_char' => $row->min_char,
+                    'max_char' => $row->max_char,
+                    'field_type_id' => $row->field_type_id,
+                ]);
 
                 $where = array('predefined_field_id' => $row->id);
                 $pre_defined_field_elements_res = PreDefinedFieldElement::where($where)->get()->all();
@@ -109,9 +106,9 @@ class TemplateController extends Controller
                             'template_field_id' => $templateField->id,
                         ]);
                 }
-            }
         }
-        //}
+        }
+    }
 
         return Response::json($post);
     }

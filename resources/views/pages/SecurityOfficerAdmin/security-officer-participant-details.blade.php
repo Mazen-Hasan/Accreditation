@@ -79,6 +79,7 @@
                 <div class="modal-body">
                     <div>
                         <input type="hidden" id="curr_element_id-new">
+                        <!-- <input type="hidden" id="action_button"> -->
                         <label class="col-sm-12 confirm-text" id="confirmText-new"></label>
                         <textarea id="reason" style="margin-bottom:10px"></textarea>
                     </div>
@@ -107,6 +108,7 @@
         });
 
         $('body').on('click', '.preview-badge', function () {
+            //alert($(this).data("id"));
                 var src = $(this).data("src");
                 var label = $(this).data("label")
                 $('#badge-modal').modal('show');
@@ -116,6 +118,7 @@
             });
             $('body').on('click', '#approve', function () {
                 var post_id = $(this).data("id");
+                //alert(post_id);
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
                 $('#confirmTitle').html('Approve Participation Request');
@@ -127,6 +130,7 @@
             });
             $('body').on('click', '#reject', function () {
                 var post_id = $(this).data("id");
+                //alert(post_id);
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
                 $('#confirmTitle').html('Reject Participation Request');
@@ -142,6 +146,7 @@
                 var eventId = $('#event_id').val();
                 $('#confirmTitle-new').html('Reject Participation Request To Correct');
                 $('#curr_element_id-new').val(post_id);
+                // $('#action_button').val('approve');
                 $('#reason').val('');
                 var confirmText =  "Insert Reason:";
                 $('#confirmText-new').html(confirmText);
@@ -161,6 +166,9 @@
                                 type: "get",
                                 url: "../securityOfficerAdminController/Approve/"+staffId,
                                 success: function (data) {
+                                    // var oTable = $('#laravel_datatable').dataTable();
+                                    // oTable.fnDraw(false);
+                                    // window.location.href = "{{ route('securityOfficerCompanyParticipants',['"+company_id+"','"+event_id+"'])}}";
                                     window.location.href = "../security-officer-company-participants/"+company_id+"/"+event_id;
                                 },
                                 error: function (data) {
@@ -176,6 +184,11 @@
                                 type: "get",
                                 url: "../securityOfficerAdminController/Reject/"+staffId,
                                 success: function (data) {
+                                    // var oTable = $('#laravel_datatable').dataTable();
+                                    // $('#send-approval-request').hide();
+                                    // $('#add-new-post').hide();
+                                    // oTable.fnDraw(false);
+                                    //window.location.href = "{{ route('securityOfficerCompanyParticipants',['"+company_id+"','"+event_id+"'])}}";
                                     window.location.href = "../security-officer-company-participants/"+company_id+"/"+event_id;
                                 },
                                 error: function (data) {
@@ -186,7 +199,6 @@
                     }
                 });
             });
-
             $('#delete-element-confirm-modal-new button').on('click', function(event) {
                 var $button = $(event.target);
                 $(this).closest('.modal').one('hidden.bs.modal', function() {
@@ -199,6 +211,9 @@
                                 type: "get",
                                 url: "../securityOfficerAdminController/RejectToCorrect/"+staffId+"/"+reason,
                                 success: function (data) {
+                                    // var oTable = $('#laravel_datatable').dataTable();
+                                    // oTable.fnDraw(false);
+                                    //window.location.href = "{{ route('securityOfficerCompanyParticipants',['"+company_id+"','"+event_id+"'])}}";
                                     window.location.href = "../security-officer-company-participants/"+company_id+"/"+event_id;
                                 },
                                 error: function (data) {
@@ -208,6 +223,7 @@
                     }
                 });
             });
+
 
         </script>
 @endsection

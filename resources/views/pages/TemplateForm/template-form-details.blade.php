@@ -79,6 +79,7 @@
             });
         });
         $('body').on('click', '.preview-badge', function () {
+            //alert($(this).data("id"));
                 var src = $(this).data("src");
                 var label = $(this).data("label")
                 $('#badge-modal').modal('show');
@@ -88,6 +89,7 @@
             });
         $('body').on('click', '#send_request', function () {
                 var post_id = $(this).data("id");
+                //alert(post_id);
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
                 $('#confirmTitle').html('Send Participation Request');

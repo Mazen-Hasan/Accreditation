@@ -109,15 +109,6 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'contact') =="1" ? "active" : "" }}"
-               href="{{ route('contacts') }}">
-                <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Contact">
-                </i>
-                <span class="menu-title">Event Organizer/Owner</span>
-            </a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link {{ str_contains( Request::route()->getName(),'users') =="1" ? "active" : "" }}"
                href="{{ route('users') }}">
                 <i class="logout">

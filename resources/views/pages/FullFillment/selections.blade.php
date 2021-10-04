@@ -156,7 +156,7 @@
             var labelValue = $('#btn-filter').html();
             //alert(labelValue);
             if(labelValue.toLowerCase().indexOf('filter') >= 0){
-                alert('first');
+                //alert('first');
                 var selectedEvent = $('#event option:selected').val();
                 var selectedCompany = $('#company option:selected').val();
                 var selectedAccredit = $('#category option:selected').text();
@@ -176,10 +176,9 @@
                 });
             }
             if(labelValue.toLowerCase().indexOf('generate') >=0){
-                //alert('second');
-                $('#btn-filter').html('Fullfillment');
+                //alert('second');        
                 var staff = companySelectOptions;
-                alert(companySelectOptions);
+                //alert(companySelectOptions);
                 if(staff.length > 0){
                     $.ajax({
                         type: "post",
@@ -188,7 +187,9 @@
                         url: "{{ url('pdf-generate')}}",
                         success: function (data) {
                             console.log(data);
-                            window.open(data.file, '_blank');
+                            //window.open(data.file, '_blank');
+                            window.location.href = data.file;
+                            $('#btn-filter').html('Fullfillment');
                             ('#label-count').html('Total generated count: '+companySelectOptions.length);
                         },
                         error: function (data) {
@@ -198,8 +199,8 @@
                 }
             }
             if(labelValue.toLowerCase().indexOf('fullfillment') >=0){
-                alert('third');
-                alert(companySelectOptions);
+                //alert('third');
+                //alert(companySelectOptions);
                 var staff = companySelectOptions;
                 if(staff.length > 0){
                     $.ajax({
@@ -208,6 +209,7 @@
                         dataType: "json",
                         url: "{{ url('fullFillment')}}",
                         success: function (data) {
+                            $('#btn-filter').html('Reset');
                             $('#label-count').html('Total fullfillment count: '+companySelectOptions.length);
                         },
                         error: function (data) {
@@ -215,6 +217,12 @@
                         }
                     });
                 }
+            }
+            if(labelValue.toLowerCase().indexOf('reset') >=0){
+                //alert('third');
+                //alert(companySelectOptions);
+                $('#label-count').html('');
+                $('#btn-filter').html('Filter');
             }
         });
         $('#btn-details').click(function () {

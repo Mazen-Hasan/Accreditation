@@ -220,6 +220,21 @@
                     if(!found){
                         checkedItems.push($(this).data("id"));
                     }
+                    if(checkedItems.length == 0){
+                        $('#checkAll').prop('checked',false);
+                        selected = 0;
+                    }else{
+                        var allChecked = true;
+                        $('.select').each(function(){
+                            if(!$(this).prop('checked')){
+                                allChecked = false;
+                            }
+                        });
+                        if(allChecked){
+                            $('#checkAll').prop('checked',true);
+                            selected = 1;
+                        }
+                    }
                     //alert(checkedItems);
             });
         });

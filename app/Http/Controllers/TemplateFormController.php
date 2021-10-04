@@ -30,13 +30,13 @@ class TemplateFormController extends Controller
             $templateFields = DB::select('select * from template_fields_view v where v.template_id = ? order by v.field_order',[$template_id]);
         }
 
-
     //var_dump($templateFields);
         $fieldsCount =  0;
 
         $options = array();
         $form = '<div class="row">';
         $attachmentForm ='';
+        $attachmentFormHidden ='';
         if($participant_id == 0){
             $form .= $this->createHiddenField('participant_id','participant_id','');
         }else{
@@ -396,16 +396,16 @@ class TemplateFormController extends Controller
         $fieldsCount =  0;
 
         $options = array();
-        $form = '<div class="row">';       
+        $form = '<div class="row">';
         $form .= $this->createStatusFieldLabel("status","Status",0,1,1,$status_value);
         $form .= '</div>';
         if($status == 8){
-            $form = '<div class="row">';       
+            $form = '<div class="row">';
             $form .= $this->createStatusFieldLabel("reject_reason","Reject Reason",0,1,1, $event_reject_reason);
             $form .= '</div>';
         }
         if($status == 7){
-            $form = '<div class="row">';       
+            $form = '<div class="row">';
             $form .= $this->createStatusFieldLabel("reject_reason","Reject Reason",0,1,1, $security_officer_reject_reason);
             $form .= '</div>';
         }
@@ -695,10 +695,6 @@ public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_
     }
 
     public function createAttachmentLabel($id, $label, $mandatory, $value){
-        $required = '';
-        if($mandatory == '1'){
-            $required =  'required=""';
-        }
 
         /*$attachmentField = '<form id=form_' . $id . '" name="badgeForm" class="form-horizontal  img-upload" enctype="multipart/form-data" action="javascript:void(0)">';
         $attachmentField .= '<div class="row"><div class="col-md-5"><label>'. $label . '</label></div>';
@@ -724,7 +720,5 @@ public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_
 
         return $textfield;
     }
-
-
 }
 

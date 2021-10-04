@@ -23,7 +23,7 @@ class TemplateBadgeFieldController extends Controller
 
 //        var_dump($templateFields);
         if (request()->ajax()) {
-        	$templaeBadgeFileds = DB::select('select * from template_badge_fields where  badge_id = ?', [$badge_id]);
+            $templaeBadgeFileds = DB::select('select * from template_badge_fields where  badge_id = ?', [$badge_id]);
             return datatables()->of($templaeBadgeFileds)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-field">Edit</a>';

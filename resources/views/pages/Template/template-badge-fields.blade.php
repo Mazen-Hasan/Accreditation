@@ -20,10 +20,10 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <p class="card-title">Template / Badge / Fields</p>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
+                            <div class="col-md-5 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
@@ -36,6 +36,13 @@
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Add</span>
+                                </a>
+                                <span class="dt-hbtn"></span>
+                                <a href="javascript:void(0)" id="preview-badge" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">Preview</span>
                                 </a>
                             </div>
                         </div>
@@ -178,6 +185,21 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="badge-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="badgeTitle">Badge preview</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin-left: 25%; max-height: 100%; max-width: 50%; object-fit: fill">
+                        <img id="badge" src="" alt="Badge">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -195,9 +217,9 @@
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',
-                    title: 'Templates',
+                    title: 'Badge-fields',
                     exportOptions: {
-                        columns: [ 2,3,4,5,6,7 ]
+                        columns: [ 2,3,4,5,6 ]
                     }
                 }],
 
@@ -281,6 +303,27 @@
                 });
             });
         });
+
+        $('#preview-badge').click(function () {
+            var badge_id = $('#badge_id').val();
+            console.log(badge_id);
+            $.ajax({
+                type: "get",
+                url: "../badge-design-generate/" + badge_id,
+                success: function (data) {
+                    $('#badge-modal').modal('show');
+
+                    var imag = data;
+                    var image_path = "{{URL::asset('preview/')}}/";
+
+                    $('#badge').attr('src', image_path + imag );
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
+            });
+        });
+
 
         if ($("#fieldForm").length > 0) {
             $("#fieldForm").validate({

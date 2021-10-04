@@ -74,18 +74,18 @@
                     <form id="bg_imgForm" name="badgeForm" class="form-horizontal  img-upload" enctype="multipart/form-data" action="javascript:void(0)">
                         <div class="row">
                             <div class="col-md-5">
-                                    <label>Background image</label>
+                                <label>Background image</label>
                             </div>
 
                             <div class="col-md-4">
-                                    <div class="col-sm-12">
-                                        <input type="file" id="file" name="file">
-                                    </div>
+                                <div class="col-sm-12">
+                                    <input type="file" id="file" name="file">
+                                </div>
                             </div>
 
                             <div class="col-md-3">
-                                    <button type="submit" id="btn-upload" value="Upload">Upload
-                                    </button>
+                                <button type="submit" id="btn-upload" value="Upload">Upload
+                                </button>
                             </div>
                         </div>
                         <div class="row">
@@ -101,10 +101,10 @@
                     </form>
                     <hr>
                     <form id="badgeForm" name="badgeForm" class="form-horizontal">
-{{--                        <input style="visibility: hidden" type="text" name="bg_image" id="bg_image">--}}
+                        {{--                        <input style="visibility: hidden" type="text" name="bg_image" id="bg_image">--}}
                         <input style="visibility: hidden" type="text" name="h_template_id" id="h_template_id">
                         <input style="visibility: hidden" type="text" name="bg_image" id="bg_image">
-{{--                        <img src="{{asset('storage/badges/2021-09-24_09:18:00.png')}}" alt="im" style="width:200px;height:200px;">--}}
+                        {{--                        <img src="{{asset('storage/badges/2021-09-24_09:18:00.png')}}" alt="im" style="width:200px;height:200px;">--}}
                         <img id="badge_bg" src="{{URL::asset('storage/badges/')}}" alt="im" style="width:200px;height:200px;">
                         <input type="hidden" name="badge_id" id="badge_id">
                         <div class="row">
@@ -112,7 +112,7 @@
                                 <div class="form-group col">
                                     <label>Width</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="width" min="300" name="width" placeholder="enter width" required="">
+                                        <input type="number" id="width" min="100" name="width" placeholder="enter width" required="">
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
                                 <div class="form-group col">
                                     <label>High</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="high" name="high" min="300" placeholder="enter high" required="">
+                                        <input type="number" id="high" name="high" min="100" placeholder="enter high" required="">
                                     </div>
                                 </div>
                             </div>
@@ -142,9 +142,9 @@
                                         <select id="template_id" name="template_id" required="">
                                             @foreach ($templates as $template)
                                                 <option value="{{ $template->id }}" data-slug="{{$template->name}}"
-{{--                                                        @if ($template->key == 1)--}}
-{{--                                                        selected="selected"--}}
-{{--                                                    @endif--}}
+                                                    {{--                                                        @if ($template->key == 1)--}}
+                                                    {{--                                                        selected="selected"--}}
+                                                    {{--                                                    @endif--}}
                                                 >{{ $template->name }}</option>
                                             @endforeach
                                         </select>
@@ -195,14 +195,14 @@
         </div>
     </div>
 
-	<div class="modal fade" id="badge-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="badge-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="badgeTitle">Badge preview</h5>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <div class="row" style="margin-left: 25%; max-height: 100%; max-width: 50%; object-fit: fill">
                         <img id="badge" src="" alt="Badge">
                     </div>
                 </div>
@@ -285,8 +285,8 @@
                     $("#file_type_error").html('');
 
                     var imag = data.bg_image;
-                    //var image_path = "{{URL::asset('storage/badges/')}}/";
-                	var image_path = "{{URL::asset('badges/')}}/";
+                    var image_path = "{{URL::asset('storage/badges/')}}/";
+                    {{--var image_path = "{{URL::asset('badges/')}}/";--}}
 
                     $('#badge_bg').attr('src', image_path + imag );
                     $('#badge_bg').show();
@@ -301,8 +301,8 @@
                 });
             });
         });
-    
-    	$('body').on('click', '.preview-badge', function () {
+
+        $('body').on('click', '.preview-badge', function () {
             var badge_id = $(this).data("id");
             console.log(badge_id);
             $.ajax({

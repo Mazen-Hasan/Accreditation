@@ -40,6 +40,13 @@
                                     </i>
                                     <span class="dt-hbtn">Add</span>
                                 </a>
+
+                                <a href="{{route('pdf-generate')}}" id="generate" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">Generate</span>
+                                </a>
                                 @endrole
                             </div>
                         </div>
@@ -140,7 +147,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-<!--                        --><?php //var_dump(gd_info());  ?>
                     </div>
                     <div class="row">
                         <img id="badge" src="" alt="Badge">
@@ -262,9 +268,25 @@
                 });
             });
 
+            {{--$('body').on('click', '#generate', function () {--}}
+            {{--    var staff = [11,10];--}}
+            {{--    $.ajax({--}}
+            {{--        type: "post",--}}
+            {{--        // data: {staffID: staff_id},--}}
+            {{--        data:  {staff: staff} ,--}}
+            {{--        dataType: "json",--}}
+            {{--        url: "{{ url('pdf-generate')}}",--}}
+            {{--        success: function (data) {--}}
+            {{--            console.log(data);--}}
+            {{--        },--}}
+            {{--        error: function (data) {--}}
+            {{--            console.log('Error:', data);--}}
+            {{--        }--}}
+            {{--    });--}}
+            {{--});--}}
+
             $('body').on('click', '#send_request', function () {
                 var post_id = $(this).data("id");
-                //alert(post_id);
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
                 $('#confirmTitle').html('Send Participation Request');

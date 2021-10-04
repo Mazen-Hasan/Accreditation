@@ -49,8 +49,9 @@ Route::group(['middleware' => 'role:company-admin'], function() {
 
     Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
 
-//    Route::post('templateFormController/uploadFile', 'App\Http\Controllers\templateFormController@uploadFile');
+//    Route::get('pdf-generate', 'App\Http\Controllers\pdfController@generate');
 
+    Route::get('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
 
     //    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
 //    Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
@@ -182,6 +183,9 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::post('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
 
 
+
+    Route::get('badge-design-generate/{badgeId}', 'App\Http\Controllers\GenerateBadgeController@generatePreview');
+
 });
 
 Route::group(['middleware' => 'role:security-officer'], function() {
@@ -194,6 +198,7 @@ Route::group(['middleware' => 'role:security-officer'], function() {
     Route::get('securityOfficerAdminController/Reject/{staffId}', 'App\Http\Controllers\SecurityOfficerAdminController@Reject');
     Route::get('securityOfficerAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\SecurityOfficerAdminController@RejectToCorrect');
     Route::get('/security-officer-participant-details/{participant_id}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'details'])->name('securityParticipantDetails');
+
 });
 //Auth::routes();
 

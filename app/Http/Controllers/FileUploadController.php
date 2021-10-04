@@ -13,6 +13,7 @@ class FileUploadController extends Controller
 
                 $extension = $file->extension();
 
+//            $fileName = 'badge-'.$request->template_id;
                 $fileName = now();
                 $fileName = str_replace(':','_',$fileName);
                 $fileName = str_replace(' ', '_', $fileName) . '.' . $extension;

@@ -223,7 +223,7 @@
                     }
                 });
             });
-
-
+        
+        
         </script>
 @endsection

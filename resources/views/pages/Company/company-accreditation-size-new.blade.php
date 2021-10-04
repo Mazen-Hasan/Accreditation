@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
-<!--
+<!--                     
                     @if($status == 0)
                     <a href="javascript:void(0)" class="ha_btn" id="add-new-post" style="margin: 10px">Add Accreditation Size</a>
                     @endif -->
@@ -49,7 +49,7 @@
                                     <th>Action</th>
                                     @endif
                                     @if($status != 0)
-                                    <th>Status</th>
+                                    <th>Status</th> 
                                     @endif
                                     <!-- <th>Action</th> -->
                                 </tr>

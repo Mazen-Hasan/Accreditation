@@ -262,44 +262,6 @@ class TemplateFormController extends Controller
         return $attachmentField;
     }
 
-    // public function store(Request $request)
-    // {
-    //     $where = array('company_admin_id' => Auth::user()->id);
-    //     $company = Company::where($where)->get()->first();
-    //     $participant_id = $request->participant_id;
-    //     $companyStaff   =   CompanyStaff::updateOrCreate(['id' => $participant_id],
-    //         ['event_id'  => $company->event_id,
-    //             'company_id' => $company->id,
-    //             'security_officer_id' => '0',
-    //             'security_officer_decision' => '0',
-    //             'security_officer_decision_date' => null,
-    //             'security_officer_reject_reason' => '',
-    //             'event_admin_id' => '0',
-    //             'event_admin_decision' => '0',
-    //             'event_admin_decision_date' => null,
-    //             'event_admin_reject_reason' => '',
-    //             'status' => '0'
-    //         ]);
-    //     $data = $request->all();
-
-    //     foreach ($data as $key => $value) {
-
-    //         if($key != 'participant_id'){
-    //             if($participant_id != null){
-    //                 $query = 'update staff_data s set s.value = "'.$value.'" where s.staff_id = '.$companyStaff->id.' and s.key ="'.$key.'" ';
-    //                 DB::update($query);
-    //             }else{
-    //                 $staffData   =   StaffData::updateOrCreate(['staff_id'=>$companyStaff->id,'key' => $key],
-    //                     ['staff_id' => $companyStaff->id,
-    //                         'key'  => $key,
-    //                         'value' => $value
-    //                     ]);
-    //             }
-    //         }
-    //     }
-    //     return Response::json($companyStaff);
-    // }
-
 
     public function store(Request $request)
     {
@@ -434,16 +396,16 @@ class TemplateFormController extends Controller
         $fieldsCount =  0;
 
         $options = array();
-        $form = '<div class="row">';
+        $form = '<div class="row">';       
         $form .= $this->createStatusFieldLabel("status","Status",0,1,1,$status_value);
         $form .= '</div>';
         if($status == 8){
-            $form = '<div class="row">';
+            $form = '<div class="row">';       
             $form .= $this->createStatusFieldLabel("reject_reason","Reject Reason",0,1,1, $event_reject_reason);
             $form .= '</div>';
         }
         if($status == 7){
-            $form = '<div class="row">';
+            $form = '<div class="row">';       
             $form .= $this->createStatusFieldLabel("reject_reason","Reject Reason",0,1,1, $security_officer_reject_reason);
             $form .= '</div>';
         }
@@ -714,9 +676,6 @@ public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_
         padding:10px">'.$value.'</label></div>';
         //$textfield .= '</div></div></div>';
         $textfield .= '</div></div>';
-        //<button class="preview-badge" data-id="'.$value.'">Preview</button>
-
-        //return $textfield;
 
         return $textfield;
     }
@@ -759,6 +718,9 @@ public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_
         $textfield .= '<div class="col-md-6" style="height:70px">'.$button.'</div>';
         //$textfield .= '</div></div></div>';
         $textfield .= '</div></div>';
+        //<button class="preview-badge" data-id="'.$value.'">Preview</button>
+
+        //return $textfield;
 
         return $textfield;
     }

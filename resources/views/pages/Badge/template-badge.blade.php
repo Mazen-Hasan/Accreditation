@@ -301,27 +301,7 @@
                 });
             });
         });
-
-    	$('body').on('click', '.preview-badge', function () {
-            var badge_id = $(this).data("id");
-            console.log(badge_id);
-            $.ajax({
-                type: "get",
-                url: "badge-design-generate/" + badge_id,
-                success: function (data) {
-                    $('#badge-modal').modal('show');
-
-                    var imag = data;
-                    var image_path = "{{URL::asset('preview/')}}/";
-
-                    $('#badge').attr('src', image_path + imag );
-                },
-                error: function (data) {
-                    console.log('Error:', data);
-                }
-            });
-        });
-
+    
     	$('body').on('click', '.preview-badge', function () {
             var badge_id = $(this).data("id");
             console.log(badge_id);

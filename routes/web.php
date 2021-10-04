@@ -178,9 +178,9 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::get('/selections', [App\Http\Controllers\FullFillmentController::class, 'index'])->name('Selections');
     Route::get('fullFillmentController/getCompanies/{field_id}', [App\Http\Controllers\FullFillmentController::class, 'getCompanies'])->name('getCompanies');
     Route::get('/all-participants/{event_id}/{company_id}/{accredit_id}/{checked}', [App\Http\Controllers\FullFillmentController::class, 'allParticipants'])->name('allParticipants');
-
+    Route::get('fullFillmentController/getParticipants/{event_id}/{company_id}/{accredit_id}', [App\Http\Controllers\FullFillmentController::class, 'getParticipants'])->name('getParticipants');
     Route::post('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
-
+    Route::post('/fullFillment', [App\Http\Controllers\FullFillmentController::class, 'fullFillment'])->name('fullFillment');
 
 });
 

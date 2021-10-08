@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
 use App\Models\TemplateField;
 use App\Models\TemplateFieldElement;
+use App\Http\Controllers\NotificationController;
 
 class EventAdminController extends Controller
 {
@@ -269,6 +270,9 @@ class EventAdminController extends Controller
         $eventWhere = array('id'=> $eventId);
         $event = Event::where($eventWhere)->first();
 
+        $companyWhere = array('id'=> $companyId);
+        $company = Company::where($companyWhere)->first();
+
         $approval = $event->approval_option;
         if($approval == 2){
             DB::update('update company_staff set status = ? where id = ?',[6,$staffId]);
@@ -276,6 +280,7 @@ class EventAdminController extends Controller
         }
         else{
             if($approval == 3){
+                NotificationController::sendAlertNotification($event->security_officer,$staffId,$event->name.': '.$company->name.': '.'Participant approval','/security-officer-participant-details/'.$staffId);
                 DB::update('update company_staff set security_officer_id = ? where id = ?',[$event->security_officer,$staffId]);
                 DB::update('update company_staff set status = ? where id = ?',[1,$staffId]);
             }

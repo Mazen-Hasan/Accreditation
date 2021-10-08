@@ -200,6 +200,10 @@ Route::group(['middleware' => 'role:security-officer'], function() {
     Route::get('/security-officer-participant-details/{participant_id}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'details'])->name('securityParticipantDetails');
 
 });
+
+Route::get('/send-notification', [App\Http\Controllers\NotificationController::class, 'sendAlertNotification']);
+Route::get('/get-notification', [App\Http\Controllers\NotificationController::class, 'getNotifications']);
+Route::get('/markAsRead-notification/{id}', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
 //Auth::routes();
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

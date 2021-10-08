@@ -6,8 +6,21 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    // public function getNotifications(){
+    //     $notifications = auth()->user()->notifications()
+    //                            ->orderBy('read_at', 'asc')
+    //                            ->orderBy('created_at', 'desc')
+    //                            ->get();
+
+    //     return Response::json($notifications);
+
+    // }
+
 }

@@ -14,6 +14,7 @@ use App\Models\Participant;
 use App\Models\Religion;
 use App\Models\SelectOption;
 use App\Models\TemplateFieldElement;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -444,8 +445,12 @@ class CompanyAdminController extends Controller
         $eventWhere = array('id'=> $eventId);
         $event = Event::where($eventWhere)->first();
 
+        $companyWhere = array('id'=> $companyId);
+        $company = Company::where($companyWhere)->first();
+
         $approval = $event->approval_option;
         if($approval == 1){
+            NotificationController::sendAlertNotification($event->security_officer,$staffId,$event->name.': '.$company->name.': '.'Participant approval','/security-officer-participant-details/'. $staffId);
             $updateQuery = 'update company_staff set security_officer_id = '.$event->security_officer.' where id = '.$staffId;
             // var_dump($updateQuery);
             // exit;
@@ -456,11 +461,13 @@ class CompanyAdminController extends Controller
 
         }else{
             if($approval == 2){
+                NotificationController::sendAlertNotification($event->event_admin,$staffId,$event->name.': '.$company->name.': '.'Participant approval','/event-participant-details/'.$staffId);
                 DB::update('update company_staff set event_admin_id = ? where id = ?',[$event->event_admin,$staffId]);
                 DB::update('update company_staff set status = ? where id = ?',[2,$staffId]);
                 // $compamyStaff = CompanyStaff::where($where)
                 // ->update(['status'=>2,'event_admin_id'=> $event->event_admin]);
             }else{
+                NotificationController::sendAlertNotification($event->event_admin,$staffId,$event->name.': '.$company->name.': '.'Participant approval','/event-participant-details/'. $staffId);
                 DB::update('update company_staff set event_admin_id = ? where id = ?',[$event->event_admin,$staffId]);
                 DB::update('update company_staff set status = ? where id = ?',[2,$staffId]);
                 // $compamyStaff = CompanyStaff::where($where)

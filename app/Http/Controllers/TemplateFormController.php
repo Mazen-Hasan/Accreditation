@@ -135,8 +135,13 @@ class TemplateFormController extends Controller
             $form .= '<div class="col-md-6"><div class="form-group col"></div></div>';
         }
 
-    //var_dump($form);
-        return view('pages.TemplateForm.template-form-add')->with('form',$form)->with('attachmentForm', $attachmentForm);
+        $subCompany_nav = 1;
+        $where = array('company_admin_id' => Auth::user()->id);
+        $company = Company::where($where)->first();
+        if($company->subCompany_id != null){
+            $subCompany_nav = 0;
+        }
+        return view('pages.TemplateForm.template-form-add')->with('form',$form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav',$subCompany_nav);
     }
 
      public function createTextField($id, $label, $mandatory, $min_char, $max_char, $value){
@@ -515,8 +520,13 @@ class TemplateFormController extends Controller
                 $buttons .= '<a href="' . route('templateForm', $participant_id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                 break;
         }
-    //var_dump($form);
-        return view('pages.TemplateForm.template-form-details')->with('form',$form)->with('attachmentForm', $attachmentForm)->with('buttons',$buttons);
+        $subCompany_nav = 1;
+        $where = array('company_admin_id' => Auth::user()->id);
+        $company = Company::where($where)->first();
+        if($company->subCompany_id != null){
+            $subCompany_nav = 0;
+        }
+        return view('pages.TemplateForm.template-form-details')->with('form',$form)->with('attachmentForm', $attachmentForm)->with('buttons',$buttons)->with('subCompany_nav',$subCompany_nav);
     }
 
 public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_char, $value){

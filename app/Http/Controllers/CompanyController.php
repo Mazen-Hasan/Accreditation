@@ -26,11 +26,7 @@ class CompanyController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-//            var_dump($event_id);
-//            exit;
             $companies = DB::select('select * from companies_view');
-
-//            $companies = DB::select('select * from companies_view where event_id = ?' ,$event_id );
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('companyEdit', $data->id) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
@@ -80,6 +76,8 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $companyId = $request->company_Id;
+        $where = array('id'=> $request->focal_point);
+        $focal_point = FocalPoint::where($where)->first();
         if($companyId == null) {
         $company = Company::updateOrCreate(['id' => $companyId],
             ['name' => $request->name,
@@ -88,7 +86,7 @@ class CompanyController extends Controller
                 'telephone' => $request->telephone,
                 'website' => $request->website,
                 'focal_point_id' => $request->focal_point,
-                'company_admin_id' => Auth::user()->id,
+                'company_admin_id' => $focal_point->account_id,
                 'country_id' => $request->country,
                 'city_id' => $request->city,
                 'category_id' => $request->category,
@@ -126,7 +124,7 @@ class CompanyController extends Controller
                 'telephone' => $request->telephone,
                 'website' => $request->website,
                 'focal_point_id' => $request->focal_point,
-                'company_admin_id' => Auth::user()->id,
+                'company_admin_id' => $focal_point->account_id,
                 'country_id' => $request->country,
                 'city_id' => $request->city,
                 'category_id' => $request->category,

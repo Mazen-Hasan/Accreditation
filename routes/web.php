@@ -53,10 +53,19 @@ Route::group(['middleware' => 'role:company-admin'], function() {
 
     Route::get('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
 
-    //    Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
-//    Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
-//    Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
-//    Route::get('/participant-edit/{id}', [App\Http\Controllers\ParticipantController::class, 'edit'])->name('participantEdit');
+    Route::get('/subCompanies', [App\Http\Controllers\CompanyAdminController::class, 'subCompanies'])->name('subCompanies');
+    Route::get('/subCompany-add/{eventid}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanyAdd'])->name('subCompanyAdd');
+    Route::get('/subCompany-edit/{id}/{eventid}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanyEdit'])->name('subCompanyEdit');
+    Route::post('storeSubCompnay', [App\Http\Controllers\CompanyAdminController::class, 'storeSubCompnay'])->name('storeSubCompnay');
+    Route::get('/subCompany-accreditation-size/{eventId}/{companyId}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanyAccreditCategories'])->name('subCompanyAccreditCategories');
+    Route::get('companyAdminController/Invite/{companyId}', 'App\Http\Controllers\CompanyAdminController@Invite');
+
+    Route::resource('dataentryController', 'App\Http\Controllers\DataEntryController');
+    Route::get('/dataentrys', [App\Http\Controllers\DataEntryController::class, 'index'])->name('dataentrys');
+    Route::get('/dataentry-add', [App\Http\Controllers\DataEntryController::class, 'focalpointAdd'])->name('dataentryAdd');
+    Route::get('/dataentry-edit/{id}', [App\Http\Controllers\DataEntryController::class, 'edit'])->name('dataentryEdit');
+    Route::get('dataentryController/reset_password/{id}/{password}', 'App\Http\Controllers\DataEntryController@resetPassword');
+    
 });
 
 Route::group(['middleware' => 'role:event-admin'], function() {
@@ -199,6 +208,14 @@ Route::group(['middleware' => 'role:security-officer'], function() {
     Route::get('securityOfficerAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\SecurityOfficerAdminController@RejectToCorrect');
     Route::get('/security-officer-participant-details/{participant_id}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'details'])->name('securityParticipantDetails');
 
+});
+
+Route::group(['middleware' => 'role:data-entry'], function() {
+    Route::get('/dataentry-participants', [App\Http\Controllers\DataEntryController::class, 'dataEntryParticipants'])->name('dataEntryParticipants');
+    //Route::resource('dataentryController', 'App\Http\Controllers\DataEntryController');
+    Route::get('/dataentry-participnat-add/{template_id}', [App\Http\Controllers\DataEntryController::class, 'participantAdd'])->name('participantAdd');
+    Route::post('dataentryContoller/storeParticipant', [App\Http\Controllers\DataEntryController::class, 'storeParticipant'])->name('storeParticipant');
+    Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
 });
 
 Route::get('/send-notification', [App\Http\Controllers\NotificationController::class, 'sendAlertNotification']);

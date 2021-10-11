@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Templates')
+@section('subtitle',' Participants')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
@@ -48,7 +48,8 @@
 
                     $.ajax({
                         data: $('#templateForm').serialize(),
-                        url: "{{ route('templateFormController.store') }}",
+                        url: "{{ route('storeParticipant') }}",
+
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
@@ -57,7 +58,7 @@
                             // $('#btn-save').html('Save Changes');
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
-                            window.location.href = "{{ route('companyParticipants')}}";
+                            window.location.href = "{{ route('dataEntryParticipants')}}";
                         },
                         error: function (data) {
                             console.log('Error:', data);

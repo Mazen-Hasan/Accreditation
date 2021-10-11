@@ -48,7 +48,7 @@ class EventAdminController extends Controller
         $where = array('id' => $id);
         $event  = Event::where($where)->first();
         if (request()->ajax()) {
-            $companies = DB::select('select * from companies_view where event_id = ?' ,[$id]);
+            $companies = DB::select('select * from companies_view where event_id = ? and parent_id is null' ,[$id]);
 //            $companies = DB::select('select * from companies_view');
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {

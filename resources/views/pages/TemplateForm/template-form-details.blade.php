@@ -7,6 +7,7 @@
     <div class="content-wrapper">
         <br><br>
         <div class="row">
+            <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
@@ -72,6 +73,10 @@
 @section('script')
     <script>
         $(document).ready( function () {
+            var subCompany_status = $('#subCompnay_status').val();
+            if(subCompany_status == 0){
+                $('#subsidiaries_nav').hide();
+            }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

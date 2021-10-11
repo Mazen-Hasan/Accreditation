@@ -166,6 +166,24 @@
                 <span class="menu-title">Events</span>
             </a>
         </li>
+        <li id="subsidiaries_nav" class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}"
+               href="{{ route('subCompanies') }} ">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="My Sidries">
+                </i>
+                <span class="menu-title">Subsidiaries</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}"
+               href="{{ route('dataentrys') }}">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="Data Entry">
+                </i>
+                <span class="menu-title">Data Entry</span>
+            </a>
+        </li>
         @endrole
         @role('security-officer')
         <li class="nav-item">

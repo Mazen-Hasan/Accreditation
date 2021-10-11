@@ -34,8 +34,8 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                @role('company-admin')
-                                <a href="{{route('templateForm',0)}}" id="add-new-post" class="add-hbtn">
+                                @role('data-entry')
+                                <a href="{{route('participantAdd',0)}}" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
@@ -185,7 +185,7 @@
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',
-                    title: 'Company-Participants',
+                    title: 'DataEntry-Participants',
                     exportOptions: {
                         columns: [ 1]
                     }
@@ -194,7 +194,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: 'company-participants',
+                    url: 'dataentry-participants',
                     type: 'GET',
                 },
                 columns: myColumns,

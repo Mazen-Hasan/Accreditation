@@ -28,6 +28,8 @@ class HomeController extends Controller
 //        return view('pages.event.events');
 
         $role = Auth::user()->roles->first()->slug;
+        // var_dump($role);
+        // exit;
         switch ($role) {
             case 'super-admin':
                 return view('pages.Event.events');
@@ -40,6 +42,11 @@ class HomeController extends Controller
                 break;
             case 'security-officer':
                 return Redirect::to('security-officer-admin');
+                break;
+            case 'data-entry':
+                // var_dump('here');
+                // exit;
+                return Redirect::to('dataentry-participants');
                 break;
         }
     }

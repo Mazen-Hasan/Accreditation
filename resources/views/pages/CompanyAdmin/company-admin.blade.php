@@ -11,6 +11,7 @@
         <div class="row">
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
+                <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
                     <div class="card-body">
                         <h4 class="card-title">
                             @if ($events != null)
@@ -107,4 +108,15 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+<script>
+$(document).ready( function () {
+    var subCompany_status = $('#subCompnay_status').val();
+    //alert(subCompany_status);
+    if(subCompany_status == 0){
+        $('#subsidiaries_nav').hide();
+    }
+});
+</script>
 @endsection

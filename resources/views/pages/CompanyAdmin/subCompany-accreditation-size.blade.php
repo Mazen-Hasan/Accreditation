@@ -18,7 +18,6 @@
                     @endif -->
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
                             <div class="col-md-8">
                                 <p class="card-title">{{$event_name}} / {{$company_name}} : Size ({{$company_size}}) / Accreditation Size Management</p>
                             </div>
@@ -161,22 +160,19 @@
 @section('script')
     <script>
         $(document).ready( function () {
-            var subCompany_status = $('#subCompnay_status').val();
-            if(subCompany_status == 0){
-                $('#subsidiaries_nav').hide();
-            }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
             var eventId = $('#event_id').val();
+            var companyId = $('#company_id').val();
             var status = $('#status').val();
             $('#laravel_datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../company-accreditation-size/' + eventId,
+                    url: '../../subCompany-accreditation-size/' + companyId  + '/' + eventId,
                     type: 'GET',
                 },
                 columns: [
@@ -208,7 +204,7 @@
             $('body').on('click', '#edit-company-accreditation', function () {
                 var post_id = $(this).data('id');
                 //alert(post_id);
-                $.get('../companyAdminController/editCompanyAccreditSize/'+post_id, function (data) {
+                $.get('../../companyAdminController/editCompanyAccreditSize/'+post_id, function (data) {
                     $('#name-error').hide();
                     $('#email-error').hide();
                     $('#postCrudModal').html("Edit Company Accreditation Category");
@@ -253,7 +249,7 @@
                 }else{
                     $.ajax({
                         type: "get",
-                        url: "../companyAdminController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id+"/"+eventId,
+                        url: "../../companyAdminController/storeCompanyAccrCatSize/"+post_id+"/"+accredit_cat_id+"/"+size+"/"+company_id+"/"+eventId,
                         success: function (data) {
                             $('#ajax-crud-modal').modal('hide');
                             var oTable = $('#laravel_datatable').dataTable();
@@ -296,13 +292,13 @@
                         if(action_button == 'delete'){
                             $.ajax({
                                 type: "get",
-                                url: "../companyAdminController/destroyCompanyAccreditCat/"+post_id,
+                                url: "../../companyAdminController/destroyCompanyAccreditCat/"+post_id,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
                                     var remaining_size = parseInt($('#remaining_size').val());
                                     var inserted_size = parseInt($('#curr_size').val());
-                                    alert(inserted_size);
+                                    //alert(inserted_size);
                                     var new_remaining_size = remaining_size + inserted_size;
                                     $('#remaining_size').val(new_remaining_size);
                                     $('#curr_size').val('0');

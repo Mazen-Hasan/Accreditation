@@ -16,11 +16,11 @@
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
-                <input type="hidden" id="data_values" name ="data_values" value=""/>
-                <input type="hidden" id="company_id" name ="company_id" value="{{$company_id}}"/>
-                <input type="hidden" id="event_id" name ="event_id" value="{{$event_id}}"/>
-                <input type="hidden" id="accredit" name ="accredit" value="{{$accredit}}"/>
-                <input type="hidden" id="isChecked" name ="isChecked" value="{{$checked}}"/>
+                <input type="hidden" id="data_values" name="data_values" value=""/>
+                <input type="hidden" id="company_id" name="company_id" value="{{$company_id}}"/>
+                <input type="hidden" id="event_id" name="event_id" value="{{$event_id}}"/>
+                <input type="hidden" id="accredit" name="accredit" value="{{$accredit}}"/>
+                <input type="hidden" id="isChecked" name="isChecked" value="{{$checked}}"/>
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
@@ -69,16 +69,16 @@
                             </table>
                         </div>
                     </div>
-                    </div>
                 </div>
             </div>
+        </div>
     </div>
 
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
-            var checkedItems =[];
+        $(document).ready(function () {
+            var checkedItems = [];
             var selected = 0;
             $.ajaxSetup({
                 headers: {
@@ -88,16 +88,16 @@
             var company_id = $('#company_id').val();
             var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
             var myColumns = [];
-            var i =0;
-            myColumns.push({data: "id",name: "id", 'visible': false});
-            myColumns.push({data: "action",name: "action" , orderable: false});
-            myColumns.push({data: "status",name: "status"});
+            var i = 0;
+            myColumns.push({data: "id", name: "id", 'visible': false});
+            myColumns.push({data: "action", name: "action", orderable: false});
+            myColumns.push({data: "status", name: "status"});
             // if(company_id == 0){
             //     myColumns.push({data: "company",name: "company"});
             // }
             //myColumns.push({data: "company",name: "company"});
-            while(i< jqueryarray.length){
-                myColumns.push({data: jqueryarray[i].replace(/ /g,"_") ,name: jqueryarray[i].replace(/ /g,"_")});
+            while (i < jqueryarray.length) {
+                myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
                 i++;
             }
 
@@ -112,7 +112,7 @@
                     extend: 'excelHtml5',
                     title: 'Company-Participants',
                     exportOptions: {
-                        columns: [ 1,2,3,4,5,6,7,8 ]
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
                     }
                 }],
                 //pageLength: 2,
@@ -120,38 +120,38 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../../../../all-participants/'+eventId +'/'+companyId+'/'+accredit+'/' +isChecked,
+                    url: '../../../../all-participants/' + eventId + '/' + companyId + '/' + accredit + '/' + isChecked,
                     type: 'GET',
                 },
                 columns: myColumns,
                 order: [[2, 'desc']],
 
-                "fnInitComplete" : function (oSettings, json) {
-                    checkedItems =[];
+                "fnInitComplete": function (oSettings, json) {
+                    checkedItems = [];
                     selected = 0;
-                    $('#checkAll').prop('checked',false);
+                    $('#checkAll').prop('checked', false);
                     // alert('DataTables has finished its initialisation.');
                 }
-            }).on('search.dt', function() {
-                    checkedItems =[];
-                    selected = 0;
-                    $('#checkAll').prop('checked',false);
-                    //alert('i am here');
-                }).on('length.dt', function() {
-                    checkedItems =[];
-                    selected = 0;
-                    $('#checkAll').prop('checked',false);
-                    //alert('data has changed')
-                }).on('page.dt', function() {
-                    checkedItems =[];
-                    selected = 0;
-                    $('#checkAll').prop('checked',false);
-                    //alert('data has changed page')
-                });
+            }).on('search.dt', function () {
+                checkedItems = [];
+                selected = 0;
+                $('#checkAll').prop('checked', false);
+                //alert('i am here');
+            }).on('length.dt', function () {
+                checkedItems = [];
+                selected = 0;
+                $('#checkAll').prop('checked', false);
+                //alert('data has changed')
+            }).on('page.dt', function () {
+                checkedItems = [];
+                selected = 0;
+                $('#checkAll').prop('checked', false);
+                //alert('data has changed page')
+            });
 
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
             $('#add-new-post').click(function () {
@@ -163,36 +163,36 @@
             });
 
             $('body').on('click', '#checkAll', function () {
-                if(selected == 0){
-                    $('.select').each(function(){
+                if (selected == 0) {
+                    $('.select').each(function () {
                         //alert(this);
                         checkedItems.push($(this).data("id"));
-                        $(this).prop('checked',true);
+                        $(this).prop('checked', true);
                     });
                     selected = 1;
-                }else{
+                } else {
                     //alert('i am here');
-                    $('.select').each(function(){
+                    $('.select').each(function () {
                         //alert(this);
                         checkedItems.pop();
-                        $(this).prop('checked',false);
+                        $(this).prop('checked', false);
                     });
                     selected = 0;
                 }
-                    //alert(checkedItems);
+                //alert(checkedItems);
             });
 
             $('body').on('click', '#generate', function () {
                 var staff = checkedItems;
-                if(staff.length > 0){
+                if (staff.length > 0) {
                     $.ajax({
                         type: "post",
-                        data:  {staff: staff} ,
+                        data: {staff: staff},
                         dataType: "json",
                         url: "{{ url('pdf-generate')}}",
                         success: function (data) {
                             console.log(data);
-                            window.open(data.file,'_blank');
+                            window.open(data.file, '_blank');
                             // window.location.href = data.file;
                         },
                         error: function (data) {
@@ -203,39 +203,39 @@
             });
 
             $('body').on('click', '.select', function () {
-                    //alert($(this).data("id"));
-                    var count = 0;
-                    var found = false;
-                    var result =[];
-                    while(count < checkedItems.length){
-                        if(checkedItems[count] == $(this).data("id")){
-                            found = true;
-                            //count = checkedItems.length;
-                        }else{
+                //alert($(this).data("id"));
+                var count = 0;
+                var found = false;
+                var result = [];
+                while (count < checkedItems.length) {
+                    if (checkedItems[count] == $(this).data("id")) {
+                        found = true;
+                        //count = checkedItems.length;
+                    } else {
                         result.push(checkedItems[count]);
+                    }
+                    count++;
+                }
+                checkedItems = result;
+                if (!found) {
+                    checkedItems.push($(this).data("id"));
+                }
+                if (checkedItems.length == 0) {
+                    $('#checkAll').prop('checked', false);
+                    selected = 0;
+                } else {
+                    var allChecked = true;
+                    $('.select').each(function () {
+                        if (!$(this).prop('checked')) {
+                            allChecked = false;
                         }
-                        count++;
+                    });
+                    if (allChecked) {
+                        $('#checkAll').prop('checked', true);
+                        selected = 1;
                     }
-                    checkedItems = result;
-                    if(!found){
-                        checkedItems.push($(this).data("id"));
-                    }
-                    if(checkedItems.length == 0){
-                        $('#checkAll').prop('checked',false);
-                        selected = 0;
-                    }else{
-                        var allChecked = true;
-                        $('.select').each(function(){
-                            if(!$(this).prop('checked')){
-                                allChecked = false;
-                            }
-                        });
-                        if(allChecked){
-                            $('#checkAll').prop('checked',true);
-                            selected = 1;
-                        }
-                    }
-                    //alert(checkedItems);
+                }
+                //alert(checkedItems);
             });
         });
     </script>

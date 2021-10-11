@@ -12,7 +12,7 @@
         <br>
         <div class="row">
             <div class="col-12 grid-margin">
-                <div class="card"  style="border-radius: 20px">
+                <div class="card" style="border-radius: 20px">
                     <div class="card-body">
                         <h4 class="card-title">
                             <a class="url-nav" href="{{route('users')}}">
@@ -30,7 +30,8 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" placeholder="enter name" required="" value="{{$user->user_name}}"/>
+                                            <input type="text" id="name" name="name" placeholder="enter name"
+                                                   required="" value="{{$user->user_name}}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +39,8 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="email" name="email" placeholder="enter email" required="" value="{{$user->email}}"/>
+                                            <input type="text" id="email" name="email" placeholder="enter email"
+                                                   required="" value="{{$user->email}}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -48,7 +50,9 @@
                                     <div class="form-group col">
                                         <label>Password</label>
                                         <div class="col-sm-12">
-                                            <input type="password" id="password" name="password" placeholder="enter password" required="" value="{{$user->password}}"/>
+                                            <input type="password" id="password" name="password"
+                                                   placeholder="enter password" required=""
+                                                   value="{{$user->password}}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -56,7 +60,8 @@
                                     <div class="form-group col">
                                         <label>Confirm Password</label>
                                         <div class="col-sm-12">
-                                            <input type="password" id="confirm_password" name="confirm_password" placeholder="confirm password" required=""/>
+                                            <input type="password" id="confirm_password" name="confirm_password"
+                                                   placeholder="confirm password" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +97,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -110,11 +115,8 @@
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
-                submitHandler: function(form) {
-                    //$('#post_id').val('');
-                    var actionType = $('#btn-save').val();
+                submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
-                    // alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('userController.store') }}",

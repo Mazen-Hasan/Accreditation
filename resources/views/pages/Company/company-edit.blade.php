@@ -19,7 +19,8 @@
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="event_id" id="event_id" value="{{$eventid}}">
-                            <input type="hidden" name="need_management" id="need_management" value="{{$company->need_management}}">
+                            <input type="hidden" name="need_management" id="need_management"
+                                   value="{{$company->need_management}}">
                             <input type="hidden" name="company_Id" id="company_Id" value="{{$company->id}}">
                             <br>
                             <div class="row">
@@ -27,7 +28,8 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" value="{{$company->name}}" required="" placeholder="enter name"/>
+                                            <input type="text" id="name" name="name" value="{{$company->name}}"
+                                                   required="" placeholder="enter name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -35,7 +37,8 @@
                                     <div class="form-group col">
                                         <label>Address</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="address" name="address" value="{{$company->address}}" required="" placeholder="enter address"/>
+                                            <input type="text" id="address" name="address" value="{{$company->address}}"
+                                                   required="" placeholder="enter address"/>
                                         </div>
                                     </div>
                                 </div>
@@ -45,7 +48,9 @@
                                     <div class="form-group col">
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="telephone" name="telephone" value="{{$company->telephone}}" required="" placeholder="enter telephone"/>
+                                            <input type="text" id="telephone" name="telephone"
+                                                   value="{{$company->telephone}}" required=""
+                                                   placeholder="enter telephone"/>
                                         </div>
                                     </div>
                                 </div>
@@ -53,7 +58,8 @@
                                     <div class="form-group col">
                                         <label>Website</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="website" name="website" value="{{$company->website}}" required="" placeholder="enter website"/>
+                                            <input type="text" id="website" name="website" value="{{$company->website}}"
+                                                   required="" placeholder="enter website"/>
                                         </div>
                                     </div>
                                 </div>
@@ -63,7 +69,8 @@
                                     <div class="form-group col">
                                         <label>Size</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="size" name="size" value="{{$company->size}}" required="" placeholder="enter size"/>
+                                            <input type="text" id="size" name="size" value="{{$company->size}}"
+                                                   required="" placeholder="enter size"/>
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +153,7 @@
                                             <select id="status" name="status" value="" required="">
                                                 @foreach ($statuss as $status)
                                                     <option value="{{ $status->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($status->key == $company->status)
                                                             selected="selected"
                                                         @endif
@@ -157,21 +164,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="row">
+                        <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">
                                         <div class="col-sm-12">
                                             <label for="needManagmentCheckbox"  style="word-wrap:break-word;font-size:20px">
-                                                <input type="checkbox" 
+                                                <input type="checkbox"
                                                 @if ($company->need_management == 1)
-                                                    checked="checked"
-                                                @endif
-                                                id="needManagmentCheckbox" name="needManagmentCheckbox" value="0" style="width:20px;display: inline-block;vertical-align: middle" />    Need Company Admin Accreditation Category Zise Management
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
+                            checked="checked"
+@endif
+                            id="needManagmentCheckbox" name="needManagmentCheckbox" value="0" style="width:20px;display: inline-block;vertical-align: middle" />    Need Company Admin Accreditation Category Zise Management
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div> -->
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" id="btn-save" value="create">Edit
                                 </button>
@@ -224,7 +231,7 @@
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Edited successfully');
-                            window.location.href = "../../event-companies/"+$eventid;
+                            window.location.href = "../../event-companies/" + $eventid;
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },

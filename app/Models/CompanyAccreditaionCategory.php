@@ -10,6 +10,6 @@ class CompanyAccreditaionCategory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'event_id', 'company_id','accredit_cat_id','subcompany_id','size','status'
+        'event_id', 'company_id', 'accredit_cat_id', 'subcompany_id', 'size', 'status'
     ];
 }

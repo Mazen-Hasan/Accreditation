@@ -3,27 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\AccreditationCategory;
+use App\Models\City;
 use App\Models\Company;
-use App\Models\CompanyStaff;
-use App\Models\Event;
-use App\Models\TemplateField;
 use App\Models\CompanyAccreditaionCategory;
+use App\Models\CompanyCategory;
+use App\Models\CompanyStaff;
+use App\Models\Country;
+use App\Models\Event;
+use App\Models\FocalPoint;
 use App\Models\Gender;
 use App\Models\NationalityClass;
 use App\Models\Participant;
 use App\Models\Religion;
 use App\Models\SelectOption;
+use App\Models\TemplateField;
 use App\Models\TemplateFieldElement;
-use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
-use App\Models\City;
-use App\Models\Country;
-use App\Models\CompanyCategory;
-use App\Models\FocalPoint;
 
 class CompanyAdminController extends Controller
 {
@@ -48,14 +47,14 @@ class CompanyAdminController extends Controller
                 ->make(true);
         }
 
-        $events = DB::select('select c.* , cc.need_management need_management , cc.name company_name from events_view c inner join companies cc on c.id = cc.event_id where cc.company_admin_id = ? and cc.status <> ?', [Auth::user()->id,0]);
+        $events = DB::select('select c.* , cc.need_management need_management , cc.name company_name from events_view c inner join companies cc on c.id = cc.event_id where cc.company_admin_id = ? and cc.status <> ?', [Auth::user()->id, 0]);
         $subCompany_nav = 1;
         $where = array('company_admin_id' => Auth::user()->id);
         $company = Company::where($where)->first();
-        if($company->subCompany_id != null){
+        if ($company->subCompany_id != null) {
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.company-admin')->with('events',$events)->with('subCompany_nav',$subCompany_nav);
+        return view('pages.CompanyAdmin.company-admin')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }
 
     public function companyParticipants()
@@ -71,13 +70,13 @@ class CompanyAdminController extends Controller
         $where = array('template_id' => $event->event_form);
         $templateFields = TemplateField::where($where)->orderBy('field_order', 'ASC')->get()->all();
 
-        foreach($templateFields as $templateField){
+        foreach ($templateFields as $templateField) {
             $dataTableColumuns[] = $templateField->label_en;
         }
-        Schema::dropIfExists('temp'.Auth::user()->id);
-        Schema::create('temp'.Auth::user()->id, function ($table) use($templateFields) {
+        Schema::dropIfExists('temp' . Auth::user()->id);
+        Schema::create('temp' . Auth::user()->id, function ($table) use ($templateFields) {
             $table->string('id');
-            foreach($templateFields as $templateField){
+            foreach ($templateFields as $templateField) {
                 $dataTableColumuns[] = $templateField->label_en;
                 $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
             }
@@ -85,21 +84,21 @@ class CompanyAdminController extends Controller
         $where = array('company_admin_id' => Auth::user()->id);
         $company = Company::where($where)->get()->first();
 
-        $where = array('event_id' => $company->event_id,'company_id' => $company->id);
+        $where = array('event_id' => $company->event_id, 'company_id' => $company->id);
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
-        foreach($companyStaffs as $companyStaff){
+        foreach ($companyStaffs as $companyStaff) {
             $where = array('staff_id' => $companyStaff->id);
             // $staffDatas = StaffData::where($where)->get()->all();
-            $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?',[$companyStaff->id,$event->event_form]);
+            $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
             $staffDataValues = array();
             $staffDataValues[] = $companyStaff->id;
-            foreach($staffDatas as $staffData){
-                if($staffData->slug == 'select' ){
-                    $where = array('template_field_id' =>$staffData->template_field_id , 'value_id' => $staffData->value);
+            foreach ($staffDatas as $staffData) {
+                if ($staffData->slug == 'select') {
+                    $where = array('template_field_id' => $staffData->template_field_id, 'value_id' => $staffData->value);
                     $value = TemplateFieldElement::where($where)->first();
                     $staffDataValues[] = $value->value_en;
-                }else{
+                } else {
                     $staffDataValues[] = $staffData->value;
                 }
             }
@@ -108,16 +107,16 @@ class CompanyAdminController extends Controller
         // var_dump($alldata);
         // exit;
         $query = '';
-        foreach($alldata as $data){
-            $query = 'insert into temp'.Auth::user()->id.' (id';
-            foreach($templateFields as $templateField){
-                $query = $query .',' . preg_replace('/\s+/', '_', $templateField->label_en);
+        foreach ($alldata as $data) {
+            $query = 'insert into temp' . Auth::user()->id . ' (id';
+            foreach ($templateFields as $templateField) {
+                $query = $query . ',' . preg_replace('/\s+/', '_', $templateField->label_en);
             }
             $query = $query . ') values (';
-            foreach($data as $staffDataValue){
+            foreach ($data as $staffDataValue) {
                 $query = $query . '"' . $staffDataValue . '",';
             }
-            $query = substr($query,0, strlen($query)-1);
+            $query = substr($query, 0, strlen($query) - 1);
             $query = $query . ')';
             DB::insert($query);
         }
@@ -125,43 +124,43 @@ class CompanyAdminController extends Controller
         // var_dump($query);
         // exit;
         if (request()->ajax()) {
-            $participants = DB::select('select t.* , c.* from temp'.Auth::user()->id. ' t inner join company_staff c on t.id = c.id');
+            $participants = DB::select('select t.* , c.* from temp' . Auth::user()->id . ' t inner join company_staff c on t.id = c.id');
             return datatables()->of($participants)
-                ->addColumn('status', function($data){
+                ->addColumn('status', function ($data) {
                     $status_value = "initaited";
-                    switch($data->status){
+                    switch ($data->status) {
                         case 0:
-                            $status_value =  "Initaited";
+                            $status_value = "Initaited";
                             break;
                         case 1:
-                            $status_value =  "waiting Security Officer Approval";
+                            $status_value = "waiting Security Officer Approval";
                             break;
                         case 2:
-                            $status_value =  "waiting Event Admin Approval";
+                            $status_value = "waiting Event Admin Approval";
                             break;
                         case 3:
-                            $status_value =  "approved by security officer";
+                            $status_value = "approved by security officer";
                             break;
                         case 4:
-                            $status_value =  "rejected by security officer";
+                            $status_value = "rejected by security officer";
                             break;
                         case 5:
-                            $status_value =  "rejected by event admin";
+                            $status_value = "rejected by event admin";
                             break;
                         case 6:
-                            $status_value =  "approved by event admin";
+                            $status_value = "approved by event admin";
                             break;
                         case 7:
-                            $status_value =  "rejected with correction by security officer";
+                            $status_value = "rejected with correction by security officer";
                             break;
                         case 8:
-                            $status_value =  "rejected with correction by event admin";
+                            $status_value = "rejected with correction by event admin";
                             break;
-                    	 case 9:
-                            $status_value =  "badge generated";
+                        case 9:
+                            $status_value = "badge generated";
                             break;
-                    	 case 10:
-                            $status_value =  "badge printed";
+                        case 10:
+                            $status_value = "badge printed";
                             break;
                     }
                     return $status_value;
@@ -172,7 +171,7 @@ class CompanyAdminController extends Controller
                     //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     // $button = '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     // $button .= '&nbsp;&nbsp;';
-                
+
                     // if($data->print_status == 0){
                     //     $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="'.$data->id.'" class="delete btn btn-reddit generate-badge">Generate</a>';
                     //     $button .= '&nbsp;&nbsp;';
@@ -183,38 +182,38 @@ class CompanyAdminController extends Controller
                     //     $button .= '&nbsp;&nbsp;';
                     // }
 
-					$button .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
+                    $button .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
                     $button .= '&nbsp;&nbsp;';
-                    switch($data->status){
+                    switch ($data->status) {
 
                         case 0:
                             $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">Send Request</a>';
+                            $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger">Send Request</a>';
                             break;
                         case 7:
                             $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->security_officer_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
+                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" class="delete btn btn-danger">Reject Reason</a>';
                             break;
                         case 8:
                             $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->event_admin_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
+                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->event_admin_reject_reason . '" class="delete btn btn-danger">Reject Reason</a>';
                             break;
                     }
                     return $button;
                 })
-                ->rawColumns(['status','action'])
+                ->rawColumns(['status', 'action'])
                 ->make(true);
         }
         $subCompany_nav = 1;
         $where = array('company_admin_id' => Auth::user()->id);
         $company = Company::where($where)->first();
-        if($company->subCompany_id != null){
+        if ($company->subCompany_id != null) {
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns',$dataTableColumuns)->with('subCompany_nav', $subCompany_nav);
+        return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav);
     }
 
 
@@ -244,7 +243,7 @@ class CompanyAdminController extends Controller
             $religion = new SelectOption($religionsItem->id, $religionsItem->name);
             $religions[] = $religion;
         }
-        return view('pages.CompanyAdmin.company-participant-add')->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption',$religions);
+        return view('pages.CompanyAdmin.company-participant-add')->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption', $religions);
     }
 
 
@@ -328,7 +327,7 @@ class CompanyAdminController extends Controller
             $religions[] = $religion;
         }
 
-        return view('pages.CompanyAdmin.company-participant-edit')->with('post', $post)->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption',$religions);;
+        return view('pages.CompanyAdmin.company-participant-edit')->with('post', $post)->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption', $religions);;
     }
 
     public function companyAccreditCategories($eventId)
@@ -340,11 +339,10 @@ class CompanyAdminController extends Controller
 
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
-        $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?',[$company->id,$eventId]);
+        $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?', [$company->id, $eventId]);
         $status = 0;
         $remainingSize = $company->size;
-        foreach($companyAccreditationCategories as $companyAccreditationCategory)
-        {
+        foreach ($companyAccreditationCategories as $companyAccreditationCategory) {
             $status = $companyAccreditationCategory->status;
             $remainingSize = $remainingSize - $companyAccreditationCategory->size;
         }
@@ -353,139 +351,142 @@ class CompanyAdminController extends Controller
         $accreditationCategorysSelectOptions = array();
         $accreditationCategories = AccreditationCategory::where($where)->get()->all();
 
-        foreach($accreditationCategories as $accreditationCategory)
-        {
+        foreach ($accreditationCategories as $accreditationCategory) {
             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
 
         if (request()->ajax()) {
-            $where = array('company_admin_id' => Auth::user()->id,'event_id' =>$eventId);
+            $where = array('company_admin_id' => Auth::user()->id, 'event_id' => $eventId);
             $company = Company::where($where)->get()->first();
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ? and event_id = ?',[$company->id,$eventId]);
-            $companyAccreditationCategoriesStatuss= DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?',[$company->id,$eventId]);
+            $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories_view where company_id = ? and event_id = ?', [$company->id, $eventId]);
+            $companyAccreditationCategoriesStatuss = DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?', [$company->id, $eventId]);
             $status = 0;
-            foreach($companyAccreditationCategoriesStatuss as $companyAccreditationCategoriesStatus)
-            {
+            foreach ($companyAccreditationCategoriesStatuss as $companyAccreditationCategoriesStatus) {
                 $status = $companyAccreditationCategoriesStatus->status;
             }
             // $status = 1;
-            if($status == 0){
-            return datatables()->of($companyAccreditationCategories)
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip"  data-size="'.$data->size.'" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
-                    return $button;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-            }else{
-                if($status == 1){
+            if ($status == 0) {
                 return datatables()->of($companyAccreditationCategories)
-                ->addColumn('action', function ($data) {
-                    $button = 'Waiting for approval';
-                    return $button;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-                }else{
-                    return datatables()->of($companyAccreditationCategories)
                     ->addColumn('action', function ($data) {
-                        $button = 'Approved';
+                        $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip"  data-size="' . $data->size . '" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
                         return $button;
                     })
                     ->rawColumns(['action'])
                     ->make(true);
+            } else {
+                if ($status == 1) {
+                    return datatables()->of($companyAccreditationCategories)
+                        ->addColumn('action', function ($data) {
+                            $button = 'Waiting for approval';
+                            return $button;
+                        })
+                        ->rawColumns(['action'])
+                        ->make(true);
+                } else {
+                    return datatables()->of($companyAccreditationCategories)
+                        ->addColumn('action', function ($data) {
+                            $button = 'Approved';
+                            return $button;
+                        })
+                        ->rawColumns(['action'])
+                        ->make(true);
                 }
             }
         }
         $subCompany_nav = 1;
         $where = array('company_admin_id' => Auth::user()->id);
         $company = Company::where($where)->first();
-        if($company->subCompany_id != null){
+        if ($company->subCompany_id != null) {
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId',$eventId)->with('status',$status)->with('event_name',$event->name)->with('company_name',$company->name)->with('company_size',$company->size)->with('remaining_size',$remainingSize)->with('subCompany_nav',$subCompany_nav);
+        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('subCompany_nav', $subCompany_nav);
     }
 
-    public function editCompanyAccreditSize($id){
+    public function editCompanyAccreditSize($id)
+    {
 
         $where = array('id' => $id);
         $post = CompanyAccreditaionCategory::where($where)->first();
         return Response::json($post);
     }
 
-    public function storeCompanyAccrCatSize($id,$accredit_cat_id,$size,$company_id,$event_id){
+    public function storeCompanyAccrCatSize($id, $accredit_cat_id, $size, $company_id, $event_id)
+    {
         try {
             $post = CompanyAccreditaionCategory::updateOrCreate(['id' => $id],
-            ['size' => $size,
-                'accredit_cat_id' => $accredit_cat_id,
-                'company_id'=> $company_id,
-                'subcompany_id' =>$company_id,
-                'event_id' => $event_id,
-                'status'=> 0
-            ]);
+                ['size' => $size,
+                    'accredit_cat_id' => $accredit_cat_id,
+                    'company_id' => $company_id,
+                    'subcompany_id' => $company_id,
+                    'event_id' => $event_id,
+                    'status' => 0
+                ]);
 
-          } catch (\Exception $e) {
+        } catch (\Exception $e) {
             return Response::json(array(
-                'code'      =>  400,
-                'message'   =>  $e->getMessage()
+                'code' => 400,
+                'message' => $e->getMessage()
             ), 400);
-          }
+        }
         return Response::json($post);
     }
 
-    public function destroyCompanyAccreditCat($id){
+    public function destroyCompanyAccreditCat($id)
+    {
         $post = CompanyAccreditaionCategory::where('id', $id)->delete();
         return Response::json($post);
 
     }
 
-    public function sendApproval($companyId,$eventId){
-        $where = array('company_id' => $companyId,'event_id'=>$eventId);
+    public function sendApproval($companyId, $eventId)
+    {
+        $where = array('company_id' => $companyId, 'event_id' => $eventId);
         //$post = CompanyAccreditaionCategory::where($where);
         $companyAccreditCategories = CompanyAccreditaionCategory::where($where)
-        ->update(['status'=>1]);
+            ->update(['status' => 1]);
         return Response::json($companyAccreditCategories);
 
     }
 
-    public function sendRequest($staffId){
+    public function sendRequest($staffId)
+    {
         $where = array('id' => $staffId);
         $companyStaff = CompanyStaff::where($where)->first();
         $companyId = $companyStaff->company_id;
         $eventId = $companyStaff->event_id;
 
-        $eventWhere = array('id'=> $eventId);
+        $eventWhere = array('id' => $eventId);
         $event = Event::where($eventWhere)->first();
 
-        $companyWhere = array('id'=> $companyId);
+        $companyWhere = array('id' => $companyId);
         $company = Company::where($companyWhere)->first();
 
         $approval = $event->approval_option;
-        if($approval == 1){
-            NotificationController::sendAlertNotification($event->security_officer,$staffId,$event->name.': '.$company->name.': '.'Participant approval','/security-officer-participant-details/'. $staffId);
-            $updateQuery = 'update company_staff set security_officer_id = '.$event->security_officer.' where id = '.$staffId;
+        if ($approval == 1) {
+            NotificationController::sendAlertNotification($event->security_officer, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/security-officer-participant-details/' . $staffId);
+            $updateQuery = 'update company_staff set security_officer_id = ' . $event->security_officer . ' where id = ' . $staffId;
             // var_dump($updateQuery);
             // exit;
             DB::update($updateQuery);
-            DB::update('update company_staff set status = ? where id = ?',[1,$staffId]);
+            DB::update('update company_staff set status = ? where id = ?', [1, $staffId]);
             // $compamyStaff = CompanyStaff::where($where)
             // ->update(['status'=>1,'security_officer_id'=> $event->security_officer]);
 
-        }else{
-            if($approval == 2){
-                NotificationController::sendAlertNotification($event->event_admin,$staffId,$event->name.': '.$company->name.': '.'Participant approval','/event-participant-details/'.$staffId);
-                DB::update('update company_staff set event_admin_id = ? where id = ?',[$event->event_admin,$staffId]);
-                DB::update('update company_staff set status = ? where id = ?',[2,$staffId]);
+        } else {
+            if ($approval == 2) {
+                NotificationController::sendAlertNotification($event->event_admin, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/event-participant-details/' . $staffId);
+                DB::update('update company_staff set event_admin_id = ? where id = ?', [$event->event_admin, $staffId]);
+                DB::update('update company_staff set status = ? where id = ?', [2, $staffId]);
                 // $compamyStaff = CompanyStaff::where($where)
                 // ->update(['status'=>2,'event_admin_id'=> $event->event_admin]);
-            }else{
-                NotificationController::sendAlertNotification($event->event_admin,$staffId,$event->name.': '.$company->name.': '.'Participant approval','/event-participant-details/'. $staffId);
-                DB::update('update company_staff set event_admin_id = ? where id = ?',[$event->event_admin,$staffId]);
-                DB::update('update company_staff set status = ? where id = ?',[2,$staffId]);
+            } else {
+                NotificationController::sendAlertNotification($event->event_admin, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/event-participant-details/' . $staffId);
+                DB::update('update company_staff set event_admin_id = ? where id = ?', [$event->event_admin, $staffId]);
+                DB::update('update company_staff set status = ? where id = ?', [2, $staffId]);
                 // $compamyStaff = CompanyStaff::where($where)
                 // ->update(['status'=>1,'security_officer_id'=> $event->security_officer]);
             }
@@ -502,20 +503,20 @@ class CompanyAdminController extends Controller
         $where = array('id' => $company->event_id);
         $event = Event::where($where)->first();
         if (request()->ajax()) {
-            $companies = DB::select('select * from companies_view where parent_id = ?',[$company->id]);
+            $companies = DB::select('select * from companies_view where parent_id = ?', [$company->id]);
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('subCompanyEdit', [$data->id, $data->event_id]) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="'.$data->name.'" data-focalpoint="'.$data->focal_point.'" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('subCompanyAccreditCategories', [$data->id , $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="' . route('subCompanyAccreditCategories', [$data->id, $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.CompanyAdmin.subCompany')->with('event_name',$event->name)->with('company_name',$company->name)->with('eventid',$event->id);
+        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventid', $event->id);
     }
 
     public function storeSubCompnay(Request $request)
@@ -525,51 +526,51 @@ class CompanyAdminController extends Controller
         $where = array('id' => $request->focal_point);
         $focalPoint = FocalPoint::where($where)->first();
         $companyId = $request->company_Id;
-        if($companyId == null) {
-        $company = Company::updateOrCreate(['id' => $companyId],
-            ['name' => $request->name,
-                'event_id' => $request->event_id,
-                'address' => $request->address,
-                'telephone' => $request->telephone,
-                'website' => $request->website,
-                'focal_point_id' => $request->focal_point,
-                'company_admin_id' => $focalPoint->account_id,
-                'subCompany_id' => $companyAdmin->id,
-                'country_id' => $request->country,
-                'city_id' => $request->city,
-                'category_id' => $request->category,
-                'size' => $request->size,
-                'need_management' => 0,
-                'status' => $request->status,
-            ]);
-        }else{
-            
-            $where = array('id'=>$companyId);
+        if ($companyId == null) {
+            $company = Company::updateOrCreate(['id' => $companyId],
+                ['name' => $request->name,
+                    'event_id' => $request->event_id,
+                    'address' => $request->address,
+                    'telephone' => $request->telephone,
+                    'website' => $request->website,
+                    'focal_point_id' => $request->focal_point,
+                    'company_admin_id' => $focalPoint->account_id,
+                    'subCompany_id' => $companyAdmin->id,
+                    'country_id' => $request->country,
+                    'city_id' => $request->city,
+                    'category_id' => $request->category,
+                    'size' => $request->size,
+                    'need_management' => 0,
+                    'status' => $request->status,
+                ]);
+        } else {
+
+            $where = array('id' => $companyId);
             $company = Company::where($where)->first();
             $status = $company->status;
-            if($request->status == 0){
+            if ($request->status == 0) {
                 $status = 0;
-            }else{
-                if($company->status != 3){
+            } else {
+                if ($company->status != 3) {
                     $status = $request->status;
                 }
             }
             $company = Company::updateOrCreate(['id' => $companyId],
-            ['name' => $request->name,
-                'event_id' => $request->event_id,
-                'address' => $request->address,
-                'telephone' => $request->telephone,
-                'website' => $request->website,
-                'focal_point_id' => $request->focal_point,
-                'company_admin_id' => $focalPoint->account_id,
-                'subCompany_id' => $companyAdmin->id,
-                'country_id' => $request->country,
-                'city_id' => $request->city,
-                'category_id' => $request->category,
-                'size' => $request->size,
-                'need_management' => $request->need_management,
-                'status' => $status
-            ]);
+                ['name' => $request->name,
+                    'event_id' => $request->event_id,
+                    'address' => $request->address,
+                    'telephone' => $request->telephone,
+                    'website' => $request->website,
+                    'focal_point_id' => $request->focal_point,
+                    'company_admin_id' => $focalPoint->account_id,
+                    'subCompany_id' => $companyAdmin->id,
+                    'country_id' => $request->country,
+                    'city_id' => $request->city,
+                    'category_id' => $request->category,
+                    'size' => $request->size,
+                    'need_management' => $request->need_management,
+                    'status' => $status
+                ]);
         }
 
         return Response::json($company);
@@ -579,7 +580,7 @@ class CompanyAdminController extends Controller
     public function subCompanyEdit($id, $eventid)
     {
         $where = array('id' => $eventid);
-        $event  = Event::where($where)->first();
+        $event = Event::where($where)->first();
 
         $where = array('id' => $id);
         $post = Company::where($where)->first();
@@ -587,9 +588,8 @@ class CompanyAdminController extends Controller
         $where = array('event_admin_id' => $event->event_admin);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
-        foreach($contacts as $contact)
-        {
-            $focalPointSelectOption = new SelectOption($contact->id, $contact->name .' '.$contact->middle_name.' '.$contact->last_name);
+        foreach ($contacts as $contact) {
+            $focalPointSelectOption = new SelectOption($contact->id, $contact->name . ' ' . $contact->middle_name . ' ' . $contact->last_name);
             $focalPointsOption[] = $focalPointSelectOption;
         }
 
@@ -613,8 +613,7 @@ class CompanyAdminController extends Controller
         $categorysSelectOptions = array();
         $categories = CompanyCategory::where($where)->get()->all();
 
-        foreach($categories as $category)
-        {
+        foreach ($categories as $category) {
             $categorySelectOption = new SelectOption($category->id, $category->name);
             $categorysSelectOptions[] = $categorySelectOption;
         }
@@ -623,20 +622,19 @@ class CompanyAdminController extends Controller
         $accreditationCategorysSelectOptions = array();
         $accreditationCategories = AccreditationCategory::where($where)->get()->all();
 
-        foreach($accreditationCategories as $accreditationCategory)
-        {
+        foreach ($accreditationCategories as $accreditationCategory) {
             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
 
-        $companyStatus1 = new SelectOption(1,'Active');
-        $companyStatus2 = new SelectOption(0,'InActive');
+        $companyStatus1 = new SelectOption(1, 'Active');
+        $companyStatus2 = new SelectOption(0, 'InActive');
         //$companyStatus3 = new SelectOption(3,'Invited');
-        $companyStatuss = [$companyStatus1,$companyStatus2];
+        $companyStatuss = [$companyStatus1, $companyStatus2];
 
         if (request()->ajax()) {
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',[$id]);
+            $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories_view where company_id = ?', [$id]);
             return datatables()->of($companyAccreditationCategories)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
@@ -648,8 +646,8 @@ class CompanyAdminController extends Controller
                 ->make(true);
         }
 
-        return view('pages.CompanyAdmin.subCompany-edit')->with('company',$post)->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$eventid)->with('event_name',$event->name)->with('company_name',$post->name)->with('statuss',$companyStatuss);
+        return view('pages.CompanyAdmin.subCompany-edit')->with('company', $post)->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss);
     }
 
 
@@ -667,17 +665,16 @@ class CompanyAdminController extends Controller
     public function subCompanyAdd($id)
     {
         $where = array('id' => $id);
-        $event  = Event::where($where)->first();
+        $event = Event::where($where)->first();
         $where = array('company_admin_id' => Auth::user()->id);
         $company = Company::where($where)->first();
         // $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Focal Point")';
         // $query = $sql;
-        $where = array('event_admin_id' => $event->event_admin,'company_id' => null);
+        $where = array('event_admin_id' => $event->event_admin, 'company_id' => null);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
-        foreach($contacts as $contact)
-        {
-            $focalPointSelectOption = new SelectOption($contact->id, $contact->name .' '.$contact->middle_name.' '.$contact->last_name);
+        foreach ($contacts as $contact) {
+            $focalPointSelectOption = new SelectOption($contact->id, $contact->name . ' ' . $contact->middle_name . ' ' . $contact->last_name);
             $focalPointsOption[] = $focalPointSelectOption;
         }
 
@@ -701,8 +698,7 @@ class CompanyAdminController extends Controller
         $categorysSelectOptions = array();
         $categories = CompanyCategory::where($where)->get()->all();
 
-        foreach($categories as $category)
-        {
+        foreach ($categories as $category) {
             $categorySelectOption = new SelectOption($category->id, $category->name);
             $categorysSelectOptions[] = $categorySelectOption;
         }
@@ -711,22 +707,21 @@ class CompanyAdminController extends Controller
         $accreditationCategorysSelectOptions = array();
         $accreditationCategories = AccreditationCategory::where($where)->get()->all();
 
-        foreach($accreditationCategories as $accreditationCategory)
-        {
+        foreach ($accreditationCategories as $accreditationCategory) {
             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
 
-        $companyStatus1 = new SelectOption(1,'Active');
-        $companyStatus2 = new SelectOption(0,'InActive');
+        $companyStatus1 = new SelectOption(1, 'Active');
+        $companyStatus2 = new SelectOption(0, 'InActive');
         //$companyStatus3 = new SelectOption(3,'Invited');
-        $companyStatuss = [$companyStatus1,$companyStatus2];
+        $companyStatuss = [$companyStatus1, $companyStatus2];
 
-        return view('pages.CompanyAdmin.subCompany-add')->with('countrys',$countrysSelectOptions)->with('citys',$citysSelectOptions)->with('focalPoints',$focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('eventid',$id)->with('event_name',$event->name)->with('statuss',$companyStatuss)->with('company_name',$company->name);
+        return view('pages.CompanyAdmin.subCompany-add')->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $id)->with('event_name', $event->name)->with('statuss', $companyStatuss)->with('company_name', $company->name);
     }
 
-    public function subCompanyAccreditCategories($companyId,$eventId)
+    public function subCompanyAccreditCategories($companyId, $eventId)
     {
         //$eventId = $request->eventId;
 
@@ -735,11 +730,10 @@ class CompanyAdminController extends Controller
 
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
-        $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?',[$company->id,$eventId]);
+        $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?', [$company->id, $eventId]);
         $status = 0;
         $remainingSize = $company->size;
-        foreach($companyAccreditationCategories as $companyAccreditationCategory)
-        {
+        foreach ($companyAccreditationCategories as $companyAccreditationCategory) {
             $status = $companyAccreditationCategory->status;
             $remainingSize = $remainingSize - $companyAccreditationCategory->size;
         }
@@ -748,71 +742,70 @@ class CompanyAdminController extends Controller
         $accreditationCategorysSelectOptions = array();
         $accreditationCategories = AccreditationCategory::where($where)->get()->all();
 
-        foreach($accreditationCategories as $accreditationCategory)
-        {
+        foreach ($accreditationCategories as $accreditationCategory) {
             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
 
         if (request()->ajax()) {
-            $where = array('id' => $companyId,'event_id' =>$eventId);
+            $where = array('id' => $companyId, 'event_id' => $eventId);
             $company = Company::where($where)->get()->first();
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ? and event_id = ?',[$company->id,$eventId]);
-            $companyAccreditationCategoriesStatuss= DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?',[$company->id,$eventId]);
+            $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories_view where company_id = ? and event_id = ?', [$company->id, $eventId]);
+            $companyAccreditationCategoriesStatuss = DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?', [$company->id, $eventId]);
             $status = 0;
-            foreach($companyAccreditationCategoriesStatuss as $companyAccreditationCategoriesStatus)
-            {
+            foreach ($companyAccreditationCategoriesStatuss as $companyAccreditationCategoriesStatus) {
                 $status = $companyAccreditationCategoriesStatus->status;
             }
             // $status = 1;
-            if($status == 0){
-            return datatables()->of($companyAccreditationCategories)
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip"  data-size="'.$data->size.'" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
-                    return $button;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-            }else{
-                if($status == 1){
+            if ($status == 0) {
                 return datatables()->of($companyAccreditationCategories)
-                ->addColumn('action', function ($data) {
-                    $button = 'Waiting for approval';
-                    return $button;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-                }else{
-                    return datatables()->of($companyAccreditationCategories)
                     ->addColumn('action', function ($data) {
-                        $button = 'Approved';
+                        $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip"  data-size="' . $data->size . '" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
                         return $button;
                     })
                     ->rawColumns(['action'])
                     ->make(true);
+            } else {
+                if ($status == 1) {
+                    return datatables()->of($companyAccreditationCategories)
+                        ->addColumn('action', function ($data) {
+                            $button = 'Waiting for approval';
+                            return $button;
+                        })
+                        ->rawColumns(['action'])
+                        ->make(true);
+                } else {
+                    return datatables()->of($companyAccreditationCategories)
+                        ->addColumn('action', function ($data) {
+                            $button = 'Approved';
+                            return $button;
+                        })
+                        ->rawColumns(['action'])
+                        ->make(true);
                 }
             }
         }
-        return view('pages.CompanyAdmin.subCompany-accreditation-size')->with('accreditationCategorys',$accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId',$eventId)->with('status',$status)->with('event_name',$event->name)->with('company_name',$company->name)->with('company_size',$company->size)->with('remaining_size',$remainingSize);
+        return view('pages.CompanyAdmin.subCompany-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize);
     }
 
-    public function Invite($companyId){
+    public function Invite($companyId)
+    {
         $where = array('id' => $companyId);
         $company = Company::where($where)->first();
         $where = array('id' => $company->focal_point_id);
         $focalpoint = FocalPoint::where($where)->first();
         $post = Company::updateOrCreate(['id' => $companyId],
-        [
-            'company_admin_id' => $focalpoint->account_id,
-            'status' => 3
-        ]);
+            [
+                'company_admin_id' => $focalpoint->account_id,
+                'status' => 3
+            ]);
         $focalpointUpdate = FocalPoint::updateOrCreate(['id' => $focalpoint->id],
-        [
-            'company_id' => $companyId
-        ]);
+            [
+                'company_id' => $companyId
+            ]);
         return Response::json($post);
     }
 }

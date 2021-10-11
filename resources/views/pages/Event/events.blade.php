@@ -45,11 +45,9 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-{{--                                    <th>Location</th>--}}
                                     <th>Size</th>
-                                    <!-- <th>Event Admin</th> -->
                                     <th>Organizer</th>
-                                    <th>Owner</th>
+                                    <th>Template</th>
                                     <th>Type</th>
                                     <th>Start</th>
                                     <th>End</th>
@@ -71,7 +69,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -84,7 +82,7 @@
                     extend: 'excelHtml5',
                     title: 'Events',
                     exportOptions: {
-                        columns: [ 1,2,3,4,5,6,7,8,9 ]
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
                     }
                 }],
 
@@ -95,28 +93,25 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'name', name: 'name'},
-                    // { data: 'event_admin', name: 'event_admin', 'visible': false},
-                    // { data: 'location', name: 'location' , 'visible': false},
-                    { data: 'size', name: 'size' },
-                    // { data: 'event_admin_name', name: 'event_admin_name' },
-                    { data: 'organizer', name: 'organizer' },
-                    { data: 'owner', name: 'owner' },
-                    { data: 'event_type', name: 'event_type' },
-                    { data: 'event_start_date', name: 'event_start_date'},
-                    { data: 'event_end_date', name: 'event_end_date'},
-                    { data: 'accreditation_start_date', name: 'accreditation_start_date'},
-                    { data: 'accreditation_end_date', name: 'accreditation_end_date'},
-                    // { data: 'accreditation_period', name: 'accreditation_period' },
-                    { data: 'status', render:function (data){ if(data == 1) { return "<span style='color: green'>Active</span>"} else{ return "<span style='color: red'>InActive</span>" }}},
-                    // { data: 'approval_option', name: 'approval_option' , 'visible': false},
-                    // { data: 'security_officer', name: 'security_officer' , 'visible': false},
-                    // { data: 'event_form', name: 'event_form' , 'visible': false},
-                    // { data: 'creation_date', name: 'creation_date' , 'visible': false},
-                    // { data: 'creator', name: 'creator' , 'visible': false},
-                    // { data: 'created_at', name: 'created_at' , 'visible': false},
-                    // { data: 'uploaded_at', name: 'uploaded_at' , 'visible': false},
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'name', name: 'name'},
+                    {data: 'size', name: 'size'},
+                    {data: 'organizer', name: 'organizer'},
+                    {data: 'template_name', name: 'template_name'},
+                    {data: 'event_type', name: 'event_type'},
+                    {data: 'event_start_date', name: 'event_start_date'},
+                    {data: 'event_end_date', name: 'event_end_date'},
+                    {data: 'accreditation_start_date', name: 'accreditation_start_date'},
+                    {data: 'accreditation_end_date', name: 'accreditation_end_date'},
+                    {
+                        data: 'status', render: function (data) {
+                            if (data == 1) {
+                                return "<span style='color: green'>Active</span>"
+                            } else {
+                                return "<span style='color: red'>InActive</span>"
+                            }
+                        }
+                    },
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]
@@ -127,12 +122,10 @@
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Post");
-                //$('#ajax-crud-modal').modal('show');
-
             });
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
         });
     </script>

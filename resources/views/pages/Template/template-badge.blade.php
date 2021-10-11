@@ -113,7 +113,8 @@
                                 <div class="form-group col">
                                     <label>Width</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="width" min="100" name="width" placeholder="enter width (Pixel)"
+                                        <input type="number" id="width" min="100" name="width"
+                                               placeholder="enter width (Pixel)"
                                                required="">
                                     </div>
                                 </div>
@@ -122,7 +123,8 @@
                                 <div class="form-group col">
                                     <label>High</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="high" name="high" min="100" placeholder="enter high (Pixel)"
+                                        <input type="number" id="high" name="high" min="100"
+                                               placeholder="enter high (Pixel)"
                                                required="">
                                     </div>
                                 </div>
@@ -148,8 +150,8 @@
                                             @foreach ($templates as $template)
                                                 <option value="{{ $template->id }}" data-slug="{{$template->name}}"
                                                         @if ($template->id == 1)
-                                                            selected="selected"
-                                                        @endif
+                                                        selected="selected"
+                                                    @endif
                                                 >{{ $template->name }}</option>
                                             @endforeach
                                         </select>
@@ -233,7 +235,7 @@
                     extend: 'excelHtml5',
                     title: 'Badge',
                     exportOptions: {
-                        columns: [2, 3, 4, 6,7]
+                        columns: [2, 3, 4, 6, 7]
                     }
                 }],
 
@@ -422,7 +424,6 @@
                 }
             })
         }
-
 
 
         $('.img-upload').submit(function (e) {

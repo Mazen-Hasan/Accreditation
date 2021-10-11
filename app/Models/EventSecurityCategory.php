@@ -10,6 +10,6 @@ class EventSecurityCategory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'event_id','security_category_id','order'
+        'event_id', 'security_category_id', 'order'
     ];
 }

@@ -11,7 +11,7 @@
         <br>
         <div class="row">
             <div class="col-12 grid-margin">
-                <div class="card"  style="border-radius: 20px">
+                <div class="card" style="border-radius: 20px">
                     <div class="card-body">
                         <h4 class="card-title">Company / Participants - Edit</h4>
                         <form class="form-sample" id="postForm" name="postForm">
@@ -26,7 +26,9 @@
                                     <div class="form-group col">
                                         <label class="col-form-label">First Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="first_name" name="first_name" value="{{$post->first_name}}" required="" placeholder="enter first name"/>
+                                            <input type="text" class="input100" id="first_name" name="first_name"
+                                                   value="{{$post->first_name}}" required=""
+                                                   placeholder="enter first name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -34,7 +36,9 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Last Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="last_name" name="last_name" value="{{$post->last_name}}" required=""placeholder="enter last name"/>
+                                            <input type="text" class="input100" id="last_name" name="last_name"
+                                                   value="{{$post->last_name}}" required=""
+                                                   placeholder="enter last name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -44,7 +48,9 @@
                                     <div class="form-group col">
                                         <label class="col-form-label">First Name Arabic</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="first_name_ar" name="first_name_ar" value="{{$post->first_name_ar}}" required="" placeholder="enter first name arabic"/>
+                                            <input type="text" class="input100" id="first_name_ar" name="first_name_ar"
+                                                   value="{{$post->first_name_ar}}" required=""
+                                                   placeholder="enter first name arabic"/>
                                         </div>
                                     </div>
                                 </div>
@@ -52,7 +58,9 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Last Name Arabic</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="last_name_ar" name="last_name_ar" value="{{$post->last_name_ar}}" required=""placeholder="enter last name arabic"/>
+                                            <input type="text" class="input100" id="last_name_ar" name="last_name_ar"
+                                                   value="{{$post->last_name_ar}}" required=""
+                                                   placeholder="enter last name arabic"/>
                                         </div>
                                     </div>
                                 </div>
@@ -62,7 +70,9 @@
                                     <div class="form-group col">
                                         <label class="col-form-label">Nationality</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="nationality" name="nationality" value="{{$post->nationality}}" required="" placeholder="enter nationality"/>
+                                            <input type="text" class="input100" id="nationality" name="nationality"
+                                                   value="{{$post->nationality}}" required=""
+                                                   placeholder="enter nationality"/>
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +80,8 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="email" name="email" value="{{$post->email}}" required=""placeholder="enter email"/>
+                                            <input type="text" class="input100" id="email" name="email"
+                                                   value="{{$post->email}}" required="" placeholder="enter email"/>
                                         </div>
                                     </div>
                                 </div>
@@ -80,7 +91,8 @@
                                     <div class="form-group col">
                                         <label class="col-form-label">Mobile</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="mobile" name="mobile" value="{{$post->mobile}}" required="" placeholder="enter mobile"/>
+                                            <input type="text" class="input100" id="mobile" name="mobile"
+                                                   value="{{$post->mobile}}" required="" placeholder="enter mobile"/>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +100,9 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Position</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="position" name="position" value="{{$post->position}}" required=""placeholder="enter position"/>
+                                            <input type="text" class="input100" id="position" name="position"
+                                                   value="{{$post->position}}" required=""
+                                                   placeholder="enter position"/>
                                         </div>
                                     </div>
                                 </div>
@@ -115,7 +129,8 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Address</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="address" name="address" value="{{$post->address}}" required=""placeholder="enter address"/>
+                                            <input type="text" class="input100" id="address" name="address"
+                                                   value="{{$post->address}}" required="" placeholder="enter address"/>
                                         </div>
                                     </div>
                                 </div>
@@ -125,7 +140,9 @@
                                     <div class="form-group col">
                                         <label class="col-form-label">Birthdate</label>
                                         <div class="col-sm-12">
-                                            <input type="date" class="input100" id="birthdate" name="birthdate" value="{{$post->birthdate}}" required="" placeholder="enter birthdate"/>
+                                            <input type="date" class="input100" id="birthdate" name="birthdate"
+                                                   value="{{$post->birthdate}}" required=""
+                                                   placeholder="enter birthdate"/>
                                         </div>
                                     </div>
                                 </div>
@@ -152,7 +169,9 @@
                                     <div class="form-group col">
                                         <label class="col-form-label">Passport Number</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="passport_number" name="passport_number" value="{{$post->passport_number}}" required="" placeholder="enter passport number"/>
+                                            <input type="text" class="input100" id="passport_number"
+                                                   name="passport_number" value="{{$post->passport_number}}" required=""
+                                                   placeholder="enter passport number"/>
                                         </div>
                                     </div>
                                 </div>
@@ -160,7 +179,9 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">ID Number</label>
                                         <div class="col-sm-12">
-                                            <input type="text" class="input100" id="id_number" name="id_number" value="{{$post->id_number}}" required=""placeholder="enter ID number"/>
+                                            <input type="text" class="input100" id="id_number" name="id_number"
+                                                   value="{{$post->id_number}}" required=""
+                                                   placeholder="enter ID number"/>
                                         </div>
                                     </div>
                                 </div>
@@ -187,7 +208,8 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Accreditation Category</label>
                                         <div class="col-sm-12">
-                                            <select class="input100 minimal" id="accreditation_category" name="accreditation_category" required="">
+                                            <select class="input100 minimal" id="accreditation_category"
+                                                    name="accreditation_category" required="">
                                                 @foreach ($accreditationCategoriesSelectOption as $accreditationCategorySelectOption)
                                                     <option value="{{ $accreditationCategorySelectOption->key }}"
                                                             {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -219,7 +241,7 @@
     {{--    <script src="js/typeahead.js"></script>--}}
     {{--    <script src="js/select2.js"></script>--}}
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -268,7 +290,7 @@
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');

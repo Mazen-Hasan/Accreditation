@@ -12,7 +12,7 @@
         <br>
         <div class="row">
             <div class="col-12 grid-margin">
-                <div class="card"  style="border-radius: 20px">
+                <div class="card" style="border-radius: 20px">
                     <div class="card-body">
                         <h4 class="card-title">Contact - New</h4>
                         <form class="form-sample" id="postForm" name="postForm">
@@ -25,7 +25,8 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" placeholder="enter name" required=""/>
+                                            <input type="text" id="name" name="name" placeholder="enter name"
+                                                   required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -33,7 +34,8 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="email" name="email" placeholder="enter email" required=""/>
+                                            <input type="text" id="email" name="email" placeholder="enter email"
+                                                   required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -43,7 +45,8 @@
                                     <div class="form-group col">
                                         <label>Last Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="last_name" name="last_name" placeholder="enter last name" required=""/>
+                                            <input type="text" id="last_name" name="last_name"
+                                                   placeholder="enter last name" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -51,7 +54,8 @@
                                     <div class="form-group col">
                                         <label>Middle Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="middle_name" name="middle_name" placeholder="enter middle name" required=""/>
+                                            <input type="text" id="middle_name" name="middle_name"
+                                                   placeholder="enter middle name" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -61,7 +65,8 @@
                                     <div class="form-group col">
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="telephone" name="telephone" placeholder="enter telephone" required=""/>
+                                            <input type="text" id="telephone" name="telephone"
+                                                   placeholder="enter telephone" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -69,7 +74,8 @@
                                     <div class="form-group col">
                                         <label>Mobile</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="mobile" name="mobile" placeholder="enter mobile" required=""/>
+                                            <input type="text" id="mobile" name="mobile" placeholder="enter mobile"
+                                                   required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -79,7 +85,8 @@
                                     <div class="form-group col">
                                         <label>Title</label>
                                         <div class="col-sm-12">
-                                            <select multiple id="titles" name="titles[]" value="" required="" style="height:150px">
+                                            <select multiple id="titles" name="titles[]" value="" required=""
+                                                    style="height:150px">
                                                 @foreach ($titles as $titles)
                                                     <option value="{{ $titles->key }}"
                                                             @if ($titles->key == 1)
@@ -121,7 +128,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -139,7 +146,7 @@
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');

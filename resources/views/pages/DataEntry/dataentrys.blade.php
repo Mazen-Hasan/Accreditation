@@ -51,7 +51,7 @@
                                     <th>Account Email</th>
                                     <th>Company</th>
                                     <th>Status</th>
-{{--                                    <th style="color: black">Status</th>--}}
+                                    {{--                                    <th style="color: black">Status</th>--}}
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -73,16 +73,18 @@
                 <div class="modal-body">
                     <input type="hidden" name="user_id" id="user_id" value="">
                     <div class="form-group">
-                            <label for="name">Password</label>
-                            <div class="col-sm-12">
-                                <input type="password" id="password" name="password" placeholder="enter passsword" required="">
-                            </div>
+                        <label for="name">Password</label>
+                        <div class="col-sm-12">
+                            <input type="password" id="password" name="password" placeholder="enter passsword"
+                                   required="">
+                        </div>
                     </div>
                     <div class="form-group">
-                            <label for="name">Confirm Password</label>
-                            <div class="col-sm-12">
-                                <input type="password" id="confirm_password" name="confirm_password" placeholder="confirm password" required="">
-                            </div>
+                        <label for="name">Confirm Password</label>
+                        <div class="col-sm-12">
+                            <input type="password" id="confirm_password" name="confirm_password"
+                                   placeholder="confirm password" required="">
+                        </div>
                     </div>
                     <div class="col-sm-offset-2 col-sm-10">
                         <button id="reset-password-btn" value="create">Reset Password
@@ -98,7 +100,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -111,7 +113,7 @@
                     extend: 'excelHtml5',
                     title: 'Contacts',
                     exportOptions: {
-                        columns: [ 1,2,3,4,5,6,7,8 ]
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
                     }
                 }],
 
@@ -122,22 +124,30 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'name', name: 'name'},
-                    { data: 'email', name: 'email' },
-                    { data: 'telephone', name: 'telephone' },
-                    { data: 'mobile', name: 'mobile'},
-                    { data: 'account_name', name: 'account_name'},
-                    { data: 'account_email', name: 'account_email'},
-                    { data: 'company_name', name: 'company_name'},
-                    { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ return "<p style='color: red'>InActive</p>" }}},
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'name', name: 'name'},
+                    {data: 'email', name: 'email'},
+                    {data: 'telephone', name: 'telephone'},
+                    {data: 'mobile', name: 'mobile'},
+                    {data: 'account_name', name: 'account_name'},
+                    {data: 'account_email', name: 'account_email'},
+                    {data: 'company_name', name: 'company_name'},
+                    {
+                        data: 'status', render: function (data) {
+                            if (data == 1) {
+                                return "<p style='color: green'>Active</p>"
+                            } else {
+                                return "<p style='color: red'>InActive</p>"
+                            }
+                        }
+                    },
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
             $('#add-new-post').click(function () {
@@ -164,7 +174,7 @@
                 var password = $('#password').val();
                 $.ajax({
                     type: "get",
-                    url: "dataentryController/reset_password/"+userId+"/"+password,
+                    url: "dataentryController/reset_password/" + userId + "/" + password,
                     success: function (data) {
                         $('#ajax-crud-modal').modal('hide');
                     },

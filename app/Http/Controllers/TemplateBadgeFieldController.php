@@ -16,13 +16,13 @@ class TemplateBadgeFieldController extends Controller
         $where = array('id' => $badge_id);
         $templateBadge = TemplateBadge::where($where)->get()->first();
 
-        $templateFields = DB::select('select * from template_fields_view v where v.template_id = ?',[$templateBadge->template_id]);
+        $templateFields = DB::select('select * from template_fields_view v where v.template_id = ?', [$templateBadge->template_id]);
 
         if (request()->ajax()) {
             $templaeBadgeFileds = DB::select('select * from template_badge_fields_view where  badge_id = ?', [$badge_id]);
             return datatables()->of($templaeBadgeFileds)
                 ->addColumn('action', function ($data) {
-                    $button ='';
+                    $button = '';
                     if ($data->is_locked == 0) {
                         $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-field">Edit</a>';
                         $button .= '&nbsp;&nbsp;';
@@ -38,7 +38,7 @@ class TemplateBadgeFieldController extends Controller
         $where = array('id' => $badge_id);
         $badge = TemplateBadge::where($where)->first();
 
-        return view('pages.Template.template-badge-fields')->with('badge',$badge)->with('templateFields',$templateFields);
+        return view('pages.Template.template-badge-fields')->with('badge', $badge)->with('templateFields', $templateFields);
     }
 
     public function store(Request $request)
@@ -48,12 +48,12 @@ class TemplateBadgeFieldController extends Controller
         $where = array('id' => $templateFieldId);
         $templateFiled = TemplateField::where($where)->first();
 
-        $templateBadgeField   =   TemplateBadgeFields::updateOrCreate(['id' => $request->field_id],
-            [   'badge_id'  => $request->badge_id,
-                'template_field_id'  => $request->template_field_id,
+        $templateBadgeField = TemplateBadgeFields::updateOrCreate(['id' => $request->field_id],
+            ['badge_id' => $request->badge_id,
+                'template_field_id' => $request->template_field_id,
                 'template_field_name' => $templateFiled->label_en,
                 'position_x' => $request->position_x,
-                'position_y'  =>  $request->position_y,
+                'position_y' => $request->position_y,
                 'size' => $request->size,
                 'text_color' => $request->text_color,
                 'bg_color' => $request->bg_color,

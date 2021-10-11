@@ -1,4 +1,4 @@
-.content-wrapper{
+.content-wrapper {
     background: transparent;
     /*margin-left: 200px;*/
 
@@ -8,7 +8,7 @@
 /*    margin-left: 200px;*/
 /*}*/
 
-.footer{
+.footer {
     background: transparent;
 }
 
@@ -67,7 +67,7 @@ a:hover {
 }
 
 /*---------------------------------------------*/
-h1,h2,h3,h4,h5,h6 {
+h1, h2, h3, h4, h5, h6 {
     margin: 0px;
 }
 
@@ -96,25 +96,69 @@ textarea:focus, input:focus {
     border-color: transparent !important;
 }
 
-input:focus::-webkit-input-placeholder { color:transparent; }
-input:focus:-moz-placeholder { color:transparent; }
-input:focus::-moz-placeholder { color:transparent; }
-input:focus:-ms-input-placeholder { color:transparent; }
+input:focus::-webkit-input-placeholder {
+    color: transparent;
+}
 
-textarea:focus::-webkit-input-placeholder { color:transparent; }
-textarea:focus:-moz-placeholder { color:transparent; }
-textarea:focus::-moz-placeholder { color:transparent; }
-textarea:focus:-ms-input-placeholder { color:transparent; }
+input:focus:-moz-placeholder {
+    color: transparent;
+}
 
-input::-webkit-input-placeholder { color: #999999; }
-input:-moz-placeholder { color: #999999; }
-input::-moz-placeholder { color: #999999; }
-input:-ms-input-placeholder { color: #999999; }
+input:focus::-moz-placeholder {
+    color: transparent;
+}
 
-textarea::-webkit-input-placeholder { color: #999999; }
-textarea:-moz-placeholder { color: #999999; }
-textarea::-moz-placeholder { color: #999999; }
-textarea:-ms-input-placeholder { color: #999999; }
+input:focus:-ms-input-placeholder {
+    color: transparent;
+}
+
+textarea:focus::-webkit-input-placeholder {
+    color: transparent;
+}
+
+textarea:focus:-moz-placeholder {
+    color: transparent;
+}
+
+textarea:focus::-moz-placeholder {
+    color: transparent;
+}
+
+textarea:focus:-ms-input-placeholder {
+    color: transparent;
+}
+
+input::-webkit-input-placeholder {
+    color: #999999;
+}
+
+input:-moz-placeholder {
+    color: #999999;
+}
+
+input::-moz-placeholder {
+    color: #999999;
+}
+
+input:-ms-input-placeholder {
+    color: #999999;
+}
+
+textarea::-webkit-input-placeholder {
+    color: #999999;
+}
+
+textarea:-moz-placeholder {
+    color: #999999;
+}
+
+textarea::-moz-placeholder {
+    color: #999999;
+}
+
+textarea:-ms-input-placeholder {
+    color: #999999;
+}
 
 /*---------------------------------------------*/
 button {
@@ -236,7 +280,7 @@ iframe {
     margin-bottom: 21px;
 }
 
-.input100  {
+.input100 {
     font-family: Poppins-Regular;
     font-size: 15px;
     line-height: 1.5;
@@ -251,7 +295,7 @@ iframe {
 }
 
 
-.input100::placeholder{
+.input100::placeholder {
     text-transform: capitalize;
 }
 
@@ -267,7 +311,7 @@ iframe {
     width: 100%;
     height: 100%;
     box-shadow: 0px 0px 0px 0px;
-    color: rgba(87,184,70, 0.8);
+    color: rgba(87, 184, 70, 0.8);
 }
 
 .input100:focus + .focus-input100 {
@@ -364,10 +408,8 @@ iframe {
 }
 
 
-
 /*------------------------------------------------------------------
 [ Responsive ]*/
-
 
 
 @media (max-width: 992px) {
@@ -472,7 +514,7 @@ iframe {
     }
 }
 
-.form-group label{
+.form-group label {
     font-family: Poppins-Regular;
     font-size: 26px;
     color: #000000;
@@ -523,7 +565,7 @@ iframe {
     transition: all 0.4s;
 }
 
-.ha_btn:hover{
+.ha_btn:hover {
     background-color: #333333;
     color: #fff;
 }
@@ -532,7 +574,7 @@ iframe {
     text-transform: capitalize;
 }
 
-select{
+select {
     border: none;
 }
 
@@ -553,18 +595,15 @@ select {
 /* arrows */
 
 select.minimal {
-    background-image:
-        linear-gradient(45deg, transparent 50%, gray 50%),
-        linear-gradient(135deg, gray 50%, transparent 50%),
-        linear-gradient(to right, #ccc, #ccc);
-    background-position:
-        calc(100% - 20px) calc(1em + 6px),
-        calc(100% - 15px) calc(1em + 6px),
-        calc(100% - 2.5em) 0.8em;
-    background-size:
-        5px 5px,
-        5px 5px,
-        1px 1.5em;
+    background-image: linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%),
+    linear-gradient(to right, #ccc, #ccc);
+    background-position: calc(100% - 20px) calc(1em + 6px),
+    calc(100% - 15px) calc(1em + 6px),
+    calc(100% - 2.5em) 0.8em;
+    background-size: 5px 5px,
+    5px 5px,
+    1px 1.5em;
     background-repeat: no-repeat;
 }
 
@@ -573,7 +612,7 @@ select:-moz-focusring {
     text-shadow: 0 0 0 #000;
 }
 
-label{
+label {
     font-family: Poppins-Regular;
     font-size: 26px;
     color: #000000;
@@ -658,7 +697,7 @@ input {
 }
 
 
-input::placeholder{
+input::placeholder {
     text-transform: capitalize;
 }
 
@@ -679,7 +718,7 @@ textarea {
     padding: 10px 5px 0 25px;
 }
 
-textarea::placeholder{
+textarea::placeholder {
     text-transform: capitalize;
 }
 
@@ -696,27 +735,24 @@ select {
     border-radius: 10px;
     padding: 0 5px 0 25px;
 
-    background-image:
-        linear-gradient(45deg, transparent 50%, gray 50%),
-        linear-gradient(135deg, gray 50%, transparent 50%),
-        linear-gradient(to right, #ccc, #ccc);
-    background-position:
-        calc(100% - 20px) calc(1em + 6px),
-        calc(100% - 15px) calc(1em + 6px),
-        calc(100% - 2.5em) 0.8em;
-    background-size:
-        5px 5px,
-        5px 5px,
-        1px 1.5em;
+    background-image: linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%),
+    linear-gradient(to right, #ccc, #ccc);
+    background-position: calc(100% - 20px) calc(1em + 6px),
+    calc(100% - 15px) calc(1em + 6px),
+    calc(100% - 2.5em) 0.8em;
+    background-size: 5px 5px,
+    5px 5px,
+    1px 1.5em;
     background-repeat: no-repeat;
 }
 
-select[multiple]{
+select[multiple] {
     height: 150px;
     background-image: none;
 }
 
-.user_name{
+.user_name {
     font-family: Poppins-Regular;
     font-size: 18px;
     font-weight: 500;
@@ -724,7 +760,7 @@ select[multiple]{
     color: #000000;
 }
 
-.user_role{
+.user_role {
     font-family: Poppins-Regular;
     font-size: 15px;
     font-weight: 400;
@@ -732,26 +768,26 @@ select[multiple]{
     color: #000000;
 }
 
-.card_event_title{
+.card_event_title {
     font-family: Poppins-Bold;
     font-size: 16px;
     color: #000000;
     margin-bottom: 0.75rem;
 }
 
-.card_event_label{
+.card_event_label {
     font-family: Poppins-Regular;
     font-size: 14px;
     color: #b8b5b5;
 }
 
-.card_event_text{
+.card_event_text {
     font-family: Poppins-Bold;
     font-size: 16px;
     color: #b8b5b5;
 }
 
-.logout{
+.logout {
     font-family: Poppins-Regular;
     font-size: 20px;
     font-weight: 500;
@@ -761,47 +797,47 @@ select[multiple]{
     color: #484848;
 }
 
-.menu_item{
+.menu_item {
     margin-right: 1rem;
     margin-left: 2rem;
     color: #484848;
     alignment: right;
 }
 
-#laravel_datatable_filter{
+#laravel_datatable_filter {
     margin-right: 40px;
-    width:200px;
+    width: 200px;
 }
 
-#laravel_datatable_length label{
+#laravel_datatable_length label {
     visibility: hidden;
 }
 
-#laravel_datatable_length label select{
+#laravel_datatable_length label select {
     visibility: visible;
-    height:40px;
-    width:70px;
+    height: 40px;
+    width: 70px;
 }
 
 button.navbar-toggler {
     background: transparent;
-    width:40px;
+    width: 40px;
 }
 
 .card {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
 }
 
 @media (min-width: 990px) {
-    #sidebar{
+    #sidebar {
         background: transparent;
     }
 }
 
 
 @media (max-width: 991px) {
-    #sidebar{
+    #sidebar {
         background: white;
         border-radius: 17px;
         margin-left: 10px;
@@ -826,11 +862,11 @@ button.navbar-toggler {
     transition: all 0.4s;
 }
 
-.add-hbtn:hover{
+.add-hbtn:hover {
     color: #000000;
 }
 
-.dt-hbtn{
+.dt-hbtn {
     margin-left: 11px;
 }
 
@@ -851,12 +887,12 @@ button.navbar-toggler {
     transition: all 0.4s;
 }
 
-.url-nav:hover{
+.url-nav:hover {
     color: #0000ff;
     text-decoration: underline;
 }
 
-.buttons-excel{
+.buttons-excel {
     display: none;
 }
 
@@ -873,7 +909,7 @@ button.navbar-toggler {
     text-transform: none;
 }
 
-input[type=checkbox]{
+input[type=checkbox] {
     width: 20px;
     margin-left: 20px;
 }
@@ -888,46 +924,57 @@ input[type=checkbox]{
     background: #f6021f;
 }
 
-.progress{
-    display:-ms-flexbox;
-    display:flex;
-    height:1rem;
-    overflow:hidden;
-    font-size:.75rem;
-    background-color:#e9ecef;
-    border-radius:.25rem
+.progress {
+    display: -ms-flexbox;
+    display: flex;
+    height: 1rem;
+    overflow: hidden;
+    font-size: .75rem;
+    background-color: #e9ecef;
+    border-radius: .25rem
 }
-.progress-bar{
-    display:-ms-flexbox;
-    display:flex;
-    -ms-flex-direction:column;
-    flex-direction:column;
-    -ms-flex-pack:center;
-    justify-content:center;
-    color:#fff;
-    text-align:center;
-    white-space:nowrap;
-    background-color:#007bff;
-    transition:width .6s ease}
-@media (prefers-reduced-motion:reduce){
-    .progress-bar{transition:none}
+
+.progress-bar {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #007bff;
+    transition: width .6s ease
 }
-.progress-bar-striped{
-    background-image:linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
-    background-size:1rem 1rem}
-.progress-bar-animated{
-    -webkit-animation:progress-bar-stripes 1s linear infinite;
-    animation:progress-bar-stripes 1s linear infinite}
-@media (prefers-reduced-motion:reduce){
-    .progress-bar-animated{-webkit-animation:none;animation:none
+
+@media (prefers-reduced-motion: reduce) {
+    .progress-bar {
+        transition: none
+    }
+}
+
+.progress-bar-striped {
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+    background-size: 1rem 1rem
+}
+
+.progress-bar-animated {
+    -webkit-animation: progress-bar-stripes 1s linear infinite;
+    animation: progress-bar-stripes 1s linear infinite
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .progress-bar-animated {
+        -webkit-animation: none;
+        animation: none
     }
 }
 
 input[type="color"] {
-    border: 0;
     padding: 0;
     width: 100%;
-    height: 100%;
+    height: 40px;
     cursor: pointer;
 }
 
@@ -935,18 +982,17 @@ input[type="color"] {
     width: 100%;
     height: 40px;
     border-radius: 10px;
-    border-color: #cc3700;
-    padding: 5px;
-    /*overflow: hidden;*/
+    border: 1px solid #000000;
+    /*padding: 5px;*/
 }
 
-#eye{
+#eye {
     margin-left: -30px;
     margin-top: 14px;
     cursor: pointer;
 }
 
-label.error{
+label.error {
     padding-top: 10px;
     font-size: 15px;
     color: #ff0000;

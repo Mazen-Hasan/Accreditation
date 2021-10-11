@@ -116,15 +116,16 @@
                     });
                 }
             })
-        };
+        }
+        ;
 
         $("#add-new-field").click(function () {
 
             var html = '<div class="row" id="inputFormRow"><div class="col-md-5"><div class="form-group col">' +
                 '<label>' + $('#field-name').val() + '</label></div></div>' +
-                '<div class="col-md-5"><div class="form-group col">'+
-                '<label>' + $('#filedType').val() + '</label></div></div>'+
-                '<div class="col-md-1">'+
+                '<div class="col-md-5"><div class="form-group col">' +
+                '<label>' + $('#filedType').val() + '</label></div></div>' +
+                '<div class="col-md-1">' +
                 '<button id="removeRow" type="button" class="btn btn-danger">Remove</button></div></div>';
 
             $('#newRow').append(html);

@@ -1,4 +1,3 @@
-
 @extends('main')
 @section('subtitle',' Edit Contact')
 @section('style')
@@ -13,7 +12,7 @@
         <br>
         <div class="row">
             <div class="col-12 grid-margin">
-                <div class="card"  style="border-radius: 20px">
+                <div class="card" style="border-radius: 20px">
                     <div class="card-body">
                         <h4 class="card-title">Contact Management - Edit</h4>
                         <form class="form-sample" id="postForm" name="postForm">
@@ -26,7 +25,8 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" value="{{$post->name}}" required=""/>
+                                            <input type="text" id="name" name="name" value="{{$post->name}}"
+                                                   required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -34,7 +34,8 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="email" name="email" value="{{$post->email}}" required=""/>
+                                            <input type="text" id="email" name="email" value="{{$post->email}}"
+                                                   required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -44,7 +45,8 @@
                                     <div class="form-group col">
                                         <label>Last Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="last_name" name="last_name" value="{{$post->last_name}}" required=""/>
+                                            <input type="text" id="last_name" name="last_name"
+                                                   value="{{$post->last_name}}" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -52,7 +54,8 @@
                                     <div class="form-group col">
                                         <label>Middle Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="middle_name" name="middle_name" value="{{$post->middle_name}}" required=""/>
+                                            <input type="text" id="middle_name" name="middle_name"
+                                                   value="{{$post->middle_name}}" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -62,7 +65,8 @@
                                     <div class="form-group col">
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="telephone" name="telephone" value="{{$post->telephone}}" required=""/>
+                                            <input type="text" id="telephone" name="telephone"
+                                                   value="{{$post->telephone}}" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +74,8 @@
                                     <div class="form-group col">
                                         <label>Mobile</label>
                                         <div class="col-sm-12">
-                                            <input type="text"id="mobile" name="mobile" value="{{$post->mobile}}" required=""/>
+                                            <input type="text" id="mobile" name="mobile" value="{{$post->mobile}}"
+                                                   required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -83,7 +88,7 @@
                                             <select id="status" name="status" value="" required="" style="">
                                                 @foreach ($contactStatuss as $contactStatus)
                                                     <option value="{{ $contactStatus->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($contactStatus->key == $post->status)
                                                             selected="selected"
                                                         @endif
@@ -106,12 +111,13 @@
                                     <div class="card-body">
                                         <h4 class="card-title">Contact Title Table</h4>
                                         <div class="table-responsive">
-                                            <table class="table table-hover" id="laravel_datatable" style="text-align: center">
+                                            <table class="table table-hover" id="laravel_datatable"
+                                                   style="text-align: center">
                                                 <thead>
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>Title</th>
-{{--                                                    <th style="color: black">Status</th>--}}
+                                                    {{--                                                    <th style="color: black">Status</th>--}}
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -137,25 +143,25 @@
                     <h4 class="modal-title" id="postCrudModal"></h4>
                 </div>
                 <div class="modal-body">
-                        <input type="hidden" name="contact_id" id="contact_id" value="{{$post->id}}">
-                        <div class="form-group">
-                            <label>Status</label>
-                            <div class="col-sm-12">
-                                <select id="contactTitle" name="contactTitle" value="" required="">
-                                    @foreach ($titlesSelectOptions as $titlesSelectOptions)
-                                        <option value="{{ $titlesSelectOptions->key }}"
-                                            @if ($titlesSelectOptions->key == 1)
-                                                selected="selected"
-                                            @endif
-                                        >{{ $titlesSelectOptions->value }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                    <input type="hidden" name="contact_id" id="contact_id" value="{{$post->id}}">
+                    <div class="form-group">
+                        <label>Status</label>
                         <div class="col-sm-12">
-                            <button id="btn-contact_title-save" value="create">Save
-                            </button>
+                            <select id="contactTitle" name="contactTitle" value="" required="">
+                                @foreach ($titlesSelectOptions as $titlesSelectOptions)
+                                    <option value="{{ $titlesSelectOptions->key }}"
+                                            @if ($titlesSelectOptions->key == 1)
+                                            selected="selected"
+                                        @endif
+                                    >{{ $titlesSelectOptions->value }}</option>
+                                @endforeach
+                            </select>
                         </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <button id="btn-contact_title-save" value="create">Save
+                        </button>
+                    </div>
                 </div>
                 <div class="modal-footer">
 
@@ -166,7 +172,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -211,7 +217,7 @@
                 confirm("Are You sure want to remove contact title ?!");
                 $.ajax({
                     type: "get",
-                    url: "../contactController/removeContactTitle/"+post_id,
+                    url: "../contactController/removeContactTitle/" + post_id,
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -228,7 +234,7 @@
                 //confirm("Are You sure want to deActivate ?!");
                 $.ajax({
                     type: "get",
-                    url: "../contactController/storeContactTitle/"+contact_id+"/"+title_id,
+                    url: "../contactController/storeContactTitle/" + contact_id + "/" + title_id,
                     success: function (data) {
                         //alert(data);
                         $('#ajax-crud-modal').modal('hide');
@@ -243,7 +249,7 @@
         });
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');

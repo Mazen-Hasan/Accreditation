@@ -10,6 +10,6 @@ class contactTitle extends Model
     use HasFactory;
 
     protected $fillable = [
-         'contact_id','title_id','status'
+        'contact_id', 'title_id', 'status'
     ];
 }

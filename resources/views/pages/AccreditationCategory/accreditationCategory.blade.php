@@ -94,7 +94,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -110,7 +111,8 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel</button>
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                            </button>
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
@@ -123,7 +125,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -136,7 +138,7 @@
                     extend: 'excelHtml5',
                     title: 'Accreditation-Categories',
                     exportOptions: {
-                        columns: [ 1,2 ]
+                        columns: [1, 2]
                     }
                 }],
 
@@ -147,16 +149,24 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'name', name: 'name' },
-                    { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ return "<p style='color: red'>InActive</p>" }}},
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'name', name: 'name'},
+                    {
+                        data: 'status', render: function (data) {
+                            if (data == 1) {
+                                return "<p style='color: green'>Active</p>"
+                            } else {
+                                return "<p style='color: red'>InActive</p>"
+                            }
+                        }
+                    },
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
             $('#add-new-post').click(function () {
@@ -171,7 +181,7 @@
             $('body').on('click', '.edit-post', function () {
                 var post_id = $(this).data('id');
                 //alert(post_id);
-                $.get('accreditationCategoryController/'+post_id+'/edit', function (data) {
+                $.get('accreditationCategoryController/' + post_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#email-error').hide();
                     $('#postCrudModal').html("Edit Accreditation Category");
@@ -188,7 +198,7 @@
                 $('#confirmTitle').html('Delete Accrediation Category');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('delete');
-                var confirmText =  'Are You sure want to delete ?';
+                var confirmText = 'Are You sure want to delete ?';
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
                 // confirm("Are You sure want to delete !");
@@ -203,14 +213,14 @@
                 //                     console.log('Error:', data);
                 //                 }
                 //             });
-                
+
             });
             $('body').on('click', '#activate-title', function () {
                 var post_id = $(this).data("id");
                 $('#confirmTitle').html('Activate Accrediation Category');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('activate');
-                var confirmText =  "Are You sure want to activate ?!";
+                var confirmText = "Are You sure want to activate ?!";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
                 // confirm("Are You sure want to activate ?!");
@@ -231,7 +241,7 @@
                 $('#confirmTitle').html('Deactivate Accrediation Category');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('deactivate');
-                var confirmText =  "Are You sure want to deactivate ?!";
+                var confirmText = "Are You sure want to deactivate ?!";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
                 // confirm("Are You sure want to deActivate ?!");
@@ -247,16 +257,16 @@
                 //     }
                 // });
             });
-            $('#delete-element-confirm-modal button').on('click', function(event) {
+            $('#delete-element-confirm-modal button').on('click', function (event) {
                 var $button = $(event.target);
-                $(this).closest('.modal').one('hidden.bs.modal', function() {
-                    if($button[0].id === 'btn-yes'){
+                $(this).closest('.modal').one('hidden.bs.modal', function () {
+                    if ($button[0].id === 'btn-yes') {
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
-                        if(action_button == 'delete'){
+                        if (action_button == 'delete') {
                             $.ajax({
                                 type: "get",
-                                url: "accreditationCategoryController/destroy/"+post_id,
+                                url: "accreditationCategoryController/destroy/" + post_id,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -266,10 +276,10 @@
                                 }
                             });
                         }
-                        if(action_button == 'activate'){
+                        if (action_button == 'activate') {
                             $.ajax({
                                 type: "get",
-                                url: "accreditationCategoryController/changeStatus/"+post_id+"/1",
+                                url: "accreditationCategoryController/changeStatus/" + post_id + "/1",
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -279,10 +289,10 @@
                                 }
                             });
                         }
-                        if(action_button == 'deactivate'){
+                        if (action_button == 'deactivate') {
                             $.ajax({
                                 type: "get",
-                                url: "accreditationCategoryController/changeStatus/"+post_id+"/0",
+                                url: "accreditationCategoryController/changeStatus/" + post_id + "/0",
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -300,7 +310,7 @@
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');

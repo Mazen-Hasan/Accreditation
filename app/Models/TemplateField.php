@@ -10,6 +10,6 @@ class TemplateField extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id','template_id','label_ar','label_en','mandatory','min_char','max_char', 'field_order','field_type_id'
+        'id', 'template_id', 'label_ar', 'label_en', 'mandatory', 'min_char', 'max_char', 'field_order', 'field_type_id'
     ];
 }

@@ -19,12 +19,12 @@ class TemplateFieldController extends Controller
     public function index($template_id)
     {
         if (request()->ajax()) {
-            $templateFields = DB::select('select * from template_fields_view v where v.template_id = ?',[$template_id]);
+            $templateFields = DB::select('select * from template_fields_view v where v.template_id = ?', [$template_id]);
             return datatables()->of($templateFields)
                 ->addColumn('action', function ($data) {
-                    $button ='';
-                    if($data->is_locked == 0){
-                        if(strtolower($data->label_en) != 'company' and strtolower($data->label_en) != 'event'){
+                    $button = '';
+                    if ($data->is_locked == 0) {
+                        if (strtolower($data->label_en) != 'company' and strtolower($data->label_en) != 'event') {
                             $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="edit-field"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-feild">Edit</a>';
                             $button .= '&nbsp;&nbsp;';
                             $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-field">Delete</a>';
@@ -46,18 +46,18 @@ class TemplateFieldController extends Controller
         $where = array('id' => $template_id);
         $template = Template::where($where)->first();
 
-        return view('pages.Template.template-fields')->with('template',$template)->with('fieldTypes', $fieldTypes);
+        return view('pages.Template.template-fields')->with('template', $template)->with('fieldTypes', $fieldTypes);
     }
 
     public function store(Request $request)
     {
         $fieldId = $request->field_id;
 
-        $templateField   =   TemplateField::updateOrCreate(['id' => $fieldId],
-            ['template_id'  => $request->template_id,
+        $templateField = TemplateField::updateOrCreate(['id' => $fieldId],
+            ['template_id' => $request->template_id,
                 'label_ar' => $request->label_ar,
                 'label_en' => $request->label_en,
-                'mandatory'  =>  $request->has('mandatory'),
+                'mandatory' => $request->has('mandatory'),
                 'min_char' => $request->min_char,
                 'max_char' => $request->max_char,
                 'field_type_id' => $request->field_type,

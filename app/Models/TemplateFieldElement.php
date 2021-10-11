@@ -10,6 +10,6 @@ class TemplateFieldElement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'value_ar','value_en','value_id','order','template_field_id'
+        'value_ar', 'value_en', 'value_id', 'order', 'template_field_id'
     ];
 }

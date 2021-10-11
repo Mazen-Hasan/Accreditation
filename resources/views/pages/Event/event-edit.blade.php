@@ -11,9 +11,14 @@
         <br><br>
         <div class="row">
             <div class="col-12 grid-margin">
-                <div class="card"  style="border-radius: 20px">
+                <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Event Management - New</h4>
+                        <h4 class="card-title">
+                            <a class="url-nav" href="{{route('events')}}">
+                                <span>Events:</span>
+                            </a>
+                            {{$event->name}} / Edit
+                        </h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
@@ -24,7 +29,8 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" value="{{$event->name}}" required="" placeholder="enter name"/>
+                                            <input type="text" id="name" name="name" value="{{$event->name}}"
+                                                   required="" placeholder="enter name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -32,7 +38,8 @@
                                     <div class="form-group col">
                                         <label>Size</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="size" name="size" value="{{$event->size}}" placeholder="enter size" required=""/>
+                                            <input type="text" id="size" name="size" value="{{$event->size}}"
+                                                   placeholder="enter size" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -42,7 +49,8 @@
                                     <div class="form-group col">
                                         <label>Event Start Date</label>
                                         <div class="col-sm-12">
-                                            <input type="date" id="event_start_date"  name="event_start_date" value="{{$event->event_start_date}}" required=""/>
+                                            <input type="date" id="event_start_date" name="event_start_date"
+                                                   value="{{$event->event_start_date}}" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -50,7 +58,8 @@
                                     <div class="form-group col">
                                         <label>Event End Date</label>
                                         <div class="col-sm-12">
-                                            <input type="date" id="event_end_date" name="event_end_date" value="{{$event->event_end_date}}"  required=""/>
+                                            <input type="date" id="event_end_date" name="event_end_date"
+                                                   value="{{$event->event_end_date}}" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -60,7 +69,9 @@
                                     <div class="form-group col">
                                         <label>Accreditation Start Date</label>
                                         <div class="col-sm-12">
-                                            <input type="date" id="accreditation_start_date" name="accreditation_start_date" value="{{$event->accreditation_start_date}}" required=""/>
+                                            <input type="date" id="accreditation_start_date"
+                                                   name="accreditation_start_date"
+                                                   value="{{$event->accreditation_start_date}}" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -68,7 +79,8 @@
                                     <div class="form-group col">
                                         <label>Accreditation End Date</label>
                                         <div class="col-sm-12">
-                                            <input type="date" id="accreditation_end_date" name="accreditation_end_date" value="{{$event->accreditation_end_date}}" required=""/>
+                                            <input type="date" id="accreditation_end_date" name="accreditation_end_date"
+                                                   value="{{$event->accreditation_end_date}}" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -78,7 +90,7 @@
                                     <div class="form-group col">
                                         <label>Event Admin</label>
                                         <div class="col-sm-12">
-                                           <select id="event_admin" name="event_admin" required="">
+                                            <select id="event_admin" name="event_admin" required="">
                                                 @foreach ($eventAdmins as $eventAdmin)
                                                     <option value="{{ $eventAdmin->key }}"
                                                             @if ($eventAdmin->key == $event->event_admin)
@@ -94,10 +106,10 @@
                                     <div class="form-group col">
                                         <label>Registration Form Template</label>
                                         <div class="col-sm-12">
-                                           <select id="event_form" name="event_form" required="">
+                                            <select id="event_form" name="event_form" required="">
                                                 @foreach ($eventForms as $eventForm)
                                                     <option value="{{ $eventForm->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($eventForm->key == $event->event_form)
                                                             selected="selected"
                                                         @endif
@@ -113,11 +125,11 @@
                                     <div class="form-group col">
                                         <label>Owner</label>
                                         <div class="col-sm-12">
-                                           <select id="owner" name="owner" required="">
+                                            <select id="owner" name="owner" required="">
                                                 @foreach ($owners as $owner)
                                                     <option value="{{ $owner->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                                @if ($owner->key == $event->owner)
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($owner->key == $event->owner)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $owner->value }}</option>
@@ -130,10 +142,10 @@
                                     <div class="form-group col">
                                         <label>Organizer</label>
                                         <div class="col-sm-12">
-                                           <select id="organizer" name="organizer" required="">
+                                            <select id="organizer" name="organizer" required="">
                                                 @foreach ($organizers as $organizer)
                                                     <option value="{{ $organizer->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($organizer->key == $event->organizer)
                                                             selected="selected"
                                                         @endif
@@ -144,15 +156,17 @@
                                     </div>
                                 </div>
                             </div>
-{{--                            <p class="card-description">--}}
-{{--                                Address--}}
-{{--                            </p>--}}
+                            {{--                            <p class="card-description">--}}
+                            {{--                                Address--}}
+                            {{--                            </p>--}}
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Location</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="location" name="location" value="{{$event->location}}"  placeholder="enter location"  required=""/>
+                                            <input type="text" id="location" name="location"
+                                                   value="{{$event->location}}" placeholder="enter location"
+                                                   required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -160,10 +174,10 @@
                                     <div class="form-group col">
                                         <label>Event Type</label>
                                         <div class="col-sm-12">
-                                           <select id="event_type" name="event_type" required="">
+                                            <select id="event_type" name="event_type" required="">
                                                 @foreach ($eventTypes as $eventType)
                                                     <option value="{{ $eventType->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($eventType->key == $event->event_type)
                                                             selected="selected"
                                                         @endif
@@ -179,10 +193,10 @@
                                     <div class="form-group col">
                                         <label>Security Option</label>
                                         <div class="col-sm-12">
-                                           <select id="approval_option" name="approval_option" required="">
+                                            <select id="approval_option" name="approval_option" required="">
                                                 @foreach ($approvalOptions as $approvalOption)
                                                     <option value="{{ $approvalOption->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($approvalOption->key == $event->approval_option)
                                                             selected="selected"
                                                         @endif
@@ -196,14 +210,14 @@
                                     <div class="form-group col">
                                         <label>Security Officer</label>
                                         <div class="col-sm-12">
-                                           <select id="security_officer" 
-                                           @if ($event->approval_option == 1)
-                                                disabled = true
-                                           @endif
-                                           name="security_officer" required="">
+                                            <select id="security_officer"
+                                                    @if ($event->approval_option == 1)
+                                                    disabled=true
+                                                    @endif
+                                                    name="security_officer" required="">
                                                 @foreach ($securityOfficers as $securityOfficer)
                                                     <option value="{{ $securityOfficer->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($securityOfficer->key == $event->security_officer)
                                                             selected="selected"
                                                         @endif
@@ -219,10 +233,10 @@
                                     <div class="form-group col">
                                         <label>Status</label>
                                         <div class="col-sm-12">
-                                           <select id="status" name="status" required="">
+                                            <select id="status" name="status" required="">
                                                 @foreach ($eventStatuss as $eventStatus)
                                                     <option value="{{ $eventStatus->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($eventStatus->key == $event->status)
                                                             selected="selected"
                                                         @endif
@@ -232,23 +246,23 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Security Group</label>
                                         <div class="col-sm-12">
                                             <select  multiple id="security_categories" name="security_categories[]" required="">
                                                 @foreach ($securityCategories as $securityCategory)
-                                                    <option value="{{ $securityCategory->key }}"
+                                <option value="{{ $securityCategory->key }}"
 {{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($securityCategory->key == 1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $securityCategory->value }}</option>
+                                @if ($securityCategory->key == 1)
+                                    selected="selected"
+@endif
+                                    >{{ $securityCategory->value }}</option>
                                                 @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div> -->
+                                </select>
+                            </div>
+                        </div>
+                    </div> -->
                             </div>
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" id="btn-save" value="create">Save
@@ -296,7 +310,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -333,7 +347,7 @@
                 confirm("Are You sure want to remove event security category ?!");
                 $.ajax({
                     type: "get",
-                    url: "../EventController/remove/"+post_id,
+                    url: "../EventController/remove/" + post_id,
                     success: function (data) {
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -350,7 +364,7 @@
                 //confirm("Are You sure want to deActivate ?!");
                 $.ajax({
                     type: "get",
-                    url: "../EventController/storeEventSecurityCategory/"+event_id+"/"+eventSecurityCategory,
+                    url: "../EventController/storeEventSecurityCategory/" + event_id + "/" + eventSecurityCategory,
                     success: function (data) {
                         //alert(data);
                         $('#ajax-crud-modal').modal('hide');
@@ -362,20 +376,20 @@
                     }
                 });
             });
-            $(document).on('change','#approval_option',function(){
-               var choosed = $('#approval_option').find(":selected").val();
-               //alert(choosed);
-               if(choosed == 1){
-                    $("#security_officer").prop('disabled', true);                                                       
-               }else{
+            $(document).on('change', '#approval_option', function () {
+                var choosed = $('#approval_option').find(":selected").val();
+                //alert(choosed);
+                if (choosed == 1) {
+                    $("#security_officer").prop('disabled', true);
+                } else {
                     $('#security_officer').prop('disabled', false);
-               }
+                }
             });
         });
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');

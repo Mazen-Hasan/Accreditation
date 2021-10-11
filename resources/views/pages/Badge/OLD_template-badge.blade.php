@@ -71,7 +71,8 @@
                     <h4 class="modal-title" id="modalTitle"></h4>
                 </div>
                 <div class="modal-body">
-                    <form id="bg_imgForm" name="badgeForm" class="form-horizontal  img-upload" enctype="multipart/form-data" action="javascript:void(0)">
+                    <form id="bg_imgForm" name="badgeForm" class="form-horizontal  img-upload"
+                          enctype="multipart/form-data" action="javascript:void(0)">
                         <div class="row">
                             <div class="col-md-5">
                                 <label>Background image</label>
@@ -105,14 +106,16 @@
                         <input style="visibility: hidden" type="text" name="h_template_id" id="h_template_id">
                         <input style="visibility: hidden" type="text" name="bg_image" id="bg_image">
                         {{--                        <img src="{{asset('storage/badges/2021-09-24_09:18:00.png')}}" alt="im" style="width:200px;height:200px;">--}}
-                        <img id="badge_bg" src="{{URL::asset('storage/badges/')}}" alt="im" style="width:200px;height:200px;">
+                        <img id="badge_bg" src="{{URL::asset('storage/badges/')}}" alt="im"
+                             style="width:200px;height:200px;">
                         <input type="hidden" name="badge_id" id="badge_id">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group col">
                                     <label>Width</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="width" min="100" name="width" placeholder="enter width" required="">
+                                        <input type="number" id="width" min="100" name="width" placeholder="enter width"
+                                               required="">
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +123,8 @@
                                 <div class="form-group col">
                                     <label>High</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="high" name="high" min="100" placeholder="enter high" required="">
+                                        <input type="number" id="high" name="high" min="100" placeholder="enter high"
+                                               required="">
                                     </div>
                                 </div>
                             </div>
@@ -166,7 +170,8 @@
     </div>
 
     <!-- add badge image modal -->
-    <div class="modal fade" id="fileErrorModal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="fileErrorModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+         role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -195,7 +200,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="badge-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="badge-modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+         role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -212,7 +218,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -228,7 +234,7 @@
                     extend: 'excelHtml5',
                     title: 'Badge',
                     exportOptions: {
-                        columns: [ 2,3,4,5 ]
+                        columns: [2, 3, 4, 5]
                     }
                 }],
 
@@ -239,19 +245,19 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id','visible': false},
-                    { data: 'template_id', name: 'template_id', 'visible': false},
-                    { data: 'name', name: 'name' },
-                    { data: 'width', name: 'width' },
-                    { data: 'high', name: 'high' },
-                    { data: 'bg_color', name: 'bg_color' },
-                    { data: 'bg_image', name: 'bg_image' },
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'template_id', name: 'template_id', 'visible': false},
+                    {data: 'name', name: 'name'},
+                    {data: 'width', name: 'width'},
+                    {data: 'high', name: 'high'},
+                    {data: 'bg_color', name: 'bg_color'},
+                    {data: 'bg_image', name: 'bg_image'},
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
+            $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
@@ -260,7 +266,7 @@
                 $('#badge_id').val('');
                 $('#badgeForm').trigger("reset");
                 $('#modalTitle').html("New Badge");
-                $('#badge_bg').attr('src', '' );
+                $('#badge_bg').attr('src', '');
                 $('#badge_bg').hide();
 
 
@@ -288,7 +294,7 @@
                     var image_path = "{{URL::asset('storage/badges/')}}/";
                     {{--var image_path = "{{URL::asset('badges/')}}/";--}}
 
-                    $('#badge_bg').attr('src', image_path + imag );
+                    $('#badge_bg').attr('src', image_path + imag);
                     $('#badge_bg').show();
 
                     // if(data){
@@ -314,7 +320,7 @@
                     var imag = data;
                     var image_path = "{{URL::asset('preview/')}}/";
 
-                    $('#badge').attr('src', image_path + imag );
+                    $('#badge').attr('src', image_path + imag);
                 },
                 error: function (data) {
                     console.log('Error:', data);
@@ -331,7 +337,7 @@
                 $("#file-progress-bar").width('0%');
                 $("#file_type_error").html('Please choose a valid file (png)');
                 $("#file").val('');
-                $("#btn-upload").attr('disabled',true);
+                $("#btn-upload").attr('disabled', true);
                 return false;
             } else {
                 $("button").removeAttr('disabled');
@@ -342,7 +348,7 @@
 
         if ($("#badgeForm").length > 0) {
             $("#badgeForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
                     $.ajax({
                         data: $('#badgeForm').serialize(),
@@ -363,10 +369,11 @@
                     });
                 }
             })
-        };
+        }
+        ;
 
 
-        $('.img-upload').submit(function(e) {
+        $('.img-upload').submit(function (e) {
             $('#btn-upload').html('Sending..');
             e.preventDefault();
             var formData = new FormData(this);
@@ -384,10 +391,10 @@
                     return xhr;
                 },
 
-                type:'POST',
+                type: 'POST',
                 url: "{{ url('store-file')}}",
                 data: formData,
-                cache:false,
+                cache: false,
                 contentType: false,
                 processData: false,
 
@@ -404,7 +411,7 @@
 
                 },
 
-                error: function(data){
+                error: function (data) {
                     $("#file_type_error").html('Error uploading file');
                     console.log(data);
                 }

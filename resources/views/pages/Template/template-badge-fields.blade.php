@@ -25,7 +25,7 @@
                                     <a class="url-nav" href="{{route('templateBadge')}}">
                                         <span>Badges:</span>
                                     </a>
-                                     / Fields
+                                    / Fields
                                 </p>
                             </div>
                             <div class="col-md-5 align-content-md-center">
@@ -111,7 +111,8 @@
                                 <div class="form-group col">
                                     <label>Size</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="size" name="size" placeholder="enter size (pixel)" required="">
+                                        <input type="number" id="size" name="size" placeholder="enter size (pixel)"
+                                               required="">
                                     </div>
                                 </div>
                             </div>
@@ -143,9 +144,7 @@
                                 <div class="form-group col">
                                     <label>Text Color</label>
                                     <div class="col-sm-12">
-                                        <div class="div-color">
-                                            <input type="color" id="text_color" name="text_color" value="#ffffff">
-                                        </div>
+                                        <input type="color" id="text_color" name="text_color" value="#ffffff">
                                     </div>
                                 </div>
                             </div>
@@ -154,9 +153,7 @@
                                 <div class="form-group col">
                                     <label>Background Color</label>
                                     <div class="col-sm-12">
-                                        <div class="div-color">
-                                            <input type="color" id="bg_color" name="bg_color" value="#ffffff">
-                                        </div>
+                                        <input type="color" id="bg_color" name="bg_color" value="#ffffff">
                                     </div>
                                 </div>
                             </div>

@@ -16,9 +16,9 @@
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
-                <input type="hidden" id="data_values" name ="data_values" value=""/>
-                <input type="hidden" id="company_id" name ="company_id" value="{{$company_id}}"/>
-                <input type="hidden" id="event_id" name ="event_id" value="{{$event_id}}"/>
+                <input type="hidden" id="data_values" name="data_values" value=""/>
+                <input type="hidden" id="company_id" name="company_id" value="{{$company_id}}"/>
+                <input type="hidden" id="event_id" name="event_id" value="{{$event_id}}"/>
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
@@ -50,8 +50,8 @@
                                     <th>ID</th>
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
-                                    @endforeach
-                                    <!-- <th>ID</th>
+                                @endforeach
+                                <!-- <th>ID</th>
                                     <th>Name</th>
                                     {{--                                    <th>Location</th>--}}
                                     <th>Nationality</th>
@@ -74,7 +74,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -90,7 +91,8 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel</button>
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                            </button>
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
@@ -100,7 +102,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="delete-element-confirm-modal-new" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="delete-element-confirm-modal-new" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -116,7 +119,8 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel-new">Cancel</button>
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel-new">Cancel
+                            </button>
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes-new">Reject</button>
@@ -126,11 +130,11 @@
             </div>
         </div>
     </div>
-    
+
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -138,14 +142,14 @@
             });
             var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
             var myColumns = [];
-            var i =0;
-            myColumns.push({data: "id",name: "id", 'visible': false});
-            while(i< jqueryarray.length){
-                myColumns.push({data: jqueryarray[i].replace(/ /g,"_") ,name: jqueryarray[i].replace(/ /g,"_")});
+            var i = 0;
+            myColumns.push({data: "id", name: "id", 'visible': false});
+            while (i < jqueryarray.length) {
+                myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
                 i++;
             }
-            myColumns.push({data: "status",name: "status"});
-            myColumns.push({data: "action",name: "action" , orderable: "false"});
+            myColumns.push({data: "status", name: "status"});
+            myColumns.push({data: "action", name: "action", orderable: "false"});
             //alert("val---" + JSON.stringify(myColumns));
             var companyId = $('#company_id').val();
             var eventId = $('#event_id').val();
@@ -155,22 +159,22 @@
                     extend: 'excelHtml5',
                     title: 'Company-Participants',
                     exportOptions: {
-                        columns: [ 1,2,3,4,5,6,7,8 ]
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
                     }
                 }],
 
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../../security-officer-company-participants/'+companyId +'/'+eventId,
+                    url: '../../security-officer-company-participants/' + companyId + '/' + eventId,
                     type: 'GET',
                 },
                 columns: myColumns,
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
             $('#add-new-post').click(function () {
@@ -189,7 +193,7 @@
                 $('#confirmTitle').html('Approve Participation Request');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('approve');
-                var confirmText =  "Are You sure you want to Approve Event participation Request?";
+                var confirmText = "Are You sure you want to Approve Event participation Request?";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
@@ -201,7 +205,7 @@
                 $('#confirmTitle').html('Reject Participation Request');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('reject');
-                var confirmText =  "Are You sure you want to reject Event participation Request?";
+                var confirmText = "Are You sure you want to reject Event participation Request?";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
@@ -213,7 +217,7 @@
                 $('#curr_element_id-new').val(post_id);
                 // $('#action_button').val('approve');
                 $('#reason').val('');
-                var confirmText =  "Insert Reason:";
+                var confirmText = "Insert Reason:";
                 $('#confirmText-new').html(confirmText);
                 $('#delete-element-confirm-modal-new').modal('show');
             });
@@ -227,22 +231,22 @@
                 // $('#action_button').val('approve');
                 $('#reason').val(reason);
                 $('#btn-yes-new').hide();
-                var confirmText =  "Reason:";
+                var confirmText = "Reason:";
                 $('#confirmText-new').html(confirmText);
                 $('#delete-element-confirm-modal-new').modal('show');
             });
 
-            $('#delete-element-confirm-modal button').on('click', function(event) {
+            $('#delete-element-confirm-modal button').on('click', function (event) {
                 var $button = $(event.target);
-                $(this).closest('.modal').one('hidden.bs.modal', function() {
-                    if($button[0].id === 'btn-yes'){
+                $(this).closest('.modal').one('hidden.bs.modal', function () {
+                    if ($button[0].id === 'btn-yes') {
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
-                        if(action_button == 'approve'){
+                        if (action_button == 'approve') {
                             var staffId = $('#curr_element_id').val();
                             $.ajax({
                                 type: "get",
-                                url: "../../securityOfficerAdminController/Approve/"+staffId,
+                                url: "../../securityOfficerAdminController/Approve/" + staffId,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -252,12 +256,12 @@
                                 }
                             });
                         }
-                        if(action_button == 'reject'){
+                        if (action_button == 'reject') {
                             // var company_id = $('#company_id').val();
                             var staffId = $('#curr_element_id').val();
                             $.ajax({
                                 type: "get",
-                                url: "../../securityOfficerAdminController/Reject/"+staffId,
+                                url: "../../securityOfficerAdminController/Reject/" + staffId,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
@@ -272,22 +276,22 @@
                     }
                 });
             });
-            $('#delete-element-confirm-modal-new button').on('click', function(event) {
+            $('#delete-element-confirm-modal-new button').on('click', function (event) {
                 var $button = $(event.target);
-                $(this).closest('.modal').one('hidden.bs.modal', function() {
-                    if($button[0].id === 'btn-yes-new'){
+                $(this).closest('.modal').one('hidden.bs.modal', function () {
+                    if ($button[0].id === 'btn-yes-new') {
                         var staffId = $('#curr_element_id-new').val();
                         var reason = $('#reason').val();
                         $.ajax({
-                                type: "get",
-                                url: "../../securityOfficerAdminController/RejectToCorrect/"+staffId+"/"+reason,
-                                success: function (data) {
-                                    var oTable = $('#laravel_datatable').dataTable();
-                                    oTable.fnDraw(false);
-                                },
-                                error: function (data) {
-                                    console.log('Error:', data);
-                                }
+                            type: "get",
+                            url: "../../securityOfficerAdminController/RejectToCorrect/" + staffId + "/" + reason,
+                            success: function (data) {
+                                var oTable = $('#laravel_datatable').dataTable();
+                                oTable.fnDraw(false);
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
                         });
                     }
                 });

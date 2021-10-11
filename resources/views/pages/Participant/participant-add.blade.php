@@ -10,7 +10,7 @@
     <div class="content-wrapper">
         <div class="row">
             <div class="col-12 grid-margin">
-                <div class="card"  style="border-radius: 20px">
+                <div class="card" style="border-radius: 20px">
                     <div class="card-body">
                         <h4 class="card-title">Participant Management - New</h4>
                         <form class="form-sample" id="postForm" name="postForm">
@@ -23,7 +23,8 @@
                                     <div class="form-group col">
                                         <label>First Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="first_name" name="first_name" value="" required="" placeholder="enter first name"/>
+                                            <input type="text" id="first_name" name="first_name" value="" required=""
+                                                   placeholder="enter first name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -31,7 +32,8 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Last Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="last_name" name="last_name" value="" required=""placeholder="enter last name"/>
+                                            <input type="text" id="last_name" name="last_name" value="" required=""
+                                                   placeholder="enter last name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -39,9 +41,10 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label >First Name Arabic</label>
+                                        <label>First Name Arabic</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="first_name_ar" name="first_name_ar" value="" required="" placeholder="enter first name arabic"/>
+                                            <input type="text" id="first_name_ar" name="first_name_ar" value=""
+                                                   required="" placeholder="enter first name arabic"/>
                                         </div>
                                     </div>
                                 </div>
@@ -49,7 +52,8 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Last Name Arabic</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="last_name_ar" name="last_name_ar" value="" required=""placeholder="enter last name ar"/>
+                                            <input type="text" id="last_name_ar" name="last_name_ar" value=""
+                                                   required="" placeholder="enter last name ar"/>
                                         </div>
                                     </div>
                                 </div>
@@ -57,9 +61,10 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label >Nationality</label>
+                                        <label>Nationality</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="nationality" name="nationality" value="" required="" placeholder="enter nationality"/>
+                                            <input type="text" id="nationality" name="nationality" value="" required=""
+                                                   placeholder="enter nationality"/>
                                         </div>
                                     </div>
                                 </div>
@@ -67,7 +72,8 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="email" name="email" value="" required=""placeholder="enter email"/>
+                                            <input type="text" id="email" name="email" value="" required=""
+                                                   placeholder="enter email"/>
                                         </div>
                                     </div>
                                 </div>
@@ -75,9 +81,10 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label >Mobile</label>
+                                        <label>Mobile</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="mobile" name="mobile" value="" required="" placeholder="enter mobile"/>
+                                            <input type="text" id="mobile" name="mobile" value="" required=""
+                                                   placeholder="enter mobile"/>
                                         </div>
                                     </div>
                                 </div>
@@ -85,7 +92,8 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Position</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="position" name="position" value="" required=""placeholder="enter position"/>
+                                            <input type="text" id="position" name="position" value="" required=""
+                                                   placeholder="enter position"/>
                                         </div>
                                     </div>
                                 </div>
@@ -93,9 +101,10 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label >Religion</label>
+                                        <label>Religion</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="religion" name="religion" value="" required="" placeholder="enter religion"/>
+                                            <input type="text" id="religion" name="religion" value="" required=""
+                                                   placeholder="enter religion"/>
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +112,8 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Address</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="address" name="address" value="" required=""placeholder="enter address"/>
+                                            <input type="text" id="address" name="address" value="" required=""
+                                                   placeholder="enter address"/>
                                         </div>
                                     </div>
                                 </div>
@@ -111,9 +121,10 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label >Birthdate</label>
+                                        <label>Birthdate</label>
                                         <div class="col-sm-12">
-                                            <input type="date"  id="birthdate" name="birthdate" value="" required="" placeholder="enter birthdate"/>
+                                            <input type="date" id="birthdate" name="birthdate" value="" required=""
+                                                   placeholder="enter birthdate"/>
                                         </div>
                                     </div>
                                 </div>
@@ -138,9 +149,10 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label >Passport Number</label>
+                                        <label>Passport Number</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="passport_number" name="passport_number" value="" required="" placeholder="enter passport number"/>
+                                            <input type="text" id="passport_number" name="passport_number" value=""
+                                                   required="" placeholder="enter passport number"/>
                                         </div>
                                     </div>
                                 </div>
@@ -148,7 +160,8 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">ID Number</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="id_number" name="id_number" value="" required=""placeholder="enter ID number"/>
+                                            <input type="text" id="id_number" name="id_number" value="" required=""
+                                                   placeholder="enter ID number"/>
                                         </div>
                                     </div>
                                 </div>
@@ -158,11 +171,11 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Class</label>
                                         <div class="col-sm-12">
-                                           <select class="input100 minimal" id="class" name="class" required="">
+                                            <select class="input100 minimal" id="class" name="class" required="">
                                                 @foreach ($classess as $class)
                                                     <option value="{{ $class->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                                @if ($class->key == 1)
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($class->key == 1)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $class->value }}</option>
@@ -175,10 +188,11 @@
                                     <div class="form-group col">
                                         <label class=" col-form-label">Accreditation Category</label>
                                         <div class="col-sm-12">
-                                           <select class="input100 minimal" id="accreditation_category" name="accreditation_category" required="">
+                                            <select class="input100 minimal" id="accreditation_category"
+                                                    name="accreditation_category" required="">
                                                 @foreach ($accreditationCategoriesSelectOption as $accreditationCategorySelectOption)
                                                     <option value="{{ $accreditationCategorySelectOption->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($accreditationCategorySelectOption->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -189,7 +203,7 @@
                                     </div>
                                 </div>
                             </div>
-                           <div class="col-sm-offset-2 col-sm-2">
+                            <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" class="login100-form-btn" id="btn-save" value="create">Save
                                 </button>
                             </div>
@@ -201,13 +215,13 @@
     </div>
 @endsection
 @section('script')
-{{--    <script src="vendors/typeahead.js/typeahead.bundle.min.js"></script>--}}
-{{--    <script src="vendors/select2/select2.min.js"></script>--}}
-{{--    <script src="js/file-upload.js"></script>--}}
-{{--    <script src="js/typeahead.js"></script>--}}
-{{--    <script src="js/select2.js"></script>--}}
+    {{--    <script src="vendors/typeahead.js/typeahead.bundle.min.js"></script>--}}
+    {{--    <script src="vendors/select2/select2.min.js"></script>--}}
+    {{--    <script src="js/file-upload.js"></script>--}}
+    {{--    <script src="js/typeahead.js"></script>--}}
+    {{--    <script src="js/select2.js"></script>--}}
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -273,7 +287,7 @@
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');

@@ -1,13 +1,14 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\AccreditationCategory;
 use App\Models\Company;
 use App\Models\Participant;
-use Illuminate\Support\Facades\DB;
 use App\Models\SelectOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class ParticipantController extends Controller
@@ -22,10 +23,10 @@ class ParticipantController extends Controller
         if (request()->ajax()) {
             $where = array('company_admin_id' => Auth::user()->id);
             $company = Company::where($where)->first();
-            $participants = DB::select('select * from paticipants where company = ?' ,[$company->id]);
+            $participants = DB::select('select * from paticipants where company = ?', [$company->id]);
             return datatables()->of($participants)
-                ->addColumn('name', function($row){
-                    return $row->first_name.' '.$row->last_name;
+                ->addColumn('name', function ($row) {
+                    return $row->first_name . ' ' . $row->last_name;
                 })
                 ->addColumn('action', function ($data) {
                     //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';

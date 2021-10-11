@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ma
 //     Artisan::call('storage:link');
 // });
 
-Route::group(['middleware' => 'role:company-admin'], function() {
+Route::group(['middleware' => 'role:company-admin'], function () {
 
 
     Route::resource('companyAdminController', 'App\Http\Controllers\CompanyAdminController');
@@ -40,7 +40,7 @@ Route::group(['middleware' => 'role:company-admin'], function() {
 
     Route::resource('templateFormController', 'App\Http\Controllers\TemplateFormController');
     Route::get('/template-form/{template_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
-	Route::get('/template-form-details/{participant_id}', [App\Http\Controllers\TemplateFormController::class, 'details'])->name('templateFormDetails');
+    Route::get('/template-form-details/{participant_id}', [App\Http\Controllers\TemplateFormController::class, 'details'])->name('templateFormDetails');
 
     //Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate');
     //Route::get('badge-preview/{staffId}', 'App\Http\Controllers\GenerateBadgeController@getBadgePath');
@@ -68,7 +68,7 @@ Route::group(['middleware' => 'role:company-admin'], function() {
 
 });
 
-Route::group(['middleware' => 'role:event-admin'], function() {
+Route::group(['middleware' => 'role:event-admin'], function () {
 
     Route::resource('eventAdminController', 'App\Http\Controllers\EventAdminController');
     Route::get('/event-admin', [App\Http\Controllers\EventAdminController::class, 'index'])->name('event-admin');
@@ -98,14 +98,14 @@ Route::group(['middleware' => 'role:event-admin'], function() {
     Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat');
     Route::get('companyController/Approve/{companyId}/{eventId}', 'App\Http\Controllers\CompanyController@Approve');
 
-	 Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate');
+    Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate');
     Route::get('badge-preview/{staffId}', 'App\Http\Controllers\GenerateBadgeController@getBadgePath');
     Route::get('badge-print/{staffId}', 'App\Http\Controllers\GenerateBadgeController@printBadge');
     Route::get('/event-participant-details/{participant_id}', [App\Http\Controllers\EventAdminController::class, 'details'])->name('participantDetails');
 
 });
 
-Route::group(['middleware' => 'role:super-admin'], function() {
+Route::group(['middleware' => 'role:super-admin'], function () {
     Route::resource('EventController', 'App\Http\Controllers\EventController');
     Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events');
     Route::get('/event-add', [App\Http\Controllers\EventController::class, 'eventAdd'])->name('eventAdd');
@@ -185,9 +185,9 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::resource('templateBadgeFieldController', 'App\Http\Controllers\TemplateBadgeFieldController');
     Route::get('templateBadgeFieldController/destroy/{field_id}', 'App\Http\Controllers\TemplateBadgeFieldController@destroy');
 
-	Route::get('badge-design-generate/{badgeId}', 'App\Http\Controllers\GenerateBadgeController@generatePreview');
+    Route::get('badge-design-generate/{badgeId}', 'App\Http\Controllers\GenerateBadgeController@generatePreview');
 
-	Route::resource('fullFillmentController', 'App\Http\Controllers\FullFillmentController');
+    Route::resource('fullFillmentController', 'App\Http\Controllers\FullFillmentController');
     Route::get('/selections', [App\Http\Controllers\FullFillmentController::class, 'index'])->name('Selections');
     Route::get('fullFillmentController/getCompanies/{field_id}', [App\Http\Controllers\FullFillmentController::class, 'getCompanies'])->name('getCompanies');
     Route::get('/all-participants/{event_id}/{company_id}/{accredit_id}/{checked}', [App\Http\Controllers\FullFillmentController::class, 'allParticipants'])->name('allParticipants');
@@ -200,7 +200,7 @@ Route::group(['middleware' => 'role:super-admin'], function() {
 
 });
 
-Route::group(['middleware' => 'role:security-officer'], function() {
+Route::group(['middleware' => 'role:security-officer'], function () {
 
     Route::resource('securityOfficerAdminController', 'App\Http\Controllers\SecurityOfficerAdminController');
     Route::get('/security-officer-admin', [App\Http\Controllers\SecurityOfficerAdminController::class, 'index'])->name('security-officer-admin');
@@ -213,7 +213,7 @@ Route::group(['middleware' => 'role:security-officer'], function() {
 
 });
 
-Route::group(['middleware' => 'role:data-entry'], function() {
+Route::group(['middleware' => 'role:data-entry'], function () {
     Route::get('/dataentry-participants', [App\Http\Controllers\DataEntryController::class, 'dataEntryParticipants'])->name('dataEntryParticipants');
     //Route::resource('dataentryController', 'App\Http\Controllers\DataEntryController');
     Route::get('/dataentry-participnat-add/{template_id}', [App\Http\Controllers\DataEntryController::class, 'participantAdd'])->name('participantAdd');
@@ -229,6 +229,8 @@ Route::get('/markAsRead-notification/{id}', [App\Http\Controllers\NotificationCo
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::any('{query}',
-    function() { return redirect('/'); })
+    function () {
+        return redirect('/');
+    })
     ->where('query', '.*');
 

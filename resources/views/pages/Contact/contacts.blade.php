@@ -44,13 +44,13 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-{{--                                    <th>Location</th>--}}
+                                    {{--                                    <th>Location</th>--}}
                                     <th>Email</th>
                                     <th>Telephone</th>
                                     <th>Mobile</th>
                                     <th>Titles</th>
                                     <th>Status</th>
-{{--                                    <th style="color: black">Status</th>--}}
+                                    {{--                                    <th style="color: black">Status</th>--}}
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -66,7 +66,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -79,7 +79,7 @@
                     extend: 'excelHtml5',
                     title: 'Contacts',
                     exportOptions: {
-                        columns: [ 1,2,3,4,5,6 ]
+                        columns: [1, 2, 3, 4, 5, 6]
                     }
                 }],
 
@@ -90,20 +90,28 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'name', name: 'name'},
-                    { data: 'email', name: 'email' },
-                    { data: 'telephone', name: 'telephone' },
-                    { data: 'mobile', name: 'mobile'},
-                    { data: 'titleNames', name: 'titleNames'},
-                    { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ return "<p style='color: red'>InActive</p>" }}},
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'name', name: 'name'},
+                    {data: 'email', name: 'email'},
+                    {data: 'telephone', name: 'telephone'},
+                    {data: 'mobile', name: 'mobile'},
+                    {data: 'titleNames', name: 'titleNames'},
+                    {
+                        data: 'status', render: function (data) {
+                            if (data == 1) {
+                                return "<p style='color: green'>Active</p>"
+                            } else {
+                                return "<p style='color: red'>InActive</p>"
+                            }
+                        }
+                    },
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
             $('#add-new-post').click(function () {

@@ -18,7 +18,7 @@
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
-                <input type="hidden" id="data_values" name ="data_values" value=""/>
+                <input type="hidden" id="data_values" name="data_values" value=""/>
                 <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
                 <div class="card">
                     <div class="card-body">
@@ -58,8 +58,8 @@
                                     <th>ID</th>
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
-                                    @endforeach
-                                    <!-- <th>ID</th>
+                                @endforeach
+                                <!-- <th>ID</th>
                                     <th>Name</th>
                                     {{--                                    <th>Location</th>--}}
                                     <th>Nationality</th>
@@ -82,7 +82,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -98,7 +99,8 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel</button>
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                            </button>
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
@@ -109,7 +111,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="delete-element-confirm-modal-new" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="delete-element-confirm-modal-new" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -125,7 +128,8 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel-new">Cancel</button>
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel-new">Cancel
+                            </button>
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes-new">Reject</button>
@@ -136,12 +140,13 @@
         </div>
     </div>
 
-    <div class="modal fade" id="badge-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="badge-modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+         role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="badgeTitle"></h5>
-                	<input type="hidden" id="print_staff_id">
+                    <input type="hidden" id="print_staff_id">
                     <div class="col-sm-4">
                         <button type="button" data-dismiss="modal" id="btn-print">Print</button>
                     </div>
@@ -160,9 +165,9 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             var subCompany_status = $('#subCompnay_status').val();
-            if(subCompany_status == 0){
+            if (subCompany_status == 0) {
                 $('#subsidiaries_nav').hide();
             }
             $.ajaxSetup({
@@ -172,14 +177,14 @@
             });
             var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
             var myColumns = [];
-            var i =0;
-            myColumns.push({data: "id",name: "id", 'visible': false});
-            while(i< jqueryarray.length){
-                myColumns.push({data: jqueryarray[i].replace(/ /g,"_") ,name: jqueryarray[i].replace(/ /g,"_")});
+            var i = 0;
+            myColumns.push({data: "id", name: "id", 'visible': false});
+            while (i < jqueryarray.length) {
+                myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
                 i++;
             }
-            myColumns.push({data: "status",name: "status"});
-            myColumns.push({data: "action",name: "action" , orderable: "false"});
+            myColumns.push({data: "status", name: "status"});
+            myColumns.push({data: "action", name: "action", orderable: "false"});
             //alert("val---" + JSON.stringify(myColumns));
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
@@ -187,7 +192,7 @@
                     extend: 'excelHtml5',
                     title: 'Company-Participants',
                     exportOptions: {
-                        columns: [ 1]
+                        columns: [1]
                     }
                 }],
 
@@ -201,8 +206,8 @@
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
             $('#add-new-post').click(function () {
@@ -216,7 +221,7 @@
 
             $('body').on('click', '#generate-badge', function () {
                 var staff_id = $(this).data("id");
-            	$('#print_staff_id').val(staff_id);
+                $('#print_staff_id').val(staff_id);
                 $.ajax({
                     type: "get",
                     url: "badge-generate/" + staff_id,
@@ -225,7 +230,7 @@
                         var imag = data;
                         var image_path = "{{URL::asset('badges/')}}/";
 
-                        $('#badge').attr('src', image_path + imag );
+                        $('#badge').attr('src', image_path + imag);
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
                     },
@@ -237,7 +242,7 @@
 
             $('body').on('click', '#preview-badge', function () {
                 var staff_id = $(this).data("id");
-            	$('#print_staff_id').val(staff_id);
+                $('#print_staff_id').val(staff_id);
                 $.ajax({
                     type: "get",
                     url: "badge-preview/" + staff_id,
@@ -247,10 +252,10 @@
                         var imag = data;
                         var image_path = "{{URL::asset('badges/')}}/";
 
-                        $('#badge').attr('src', image_path + imag );
+                        $('#badge').attr('src', image_path + imag);
                     },
                     error: function (data) {
-                         console.log('Error:', data);
+                        console.log('Error:', data);
                     }
                 });
             });
@@ -263,9 +268,9 @@
                     success: function (data) {
                         $('#badge-modal').modal('show');
                         printJS($('#badge').attr('src'), 'image');
-                    	var oTable = $('#laravel_datatable').dataTable();
+                        var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
-                    	return false;
+                        return false;
                     },
                     error: function (data) {
                         console.log('Error:', data);
@@ -280,7 +285,7 @@
                 $('#confirmTitle').html('Send Participation Request');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('sendRequest');
-                var confirmText =  "Are You sure you want to Send Event participation?";
+                var confirmText = "Are You sure you want to Send Event participation?";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
@@ -295,15 +300,15 @@
                 // $('#action_button').val('approve');
                 $('#reason').val(reason);
                 $('#btn-yes-new').hide();
-                var confirmText =  "Reason:";
+                var confirmText = "Reason:";
                 $('#confirmText-new').html(confirmText);
                 $('#delete-element-confirm-modal-new').modal('show');
             });
 
-            $('#delete-element-confirm-modal button').on('click', function(event) {
+            $('#delete-element-confirm-modal button').on('click', function (event) {
                 var $button = $(event.target);
-                $(this).closest('.modal').one('hidden.bs.modal', function() {
-                    if($button[0].id === 'btn-yes'){
+                $(this).closest('.modal').one('hidden.bs.modal', function () {
+                    if ($button[0].id === 'btn-yes') {
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
                         // if(action_button == 'delete'){
@@ -319,12 +324,12 @@
                         //         }
                         //     });
                         // }
-                        if(action_button == 'sendRequest'){
+                        if (action_button == 'sendRequest') {
                             // var company_id = $('#company_id').val();
                             var staffId = $('#curr_element_id').val();
                             $.ajax({
                                 type: "get",
-                                url: "companyAdminController/sendRequest/"+staffId,
+                                url: "companyAdminController/sendRequest/" + staffId,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
@@ -339,22 +344,22 @@
                     }
                 });
             });
-            $('#delete-element-confirm-modal-new button').on('click', function(event) {
+            $('#delete-element-confirm-modal-new button').on('click', function (event) {
                 var $button = $(event.target);
-                $(this).closest('.modal').one('hidden.bs.modal', function() {
-                    if($button[0].id === 'btn-yes-new'){
+                $(this).closest('.modal').one('hidden.bs.modal', function () {
+                    if ($button[0].id === 'btn-yes-new') {
                         var staffId = $('#curr_element_id-new').val();
                         var reason = $('#reason').val();
                         $.ajax({
-                                type: "get",
-                                url: "../../eventAdminController/RejectToCorrect/"+staffId+"/"+reason,
-                                success: function (data) {
-                                    var oTable = $('#laravel_datatable').dataTable();
-                                    oTable.fnDraw(false);
-                                },
-                                error: function (data) {
-                                    console.log('Error:', data);
-                                }
+                            type: "get",
+                            url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
+                            success: function (data) {
+                                var oTable = $('#laravel_datatable').dataTable();
+                                oTable.fnDraw(false);
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
                         });
                     }
                 });

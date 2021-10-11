@@ -15,7 +15,7 @@ class CitySeeder extends Seeder
      */
     public function run()
     {
-        $country = Country::where('code','AE')->first();
+        $country = Country::where('code', 'AE')->first();
 
         $cities = [
             ['name' => 'Dubai', 'country_id' => $country->id],
@@ -30,7 +30,7 @@ class CitySeeder extends Seeder
             City::create($value);
         }
 
-        $country = Country::where('code','SY')->first();
+        $country = Country::where('code', 'SY')->first();
 
         $cities = [
             ['name' => 'Damascus', 'country_id' => $country->id],
@@ -43,7 +43,7 @@ class CitySeeder extends Seeder
             City::create($value);
         }
 
-        $country = Country::where('code','GB')->first();
+        $country = Country::where('code', 'GB')->first();
 
         $cities = [
             ['name' => 'Leeds', 'country_id' => $country->id],

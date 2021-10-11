@@ -9,12 +9,12 @@ class FileUploadController extends Controller
     public function store(Request $request)
     {
         if ($files = $request->allFiles()) {
-            foreach ($files as $file){
+            foreach ($files as $file) {
 
                 $extension = $file->extension();
 
                 $fileName = now();
-                $fileName = str_replace(':','_',$fileName);
+                $fileName = str_replace(':', '_', $fileName);
                 $fileName = str_replace(' ', '_', $fileName) . '.' . $extension;
 
                 $stored_file = $file->storeAs(
@@ -22,7 +22,7 @@ class FileUploadController extends Controller
 
                 return Response()->json([
                     "success" => true,
-                    "fileName" =>$fileName,
+                    "fileName" => $fileName,
                     "filePath" => $stored_file
                 ]);
             }
@@ -30,7 +30,7 @@ class FileUploadController extends Controller
 
         return Response()->json([
             "success" => false,
-            "fileName" =>'',
+            "fileName" => '',
             "file" => ''
         ]);
     }

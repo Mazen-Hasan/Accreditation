@@ -13,7 +13,7 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-        <!-- <a href="{{route('userAdd')}}" class="ha_btn" id="add-new-company">Add User</a> -->
+    <!-- <a href="{{route('userAdd')}}" class="ha_btn" id="add-new-company">Add User</a> -->
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
@@ -70,16 +70,18 @@
                 <div class="modal-body">
                     <input type="hidden" name="user_id" id="user_id" value="">
                     <div class="form-group">
-                            <label for="name">Password</label>
-                            <div class="col-sm-12">
-                                <input type="password" id="password" name="password" placeholder="enter passsword" required="">
-                            </div>
+                        <label for="name">Password</label>
+                        <div class="col-sm-12">
+                            <input type="password" id="password" name="password" placeholder="enter passsword"
+                                   required="">
+                        </div>
                     </div>
                     <div class="form-group">
-                            <label for="name">Confirm Password</label>
-                            <div class="col-sm-12">
-                                <input type="password" id="confirm_password" name="confirm_password" placeholder="confirm password" required="">
-                            </div>
+                        <label for="name">Confirm Password</label>
+                        <div class="col-sm-12">
+                            <input type="password" id="confirm_password" name="confirm_password"
+                                   placeholder="confirm password" required="">
+                        </div>
                     </div>
                     <div class="col-sm-offset-2 col-sm-10">
                         <button id="reset-password-btn" value="create">Reset Password
@@ -95,7 +97,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -109,7 +111,7 @@
                     extend: 'excelHtml5',
                     title: 'Templates',
                     exportOptions: {
-                        columns: [ 2,3,4 ]
+                        columns: [2, 3, 4]
                     }
                 }],
 
@@ -120,12 +122,12 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'user_id', name: 'user_id', 'visible': false},
-                    { data: 'role_id', name: 'role_id', 'visible': false},
-                    { data: 'user_name', name: 'user_name'},
-                    { data: 'email', name: 'email' },
-                    { data: 'role_name', name: 'role_name' },
-                    { data: 'action', name: 'action', orderable: false},
+                    {data: 'user_id', name: 'user_id', 'visible': false},
+                    {data: 'role_id', name: 'role_id', 'visible': false},
+                    {data: 'user_name', name: 'user_name'},
+                    {data: 'email', name: 'email'},
+                    {data: 'role_name', name: 'role_name'},
+                    {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]
             });
@@ -155,7 +157,7 @@
                 var password = $('#password').val();
                 $.ajax({
                     type: "get",
-                    url: "userController/reset_password/"+userId+"/"+password,
+                    url: "userController/reset_password/" + userId + "/" + password,
                     success: function (data) {
                         //alert(data);
                         $('#ajax-crud-modal').modal('hide');
@@ -170,8 +172,8 @@
                 });
             });
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
         });
     </script>

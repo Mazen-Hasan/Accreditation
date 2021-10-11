@@ -7,7 +7,7 @@
     <div class="content-wrapper">
         <br><br>
         <div class="row">
-        <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
+            <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
@@ -29,9 +29,9 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             var subCompany_status = $('#subCompnay_status').val();
-            if(subCompany_status == 0){
+            if (subCompany_status == 0) {
                 $('#subsidiaries_nav').hide();
             }
             $.ajaxSetup({
@@ -43,7 +43,7 @@
 
         if ($("#templateForm").length > 0) {
             $("#templateForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
 
                     $.ajax({
@@ -69,9 +69,9 @@
             })
         }
 
-    $('.img-upload').submit(function(e) {
+        $('.img-upload').submit(function (e) {
             var btnID = this.id;
-            btnID =  btnID.substring(5,btnID.length -1);
+            btnID = btnID.substring(5, btnID.length - 1);
             var btn_upl = '#btn-upload_' + btnID;
 
             $(btn_upl).html('Sending..');
@@ -96,10 +96,10 @@
                     return xhr;
                 },
 
-                type:'POST',
+                type: 'POST',
                 url: "{{ url('upload-file')}}",
                 data: formData,
-                cache:false,
+                cache: false,
                 contentType: false,
                 processData: false,
 
@@ -122,18 +122,18 @@
                     // $("#bg_image").val(data.fileName);
 
                     var btnID = this.id;
-                    btnID =  btnID.substring(5,btnID.length -1);
+                    btnID = btnID.substring(5, btnID.length - 1);
                     btnID = "#" + btnID;
                     $(btnID).val(data.fileName);
                     console.log(data);
 
                 },
 
-                error: function(data){
+                error: function (data) {
                     $("#file_type_error").html('Error uploading file');
                     console.log(data);
                 }
             });
         });
-   </script>
+    </script>
 @endsection

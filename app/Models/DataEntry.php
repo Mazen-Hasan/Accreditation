@@ -10,6 +10,6 @@ class DataEntry extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'middle_name','last_name','email','telephone','mobile','status','password','account_id','company_admin_id','company_id'
+        'name', 'middle_name', 'last_name', 'email', 'telephone', 'mobile', 'status', 'password', 'account_id', 'company_admin_id', 'company_id'
     ];
 }

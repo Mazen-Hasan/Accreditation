@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Template;
 use App\Models\TemplateBadge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +20,7 @@ class TemplateBadgeController extends Controller
 
             return datatables()->of($templateBadge)
                 ->addColumn('action', function ($data) {
-                    $button ='';
+                    $button = '';
                     if ($data->is_locked == 0) {
                         $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Edit" class="edit btn btn-success edit-badge">Edit</a>';
                         $button .= '&nbsp;&nbsp;';
@@ -58,13 +57,13 @@ class TemplateBadgeController extends Controller
 //            }
 //        }
 
-        $templateBadge   =   TemplateBadge::updateOrCreate(['id' => $badge_id],
+        $templateBadge = TemplateBadge::updateOrCreate(['id' => $badge_id],
             ['template_id' => $request->template_id,
                 'width' => $request->width,
                 'high' => $request->high,
                 'bg_color' => $request->bg_color,
                 'bg_image' => $request->bg_image,
-                'is_locked'  =>  $request->has('locked'),
+                'is_locked' => $request->has('locked'),
                 'creator' => Auth::user()->id
             ]);
         return Response::json($templateBadge);

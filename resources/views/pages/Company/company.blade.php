@@ -45,7 +45,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -61,16 +61,16 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'event_id', name: 'event_id', 'visible': false},
-                    { data: 'name', name: 'name'},
-                    { data: 'category', name: 'category' },
-                    { data: 'country', name: 'country' },
-                    { data: 'city', name: 'city' },
-                    { data: 'address', name: 'address'},
-                    { data: 'website', name: 'website'},
-                    { data: 'telephone', name: 'telephone'},
-                    { data: 'focal_point', name: 'focal_point'},
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'event_id', name: 'event_id', 'visible': false},
+                    {data: 'name', name: 'name'},
+                    {data: 'category', name: 'category'},
+                    {data: 'country', name: 'country'},
+                    {data: 'city', name: 'city'},
+                    {data: 'address', name: 'address'},
+                    {data: 'website', name: 'website'},
+                    {data: 'telephone', name: 'telephone'},
+                    {data: 'focal_point', name: 'focal_point'},
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]

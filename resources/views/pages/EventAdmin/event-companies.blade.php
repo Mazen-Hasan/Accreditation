@@ -19,7 +19,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                        <input type="hidden" id="h_event_id" value={{$eventid}}>
+                            <input type="hidden" id="h_event_id" value={{$eventid}}>
                             <div class="col-md-8">
                                 <p class="card-title">{{$event_name}} / Companies</p>
                             </div>
@@ -66,7 +66,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -75,14 +76,15 @@
                 <div class="modal-body">
                     <div>
                         <input type="hidden" id="curr_element_id">
-                        
+
                         <label class="col-sm-12 confirm-text" id="confirmText"></label>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel</button>
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                            </button>
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
@@ -95,7 +97,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             //alert({{$eventid}});
             $.ajaxSetup({
                 headers: {
@@ -109,7 +111,7 @@
                     extend: 'excelHtml5',
                     title: 'Event-Companies',
                     exportOptions: {
-                        columns: [ 2,3,4,5,6,7,8,9 ]
+                        columns: [2, 3, 4, 5, 6, 7, 8, 9]
                     }
                 }],
 
@@ -120,23 +122,35 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'event_id', name: 'event_id', 'visible': false},
-                    { data: 'name', name: 'name'},
-                    { data: 'category', name: 'category' },
-                    { data: 'country', name: 'country' },
-                    { data: 'city', name: 'city' },
-                    { data: 'website', name: 'website'},
-                    { data: 'telephone', name: 'telephone'},
-                    { data: 'focal_point', name: 'focal_point'},
-                    { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ if(data == 0){return "<p style='color: red'>InActive</p>"}else{return "<p style='color: orange'>Invited</p>" }}}},
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'event_id', name: 'event_id', 'visible': false},
+                    {data: 'name', name: 'name'},
+                    {data: 'category', name: 'category'},
+                    {data: 'country', name: 'country'},
+                    {data: 'city', name: 'city'},
+                    {data: 'website', name: 'website'},
+                    {data: 'telephone', name: 'telephone'},
+                    {data: 'focal_point', name: 'focal_point'},
+                    {
+                        data: 'status', render: function (data) {
+                            if (data == 1) {
+                                return "<p style='color: green'>Active</p>"
+                            } else {
+                                if (data == 0) {
+                                    return "<p style='color: red'>InActive</p>"
+                                } else {
+                                    return "<p style='color: orange'>Invited</p>"
+                                }
+                            }
+                        }
+                    },
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
             $('#add-new-company').click(function () {
@@ -154,15 +168,15 @@
                 var company_focalpoint = $(this).data("focalpoint");
                 $('#confirmTitle').html('Company Invitation');
                 $('#curr_element_id').val(company_id);
-                var confirmText =  'Are you sure you want to invite Company: ' + company_name + ' to focal point: '+company_focalpoint+'?';
+                var confirmText = 'Are you sure you want to invite Company: ' + company_name + ' to focal point: ' + company_focalpoint + '?';
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
 
-            $('#delete-element-confirm-modal button').on('click', function(event) {
+            $('#delete-element-confirm-modal button').on('click', function (event) {
                 var $button = $(event.target);
-                $(this).closest('.modal').one('hidden.bs.modal', function() {
-                    if($button[0].id === 'btn-yes'){
+                $(this).closest('.modal').one('hidden.bs.modal', function () {
+                    if ($button[0].id === 'btn-yes') {
                         var company_id = $('#curr_element_id').val();
                         $.ajax({
                             type: "get",

@@ -78,14 +78,16 @@
                 </div>
                 <div class="modal-body">
                     <form id="fieldForm" name="fieldForm" class="form-horizontal">
-                        <input style="visibility: hidden" type="text" name="field_id" id="field_id" value="{{$template->id}}">
+                        <input style="visibility: hidden" type="text" name="field_id" id="field_id"
+                               value="{{$template->id}}">
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group col">
                                     <label>Value (Arabic)</label>
                                     <div class="col-sm-12">
-                                        <input type="text" id="value_ar" name="value_ar" placeholder="enter arabic value" required="">
+                                        <input type="text" id="value_ar" name="value_ar"
+                                               placeholder="enter arabic value" required="">
                                     </div>
                                 </div>
                             </div>
@@ -93,7 +95,8 @@
                                 <div class="form-group col">
                                     <label>Value (English)</label>
                                     <div class="col-sm-12">
-                                        <input type="text" id="value_en" name="value_en" placeholder="enter english value" required="">
+                                        <input type="text" id="value_en" name="value_en"
+                                               placeholder="enter english value" required="">
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +107,8 @@
                                 <div class="form-group col">
                                     <label>Order</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="order" min="1" max="20" name="order" placeholder="enter order" required="">
+                                        <input type="number" id="order" min="1" max="20" name="order"
+                                               placeholder="enter order" required="">
                                     </div>
                                 </div>
                             </div>
@@ -112,7 +116,8 @@
                                 <div class="form-group col">
                                     <label>Value (ID)</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="value_id" min="1" max="20" name="value_id" placeholder="enter value ID" required="">
+                                        <input type="number" id="value_id" min="1" max="20" name="value_id"
+                                               placeholder="enter value ID" required="">
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +136,8 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -146,7 +152,8 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel</button>
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                            </button>
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
@@ -159,7 +166,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -175,28 +182,28 @@
                     extend: 'excelHtml5',
                     title: 'Templates',
                     exportOptions: {
-                        columns: [ 1,2,3,4 ]
+                        columns: [1, 2, 3, 4]
                     }
                 }],
 
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../../field-elements/'+ fieldId,
+                    url: '../../field-elements/' + fieldId,
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'value_ar', name: 'value_ar' },
-                    { data: 'value_en', name: 'value_en' },
-                    { data: 'value_id', name: 'value_id' },
-                    { data: 'order', name: 'order' },
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'value_ar', name: 'value_ar'},
+                    {data: 'value_en', name: 'value_en'},
+                    {data: 'value_id', name: 'value_id'},
+                    {data: 'order', name: 'order'},
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
+            $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
@@ -210,7 +217,7 @@
 
             $('body').on('click', '.edit-element', function () {
                 var field_id = $(this).data('id');
-                $.get('../fieldElementController/'+field_id+'/edit', function (data) {
+                $.get('../fieldElementController/' + field_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit element");
                     $('#btn-save').val("edit-element");
@@ -228,16 +235,16 @@
                 var element_id = $(this).data("id");
                 $('#confirmTitle').html('Delete field');
                 $('#curr_element_id').val(element_id);
-                var confirmText =  'Are you sure you want to delete this element?';
+                var confirmText = 'Are you sure you want to delete this element?';
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
 
-            $('#delete-element-confirm-modal button').on('click', function(event) {
+            $('#delete-element-confirm-modal button').on('click', function (event) {
                 var $button = $(event.target);
 
-                $(this).closest('.modal').one('hidden.bs.modal', function() {
-                    if($button[0].id === 'btn-yes'){
+                $(this).closest('.modal').one('hidden.bs.modal', function () {
+                    if ($button[0].id === 'btn-yes') {
                         var element_id = $('#curr_element_id').val();
                         $.ajax({
                             type: "get",
@@ -258,7 +265,7 @@
         if ($("#fieldForm").length > 0) {
             console.log('Sending...');
             $("#fieldForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
 
                     $.ajax({

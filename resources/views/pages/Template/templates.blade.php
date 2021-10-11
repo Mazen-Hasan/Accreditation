@@ -97,7 +97,8 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="confirmModal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="confirmModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+         role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -113,7 +114,8 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel</button>
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                            </button>
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
@@ -126,7 +128,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -140,7 +142,7 @@
                     extend: 'excelHtml5',
                     title: 'Templates',
                     exportOptions: {
-                        columns: [ 1,2,3 ]
+                        columns: [1, 2, 3]
                     }
                 }],
 
@@ -151,21 +153,29 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'name', name: 'name' },
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'name', name: 'name'},
                     {
                         "data": "is_locked",
                         "render": function (val) {
                             return val == 1 ? "Yes" : "No";
                         }
                     },
-                    { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ return "<p style='color: red'>InActive</p>" }}},
+                    {
+                        data: 'status', render: function (data) {
+                            if (data == 1) {
+                                return "<p style='color: green'>Active</p>"
+                            } else {
+                                return "<p style='color: red'>InActive</p>"
+                            }
+                        }
+                    },
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
+            $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
@@ -179,7 +189,7 @@
 
             $('body').on('click', '.edit-template', function () {
                 var template_id = $(this).data('id');
-                $.get('templateController/'+template_id+'/edit', function (data) {
+                $.get('templateController/' + template_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Template");
                     $('#btn-save').val("edit-template");
@@ -195,7 +205,7 @@
                 $('#confirmTitle').html('Activate template');
                 $('#curr_template_id').val(template_id);
                 $('#mode_id').val('1');
-                var confirmText =  'Are you sure you want to activate this template?';
+                var confirmText = 'Are you sure you want to activate this template?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
@@ -205,7 +215,7 @@
                 $('#confirmTitle').html('Deactivate template');
                 $('#curr_template_id').val(template_id);
                 $('#mode_id').val('0');
-                var confirmText =  'Are you sure you want to deactivate this template?';
+                var confirmText = 'Are you sure you want to deactivate this template?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
@@ -215,7 +225,7 @@
                 $('#confirmTitle').html('Lock template');
                 $('#curr_template_id').val(template_id);
                 $('#mode_id').val('3');
-                var confirmText =  'Are you sure you want to lock this template?';
+                var confirmText = 'Are you sure you want to lock this template?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
@@ -225,22 +235,22 @@
                 $('#confirmTitle').html('Un-Lock template');
                 $('#curr_template_id').val(template_id);
                 $('#mode_id').val('2');
-                var confirmText =  'Are you sure you want to unLock this template?';
+                var confirmText = 'Are you sure you want to unLock this template?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
 
-            $('#confirmModal button').on('click', function(event) {
+            $('#confirmModal button').on('click', function (event) {
                 var $button = $(event.target);
 
-                $(this).closest('.modal').one('hidden.bs.modal', function() {
-                    if($button[0].id === 'btn-yes'){
+                $(this).closest('.modal').one('hidden.bs.modal', function () {
+                    if ($button[0].id === 'btn-yes') {
                         var template_id = $('#curr_template_id').val();
                         var mode_id = $('#mode_id').val();
-                        if(mode_id == 0 || mode_id == 1){
+                        if (mode_id == 0 || mode_id == 1) {
                             $.ajax({
                                 type: "get",
-                                url: "templateController/changeStatus/" + template_id+"/" + mode_id,
+                                url: "templateController/changeStatus/" + template_id + "/" + mode_id,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -249,11 +259,10 @@
                                     console.log('Error:', data);
                                 }
                             });
-                        }
-                        else{
+                        } else {
                             $.ajax({
                                 type: "get",
-                                url: "templateController/changeLock/" + template_id +"/" + mode_id,
+                                url: "templateController/changeLock/" + template_id + "/" + mode_id,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -272,7 +281,7 @@
         if ($("#templateForm").length > 0) {
             console.log('Sending...');
             $("#templateForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
 
                     $.ajax({

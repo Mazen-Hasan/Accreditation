@@ -96,12 +96,13 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="confirmModal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="confirmModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+         role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
                 <div class="modal-header">
-                            <h5 class="modal-title" id="confirmTitle"></h5>
+                    <h5 class="modal-title" id="confirmTitle"></h5>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -113,7 +114,8 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel</button>
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                            </button>
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
@@ -126,7 +128,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -140,7 +142,7 @@
                     extend: 'excelHtml5',
                     title: 'Company-Categories',
                     exportOptions: {
-                        columns: [ 1,2 ]
+                        columns: [1, 2]
                     }
                 }],
 
@@ -151,15 +153,23 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'name', name: 'name' },
-                    { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ return "<p style='color: red'>InActive</p>" }}},
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'name', name: 'name'},
+                    {
+                        data: 'status', render: function (data) {
+                            if (data == 1) {
+                                return "<p style='color: green'>Active</p>"
+                            } else {
+                                return "<p style='color: red'>InActive</p>"
+                            }
+                        }
+                    },
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
+            $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
@@ -173,7 +183,7 @@
 
             $('body').on('click', '.edit-category', function () {
                 var category_id = $(this).data('id');
-                $.get('companyCategoryController/'+category_id+'/edit', function (data) {
+                $.get('companyCategoryController/' + category_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#postCrudModal').html("Edit Company Category");
                     $('#btn-save').val("edit-category");
@@ -206,21 +216,21 @@
                 $('#confirmTitle').html('Activate Category');
                 $('#curr_category_id').val(category_id);
                 $('#mode_id').val('1');
-                var confirmText =  'Are you sure you want to activate this category?';
+                var confirmText = 'Are you sure you want to activate this category?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
 
-            $('#confirmModal button').on('click', function(event) {
+            $('#confirmModal button').on('click', function (event) {
                 var $button = $(event.target);
                 console.log($button);
-                $(this).closest('.modal').one('hidden.bs.modal', function() {
-                    if($button[0].id === 'btn-yes'){
+                $(this).closest('.modal').one('hidden.bs.modal', function () {
+                    if ($button[0].id === 'btn-yes') {
                         var category_id = $('#curr_category_id').val();
                         var mode_id = $('#mode_id').val();
                         $.ajax({
                             type: "get",
-                            url: "companyCategoryController/changeStatus/"+category_id+"/" + mode_id,
+                            url: "companyCategoryController/changeStatus/" + category_id + "/" + mode_id,
                             success: function (data) {
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);
@@ -238,7 +248,7 @@
                 $('#confirmTitle').html('Deactivate Category');
                 $('#curr_category_id').val(category_id);
                 $('#mode_id').val('0');
-                var confirmText =  'Are you sure you want to deactivate this category?';
+                var confirmText = 'Are you sure you want to deactivate this category?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
@@ -246,7 +256,7 @@
 
         if ($("#categoryForm").length > 0) {
             $("#categoryForm").validate({
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
 
                     $.ajax({

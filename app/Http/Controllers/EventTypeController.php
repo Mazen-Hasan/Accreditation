@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\EventType;
 use Illuminate\Http\Request;
-use Redirect, Response;
+use Redirect;
+use Response;
 
 class EventTypeController extends Controller
 {

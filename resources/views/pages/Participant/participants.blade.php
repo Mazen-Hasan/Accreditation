@@ -45,7 +45,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-{{--                                    <th>Location</th>--}}
+                                    {{--                                    <th>Location</th>--}}
                                     <th>Nationality</th>
                                     <th>Email</th>
                                     <th>Mobile</th>
@@ -53,7 +53,7 @@
                                     <th>Company</th>
                                     <th>Accreditation Category</th>
                                     <th>Class</th>
-{{--                                    <th style="color: black">Status</th>--}}
+                                    {{--                                    <th style="color: black">Status</th>--}}
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -69,7 +69,7 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -83,7 +83,7 @@
                     extend: 'excelHtml5',
                     title: 'Participants',
                     exportOptions: {
-                        columns: [ 1,2,3,4,5,6,7,8 ]
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
                     }
                 }],
 
@@ -94,17 +94,17 @@
                     type: 'GET',
                 },
                 columns: [
-                    { data: 'id', name: 'id', 'visible': false},
-                    { data: 'name', name: 'name'},
+                    {data: 'id', name: 'id', 'visible': false},
+                    {data: 'name', name: 'name'},
                     // { data: 'event_admin', name: 'event_admin', 'visible': false},
                     // { data: 'location', name: 'location' , 'visible': false},
-                    { data: 'nationality', name: 'nationality' },
-                    { data: 'email', name: 'email' },
-                    { data: 'mobile', name: 'mobile' },
-                    { data: 'position', name: 'position' },
-                    { data: 'company', name: 'company'},
-                    { data: 'accreditation_category', name: 'accreditation_category' },
-                    { data: 'class', name: 'class' },
+                    {data: 'nationality', name: 'nationality'},
+                    {data: 'email', name: 'email'},
+                    {data: 'mobile', name: 'mobile'},
+                    {data: 'position', name: 'position'},
+                    {data: 'company', name: 'company'},
+                    {data: 'accreditation_category', name: 'accreditation_category'},
+                    {data: 'class', name: 'class'},
                     // { data: 'status', render:function (data){ if(data == 1) { return "<span style='color: green'>Active</span>"} else{ return "<span style='color: red'>InActive</span>" }}},
                     // { data: 'approval_option', name: 'approval_option' , 'visible': false},
                     // { data: 'security_officer', name: 'security_officer' , 'visible': false},
@@ -118,8 +118,8 @@
                 order: [[0, 'desc']]
             });
 
-            $('.export-to-excel').click( function() {
-                $('#laravel_datatable').DataTable().button( '.buttons-excel' ).trigger();
+            $('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
             $('#add-new-post').click(function () {

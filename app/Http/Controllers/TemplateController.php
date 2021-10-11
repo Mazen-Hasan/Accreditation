@@ -25,7 +25,7 @@ class TemplateController extends Controller
         if (request()->ajax()) {
             return datatables()->of(Template::latest()->get())
                 ->addColumn('action', function ($data) {
-                    $button ='';
+                    $button = '';
                     if ($data->is_locked == 0) {
                         $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-template">Edit</a>';
                         $button .= '&nbsp;&nbsp;';
@@ -83,11 +83,11 @@ class TemplateController extends Controller
         $post = Template::updateOrCreate(['id' => $template_id],
             ['name' => $request->name,
                 'status' => $request->status,
-                'is_locked'  =>  $request->has('locked'),
+                'is_locked' => $request->has('locked'),
                 'creator' => Auth::user()->id
             ]);
 
-        if($template_id == null){
+        if ($template_id == null) {
 
             $query = 'select p.id, p.label_ar, p.label_en, p.mandatory, p.min_char, p.max_char, p.field_type_id  from pre_defined_fields  p';
             $pre_defined_fields_res = DB::select($query);
@@ -110,7 +110,7 @@ class TemplateController extends Controller
 
                 foreach ($pre_defined_field_elements_res as $row_filed_elements) {
                     $templateFieldElement = TemplateFieldElement::updateOrCreate(['id' => 0],
-                        ['value_ar' => $row_filed_elements->value_ar	,
+                        ['value_ar' => $row_filed_elements->value_ar,
                             'value_en' => $row_filed_elements->value_en,
                             'value_id' => $row_filed_elements->value_id,
                             'order' => $row_filed_elements->order,

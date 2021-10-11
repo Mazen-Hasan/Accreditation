@@ -81,7 +81,6 @@
                                            <select id="event_admin" name="event_admin" required="">
                                                 @foreach ($eventAdmins as $eventAdmin)
                                                     <option value="{{ $eventAdmin->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($eventAdmin->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -98,7 +97,6 @@
                                            <select id="event_form" name="event_form" required="">
                                                 @foreach ($eventForms as $eventForm)
                                                     <option value="{{ $eventForm->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($eventForm->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -117,7 +115,6 @@
                                            <select id="owner" name="owner" required="">
                                                 @foreach ($owners as $owner)
                                                     <option value="{{ $owner->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                                 @if ($owner->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -134,7 +131,6 @@
                                            <select id="organizer" name="organizer" required="">
                                                 @foreach ($organizers as $organizer)
                                                     <option value="{{ $organizer->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($organizer->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -145,9 +141,6 @@
                                     </div>
                                 </div>
                             </div>
-{{--                            <p class="card-description">--}}
-{{--                                Address--}}
-{{--                            </p>--}}
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
@@ -164,7 +157,6 @@
                                            <select id="event_type" name="event_type" required="">
                                                 @foreach ($eventTypes as $eventType)
                                                     <option value="{{ $eventType->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($eventType->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -183,7 +175,6 @@
                                            <select id="approval_option" name="approval_option" required="">
                                                 @foreach ($approvalOptions as $approvalOption)
                                                     <option value="{{ $approvalOption->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($approvalOption->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -200,7 +191,6 @@
                                            <select id="security_officer" name="security_officer" required="">
                                                 @foreach ($securityOfficers as $securityOfficer)
                                                     <option value="{{ $securityOfficer->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($securityOfficer->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -219,7 +209,6 @@
                                            <select id="status" name="status" required="">
                                                 @foreach ($eventStatuss as $eventStatus)
                                                     <option value="{{ $eventStatus->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($eventStatus->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -236,7 +225,6 @@
                                             <select  multiple id="security_categories" name="security_categories[]" required="">
                                                 @foreach ($securityCategories as $securityCategory)
                                                     <option value="{{ $securityCategory->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($securityCategory->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -276,9 +264,8 @@
             });
             $(document).on('change','#approval_option',function(){
                var choosed = $('#approval_option').find(":selected").val();
-               //alert(choosed);
                if(choosed == 1){
-                    $("#security_officer").prop('disabled', true);                                                       
+                    $("#security_officer").prop('disabled', true);
                }else{
                     $('#security_officer').prop('disabled', false);
                }
@@ -288,11 +275,54 @@
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
+
+                // rules : {
+                //     event_start_date_n : {
+                //         date : true,
+                //         // required: false,
+                //         // dateITA : true,
+                //         dateLessThan : '#event_end_date'
+                //     },
+                //     // event_end_date : {
+                //     //     date : true,
+                //     //     required: true,
+                //     //     dateITA : true,
+                //     //     dateGreaterThan : "#event_start_date"
+                //     // },
+                //     // accreditation_start_date : {
+                //     //     date : true,
+                //     //     required: true,
+                //     //     dateITA : true,
+                //     //     dateLessThan : "#accreditation_end_date"
+                //     // },
+                //     // accreditation_end_date : {
+                //     //     date : true,
+                //     //     required: true,
+                //     //     dateITA : true,
+                //     //     dateGreaterThan : "#accreditation_start_date"
+                //     // },
+                // },
+                //
+                // messages: {
+                //     event_start_date_n: {
+                //         dateLessThan: "Event start date must be less than end date",
+                //         required: "This filed is required"
+                //     },
+                //     // event_end_date: {
+                //     //     dateGreaterThan: "Event end date must be greater than start date"
+                //     // },
+                //     // accreditation_start_date: {
+                //     //     dateLessThan: "Accreditation start date must be less than end date"
+                //     // },
+                //     // accreditation_end_date: {
+                //     //     dateGreaterThan: "Accreditation end date must be greater than start date"
+                //     // },
+                // },
+
                 submitHandler: function(form) {
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    // alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('EventController.store') }}",
@@ -303,8 +333,6 @@
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
                             window.location.href = "{{ route('events')}}";
-                            // var oTable = $('#laravel_datatable').dataTable();
-                            // oTable.fnDraw(false);
                         },
                         error: function (data) {
                             console.log('Error:', data);

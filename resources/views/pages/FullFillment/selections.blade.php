@@ -75,13 +75,13 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="col-sm-12">
-                                        <button id="btn-filter" value="create">filter
-                                        </button>
+                                    <button id="btn-filter" value="create">filter
+                                    </button>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="col-sm-12">
-                                        <label id="label-count" style="color:green;padding-top:5px"> </label>
+                                    <label id="label-count" style="color:green;padding-top:5px"> </label>
                                 </div>
                             </div>
                             <!-- <div class="col-md-3">
@@ -92,11 +92,10 @@
                             </div> -->
                             <div class="col-md-3">
                                 <div class="col-sm-12">
-                                        <button id="btn-details" value="create">Datails
-                                        </button>
+                                    <button id="btn-details" value="create">Datails
+                                    </button>
                                 </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                 </div>
@@ -113,83 +112,83 @@
                 }
             });
         });
-        $('#company').on('change', function() {
+        $('#company').on('change', function () {
             $('#label-count').html('');
             $('#btn-filter').html('Filter');
         });
-        $('#category').on('change', function() {
+        $('#category').on('change', function () {
             $('#label-count').html('');
             $('#btn-filter').html('Filter');
-        }); 
-        $('#event').on('change', function() {
+        });
+        $('#event').on('change', function () {
             $('#label-count').html('');
             $('#btn-filter').html('Filter');
             $.ajax({
                 type: "get",
-                url: "fullFillmentController/getCompanies/"+this.value,
+                url: "fullFillmentController/getCompanies/" + this.value,
                 success: function (data) {
                     var companySelectOptions = data;
                     $('#container').html('');
                     var html = '<select id="company" name="company" value="" required="">';
                     var count = 0;
-                    while (count < companySelectOptions.length){
-                        if(count == 0){
-                            html = html + "<option selected='selected' value="+companySelectOptions[count].key+">"+companySelectOptions[count].value+"</option>";
-                        }else{
-                            html = html + "<option value="+companySelectOptions[count].key+">"+companySelectOptions[count].value+"</option>";
+                    while (count < companySelectOptions.length) {
+                        if (count == 0) {
+                            html = html + "<option selected='selected' value=" + companySelectOptions[count].key + ">" + companySelectOptions[count].value + "</option>";
+                        } else {
+                            html = html + "<option value=" + companySelectOptions[count].key + ">" + companySelectOptions[count].value + "</option>";
                         }
-                         count++;
+                        count++;
                     }
                     html = html + '<select/>';
-                    $('#container').append(html); 
+                    $('#container').append(html);
                 },
-                    error: function (data) {
-                        console.log('Error:', data);
+                error: function (data) {
+                    console.log('Error:', data);
                 }
             });
         });
         $('#btn-filter').click(function () {
-            
+
             //alert($('#btn-filter').html());
             //alert( this.value );
             var labelValue = $('#btn-filter').html();
             //alert(labelValue);
-            if(labelValue.toLowerCase().indexOf('filter') >= 0){
+            if (labelValue.toLowerCase().indexOf('filter') >= 0) {
                 //alert('first');
                 var selectedEvent = $('#event option:selected').val();
                 var selectedCompany = $('#company option:selected').val();
                 var selectedAccredit = $('#category option:selected').text();
                 $.ajax({
                     type: "get",
-                    url: "fullFillmentController/getParticipants/"+selectedEvent+"/"+selectedCompany+"/"+selectedAccredit,
+                    url: "fullFillmentController/getParticipants/" + selectedEvent + "/" + selectedCompany + "/" + selectedAccredit,
                     success: function (data) {
                         companySelectOptions = data;
                         //alert(companySelectOptions);
-                        $('#label-count').html('Total filtered Count: '+companySelectOptions.length);
+                        $('#label-count').html('Total filtered Count: ' + companySelectOptions.length);
                         $('#btn-filter').html('Generate');
 
                     },
-                        error: function (data) {
-                            console.log('Error:', data);
+                    error: function (data) {
+                        console.log('Error:', data);
                     }
                 });
             }
-            if(labelValue.toLowerCase().indexOf('generate') >=0){
-                //alert('second');        
+            if (labelValue.toLowerCase().indexOf('generate') >= 0) {
+                //alert('second');
                 var staff = companySelectOptions;
                 //alert(companySelectOptions);
-                if(staff.length > 0){
+                if (staff.length > 0) {
                     $.ajax({
                         type: "post",
-                        data:  {staff: staff} ,
+                        data: {staff: staff},
                         dataType: "json",
                         url: "{{ url('pdf-generate')}}",
                         success: function (data) {
                             console.log(data);
-                            //window.open(data.file, '_blank');
-                            window.location.href = data.file;
+                            window.open(data.file, '_blank');
+                            // window.location.href = data.file;
                             $('#btn-filter').html('Fullfillment');
-                            ('#label-count').html('Total generated count: '+companySelectOptions.length);
+                            ('#label-count').html('Total generated count: ' + companySelectOptions.length);
                         },
                         error: function (data) {
                             console.log('Error:', data);
@@ -197,19 +196,19 @@
                     });
                 }
             }
-            if(labelValue.toLowerCase().indexOf('fullfillment') >=0){
+            if (labelValue.toLowerCase().indexOf('fullfillment') >= 0) {
                 //alert('third');
                 //alert(companySelectOptions);
                 var staff = companySelectOptions;
-                if(staff.length > 0){
+                if (staff.length > 0) {
                     $.ajax({
                         type: "post",
-                        data:  {staff: staff} ,
+                        data: {staff: staff},
                         dataType: "json",
                         url: "{{ url('fullFillment')}}",
                         success: function (data) {
                             $('#btn-filter').html('Reset');
-                            $('#label-count').html('Total fullfillment count: '+companySelectOptions.length);
+                            $('#label-count').html('Total fullfillment count: ' + companySelectOptions.length);
                         },
                         error: function (data) {
                             console.log('Error:', data);
@@ -217,7 +216,7 @@
                     });
                 }
             }
-            if(labelValue.toLowerCase().indexOf('reset') >=0){
+            if (labelValue.toLowerCase().indexOf('reset') >= 0) {
                 //alert('third');
                 //alert(companySelectOptions);
                 $('#label-count').html('');
@@ -229,7 +228,7 @@
             var selectedCompany = $('#company option:selected').val();
             var selectedAccredit = $('#category option:selected').text();
             //alert('i ma here' +selectedEvent +',' + selectedCompany + ',' + selectedAccredit);
-            window.location.href = "all-participants/"+selectedEvent+"/"+selectedCompany+"/"+selectedAccredit+"/0";
-            });
+            window.location.href = "all-participants/" + selectedEvent + "/" + selectedCompany + "/" + selectedAccredit + "/0";
+        });
     </script>
 @endsection

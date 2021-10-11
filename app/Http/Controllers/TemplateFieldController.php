@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FieldType;
+use App\Models\Template;
 use App\Models\TemplateField;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,12 +23,15 @@ class TemplateFieldController extends Controller
             return datatables()->of($templateFields)
                 ->addColumn('action', function ($data) {
                     $button ='';
-                    if(strtolower($data->label_en) != 'company' and strtolower($data->label_en) != 'event'){
-                        $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="edit-field"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-feild">Edit</a>';
-                        $button .= '&nbsp;&nbsp;';
-                        $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-field">Delete</a>';
-                        $button .= '&nbsp;&nbsp;';
+                    if($data->is_locked == 0){
+                        if(strtolower($data->label_en) != 'company' and strtolower($data->label_en) != 'event'){
+                            $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="edit-field"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-feild">Edit</a>';
+                            $button .= '&nbsp;&nbsp;';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-field">Delete</a>';
+                            $button .= '&nbsp;&nbsp;';
+                        }
                     }
+
                     if ($data->slug == 'select') {
                         $button .= '<a href="' . route('fieldElements', $data->id) . '" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook"> Elements</a>';
                     }
@@ -38,7 +42,11 @@ class TemplateFieldController extends Controller
         }
 
         $fieldTypes = FieldType::get()->all();
-        return view('pages.Template.template-fields')->with('template_id',$template_id)->with('fieldTypes', $fieldTypes);
+
+        $where = array('id' => $template_id);
+        $template = Template::where($where)->first();
+
+        return view('pages.Template.template-fields')->with('template',$template)->with('fieldTypes', $fieldTypes);
     }
 
     public function store(Request $request)

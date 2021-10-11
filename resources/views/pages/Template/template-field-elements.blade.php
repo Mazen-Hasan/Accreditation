@@ -21,7 +21,15 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Template / Fields / Elements</p>
+                                <p class="card-title">
+                                    <a class="url-nav" href="{{route('templates')}}">
+                                        <span>Template:</span>
+                                    </a>
+                                    <a class="url-nav" href="{{route('templateFields',$template->template_id)}}">
+                                        <span>{{$template->template_name}}</span>
+                                    </a>
+                                    / {{$template->label_en}} / Elements
+                                </p>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -31,12 +39,14 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                <a href="javascript:void(0)" id="add-new-template" class="add-hbtn">
-                                    <i>
-                                        <img src="{{ asset('images/add.png') }}" alt="Add">
-                                    </i>
-                                    <span class="dt-hbtn">Add</span>
-                                </a>
+                                @if($template->is_locked == 0)
+                                    <a href="javascript:void(0)" id="add-new-field" class="add-hbtn">
+                                        <i>
+                                            <img src="{{ asset('images/add.png') }}" alt="Add">
+                                        </i>
+                                        <span class="dt-hbtn">Add</span>
+                                    </a>
+                                @endif
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -68,7 +78,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="fieldForm" name="fieldForm" class="form-horizontal">
-                        <input style="visibility: hidden" type="text" name="field_id" id="field_id" value="{{$field_id}}">
+                        <input style="visibility: hidden" type="text" name="field_id" id="field_id" value="{{$template->id}}">
 
                         <div class="row">
                             <div class="col-md-6">
@@ -190,7 +200,7 @@
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
-            $('#add-new-template').click(function () {
+            $('#add-new-field').click(function () {
                 $('#btn-save').val("create-element");
                 $('#template_id').val('');
                 $('#fieldForm').trigger("reset");

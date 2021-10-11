@@ -13,20 +13,25 @@ class FieldElementController extends Controller
     public function index($field_id)
     {
         if (request()->ajax()) {
-            $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?',[$field_id]);
+            $fieldElements = DB::select('select * from template_field_elements_view f where f.template_field_id = ?',[$field_id]);
             return datatables()->of($fieldElements)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-element">Edit</a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-element"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-element">Delete</a>';
-                    $button .= '&nbsp;&nbsp;';
+                    $button ='';
+                    if($data->is_locked == 0) {
+                        $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-element">Edit</a>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-element"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-element">Delete</a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
 
-        return view('pages.Template.template-field-elements')->with('field_id',$field_id);
+        $template = DB::select('select * from template_fields_view v where v.id = ?',[$field_id]);
+
+        return view('pages.Template.template-field-elements')->with('template', $template[0]);
     }
 
     public function store(Request $request)

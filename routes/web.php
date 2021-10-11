@@ -65,7 +65,7 @@ Route::group(['middleware' => 'role:company-admin'], function() {
     Route::get('/dataentry-add', [App\Http\Controllers\DataEntryController::class, 'focalpointAdd'])->name('dataentryAdd');
     Route::get('/dataentry-edit/{id}', [App\Http\Controllers\DataEntryController::class, 'edit'])->name('dataentryEdit');
     Route::get('dataentryController/reset_password/{id}/{password}', 'App\Http\Controllers\DataEntryController@resetPassword');
-    
+
 });
 
 Route::group(['middleware' => 'role:event-admin'], function() {
@@ -157,6 +157,7 @@ Route::group(['middleware' => 'role:super-admin'], function() {
     Route::resource('templateController', 'App\Http\Controllers\TemplateController');
     Route::get('templateController/destroy/{id}', 'App\Http\Controllers\TemplateController@destroy');
     Route::get('templateController/changeStatus/{id}/{status}', 'App\Http\Controllers\TemplateController@changeStatus');
+    Route::get('templateController/changeLock/{id}/{status}', 'App\Http\Controllers\TemplateController@changeLock');
 
     Route::resource('userController', 'App\Http\Controllers\UserController');
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users');
@@ -174,6 +175,8 @@ Route::group(['middleware' => 'role:super-admin'], function() {
 
     Route::get('/template-badge', [App\Http\Controllers\TemplateBadgeController::class, 'index'])->name('templateBadge');
     Route::resource('templateBadgeController', 'App\Http\Controllers\TemplateBadgeController');
+    Route::get('templateBadgeController/changeLock/{id}/{status}', 'App\Http\Controllers\TemplateBadgeController@changeLock');
+
 
     Route::post('store-file', 'App\Http\Controllers\FileUploadController@store');
 
@@ -224,4 +227,8 @@ Route::get('/markAsRead-notification/{id}', [App\Http\Controllers\NotificationCo
 //Auth::routes();
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::any('{query}',
+    function() { return redirect('/'); })
+    ->where('query', '.*');
 

@@ -33,54 +33,44 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text"  id="email" name="email" placeholder="enter email" required=""/>
+                                            <input type="email"  id="email" name="email" placeholder="enter email" required=""/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group col">
-                                        <label>Email</label>
-                                        <div class="col-sm-6">
-                                            <input type="text"  id="email" name="email" placeholder="enter email" required=""/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Password</label>
-                                        <div class="col-sm-12">
-                                            <input type="password" id="password" name="password" placeholder="enter password" required=""/>
+                                        <div class="row">
+                                            <div class="col-sm-11">
+                                                <input style="margin-left: 16px; width: 103%" type="password" id="password" name="password" placeholder="enter password" required=""/>
+                                            </div>
+                                            <div class="col-sm-1" id="eye">
+                                                <i class="fa fa-eye-slash" id="togglePassword"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Confirm Password</label>
-                                        <div class="col-sm-12">
-                                            <input type="password" id="confirm_password" name="confirm_password" placeholder="confirm password" required=""/>
+                                        <div class="row">
+                                            <div class="col-sm-11">
+                                                <input style="margin-left: 16px; width: 103%" type="password" id="confirm_password" name="confirm_password" placeholder="confirm password" required=""/>
+                                            </div>
+                                            <div class="col-sm-1" id="eye">
+                                                <i class="fa fa-eye-slash" id="togglePasswordConfirm"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group col">
-                                        <label>Confirm Password</label>
-                                        <div class="col-sm-6">
-                                            <input type="password" id="confirm_password" name="confirm_password" placeholder="confirm password" required=""/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Role</label>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                             <select id="role" name="role" value="" required="">
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role->key }}"
@@ -90,6 +80,8 @@
                                                     >{{ $role->value }}</option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                        <div class="col-sm-12">
                                         </div>
                                     </div>
                                 </div>
@@ -121,10 +113,49 @@
                 $('#postCrudModal').html("Add New Contact");
                 $('#ajax-crud-modal').modal('show');
             });
+
+            $('#togglePassword').click(function (){
+                var type = $('#password').attr('type') === 'password' ? 'text' : 'password';
+                $('#password').attr('type', type);
+                if(type === 'text'){
+                    $('#togglePassword').removeClass('fa fa-eye-slash');
+                    $('#togglePassword').addClass('fa fa-eye');
+                }
+                else{
+                    $('#togglePassword').removeClass('fa fa-eye');
+                    $('#togglePassword').addClass('fa fa-eye-slash');
+                }
+            });
+
+            $('#togglePasswordConfirm').click(function (){
+                var type = $('#confirm_password').attr('type') === 'password' ? 'text' : 'password';
+                $('#confirm_password').attr('type', type);
+                if(type === 'text'){
+                    $('#togglePasswordConfirm').removeClass('fa fa-eye-slash');
+                    $('#togglePasswordConfirm').addClass('fa fa-eye');
+                }
+                else{
+                    $('#togglePasswordConfirm').removeClass('fa fa-eye');
+                    $('#togglePasswordConfirm').addClass('fa fa-eye-slash');
+                }
+            });
         });
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
+
+                rules: {
+                    confirm_password: {
+                        equalTo: '#password'
+                    }
+                },
+
+                messages: {
+                    confirm_password: {
+                        equalTo: "Please enter the same password as above"
+                    }
+                },
+
                 submitHandler: function(form) {
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();

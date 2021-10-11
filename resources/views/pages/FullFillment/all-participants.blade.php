@@ -72,8 +72,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-</div>
+    </div>
 
 @endsection
 @section('script')
@@ -193,7 +192,8 @@
                         url: "{{ url('pdf-generate')}}",
                         success: function (data) {
                             console.log(data);
-                            window.location.href = data.file;
+                            window.open(data.file,'_blank');
+                            // window.location.href = data.file;
                         },
                         error: function (data) {
                             console.log('Error:', data);

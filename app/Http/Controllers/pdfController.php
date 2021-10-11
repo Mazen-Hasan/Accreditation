@@ -49,7 +49,10 @@ class pdfController extends Controller
             }
 
             //save pdf
-            $pdf->Output('download/badges.pdf','F');
+
+            $path = public_path('download/');
+            $path .= 'badges.pdf';
+            $pdf->Output($path,'F');
 
             $updateProduct = CompanyStaff::whereIn('id',$staffIDs)
                 ->update(['print_status' => '2','status' => '10']);

@@ -25,15 +25,6 @@
                 <span class="menu-title">Event Management</span>
             </a>
         </li>
-<!--         <li class="nav-item">
-            <a class="nav-link  {{ str_contains( Request::route()->getName(),'event') =="1" ? "title" : "" }}"
-               href="{{ route('titles') }}">
-                <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Titles">
-                </i>
-                <span class="menu-title">Titles</span>
-            </a>
-        </li> -->
         <li class="nav-item">
             <a class="nav-link {{ str_contains( Request::route()->getName(),'companyCategories') =="1" ? "active" : "" }}"
                href="{{ route('companyCategories') }}">
@@ -81,15 +72,15 @@
             </a>
         </li>
 
-{{--        <li class="nav-item">--}}
-{{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'companies') =="1" ? "active" : "" }}"--}}
-{{--               href="{{ route('companies') }}">--}}
-{{--                <i class="logout">--}}
-{{--                    <img src="{{ asset('images/company.png') }}" alt="Companies">--}}
-{{--                </i>--}}
-{{--                <span class="menu-title">Companies</span>--}}
-{{--            </a>--}}
-{{--        </li>--}}
+        {{--        <li class="nav-item">--}}
+        {{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'companies') =="1" ? "active" : "" }}"--}}
+        {{--               href="{{ route('companies') }}">--}}
+        {{--                <i class="logout">--}}
+        {{--                    <img src="{{ asset('images/company.png') }}" alt="Companies">--}}
+        {{--                </i>--}}
+        {{--                <span class="menu-title">Companies</span>--}}
+        {{--            </a>--}}
+        {{--        </li>--}}
         <li class="nav-item">
             <a class="nav-link {{ str_contains( Request::route()->getName(),'accreditationCategories') =="1" ? "active" : "" }}"
                href="{{ route('accreditationCategories') }}">
@@ -126,15 +117,6 @@
                 <span class="menu-title">FullFillment</span>
             </a>
         </li>
-{{--        <li class="nav-item">--}}
-{{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'participants') =="1" ? "active" : "" }}"--}}
-{{--               href="{{ route('participants') }}">--}}
-{{--                <i class="logout">--}}
-{{--                    <img src="{{ asset('images/participant.png') }}" alt="Participants">--}}
-{{--                </i>--}}
-{{--                <span class="menu-title">Participant management</span>--}}
-{{--            </a>--}}
-{{--        </li>--}}
         @endrole
         @role('event-admin')
         <li class="nav-item">
@@ -184,6 +166,24 @@
                 <span class="menu-title">Data Entry</span>
             </a>
         </li>
+{{--        <li id="subsidiaries_nav" class="nav-item">--}}
+{{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}"--}}
+{{--               href="{{ route('subCompanies') }} ">--}}
+{{--                <i class="logout">--}}
+{{--                    <img src="{{ asset('images/menu.png') }}" alt="My Sidries">--}}
+{{--                </i>--}}
+{{--                <span class="menu-title">Subsidiaries</span>--}}
+{{--            </a>--}}
+{{--        </li>--}}
+{{--        <li class="nav-item">--}}
+{{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}"--}}
+{{--               href="{{ route('dataentrys') }}">--}}
+{{--                <i class="logout">--}}
+{{--                    <img src="{{ asset('images/menu.png') }}" alt="Data Entry">--}}
+{{--                </i>--}}
+{{--                <span class="menu-title">Data Entry</span>--}}
+{{--            </a>--}}
+{{--        </li>--}}
         @endrole
         @role('security-officer')
         <li class="nav-item">
@@ -209,8 +209,6 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
             </form>
-
-
         </li>
     </ul>
 </nav>

@@ -25,9 +25,19 @@ class TemplateController extends Controller
         if (request()->ajax()) {
             return datatables()->of(Template::latest()->get())
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-template">Edit</a>';
-                    $button .= '&nbsp;&nbsp;';
+                    $button ='';
+                    if ($data->is_locked == 0) {
+                        $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-template">Edit</a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
+
                     $button .= '<a href="' . route('templateFields', $data->id) . '" id="template-fields" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="fields">Fields<i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    if ($data->is_locked == 1) {
+                        $button .= '<a href="javascript:void(0);" id="unLock-template" data-toggle="tooltip" data-original-title="Unlock" data-id="' . $data->id . '" class="delete btn btn-facebook">Unlock</a>';
+                    } else {
+                        $button .= '<a href="javascript:void(0);" id="lock-template" data-toggle="tooltip" data-original-title="Lock" data-id="' . $data->id . '" class="delete btn btn-outline-facebook"> &nbsp;Lock&nbsp;</a>';
+                    }
                     $button .= '&nbsp;&nbsp;';
                     if ($data->status == 1) {
                         $button .= '<a href="javascript:void(0);" id="deActivate-template" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger"> Deactivate</a>';
@@ -73,10 +83,9 @@ class TemplateController extends Controller
         $post = Template::updateOrCreate(['id' => $template_id],
             ['name' => $request->name,
                 'status' => $request->status,
+                'is_locked'  =>  $request->has('locked'),
                 'creator' => Auth::user()->id
             ]);
-
-    	if($template_id == null){
 
         if($template_id == null){
 
@@ -109,7 +118,6 @@ class TemplateController extends Controller
                         ]);
                 }
             }
-        }
         }
 
         return Response::json($post);
@@ -145,6 +153,15 @@ class TemplateController extends Controller
         $post = Template::updateOrCreate(['id' => $id],
             [
                 'status' => $status
+            ]);
+        return Response::json($post);
+    }
+
+    public function changeLock($id, $is_locked)
+    {
+        $post = Template::updateOrCreate(['id' => $id],
+            [
+                'is_locked' => $is_locked - 2
             ]);
         return Response::json($post);
     }

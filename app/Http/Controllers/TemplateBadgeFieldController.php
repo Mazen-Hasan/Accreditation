@@ -13,29 +13,32 @@ class TemplateBadgeFieldController extends Controller
 {
     public function index($badge_id)
     {
-
-//        var_dump($badge_id);
         $where = array('id' => $badge_id);
         $templateBadge = TemplateBadge::where($where)->get()->first();
 
-//        var_dump($templateBadge->template_id);
         $templateFields = DB::select('select * from template_fields_view v where v.template_id = ?',[$templateBadge->template_id]);
 
-//        var_dump($templateFields);
         if (request()->ajax()) {
-            $templaeBadgeFileds = DB::select('select * from template_badge_fields where  badge_id = ?', [$badge_id]);
+            $templaeBadgeFileds = DB::select('select * from template_badge_fields_view where  badge_id = ?', [$badge_id]);
             return datatables()->of($templaeBadgeFileds)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-field">Edit</a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-field">Delete</a>';
-                    $button .= '&nbsp;&nbsp;';
+                    $button ='';
+                    if ($data->is_locked == 0) {
+                        $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-field">Edit</a>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-field">Delete</a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.Template.template-badge-fields')->with('badge_id',$badge_id)->with('templateFields',$templateFields);
+
+        $where = array('id' => $badge_id);
+        $badge = TemplateBadge::where($where)->first();
+
+        return view('pages.Template.template-badge-fields')->with('badge',$badge)->with('templateFields',$templateFields);
     }
 
     public function store(Request $request)

@@ -19,7 +19,7 @@
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="need_management" id="need_management" value="">
-                            <input style="visibility: hidden" name="event_id" id="event_id" value="{{$eventid}}" >
+                            <input style="visibility: hidden" name="event_id" id="event_id" value="{{$eventid}}">
                             <input type="hidden" name="post_id" id="post_id">
                             <br>
                             <div class="row">
@@ -27,7 +27,8 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" value="" required="" placeholder="enter name"/>
+                                            <input type="text" id="name" name="name" value="" required=""
+                                                   placeholder="enter name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -35,7 +36,8 @@
                                     <div class="form-group col">
                                         <label>Address</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="address" name="address" value="" required="" placeholder="enter address"/>
+                                            <input type="text" id="address" name="address" value="" required=""
+                                                   placeholder="enter address"/>
                                         </div>
                                     </div>
                                 </div>
@@ -45,7 +47,8 @@
                                     <div class="form-group col">
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="telephone" name="telephone" value="" required="" placeholder="enter telephone"/>
+                                            <input type="text" id="telephone" name="telephone" value="" required=""
+                                                   placeholder="enter telephone"/>
                                         </div>
                                     </div>
                                 </div>
@@ -53,7 +56,8 @@
                                     <div class="form-group col">
                                         <label>Website</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="website" name="website" value="" required="" placeholder="enter website"/>
+                                            <input type="text" id="website" name="website" value="" required=""
+                                                   placeholder="enter website"/>
                                         </div>
                                     </div>
                                 </div>
@@ -63,7 +67,8 @@
                                     <div class="form-group col">
                                         <label>Size</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="size" name="size" value="" required="" placeholder="enter size"/>
+                                            <input type="text" id="size" name="size" value="" required=""
+                                                   placeholder="enter size"/>
                                         </div>
                                     </div>
                                 </div>
@@ -90,16 +95,16 @@
                                     <div class="form-group col">
                                         <label>Country</label>
                                         <div class="col-sm-12">
-{{--                                            <input list="country" name="country">--}}
-{{--                                            <datalist id="country">--}}
-{{--                                                @foreach ($countrys as $country)--}}
-{{--                                                    <option id="{{ $country->key }}"--}}
-{{--                                                            @if ($country->key == 1)--}}
-{{--                                                            selected="selected"--}}
-{{--                                                        @endif--}}
-{{--                                                    >{{ $country->value }}</option>--}}
-{{--                                                @endforeach--}}
-{{--                                            </datalist>--}}
+                                            {{--                                            <input list="country" name="country">--}}
+                                            {{--                                            <datalist id="country">--}}
+                                            {{--                                                @foreach ($countrys as $country)--}}
+                                            {{--                                                    <option id="{{ $country->key }}"--}}
+                                            {{--                                                            @if ($country->key == 1)--}}
+                                            {{--                                                            selected="selected"--}}
+                                            {{--                                                        @endif--}}
+                                            {{--                                                    >{{ $country->value }}</option>--}}
+                                            {{--                                                @endforeach--}}
+                                            {{--                                            </datalist>--}}
                                             <select id="country" name="country" value="" required="">
                                                 @foreach ($countrys as $country)
                                                     <option value="{{ $country->key }}"
@@ -116,16 +121,16 @@
                                     <div class="form-group col">
                                         <label>City</label>
                                         <div class="col-sm-12">
-{{--                                            <input list="city-list" id="city" name="city">--}}
-{{--                                            <datalist id="city-list">--}}
-{{--                                                @foreach ($citys as $city)--}}
-{{--                                                    <option id="{{ $city->key }}" value="{{ $city->value }}"--}}
-{{--                                                            @if ($city->key == 1)--}}
-{{--                                                            selected="selected"--}}
-{{--                                                        @endif--}}
-{{--                                                    ></option>--}}
-{{--                                                @endforeach--}}
-{{--                                            </datalist>--}}
+                                            {{--                                            <input list="city-list" id="city" name="city">--}}
+                                            {{--                                            <datalist id="city-list">--}}
+                                            {{--                                                @foreach ($citys as $city)--}}
+                                            {{--                                                    <option id="{{ $city->key }}" value="{{ $city->value }}"--}}
+                                            {{--                                                            @if ($city->key == 1)--}}
+                                            {{--                                                            selected="selected"--}}
+                                            {{--                                                        @endif--}}
+                                            {{--                                                    ></option>--}}
+                                            {{--                                                @endforeach--}}
+                                            {{--                                            </datalist>--}}
 
                                             <select id="city" name="city" value="" required="">
                                                 @foreach ($citys as $city)
@@ -165,7 +170,7 @@
                                             <select id="status" name="status" value="" required="">
                                                 @foreach ($statuss as $status)
                                                     <option value="{{ $status->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($status->key == 1)
                                                             selected="selected"
                                                         @endif
@@ -176,24 +181,24 @@
                                     </div>
                                 </div>
                             </div>
-                                <!-- <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Accreditation Category</label>
                                         <div class="col-sm-12">
                                             <select id="accreditationCategories" multiple name="accreditationCategories[]" value="" required="" style="height:150px">
                                                 @foreach ($accreditationCategorys as $accreditationCategory)
-                                                    <option value="{{ $accreditationCategory->key }}"
+                            <option value="{{ $accreditationCategory->key }}"
 {{--@if ($key == old('myselect', $model->option))--}}
-                                                            @if ($accreditationCategory->key == 1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $accreditationCategory->value }}</option>
+                            @if ($accreditationCategory->key == 1)
+                                selected="selected"
+@endif
+                                >{{ $accreditationCategory->value }}</option>
                                                 @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
                             <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">
@@ -207,15 +212,16 @@
                             </div> -->
                         </form>
                         <div class="col-sm-offset-2 col-sm-2">
-                                <button id="btn-save" value="create">Save
-                                </button>
+                            <button id="btn-save" value="create">Save
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -231,7 +237,9 @@
 
                     <div class="row">
                         <div class="col-sm-8">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">No, Manage them myself</button>
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">No, Manage
+                                them myself
+                            </button>
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
@@ -260,31 +268,31 @@
             // });
         });
         $('#btn-save').click(function () {
-                $('#confirmTitle').html('Add Compnay');
-                $('#curr_element_id').val(post_id);
-                $('#action_button').val('approve');
-                var confirmText =  "Give permisson to company admin to manage accrediation categories sizes?";
-                $('#confirmText').html(confirmText);
-                $('#delete-element-confirm-modal').modal('show');
-            });
+            $('#confirmTitle').html('Add Compnay');
+            $('#curr_element_id').val(post_id);
+            $('#action_button').val('approve');
+            var confirmText = "Give permisson to company admin to manage accrediation categories sizes?";
+            $('#confirmText').html(confirmText);
+            $('#delete-element-confirm-modal').modal('show');
+        });
 
-            $('#delete-element-confirm-modal button').on('click', function(event) {
-                var $button = $(event.target);
-                $(this).closest('.modal').one('hidden.bs.modal', function() {
-                    $('#need_management').val('0');
-                    if($button[0].id === 'btn-yes'){
-                        $('#need_management').val('1');
-                        
-                    }
-                    // else{
-                    //     $('#need_management').val('0');
-                    //     $("#postForm").submit();
-                    // }
-                    $("#postForm").submit();
-                });
-            });
+        $('#delete-element-confirm-modal button').on('click', function (event) {
+            var $button = $(event.target);
+            $(this).closest('.modal').one('hidden.bs.modal', function () {
+                $('#need_management').val('0');
+                if ($button[0].id === 'btn-yes') {
+                    $('#need_management').val('1');
 
-            // .length > 0
+                }
+                // else{
+                //     $('#need_management').val('0');
+                //     $("#postForm").submit();
+                // }
+                $("#postForm").submit();
+            });
+        });
+
+        // .length > 0
         if ($("#postForm").length > 0) {
             //$('#ajax-crud-modal').modal('show');
             $("#postForm").validate({
@@ -312,12 +320,12 @@
                             //window.location.href = "{{ route('companies')}}";
                             // alert(data);
                             // alert(data.id);
-                            if(data.need_management == '1'){
-                                window.location.href = "../event-companies/"+$eventid;
+                            if (data.need_management == '1') {
+                                window.location.href = "../event-companies/" + $eventid;
                             }
-                            if(data.need_management == '0'){
+                            if (data.need_management == '0') {
                                 // window.location.href = "../event-companies/"+$eventid;
-                                window.location.href= "../company-accreditation-size-new/" + data.id+"/"+data.event_id
+                                window.location.href = "../company-accreditation-size-new/" + data.id + "/" + data.event_id
                             }
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);

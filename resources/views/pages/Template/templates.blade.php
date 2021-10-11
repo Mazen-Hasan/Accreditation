@@ -44,7 +44,8 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
+                                    <th>Template Name</th>
+                                    <th>Locked</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -139,7 +140,7 @@
                     extend: 'excelHtml5',
                     title: 'Templates',
                     exportOptions: {
-                        columns: [ 1,2 ]
+                        columns: [ 1,2,3 ]
                     }
                 }],
 
@@ -152,6 +153,12 @@
                 columns: [
                     { data: 'id', name: 'id', 'visible': false},
                     { data: 'name', name: 'name' },
+                    {
+                        "data": "is_locked",
+                        "render": function (val) {
+                            return val == 1 ? "Yes" : "No";
+                        }
+                    },
                     { data: 'status', render:function (data){ if(data == 1) { return "<p style='color: green'>Active</p>"} else{ return "<p style='color: red'>InActive</p>" }}},
                     {data: 'action', name: 'action', orderable: false}
                 ],
@@ -183,13 +190,42 @@
                 })
             });
 
-
             $('body').on('click', '#activate-template', function () {
                 var template_id = $(this).data("id");
                 $('#confirmTitle').html('Activate template');
                 $('#curr_template_id').val(template_id);
                 $('#mode_id').val('1');
                 var confirmText =  'Are you sure you want to activate this template?';
+                $('#confirmText').html(confirmText);
+                $('#confirmModal').modal('show');
+            });
+
+            $('body').on('click', '#deActivate-template', function () {
+                var template_id = $(this).data("id");
+                $('#confirmTitle').html('Deactivate template');
+                $('#curr_template_id').val(template_id);
+                $('#mode_id').val('0');
+                var confirmText =  'Are you sure you want to deactivate this template?';
+                $('#confirmText').html(confirmText);
+                $('#confirmModal').modal('show');
+            });
+
+            $('body').on('click', '#lock-template', function () {
+                var template_id = $(this).data("id");
+                $('#confirmTitle').html('Lock template');
+                $('#curr_template_id').val(template_id);
+                $('#mode_id').val('3');
+                var confirmText =  'Are you sure you want to lock this template?';
+                $('#confirmText').html(confirmText);
+                $('#confirmModal').modal('show');
+            });
+
+            $('body').on('click', '#unLock-template', function () {
+                var template_id = $(this).data("id");
+                $('#confirmTitle').html('Un-Lock template');
+                $('#curr_template_id').val(template_id);
+                $('#mode_id').val('2');
+                var confirmText =  'Are you sure you want to unLock this template?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
@@ -201,29 +237,35 @@
                     if($button[0].id === 'btn-yes'){
                         var template_id = $('#curr_template_id').val();
                         var mode_id = $('#mode_id').val();
-                        $.ajax({
-                            type: "get",
-                            url: "templateController/changeStatus/" + template_id+"/" + mode_id,
-                            success: function (data) {
-                                var oTable = $('#laravel_datatable').dataTable();
-                                oTable.fnDraw(false);
-                            },
-                            error: function (data) {
-                                console.log('Error:', data);
-                            }
-                        });
+                        if(mode_id == 0 || mode_id == 1){
+                            $.ajax({
+                                type: "get",
+                                url: "templateController/changeStatus/" + template_id+"/" + mode_id,
+                                success: function (data) {
+                                    var oTable = $('#laravel_datatable').dataTable();
+                                    oTable.fnDraw(false);
+                                },
+                                error: function (data) {
+                                    console.log('Error:', data);
+                                }
+                            });
+                        }
+                        else{
+                            $.ajax({
+                                type: "get",
+                                url: "templateController/changeLock/" + template_id +"/" + mode_id,
+                                success: function (data) {
+                                    var oTable = $('#laravel_datatable').dataTable();
+                                    oTable.fnDraw(false);
+                                },
+                                error: function (data) {
+                                    console.log('Error:', data);
+                                }
+                            });
+                        }
+
                     }
                 });
-            });
-
-            $('body').on('click', '#deActivate-template', function () {
-                var template_id = $(this).data("id");
-                $('#confirmTitle').html('Deactivate template');
-                $('#curr_template_id').val(template_id);
-                $('#mode_id').val('0');
-                var confirmText =  'Are you sure you want to deactivate this template?';
-                $('#confirmText').html(confirmText);
-                $('#confirmModal').modal('show');
             });
         });
 

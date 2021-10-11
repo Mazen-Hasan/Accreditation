@@ -9,7 +9,6 @@
                 </div>
                 <form method="POST" class="login100-form validate-form" action="{{ route('login') }}">
                     @csrf
-                    <a href="{{ route('register') }}">{{ __('Register') }}</a>
                     <span class="login100-form-title">
                             Login
                     </span>
@@ -18,7 +17,8 @@
                                 Email
                             </span>
                         <input id="email" type="email" class="input100 @error('email') is-invalid @enderror"
-                               name="email"  placeholder="Enter email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                               name="email" placeholder="Enter email" value="{{ old('email') }}" required
+                               autocomplete="email" autofocus>
                         @error('email')
                         <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -30,7 +30,7 @@
 							Password
                            </span>
                         <input id="password" type="password" class="input100 @error('password') is-invalid @enderror"
-                               placeholder="Enter password"  name="password" required autocomplete="current-password">
+                               placeholder="Enter password" name="password" required autocomplete="current-password">
                         @error('password')
                         <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -43,11 +43,6 @@
                             sigin in
                         </button>
                     </div>
-                    {{--                    <div class="text-center p-t-12">--}}
-                    {{--                    </div>--}}
-                    {{--                    <div class="text-sm-left p-t-136">--}}
-                    {{--                        <a href="{{ route('register') }}">{{ __('Register') }}</a>--}}
-                    {{--                    </div>--}}
                 </form>
             </div>
         </div>

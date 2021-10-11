@@ -24,7 +24,7 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" value="" required="" placeholder="enter name"/>
+                                            <input type="text" id="name" max="30" name="name" value="" required="" placeholder="enter name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -32,7 +32,7 @@
                                     <div class="form-group col">
                                         <label>Size</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="size" name="size" placeholder="enter size" required=""/>
+                                            <input type="number" id="size" min="1" max="20000" name="size" placeholder="enter size" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -150,7 +150,7 @@
                                     <div class="form-group col">
                                         <label>Location</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="location" name="location" value="" placeholder="enter location"  required=""/>
+                                            <input type="text" id="location" max="100" name="location" value="" placeholder="enter location"  required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -387,23 +387,17 @@
         }
         jQuery.validator.addMethod("greaterThan", 
             function(value, element, params) {
-                //alert(value);
-                var label = $(params).data("label");
-                //alert(label);
                 if (!/Invalid|NaN/.test(new Date(value))) {
                     return new Date(value) > new Date($(params).val());
                 }
-
                 return isNaN(value) && isNaN($(params).val()) 
                     || (Number(value) > Number($(params).val())); 
             },'Must be greater than {0}.');
         jQuery.validator.addMethod("lessThan", 
             function(value, element, params) {
-
                 if (!/Invalid|NaN/.test(new Date(value))) {
                     return new Date(value) < new Date($(params).val());
                 }
-
                 return isNaN(value) && isNaN($(params).val()) 
                     || (Number(value) < Number($(params).val())); 
             },'Must be less than {0}.');

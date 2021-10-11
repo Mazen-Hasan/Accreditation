@@ -289,13 +289,14 @@
                     accreditation_start_date: {lessThan: "#event_end_date"},
                     accreditation_start_date: { greaterThan: "#event_start_date" },
                     accreditation_end_date: { greaterThan: "#accreditation_start_date" },
+                    accreditation_end_date: { lessThan: "#event_end_date" },
                     security_officer: { valueNotEquals: "default"},
                     security_categories: { valueNotEquals: "default"},
                     status: { valueNotEquals: "default"},
                     approval_option: { valueNotEquals: "default"},
                     event_type: { valueNotEquals: "default"},
                     owner: { valueNotEquals: "default"},
-                    orgnaizer: { valueNotEquals: "default"},
+                    organizer: { valueNotEquals: "default"},
                     event_form: { valueNotEquals: "default"},
                     event_admin: { valueNotEquals: "default"}
                 },
@@ -303,7 +304,8 @@
                     event_end_date: { greaterThan: "Must be greater than event start date." },
                     accreditation_end_date: { greaterThan: "Must be greater than accreditation start date."},
                     accreditation_start_date: {lessThan: "Must be less than event end date"},
-                    accreditation_start_date: { greaterThan: "Must be greater than event start date." }
+                    accreditation_start_date: { greaterThan: "Must be greater than event start date." },
+                    accreditation_end_date: { lessThan: "Must be less than event end date."}
                 },
                 // rules: {
                 //     event_end_date: {

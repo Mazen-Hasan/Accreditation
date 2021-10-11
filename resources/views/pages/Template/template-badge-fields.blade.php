@@ -283,14 +283,14 @@
                     $('#modalTitle').html("Edit Field");
                     $('#btn-save').val("edit-field");
                     $('#field-modal').modal('show');
+                    console.log(data);
                     $('#field_id').val(data.id);
                     $('#position_x').val(data.position_x);
                     $('#position_y').val(data.position_y);
                     $('#size').val(data.size);
                     $('#text_color').val(data.text_color);
                     $('#bg_color').val(data.bg_color);
-                    console.log(data.template_field_id);
-                    // $('#template_field_id').val(data.template_field_id);
+                    $('#template_field_id').val(data.template_field_id);
                 });
             });
 

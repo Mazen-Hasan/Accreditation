@@ -13,7 +13,11 @@
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Event Management - New</h4>
+                        <h4 class="card-title">
+                            <a class="url-nav" href="{{route('events')}}">
+                                <span>Events:</span>
+                            </a>
+                             / New</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
@@ -307,60 +311,6 @@
                     accreditation_start_date: { greaterThan: "Must be greater than event start date." },
                     accreditation_end_date: { lessThan: "Must be less than event end date."}
                 },
-                // rules: {
-                //     event_end_date: {
-                //         dateGreaterThan : '#event_start_date'
-                //     }
-                // },
-
-                // messages: {
-                //     event_end_date: {
-                //         dateGreaterThan: "Please enter event end date greater than event start date"
-                //     }
-                // },
-                // rules : {
-                    
-                //     event_end_date : {
-                //         date : true,
-                //         // required: false,
-                //         // dateITA : true,
-                //         dateGreaterThan : '#event_start_date'
-                //     },
-                //     // event_end_date : {
-                //     //     date : true,
-                //     //     required: true,
-                //     //     dateITA : true,
-                //     //     dateGreaterThan : "#event_start_date"
-                //     // },
-                //     // accreditation_start_date : {
-                //     //     date : true,
-                //     //     required: true,
-                //     //     dateITA : true,
-                //     //     dateLessThan : "#accreditation_end_date"
-                //     // },
-                //     // accreditation_end_date : {
-                //     //     date : true,
-                //     //     required: true,
-                //     //     dateITA : true,
-                //     //     dateGreaterThan : "#accreditation_start_date"
-                //     // },
-                // },
-                
-                // messages: {
-                //     event_start_date_n: {
-                //         dateLessThan: "Event start date must be less than end date",
-                //         required: "This filed is required"
-                //     },
-                //     // event_end_date: {
-                //     //     dateGreaterThan: "Event end date must be greater than start date"
-                //     // },
-                //     // accreditation_start_date: {
-                //     //     dateLessThan: "Accreditation start date must be less than end date"
-                //     // },
-                //     // accreditation_end_date: {
-                //     //     dateGreaterThan: "Accreditation end date must be greater than start date"
-                //     // },
-                // },
 
                 submitHandler: function(form) {
                     $('#post_id').val('');
@@ -385,23 +335,23 @@
                 }
             })
         }
-        jQuery.validator.addMethod("greaterThan", 
+        jQuery.validator.addMethod("greaterThan",
             function(value, element, params) {
                 if (!/Invalid|NaN/.test(new Date(value))) {
                     return new Date(value) > new Date($(params).val());
                 }
-                return isNaN(value) && isNaN($(params).val()) 
-                    || (Number(value) > Number($(params).val())); 
+                return isNaN(value) && isNaN($(params).val())
+                    || (Number(value) > Number($(params).val()));
             },'Must be greater than {0}.');
-        jQuery.validator.addMethod("lessThan", 
+        jQuery.validator.addMethod("lessThan",
             function(value, element, params) {
                 if (!/Invalid|NaN/.test(new Date(value))) {
                     return new Date(value) < new Date($(params).val());
                 }
-                return isNaN(value) && isNaN($(params).val()) 
-                    || (Number(value) < Number($(params).val())); 
+                return isNaN(value) && isNaN($(params).val())
+                    || (Number(value) < Number($(params).val()));
             },'Must be less than {0}.');
-        jQuery.validator.addMethod("valueNotEquals", 
+        jQuery.validator.addMethod("valueNotEquals",
             function(value, element, params) {
                 return params !== value;
             }," Please select a value");

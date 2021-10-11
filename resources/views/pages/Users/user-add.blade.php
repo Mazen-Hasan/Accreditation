@@ -14,7 +14,11 @@
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">User - New</h4>
+                        <h4 class="card-title">
+                            <a class="url-nav" href="{{route('users')}}">
+                                <span>Users:</span>
+                            </a>
+                            / New</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
@@ -160,7 +164,6 @@
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    // alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('userController.store') }}",
@@ -171,8 +174,6 @@
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
                             window.location.href = "{{ route('users')}}";
-                            // var oTable = $('#laravel_datatable').dataTable();
-                            // oTable.fnDraw(false);
                         },
                         error: function (data) {
                             console.log('Error:', data);

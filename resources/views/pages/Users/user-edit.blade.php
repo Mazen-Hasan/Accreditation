@@ -14,7 +14,12 @@
             <div class="col-12 grid-margin">
                 <div class="card"  style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">User - Edit</h4>
+                        <h4 class="card-title">
+                            <a class="url-nav" href="{{route('users')}}">
+                                <span>Users:</span>
+                            </a>
+                            {{$user->user_name}} / Edit
+                        </h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
@@ -38,16 +43,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group col">
-                                        <label>Email</label>
-                                        <div class="col-sm-6">
-                                            <input type="text"  id="email" name="email" placeholder="enter email" required="" value="{{$user->email}}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="row" style="display:none">
                                 <div class="col-md-6">
                                     <div class="form-group col">
@@ -66,16 +61,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="row" style="display:none">
-                                <div class="col-md-12">
-                                    <div class="form-group col">
-                                        <label>Confirm Password</label>
-                                        <div class="col-sm-6">
-                                            <input type="password" id="confirm_password" name="confirm_password" placeholder="confirm password" required=""/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group col">
@@ -140,8 +125,6 @@
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
                             window.location.href = "{{ route('users')}}";
-                            // var oTable = $('#laravel_datatable').dataTable();
-                            // oTable.fnDraw(false);
                         },
                         error: function (data) {
                             console.log('Error:', data);

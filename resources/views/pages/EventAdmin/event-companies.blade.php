@@ -19,6 +19,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
+                        <input type="hidden" id="h_event_id" value={{$eventid}}>
                             <div class="col-md-8">
                                 <p class="card-title">{{$event_name}} / Companies</p>
                             </div>
@@ -74,6 +75,7 @@
                 <div class="modal-body">
                     <div>
                         <input type="hidden" id="curr_element_id">
+                        
                         <label class="col-sm-12 confirm-text" id="confirmText"></label>
                     </div>
 
@@ -100,7 +102,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            var eventId = $('#h_event_id').val();
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
@@ -114,7 +116,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../event-companies/' + {{$eventid}},
+                    url: '../event-companies/' + eventId,
                     type: 'GET',
                 },
                 columns: [

@@ -10,7 +10,20 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Participant - Detials</h4>
+                        <h4 class="card-title">
+                            <a class="url-nav" href="{{ route('event-admin') }} ">
+                                <span>My Events:</span>
+                            </a>
+                            /
+                            <a class="url-nav" href="{{route('eventCompanies',[$eventId])}}">
+                                <span>{{$event_name}}</span>
+                            </a>
+                            /
+                            <a class="url-nav" href="{{ route('eventCompanyParticipants',[$companyId,$eventId]) }}">
+                                <span> {{$company_name}} - Participants</span>
+                            </a>
+                            / Details
+                        </h4>
                         <input type="hidden" id="company_id" value="{{$companyId}}">
                         <input type="hidden" id="event_id" value="{{$eventId}}">
                         <form class="form-sample" id="templateForm" name="templateForm">

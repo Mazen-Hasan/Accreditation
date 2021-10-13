@@ -160,7 +160,7 @@
 
                 messages: {
                     confirm_password: {
-                        equalTo: "Please enter the same password as above"
+                        equalTo: "Please enter the same password"
                     }
                 },
 

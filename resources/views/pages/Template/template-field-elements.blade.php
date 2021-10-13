@@ -215,7 +215,7 @@
                 $('#element-modal').modal('show');
             });
 
-            $('body').on('click', '.edit-element', function () {
+            $('body').on('click', '#edit-element', function () {
                 var field_id = $(this).data('id');
                 $.get('../fieldElementController/' + field_id + '/edit', function (data) {
                     $('#name-error').hide();
@@ -233,7 +233,7 @@
 
             $('body').on('click', '#delete-element', function () {
                 var element_id = $(this).data("id");
-                $('#confirmTitle').html('Delete field');
+                $('#confirmTitle').html('Delete element');
                 $('#curr_element_id').val(element_id);
                 var confirmText = 'Are you sure you want to delete this element?';
                 $('#confirmText').html(confirmText);

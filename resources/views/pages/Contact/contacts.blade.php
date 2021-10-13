@@ -44,13 +44,11 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-                                    {{--                                    <th>Location</th>--}}
                                     <th>Email</th>
                                     <th>Telephone</th>
                                     <th>Mobile</th>
                                     <th>Titles</th>
                                     <th>Status</th>
-                                    {{--                                    <th style="color: black">Status</th>--}}
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -119,7 +117,6 @@
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Post");
-                //$('#ajax-crud-modal').modal('show');
             });
         });
     </script>

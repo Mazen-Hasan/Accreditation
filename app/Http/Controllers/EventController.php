@@ -28,7 +28,7 @@ class EventController extends Controller
             $events = DB::select('select * from events_view');
             return datatables()->of($events)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    $button = '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     return $button;
                 })

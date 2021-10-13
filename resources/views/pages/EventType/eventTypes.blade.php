@@ -178,9 +178,8 @@
             });
 
 
-            $('body').on('click', '.edit-post', function () {
+            $('body').on('click', '#edit-type', function () {
                 var post_id = $(this).data('id');
-                //alert(post_id);
                 $.get('eventTypeController/' + post_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#email-error').hide();
@@ -193,28 +192,7 @@
                 })
             });
 
-            $('body').on('click', '#delete-post', function () {
-                var post_id = $(this).data("id");
-                $('#confirmTitle').html('Delete Event Type');
-                $('#curr_element_id').val(post_id);
-                $('#action_button').val('delete');
-                var confirmText = 'Are You sure want to delete ?';
-                $('#confirmText').html(confirmText);
-                $('#delete-element-confirm-modal').modal('show');
-                // confirm("Are You sure want to delete !");
-                // $.ajax({
-                //     type: "get",
-                //     url: "eventTypeController/destroy/"+post_id,
-                //     success: function (data) {
-                //         var oTable = $('#laravel_datatable').dataTable();
-                //         oTable.fnDraw(false);
-                //     },
-                //     error: function (data) {
-                //         console.log('Error:', data);
-                //     }
-                // });
-            });
-            $('body').on('click', '#activate-title', function () {
+            $('body').on('click', '#activate-type', function () {
                 var post_id = $(this).data("id");
                 $('#confirmTitle').html('Activate Event Type');
                 $('#curr_element_id').val(post_id);
@@ -222,20 +200,9 @@
                 var confirmText = "Are You sure want to activate ?!";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
-                // confirm("Are You sure want to activate ?!");
-                // $.ajax({
-                //     type: "get",
-                //     url: "eventTypeController/changeStatus/"+post_id+"/1",
-                //     success: function (data) {
-                //         var oTable = $('#laravel_datatable').dataTable();
-                //         oTable.fnDraw(false);
-                //     },
-                //     error: function (data) {
-                //         console.log('Error:', data);
-                //     }
-                // });
             });
-            $('body').on('click', '#deActivate-title', function () {
+
+            $('body').on('click', '#deActivate-type', function () {
                 var post_id = $(this).data("id");
                 $('#confirmTitle').html('Deactivate Event Type');
                 $('#curr_element_id').val(post_id);
@@ -243,19 +210,8 @@
                 var confirmText = "Are You sure want to deactivate ?!";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
-                // confirm("Are You sure want to deActivate ?!");
-                // $.ajax({
-                //     type: "get",
-                //     url: "eventTypeController/changeStatus/"+post_id+"/0",
-                //     success: function (data) {
-                //         var oTable = $('#laravel_datatable').dataTable();
-                //         oTable.fnDraw(false);
-                //     },
-                //     error: function (data) {
-                //         console.log('Error:', data);
-                //     }
-                // });
             });
+
             $('#delete-element-confirm-modal button').on('click', function (event) {
                 var $button = $(event.target);
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
@@ -309,8 +265,6 @@
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 submitHandler: function (form) {
-                    //$('#post_id').val('');
-                    var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
 
                     $.ajax({

@@ -28,7 +28,7 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" max="30" name="name" value="" required=""
+                                            <input type="text" id="name" minlength="1" maxlength="100" name="name" value="" required=""
                                                    placeholder="enter name"/>
                                         </div>
                                     </div>
@@ -162,7 +162,7 @@
                                     <div class="form-group col">
                                         <label>Location</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="location" max="100" name="location" value=""
+                                            <input type="text" id="location" minlength="1" maxlength="100" name="location" value=""
                                                    placeholder="enter location" required=""/>
                                         </div>
                                     </div>

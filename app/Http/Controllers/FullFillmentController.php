@@ -22,7 +22,7 @@ class FullFillmentController extends Controller
         $eventsSelectOptions = array();
         $companySelectOptions = array();
         $accrediationCategorySelectOptions = array();
-        $where = array('status' => 1);
+        $where = array('status' => 1,'event_admin' => Auth::user()->id);
         $events = Event::where($where)->get()->all();
 
         $count = 0;
@@ -30,8 +30,6 @@ class FullFillmentController extends Controller
             if ($count == 0) {
                 $where = array('status' => 3, 'event_id' => $event->id);
                 $companies = Company::where($where)->get()->all();
-                // var_dump($companies);
-                // exit;
                 $subcount = 0;
                 foreach ($companies as $company) {
                     if ($subcount == 0) {
@@ -47,9 +45,6 @@ class FullFillmentController extends Controller
             $eventSelectOption = new SelectOption($event->id, $event->name);
             $eventsSelectOptions[] = $eventSelectOption;
         }
-        // var_dump($companySelectOptions);
-        // exit;
-
         $where = array('predefined_field_id' => 14);
         $acrrediationCategories = PreDefinedFieldElement::where($where)->get()->all();
         $mycount = 0;
@@ -69,8 +64,6 @@ class FullFillmentController extends Controller
     {
         $where = array('status' => 3, 'event_id' => $eventId);
         $companies = Company::where($where)->get()->all();
-        // var_dump($companies);
-        // exit;
         $subcount = 0;
         foreach ($companies as $company) {
             if ($subcount == 0) {
@@ -97,7 +90,6 @@ class FullFillmentController extends Controller
         }
 
         $company_admin_id = '_superAdmin_' . Auth::user()->id;
-
 
         $where = array('template_id' => $event->event_form);
         $templateFields = TemplateField::where($where)->orderBy('field_order', 'ASC')->get()->all();
@@ -181,7 +173,6 @@ class FullFillmentController extends Controller
 
     public function allParticipants($eventId, $companyId, $accreditId, $checked)
     {
-
         $dataTableColumuns = array();
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
@@ -193,13 +184,13 @@ class FullFillmentController extends Controller
 
         $company_admin_id = '_superAdmin_' . Auth::user()->id;
 
-
         $where = array('template_id' => $event->event_form);
         $templateFields = TemplateField::where($where)->orderBy('field_order', 'ASC')->get()->all();
 
         foreach ($templateFields as $templateField) {
             $dataTableColumuns[] = $templateField->label_en;
         }
+
         Schema::dropIfExists('temp' . $company_admin_id);
         Schema::create('temp' . $company_admin_id, function ($table) use ($templateFields, $companyId) {
             $table->string('id');
@@ -299,39 +290,9 @@ class FullFillmentController extends Controller
                             break;
                     }
                     return $status_value;
-                    //return $row->first_name.' '.$row->last_name;
                 })
                 ->addColumn('action', function ($data) use ($checked) {
-                    // $button = '';
-                    // $button .= '<a href="' . route('participantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
-                    // $button .= '&nbsp;&nbsp;';
-                    // if($data->print_status == 0){
-                    //     $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="'.$data->id.'" class="delete btn btn-reddit generate-badge">Generate</a>';
-                    //     $button .= '&nbsp;&nbsp;';
-                    // }
-                    // else{
-                    //     $printed = $data->print_status == 2 ? 'printed' : '';
-                    //     $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="'.$data->id.'" class="delete btn btn-facebook preview-badge"' . $printed  .'">Preview</a>';
-                    //     $button .= '&nbsp;&nbsp;';
-                    // }
-                    // switch($data->status){
-                    //     case 2:
-                    //         $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Aprrove</a>';
-                    //         $button .= '&nbsp;&nbsp;';
-                    //         $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject</a>';
-                    //         $button .= '&nbsp;&nbsp;';
-                    //         $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject with correction</a>';
-                    //         break;
-                    //     case 7:
-                    //         $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->security_officer_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
-                    //         break;
-                    //     case 8:
-                    //         $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->event_admin_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
-                    //         break;
-                    // }
                     $button = '';
-                    // var_dump($checked);
-                    // exit;
                     if ($checked == 1) {
                         $button .= '<input type="checkbox" class="select" data-id="' . $data->id . '" checked />';
                     } else {

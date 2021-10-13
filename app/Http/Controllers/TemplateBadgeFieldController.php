@@ -24,9 +24,9 @@ class TemplateBadgeFieldController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '';
                     if ($data->is_locked == 0) {
-                        $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-field">Edit</a>';
+                        $button = '<a href="javascript:void(0)" id="edit-field" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                         $button .= '&nbsp;&nbsp;';
-                        $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-field">Delete</a>';
+                        $button .= '<a href="javascript:void(0)" id="delete-field" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
                         $button .= '&nbsp;&nbsp;';
                     }
                     return $button;

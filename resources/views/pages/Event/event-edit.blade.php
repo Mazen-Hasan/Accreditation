@@ -109,8 +109,7 @@
                                             <select id="event_form" name="event_form" required="">
                                                 @foreach ($eventForms as $eventForm)
                                                     <option value="{{ $eventForm->key }}"
-                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($eventForm->key == $event->event_form)
+                                                           @if ($eventForm->key == $event->event_form)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $eventForm->value }}</option>
@@ -145,7 +144,6 @@
                                             <select id="organizer" name="organizer" required="">
                                                 @foreach ($organizers as $organizer)
                                                     <option value="{{ $organizer->key }}"
-                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($organizer->key == $event->organizer)
                                                             selected="selected"
                                                         @endif
@@ -156,9 +154,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {{--                            <p class="card-description">--}}
-                            {{--                                Address--}}
-                            {{--                            </p>--}}
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
@@ -246,23 +241,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            <!-- <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Security Group</label>
-                                        <div class="col-sm-12">
-                                            <select  multiple id="security_categories" name="security_categories[]" required="">
-                                                @foreach ($securityCategories as $securityCategory)
-                                <option value="{{ $securityCategory->key }}"
-{{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                @if ($securityCategory->key == 1)
-                                    selected="selected"
-@endif
-                                    >{{ $securityCategory->value }}</option>
-                                                @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div> -->
                             </div>
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" id="btn-save" value="create">Save
@@ -342,8 +320,6 @@
 
             $('body').on('click', '#remove-event-security-category', function () {
                 var post_id = $(this).data("id");
-                // var event_id = $('#event_id').val();
-                //alert(event_id + " "+ post_id);
                 confirm("Are You sure want to remove event security category ?!");
                 $.ajax({
                     type: "get",
@@ -360,13 +336,10 @@
             $('body').on('click', '#btn-event-security-category-save', function () {
                 var event_id = $('#event_id').val();
                 var eventSecurityCategory = $('#eventSecurityCategory').val();
-                //alert('hey hey');
-                //confirm("Are You sure want to deActivate ?!");
                 $.ajax({
                     type: "get",
                     url: "../EventController/storeEventSecurityCategory/" + event_id + "/" + eventSecurityCategory,
                     success: function (data) {
-                        //alert(data);
                         $('#ajax-crud-modal').modal('hide');
                         var oTable = $('#laravel_datatable').dataTable();
                         oTable.fnDraw(false);
@@ -378,7 +351,6 @@
             });
             $(document).on('change', '#approval_option', function () {
                 var choosed = $('#approval_option').find(":selected").val();
-                //alert(choosed);
                 if (choosed == 1) {
                     $("#security_officer").prop('disabled', true);
                 } else {
@@ -390,10 +362,7 @@
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 submitHandler: function (form) {
-                    //$('#post_id').val('');
-                    var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    //alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('EventController.store') }}",

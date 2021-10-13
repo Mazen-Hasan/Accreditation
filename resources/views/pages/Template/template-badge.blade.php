@@ -136,9 +136,7 @@
                                 <div class="form-group col">
                                     <label>Background Color</label>
                                     <div class="col-sm-12">
-                                        <div class="div-color">
-                                            <input type="color" id="bg_color" name="bg_color" value="#ffffff">
-                                        </div>
+                                        <input type="color" id="bg_color" name="bg_color" value="#ffffff">
                                     </div>
                                 </div>
                             </div>
@@ -147,6 +145,7 @@
                                     <label>Template</label>
                                     <div class="col-sm-12">
                                         <select id="template_id" name="template_id" required="">
+                                            <option value="default">Please select Template</option>
                                             @foreach ($templates as $template)
                                                 <option value="{{ $template->id }}" data-slug="{{$template->name}}"
                                                         @if ($template->id == 1)
@@ -155,6 +154,7 @@
                                                 >{{ $template->name }}</option>
                                             @endforeach
                                         </select>
+                                        <input id="lbl_template_id" disabled/>
                                     </div>
                                 </div>
                             </div>
@@ -277,6 +277,8 @@
             $('#add-new-badge').click(function () {
                 $('#btn-save').val("create-field");
                 $('#badge_id').val('');
+                $('#template_id').removeAttr('hidden');
+                $('#lbl_template_id').attr('hidden', 'true');
                 $('#badgeForm').trigger("reset");
                 $('#modalTitle').html("New Badge");
                 $('#badge_bg').attr('src', '');
@@ -286,7 +288,7 @@
                 $('#field-modal').modal('show');
             });
 
-            $('body').on('click', '.edit-badge', function () {
+            $('body').on('click', '#edit-badge', function () {
                 var badge_id = $(this).data('id');
                 console.log(badge_id);
                 $.get('templateBadgeController/' + badge_id + '/edit', function (data) {
@@ -298,8 +300,13 @@
                     $('#high').val(data.high);
                     $('#bg_color').val(data.bg_color);
                     $('#field-modal').modal('show');
+
                     $('#template_id').val(data.template_id);
-                    $('#h_template_id').val(data.template_id);
+                    $('#template_id').attr('hidden', 'true');
+
+                    $('#lbl_template_id').removeAttr('hidden');
+                    $('#lbl_template_id').val(data.name);
+
                     $("#file-progress-bar").width('0%');
                     $("#file_type_error").html('');
 
@@ -363,7 +370,7 @@
             });
         });
 
-        $('body').on('click', '.preview-badge', function () {
+        $('body').on('click', '#preview-badge', function () {
             var badge_id = $(this).data("id");
             console.log(badge_id);
             $.ajax({
@@ -402,6 +409,11 @@
 
         if ($("#badgeForm").length > 0) {
             $("#badgeForm").validate({
+
+                rules: {
+                    template_id: {valueNotEquals: "default"}
+                },
+
                 submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
                     $.ajax({
@@ -456,7 +468,7 @@
                 },
 
                 success: (data) => {
-                    this.reset();
+                    // this.reset();
                     $("#file_type_error").html('File uploaded successfully');
                     $('#btn-upload').html('Upload');
                     $("#bg_image").val(data.fileName);
@@ -470,5 +482,10 @@
                 }
             });
         });
+
+        jQuery.validator.addMethod("valueNotEquals",
+            function (value, element, params) {
+                return params !== value;
+            }, " Please select a template");
     </script>
 @endsection

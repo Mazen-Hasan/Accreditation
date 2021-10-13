@@ -39,7 +39,7 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="email" name="email" placeholder="enter email"
+                                            <input type="email" id="email" name="email" placeholder="enter email"
                                                    required="" value="{{$user->email}}"/>
                                         </div>
                                     </div>
@@ -67,10 +67,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Role</label>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                             <select id="role" name="role" value="" required="">
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role->key }}"
@@ -82,6 +82,8 @@
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-md-6">
                                 </div>
                             </div>
                             <div class="col-sm-offset-2 col-sm-2">

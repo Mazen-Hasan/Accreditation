@@ -21,7 +21,12 @@
                         <div class="row align-content-md-center" style="height: 80px">
                             <input type="hidden" id="h_event_id" value={{$eventid}}>
                             <div class="col-md-8">
-                                <p class="card-title">{{$event_name}} / Companies</p>
+                                <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('event-admin') }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    / {{$event_name}} / Companies
+                                </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">

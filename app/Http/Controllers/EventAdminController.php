@@ -205,7 +205,7 @@ class EventAdminController extends Controller
                     $button .= '<a href="' . route('participantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     if ($data->print_status == 0) {
-                        $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="' . $data->id . '" title="Generate"><i class="fas fa-cogs></i></a>';
+                        $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="' . $data->id . '" title="Generate"><i class="fas fa-cogs"></i></a>';
                         $button .= '&nbsp;&nbsp;';
                     } else {
                         $printed = $data->print_status == 2 ? 'printed' : '';
@@ -215,11 +215,11 @@ class EventAdminController extends Controller
 
                     switch ($data->status) {
                         case 2:
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Aprrove</a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' . $data->id . '" data-original-title="Edit" title="Approve"><i class="fas fa-vote-yea"></i></a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject</a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" title="Reject"><i class="fas fa-ban"></i></a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject with correction</a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" title="Reject with correction"><i class="far fa-window-close"></i></a>';
                             break;
                         case 7:
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" class="delete btn btn-danger">Reject Reason</a>';

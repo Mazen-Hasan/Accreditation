@@ -85,7 +85,6 @@ Route::group(['middleware' => 'role:event-admin'], function () {
     Route::get('/focalpoint-edit/{id}', [App\Http\Controllers\FocalPointController::class, 'edit'])->name('focalpointEdit');
     Route::get('focalpointController/reset_password/{id}/{password}', 'App\Http\Controllers\FocalPointController@resetPassword');
 
-
     Route::resource('companyController', 'App\Http\Controllers\CompanyController');
 
     //Route::get('/eventCompanies', [App\Http\Controllers\CompanyController::class, 'eventCompanies'])->name('eventCompanies');
@@ -103,6 +102,13 @@ Route::group(['middleware' => 'role:event-admin'], function () {
     Route::get('badge-print/{staffId}', 'App\Http\Controllers\GenerateBadgeController@printBadge');
     Route::get('/event-participant-details/{participant_id}', [App\Http\Controllers\EventAdminController::class, 'details'])->name('participantDetails');
 
+    Route::resource('fullFillmentController', 'App\Http\Controllers\FullFillmentController');
+    Route::get('/selections', [App\Http\Controllers\FullFillmentController::class, 'index'])->name('Selections');
+    Route::get('fullFillmentController/getCompanies/{field_id}', [App\Http\Controllers\FullFillmentController::class, 'getCompanies'])->name('getCompanies');
+    Route::get('/all-participants/{event_id}/{company_id}/{accredit_id}/{checked}', [App\Http\Controllers\FullFillmentController::class, 'allParticipants'])->name('allParticipants');
+    Route::get('fullFillmentController/getParticipants/{event_id}/{company_id}/{accredit_id}', [App\Http\Controllers\FullFillmentController::class, 'getParticipants'])->name('getParticipants');
+    Route::post('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
+    Route::post('/fullFillment', [App\Http\Controllers\FullFillmentController::class, 'fullFillment'])->name('fullFillment');
 });
 
 Route::group(['middleware' => 'role:super-admin'], function () {
@@ -130,7 +136,6 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::get('/contact-edit/{id}', [App\Http\Controllers\ContactController::class, 'edit'])->name('contactEdit');
     Route::get('contactController/removeContactTitle/{contact_title_id}', 'App\Http\Controllers\ContactController@removeContactTitle');
     Route::get('contactController/storeContactTitle/{contact_id}/{title_id}', 'App\Http\Controllers\ContactController@storeContactTitle');
-//    Route::get('contactController/storeContactTitle', 'App\Http\Controllers\ContactController@storeContactTitle');
 
     Route::get('/securityCategories', [App\Http\Controllers\SecurityCategoryController::class, 'index'])->name('securityCategories');
     Route::resource('securityCategoryController', 'App\Http\Controllers\SecurityCategoryController');
@@ -177,27 +182,13 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::resource('templateBadgeController', 'App\Http\Controllers\TemplateBadgeController');
     Route::get('templateBadgeController/changeLock/{id}/{status}', 'App\Http\Controllers\TemplateBadgeController@changeLock');
 
-
     Route::post('store-file', 'App\Http\Controllers\FileUploadController@store');
 
     Route::get('/template-badge-fields/{badge_id}', [App\Http\Controllers\TemplateBadgeFieldController::class, 'index'])->name('templateBadgeFields');
-
     Route::resource('templateBadgeFieldController', 'App\Http\Controllers\TemplateBadgeFieldController');
     Route::get('templateBadgeFieldController/destroy/{field_id}', 'App\Http\Controllers\TemplateBadgeFieldController@destroy');
-
     Route::get('badge-design-generate/{badgeId}', 'App\Http\Controllers\GenerateBadgeController@generatePreview');
-
-    Route::resource('fullFillmentController', 'App\Http\Controllers\FullFillmentController');
-    Route::get('/selections', [App\Http\Controllers\FullFillmentController::class, 'index'])->name('Selections');
-    Route::get('fullFillmentController/getCompanies/{field_id}', [App\Http\Controllers\FullFillmentController::class, 'getCompanies'])->name('getCompanies');
-    Route::get('/all-participants/{event_id}/{company_id}/{accredit_id}/{checked}', [App\Http\Controllers\FullFillmentController::class, 'allParticipants'])->name('allParticipants');
-    Route::get('fullFillmentController/getParticipants/{event_id}/{company_id}/{accredit_id}', [App\Http\Controllers\FullFillmentController::class, 'getParticipants'])->name('getParticipants');
-    Route::post('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
-    Route::post('/fullFillment', [App\Http\Controllers\FullFillmentController::class, 'fullFillment'])->name('fullFillment');
-
-
     Route::get('badge-design-generate/{badgeId}', 'App\Http\Controllers\GenerateBadgeController@generatePreview');
-
 });
 
 Route::group(['middleware' => 'role:security-officer'], function () {
@@ -224,13 +215,10 @@ Route::group(['middleware' => 'role:data-entry'], function () {
 Route::get('/send-notification', [App\Http\Controllers\NotificationController::class, 'sendAlertNotification']);
 Route::get('/get-notification', [App\Http\Controllers\NotificationController::class, 'getNotifications']);
 Route::get('/markAsRead-notification/{id}', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
-//Auth::routes();
 
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::any('{query}',
-    function () {
-        return redirect('/');
-    })
-    ->where('query', '.*');
+//Route::any('{query}',
+//    function () {
+//        return redirect('/');
+//    })
+//    ->where('query', '.*');
 

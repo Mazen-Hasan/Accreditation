@@ -108,15 +108,6 @@
                 <span class="menu-title">Users</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link {{ str_contains( Request::route()->getName(),'fullFillment') =="1" ? "active" : "" }}"
-               href="{{ route('Selections')}}">
-                <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Users">
-                </i>
-                <span class="menu-title">FullFillment</span>
-            </a>
-        </li>
         @endrole
         @role('event-admin')
         <li class="nav-item">
@@ -132,9 +123,18 @@
             <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
                href="{{ route('focalpoints') }}">
                 <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Focal Points">
+                    <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
                 </i>
                 <span class="menu-title">Focal Points</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'fullFillment') =="1" ? "active" : "" }}"
+               href="{{ route('Selections')}}">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="Users">
+                </i>
+                <span class="menu-title">Fulfillment</span>
             </a>
         </li>
         @endrole

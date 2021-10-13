@@ -273,14 +273,13 @@
                 $('#field-modal').modal('show');
             });
 
-            $('body').on('click', '.edit-field', function () {
+            $('body').on('click', '#edit-field', function () {
                 var field_id = $(this).data('id');
                 $.get('../templateBadgeFieldController/' + field_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Field");
                     $('#btn-save').val("edit-field");
                     $('#field-modal').modal('show');
-                    console.log(data);
                     $('#field_id').val(data.id);
                     $('#position_x').val(data.position_x);
                     $('#position_y').val(data.position_y);

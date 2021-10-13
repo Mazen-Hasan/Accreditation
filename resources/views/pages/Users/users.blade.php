@@ -13,7 +13,6 @@
 @section('content')
     <div class="content-wrapper">
         <br>
-    <!-- <a href="{{route('userAdd')}}" class="ha_btn" id="add-new-company">Add User</a> -->
         <br>
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
@@ -48,7 +47,6 @@
                                     <th>Account</th>
                                     <th>Email</th>
                                     <th>Roles</th>
-                                    <!-- <th>Status</th> -->
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -71,25 +69,37 @@
                     <input type="hidden" name="user_id" id="user_id" value="">
                     <div class="form-group">
                         <label for="name">Password</label>
-                        <div class="col-sm-12">
-                            <input type="password" id="password" name="password" placeholder="enter passsword"
-                                   required="">
+                        <div class="row">
+                            <div class="col-sm-11">
+                                <input style="margin-left: 16px; width: 103%" type="password"
+                                       id="password" name="password" placeholder="enter password"
+                                       required="" onblur="checkPassword()"/>
+                            </div>
+                            <div class="col-sm-1" id="eye">
+                                <i class="fa fa-eye-slash" id="togglePassword"></i>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="name">Confirm Password</label>
-                        <div class="col-sm-12">
-                            <input type="password" id="confirm_password" name="confirm_password"
-                                   placeholder="confirm password" required="">
+                        <div class="row">
+                            <div class="col-sm-11">
+                                <input style="margin-left: 16px; width: 103%" type="password"
+                                       id="confirm_password" name="confirm_password"
+                                       placeholder="confirm password" required="" onblur="checkPassword()"/>
+                            </div>
+                            <div class="col-sm-1" id="eye">
+                                <i class="fa fa-eye-slash" id="togglePasswordConfirm"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button id="reset-password-btn" value="create">Reset Password
-                        </button>
+                        <label id="lbl_error" class="error" for="name"></label>
                     </div>
                 </div>
                 <div class="modal-footer">
-
+                    <div class="col-sm-12">
+                        <button type="submit" id="reset-password-btn" value="create">Reset Password
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,49 +142,79 @@
                 order: [[0, 'desc']]
             });
 
-            // $('#reset_password').click(function () {
-            //     alert('iam here');
-            //     //$('#btn-save').val("create-company");
-            //     $('#user_id').val($(this).data('id'));
-            //     //$('#postForm').trigger("reset");
-            //     $('#postCrudModal').html("Reset Password");
-            //     $('#ajax-crud-modal').modal('show');
-            // });
-
             $('body').on('click', '#reset_password', function () {
-                //alert('iam here');
-                //$('#btn-save').val("create-company");
                 $('#user_id').val($(this).data('id'));
-                //$('#postForm').trigger("reset");
                 $('#postCrudModal').html("Reset Password");
+                $('#lbl_error').html('');
+                $('#togglePassword').removeClass('fa fa-eye');
+                $('#togglePassword').addClass('fa fa-eye-slash');
+                $('#togglePasswordConfirm').removeClass('fa fa-eye');
+                $('#togglePasswordConfirm').addClass('fa fa-eye-slash');
+                $('#password').attr('type', 'password');
+                $('#confirm_password').attr('type', 'password');
+                $('#password').val('');
+                $('#confirm_password').val('');
                 $('#ajax-crud-modal').modal('show');
             });
 
+            $('#togglePassword').click(function () {
+                var type = $('#password').attr('type') === 'password' ? 'text' : 'password';
+                $('#password').attr('type', type);
+                if (type === 'text') {
+                    $('#togglePassword').removeClass('fa fa-eye-slash');
+                    $('#togglePassword').addClass('fa fa-eye');
+                } else {
+                    $('#togglePassword').removeClass('fa fa-eye');
+                    $('#togglePassword').addClass('fa fa-eye-slash');
+                }
+            });
+
+            $('#togglePasswordConfirm').click(function () {
+                var type = $('#confirm_password').attr('type') === 'password' ? 'text' : 'password';
+                $('#confirm_password').attr('type', type);
+                if (type === 'text') {
+                    $('#togglePasswordConfirm').removeClass('fa fa-eye-slash');
+                    $('#togglePasswordConfirm').addClass('fa fa-eye');
+                } else {
+                    $('#togglePasswordConfirm').removeClass('fa fa-eye');
+                    $('#togglePasswordConfirm').addClass('fa fa-eye-slash');
+                }
+            });
+
             $('body').on('click', '#reset-password-btn', function () {
-                //alert('iam here');
-                //$('#btn-save').val("create-company");
                 var userId = $('#user_id').val();
                 var password = $('#password').val();
-                $.ajax({
-                    type: "get",
-                    url: "userController/reset_password/" + userId + "/" + password,
-                    success: function (data) {
-                        //alert(data);
-                        $('#ajax-crud-modal').modal('hide');
-                        // var oTable = $('#laravel_datatable').dataTable();
-                        // oTable.fnDraw(false);
-                        //alert('done');
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                        //alert('failure');
-                    }
-                });
+                var confirm_password = $('#confirm_password').val();
+                if (password !== confirm_password) {
+                    $('#lbl_error').html('Please enter the same password');
+                } else {
+                    $.ajax({
+                        type: "get",
+                        url: "userController/reset_password/" + userId + "/" + password,
+                        success: function (data) {
+                            $('#ajax-crud-modal').modal('hide');
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                        }
+                    });
+                }
             });
 
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
-        });
+        })
+
+        function checkPassword() {
+            var password = $('#password').val();
+            var confirm_password = $('#confirm_password').val();
+            if (password !== confirm_password) {
+                $('#lbl_error').html('Please enter the same password');
+            } else {
+                $('#lbl_error').html('');
+            }
+        }
+
     </script>
 @endsection

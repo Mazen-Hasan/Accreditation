@@ -19,7 +19,6 @@
                                     <div class="card">
                                         <div>
                                             <a href="{{route('eventCompanies',[$event->id])}}">
-                                                {{--                                        <a href="{{route('eventCompanies')}}">--}}
                                                 <img class="card-img-top"
                                                      style="border-top-left-radius: 20px; border-top-right-radius: 20px"
                                                      src="{{ asset('images/event.png') }}" alt="Event">
@@ -99,17 +98,21 @@
                                                     <p class="card_event_label">Template:</p>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p class="card_event_text">{{ $event->event_form}}</p>
+                                                    <p class="card_event_text">{{ $event->template_name}}</p>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <div class="col-12">
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-2"></div>
+                                                <div class="col-8">
                                                     <a href='event-company-participants/0/{{$event->id}}'
-                                                       class="ha_btn">Event Participants</a>
+                                                       class="ha_icon_btn">
+                                                        <i class="fa fa-users" style="font-size: 25px"></i>&nbsp;
+                                                        Participants
+                                                    </a>
                                                 </div>
+                                                <div class="col-2"></div>
                                             </div>
-
-
                                         </div>
                                     </div>
                                     <br>

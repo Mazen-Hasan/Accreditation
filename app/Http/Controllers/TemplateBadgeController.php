@@ -22,18 +22,18 @@ class TemplateBadgeController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '';
                     if ($data->is_locked == 0) {
-                        $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Edit" class="edit btn btn-success edit-badge">Edit</a>';
+                        $button = '<a href="javascript:void(0)" id="edit-badge" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                         $button .= '&nbsp;&nbsp;';
                     }
-                    $button .= '<a href="' . route('templateBadgeFields', $data->id) . '" id="template-badge-fields" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="fields">Fields<i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="' . route('templateBadgeFields', $data->id) . '" id="template-badge-fields" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Fields"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     if ($data->is_locked == 1) {
-                        $button .= '<a href="javascript:void(0);" id="unLock-badge" data-toggle="tooltip" data-original-title="Unlock" data-id="' . $data->id . '" class="delete btn btn-facebook">Unlock</a>';
+                        $button .= '<a href="javascript:void(0);" id="unLock-badge" data-toggle="tooltip" data-original-title="Unlock" data-id="' . $data->id . '" title="Un-Lock"><i class="fas fa-unlock"></i></a>';
                     } else {
-                        $button .= '<a href="javascript:void(0);" id="lock-badge" data-toggle="tooltip" data-original-title="Lock" data-id="' . $data->id . '" class="delete btn btn-outline-facebook"> &nbsp;Lock&nbsp;</a>';
+                        $button .= '<a href="javascript:void(0);" id="lock-badge" data-toggle="tooltip" data-original-title="Lock" data-id="' . $data->id . '" title="Lock"><i class="fas fa-lock"></i></a>';
                     }
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Preview" class="edit btn btn-facebook preview-badge">Preview</a>';
+                    $button .= '<a href="javascript:void(0)" id="preview-badge" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Preview" title="Preview"><i class="far fa-eye"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     return $button;
                 })

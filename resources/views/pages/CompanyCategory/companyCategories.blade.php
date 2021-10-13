@@ -44,7 +44,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
+                                    <th>Company Category</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -108,7 +108,7 @@
                     <div class="form-group">
                         <input type="hidden" id="curr_category_id">
                         <input type="hidden" id="mode_id">
-                        <label class="col-sm-12 control-label" id="confirmText"></label>
+                        <label class="col-sm-12 control-label confirm-text" id="confirmText"></label>
                     </div>
 
                     <div class="row">
@@ -181,7 +181,7 @@
                 $('#ajax-crud-modal').modal('show');
             });
 
-            $('body').on('click', '.edit-category', function () {
+            $('body').on('click', '#edit-category', function () {
                 var category_id = $(this).data('id');
                 $.get('companyCategoryController/' + category_id + '/edit', function (data) {
                     $('#name-error').hide();
@@ -191,25 +191,8 @@
                     $('#category_id').val(data.id);
                     $('#name').val(data.name);
                     $('#status').val(data.status);
-                    // alert($('#name').val(data.name).val());
                 })
             });
-
-            // $('body').on('click', '#delete-category', function () {
-            //     var category_id = $(this).data("id");
-            //     confirm("Are You sure want to delete !");
-            //     $.ajax({
-            //         type: "get",
-            //         url: "companyCategoryController/destroy/"+ category_id,
-            //         success: function (data) {
-            //             var oTable = $('#laravel_datatable').dataTable();
-            //             oTable.fnDraw(false);
-            //         },
-            //         error: function (data) {
-            //             console.log('Error:', data);
-            //         }
-            //     });
-            // });
 
             $('body').on('click', '#activate-category', function () {
                 var category_id = $(this).data("id");

@@ -20,7 +20,6 @@ class EventAdminController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            //$companies = DB::select('select * from companies_view where event_id = ?' ,$event_id );
             $companies = DB::select('select * from companies_view');
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
@@ -31,9 +30,6 @@ class EventAdminController extends Controller
                     $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     return $button;
                 })
-//                ->addColumn('event_id', function($event_id){
-//                    return $event_id;
-//                })
                 ->rawColumns(['action'])
                 ->make(true);
         }
@@ -48,21 +44,17 @@ class EventAdminController extends Controller
         $event = Event::where($where)->first();
         if (request()->ajax()) {
             $companies = DB::select('select * from companies_view where event_id = ? and parent_id is null', [$id]);
-//            $companies = DB::select('select * from companies_view');
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="../company-edit/' . $data->id . '/' . $data->event_id . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button = '<a href="../company-edit/' . $data->id . '/' . $data->event_id . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" title="Invite"><i class="far fa-share-square"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('companyAccreditCat', [$data->id, $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="' . route('companyAccreditCat', [$data->id, $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" itle="Accreditation Size"><i class="fas fa-sitemap"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('eventCompanyParticipants', [$data->id, $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook" title="Company Participants"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="' . route('eventCompanyParticipants', [$data->id, $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Participants"><i class="fas fa-users"></i></a>';
                     return $button;
                 })
-//                ->addColumn('event_id', function($event_id){
-//                    return $event_id;
-//                })
                 ->rawColumns(['action'])
                 ->make(true);
         }
@@ -89,21 +81,20 @@ class EventAdminController extends Controller
 
     public function eventCompanyParticipants($companyId, $eventId)
     {
-
-
         $dataTableColumuns = array();
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
+        $event_name = $event->name;
 
         if ($companyId != 0) {
             $where = array('id' => $companyId);
             $company = Company::where($where)->get()->first();
+            $company_name = $company->name;
             $company_admin_id = $company->company_admin_id;
         } else {
             $company_admin_id = '_Event' . $event->event_admin;
-            //$dataTableColumuns[] = 'Company Name';
+            $company_name = '';
         }
-
 
         $where = array('template_id' => $event->event_form);
         $templateFields = TemplateField::where($where)->orderBy('field_order', 'ASC')->get()->all();
@@ -114,16 +105,10 @@ class EventAdminController extends Controller
         Schema::dropIfExists('temp' . $company_admin_id);
         Schema::create('temp' . $company_admin_id, function ($table) use ($templateFields, $companyId) {
             $table->string('id');
-            // if($companyId == 0){
-            //     $table->string('company_name');
-            // }
             foreach ($templateFields as $templateField) {
-                //$dataTableColumuns[] = $templateField->label_en;
                 $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
             }
         });
-        // $where = array('company_admin_id' => Auth::user()->id);
-        // $company = Company::where($where)->get()->first();
         if ($companyId == 0) {
             $where = array('event_id' => $eventId);
         } else {
@@ -144,10 +129,6 @@ class EventAdminController extends Controller
             $staffDataValues[] = $companyStaff->id;
             $count = 0;
             foreach ($staffDatas as $staffData) {
-                // if($count == 0 && $companyId == 0){
-                //     $staffDataValues[] = $staffData->company_name;
-                //     $count = 1;
-                // }
                 if ($staffData->slug == 'select') {
                     $where = array('template_field_id' => $staffData->template_field_id, 'value_id' => $staffData->value);
                     $value = TemplateFieldElement::where($where)->first();
@@ -158,8 +139,6 @@ class EventAdminController extends Controller
             }
             $alldata[] = $staffDataValues;
         }
-        // var_dump($alldata);
-        // exit;
         $query = '';
         foreach ($alldata as $data) {
             $query = '';
@@ -179,9 +158,6 @@ class EventAdminController extends Controller
             $query = $query . ')';
             DB::insert($query);
         }
-        //DB::insert($query);
-        // var_dump($query);
-        // exit;
         if (request()->ajax()) {
             $participants = DB::select('select t.* , c.* from temp' . $company_admin_id . ' t inner join company_staff c on t.id = c.id');
             return datatables()->of($participants)
@@ -223,28 +199,27 @@ class EventAdminController extends Controller
                             break;
                     }
                     return $status_value;
-                    //return $row->first_name.' '.$row->last_name;
                 })
                 ->addColumn('action', function ($data) {
                     $button = '';
-                    $button .= '<a href="' . route('participantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
+                    $button .= '<a href="' . route('participantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     if ($data->print_status == 0) {
-                        $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="' . $data->id . '" class="delete btn btn-reddit generate-badge">Generate</a>';
+                        $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="' . $data->id . '" title="Generate"><i class="fas fa-cogs"></i></a>';
                         $button .= '&nbsp;&nbsp;';
                     } else {
                         $printed = $data->print_status == 2 ? 'printed' : '';
-                        $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="' . $data->id . '" class="delete btn btn-facebook preview-badge"' . $printed . '">Preview</a>';
+                        $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="' . $data->id . '" class="preview-badge"' . $printed . '" title="Preview"><i class="far fa-eye"></i></a>';
                         $button .= '&nbsp;&nbsp;';
                     }
 
                     switch ($data->status) {
                         case 2:
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Aprrove</a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' . $data->id . '" data-original-title="Edit" title="Approve"><i class="fas fa-vote-yea"></i></a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject</a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" title="Reject"><i class="fas fa-ban"></i></a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject with correction</a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" title="Reject with correction"><i class="far fa-window-close"></i></a>';
                             break;
                         case 7:
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" class="delete btn btn-danger">Reject Reason</a>';
@@ -258,7 +233,7 @@ class EventAdminController extends Controller
                 ->rawColumns(['status', 'action'])
                 ->make(true);
         }
-        return view('pages.EventAdmin.event-company-participants')->with('dataTableColumns', $dataTableColumuns)->with('company_id', $companyId)->with('event_id', $eventId);
+        return view('pages.EventAdmin.event-company-participants')->with('dataTableColumns', $dataTableColumuns)->with('company_id', $companyId)->with('event_id', $eventId)->with('company_name',$company_name)->with('event_name',$event_name);
     }
 
     public function Approve($staffId)
@@ -304,7 +279,6 @@ class EventAdminController extends Controller
 
         } else {
             if ($approval == 3) {
-                //DB::update('update company_staff set security_officer_id = ? where id = ?',[$event->security_officer,$staffId]);
                 DB::update('update company_staff set status = ? where id = ?', [5, $staffId]);
             }
         }
@@ -341,9 +315,13 @@ class EventAdminController extends Controller
         $where = array('id' => $participant_id);
         $participant = CompanyStaff::where($where)->first();
 
-
         $where = array('id' => $participant->event_id);
         $event = Event::where($where)->first();
+        $event_name = $event->name;
+
+        $where = array('id' => $participant->company_id);
+        $company = Company::where($where)->first();
+        $company_name = $company->name;
 
         $company_admin_id = '_Event' . $event->event_admin;
 
@@ -367,28 +345,28 @@ class EventAdminController extends Controller
                     $status_value = "Initiated";
                     break;
                 case 1:
-                    $status_value = "waiting Security Officer Approval";
+                    $status_value = "Waiting Security Officer Approval";
                     break;
                 case 2:
-                    $status_value = "waiting Event Admin Approval";
+                    $status_value = "Waiting Event Admin Approval";
                     break;
                 case 3:
-                    $status_value = "approved by security officer";
+                    $status_value = "Approved by security officer";
                     break;
                 case 4:
-                    $status_value = "rejected by security officer";
+                    $status_value = "Rejected by security officer";
                     break;
                 case 5:
-                    $status_value = "rejected by event admin";
+                    $status_value = "Rejected by event admin";
                     break;
                 case 6:
-                    $status_value = "approved by event admin";
+                    $status_value = "Approved by event admin";
                     break;
                 case 7:
-                    $status_value = "rejected with correction by security officer";
+                    $status_value = "Rejected with correction by security officer";
                     break;
                 case 8:
-                    $status_value = "rejected with correction by event admin";
+                    $status_value = "Rejected with correction by event admin";
                     break;
                 case 9:
                     $status_value = "Badge generated";
@@ -399,30 +377,28 @@ class EventAdminController extends Controller
             }
         }
 
-
-        //var_dump($templateFields);
         $fieldsCount = 0;
         $form = '';
         $options = array();
         $form .= '<div class="row">';
-        $form .= $this->createStatusFieldLabel("status", "Status", 0, 1, 1, $status_value);
+        $form .= $this->createStatusFieldLabel("Status",  $status_value);
         $form .= '</div>';
         if ($status == 8) {
             $form .= '<div class="row">';
-            $form .= $this->createStatusFieldLabel("reject_reason", "Reject Reason", 0, 1, 1, $event_reject_reason);
+            $form .= $this->createStatusFieldLabel("Reject Reason", $event_reject_reason);
             $form .= '</div>';
         }
         if ($status == 7) {
             $form = '<div class="row">';
-            $form .= $this->createStatusFieldLabel("reject_reason", "Reject Reason", 0, 1, 1, $security_officer_reject_reason);
+            $form .= $this->createStatusFieldLabel("Reject Reason", $security_officer_reject_reason);
             $form .= '</div>';
         }
         $form .= '<div class="row">';
         $attachmentForm = '';
         if ($participant_id == 0) {
-            $form .= $this->createHiddenFieldLabel('participant_id', 'participant_id', '');
+            $form .= $this->createHiddenFieldLabel('participant_id', '');
         } else {
-            $form .= $this->createHiddenFieldLabel('participant_id', 'participant_id', $participant_id);
+            $form .= $this->createHiddenFieldLabel( 'participant_id', $participant_id);
         }
         foreach ($templateFields as $templateField) {
             $options = [];
@@ -437,21 +413,17 @@ class EventAdminController extends Controller
             switch ($templateField->slug) {
                 case 'text':
                     if ($participant_id == 0) {
-                        $form .= $this->createTextFieldLabel($templateField->label_en, $templateField->label_en,
-                            $templateField->mandatory, $templateField->min_char, $templateField->max_char, '');
+                        $form .= $this->createTextFieldLabel($templateField->label_en, '');
                     } else {
-                        $form .= $this->createTextFieldLabel($templateField->label_en, $templateField->label_en,
-                            $templateField->mandatory, $templateField->min_char, $templateField->max_char, $templateField->value);
+                        $form .= $this->createTextFieldLabel($templateField->label_en, $templateField->value);
                     }
                     break;
 
                 case 'number':
                     if ($participant_id == 0) {
-                        $form .= $this->createNumberFieldLabel($templateField->label_en, $templateField->label_en,
-                            $templateField->mandatory, $templateField->min_char, $templateField->max_char, '');
+                        $form .= $this->createNumberFieldLabel( $templateField->label_en, '');
                     } else {
-                        $form .= $this->createNumberFieldLabel($templateField->label_en, $templateField->label_en,
-                            $templateField->mandatory, $templateField->min_char, $templateField->max_char, $templateField->value);
+                        $form .= $this->createNumberFieldLabel($templateField->label_en, $templateField->value);
                     }
                     break;
 
@@ -462,9 +434,9 @@ class EventAdminController extends Controller
 
                 case 'date':
                     if ($participant_id == 0) {
-                        $form .= $this->createDateLabel($templateField->label_en, $templateField->label_en, $templateField->mandatory, '');
+                        $form .= $this->createDateLabel($templateField->label_en,  '');
                     } else {
-                        $form .= $this->createDateLabel($templateField->label_en, $templateField->label_en, $templateField->mandatory, $templateField->value);
+                        $form .= $this->createDateLabel($templateField->label_en, $templateField->value);
                     }
                     break;
 
@@ -475,34 +447,31 @@ class EventAdminController extends Controller
                             $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
                             $options [] = $option;
                         }
-                        $form .= $this->createSelectLabel($templateField->label_en, $templateField->label_en, $options, '');
+                        $form .= $this->createSelectLabel($templateField->label_en, $options, '');
                     } else {
                         $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?', [$templateField->template_field_id]);
                         foreach ($fieldElements as $fieldElement) {
                             $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
                             $options [] = $option;
                         }
-                        $form .= $this->createSelectLabel($templateField->label_en, $templateField->label_en, $options, $templateField->value);
+                        $form .= $this->createSelectLabel($templateField->label_en, $options, $templateField->value);
                     }
                     break;
 
                 case 'file':
                     $fieldsCount--;
                     if ($participant_id == 0) {
-                        $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->label_en, 0, '');
-                        $form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->label_en, '');
+                        $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, '');
+                        $form .= $this->createHiddenFieldLabel($templateField->label_en, '');
                     } else {
-                        $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->label_en, 0, $templateField->value);
-                        $form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->label_en, $templateField->value);
+                        $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->value);
+                        $form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->value);
                     }
-
-
                     break;
             }
         }
         if ($fieldsCount % 2 == 1) {
             $form .= '<div class="col-md-6"><div class="form-group col"></div></div>';
-            //$form .= $this->createStatusFieldLabel("status","Status",0,1,1,$status_value);
         }
         $buttons = '';
         switch ($status) {
@@ -514,84 +483,45 @@ class EventAdminController extends Controller
                 $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject with correction</a>';
                 break;
         }
-        //var_dump($form);
-        return view('pages.EventAdmin.event-participant-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('companyId', $participant->company_id)->with('eventId', $participant->event_id)->with('buttons', $buttons);
+        return view('pages.EventAdmin.event-participant-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('companyId', $participant->company_id)->with('eventId', $participant->event_id)->with('buttons', $buttons)->with('event_name',$event_name)->with('company_name', $company_name);
     }
 
 
-    public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_char, $value)
+    public function createStatusFieldLabel($label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
-
-        /*$textfield = '<div class="col-md-6" style="height:70px"><div>';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
-        $textfield .= '<span><label>' . $label. ": ";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
-        $textfield .= '<span>'.$value.'</span>';
-        //$textfield .= '</div></div></div>';
-        $textfield .= '</label></sapn></div></div>';*/
-
         $textfield = '<div class="col-md-8" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
+        $textfield .= '<label>' . $label . "</label></div>";
         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger; color:red;
-        text-align: center;
-        padding:10px">' . $value . '</label></div>';
-        //$textfield .= '</div></div></div>';
+        text-align: center; padding:10px">' . $value . '</label></div>';
         $textfield .= '</div></div>';
 
         return $textfield;
     }
 
-    public function createHiddenFieldLabel($id, $label, $value)
+    public function createHiddenFieldLabel($id, $value)
     {
         $textfield = '<input type="hidden" id="' . $id . '" name="' . $id . '" value="' . $value . '" />';
 
         return $textfield;
     }
 
-    public function createTextFieldLabel($id, $label, $mandatory, $min_char, $max_char, $value)
+    public function createTextFieldLabel($label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
-
         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
+        $textfield .= '<label>' . $label . "</label></div>";
         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center;
-        background-color: darkgray;
-        padding:10px">' . $value . '</label></div>';
-        //$textfield .= '</div></div></div>';
+        text-align: center; background-color: darkgray; padding:10px">' . $value . '</label></div>';
         $textfield .= '</div></div>';
 
         return $textfield;
     }
 
-    public function createNumberFieldLabel($id, $label, $mandatory, $min_value, $max_value, $value)
+    public function createNumberFieldLabel($label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
-
-
         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
+        $textfield .= '<label>' . $label . "</label></div>";
         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center;
-        background-color: darkgray;
-        padding:10px">' . $value . '</label></div>';
-        //$textfield .= '</div></div></div>';
+        text-align: center; background-color: darkgray; padding:10px">' . $value . '</label></div>';
         $textfield .= '</div></div>';
 
         return $textfield;
@@ -612,86 +542,44 @@ class EventAdminController extends Controller
         return $datefield;
     }
 
-    public function createDateLabel($id, $label, $mandatory, $value)
+    public function createDateLabel($label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
-
-
         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
+        $textfield .= '<label>' . $label . "</label></div>";
         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center;
-        background-color: darkgray;
-        padding:10px">' . $value . '</label></div>';
-        //$textfield .= '</div></div></div>';
+        text-align: center; background-color: darkgray;padding:10px">' . $value . '</label></div>';
         $textfield .= '</div></div>';
 
         return $textfield;
     }
 
-    public function createSelectLabel($id, $label, $elements, $value)
+    public function createSelectLabel($label, $elements, $value)
     {
-
         $selectValue = '';
         foreach ($elements as $element) {
             if ($element->key == $value) {
                 $selectValue = $element->value;
             }
         }
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center;
-        background-color: darkgray;
-        padding:10px">' . $selectValue . '</label></div>';
-        //$textfield .= '</div></div></div>';
-        $textfield .= '</div></div>';
 
+        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+        $textfield .= '<label>' . $label . "</label></div>";
+        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+        text-align: center; background-color: darkgray; padding:10px">' . $selectValue . '</label></div>';
+        $textfield .= '</div></div>';
 
         return $textfield;
     }
 
-    public function createAttachmentLabel($id, $label, $mandatory, $value)
+    public function createAttachmentLabel($label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
-
-
         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
+        $textfield .= '<label>' . $label . "</label></div>";
         $button = '<a href="javascript:void(0)" data-toggle="tooltip" data-label="' . $label . '"  data-src="' . $value . '" data-original-title="Preview" class="edit btn btn-danger preview-badge">Preview</a>';
         $textfield .= '<div class="col-md-6" style="height:70px">' . $button . '</div>';
-        //$textfield .= '</div></div></div>';
         $textfield .= '</div></div>';
-        //<button class="preview-badge" data-id="'.$value.'">Preview</button>
-
-        //return $textfield;
 
         return $textfield;
-    }
-
-    public function createMultiSelectLabel($id, $label, $elements)
-    {
-        $selectField = '<div class="col-md-6"><div class="form-group col">';
-        $selectField .= '<label>' . $label . '</label><div class="col-sm-12">';
-        $selectField .= '<select  multiple id="' . $id . '" name="' . $label . '[]">';
-        foreach ($elements as $element) {
-            $selectField .= '<option value="' . $element->key . '">' . $element->value . '</option>';
-        }
-
-        $selectField .= '</select></div></div></div>';
-        return $selectField;
     }
 
 }

@@ -25,15 +25,15 @@ class TemplateFieldController extends Controller
                     $button = '';
                     if ($data->is_locked == 0) {
                         if (strtolower($data->label_en) != 'company' and strtolower($data->label_en) != 'event') {
-                            $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="edit-field"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-feild">Edit</a>';
+                            $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="edit-field"  data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" class="delete btn btn-danger delete-field">Delete</a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
                             $button .= '&nbsp;&nbsp;';
                         }
                     }
 
                     if ($data->slug == 'select') {
-                        $button .= '<a href="' . route('fieldElements', $data->id) . '" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook"> Elements</a>';
+                        $button .= '<a href="' . route('fieldElements', $data->id) . '" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Elements"><i class="far fa-list-alt"></i></a>';
                     }
                     return $button;
                 })

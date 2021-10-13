@@ -24,7 +24,22 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Company / Participants</p>
+                                <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('event-admin') }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    /
+                                    <a class="url-nav" href="{{route('eventCompanies',[$event_id])}}">
+                                        <span>{{$event_name}}</span>
+                                    </a>
+                                    /
+                                    @if($company_name  != '')
+                                        {{$company_name}}
+                                    @else
+                                        Companies
+                                    @endif
+                                    / Participants
+                                </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">

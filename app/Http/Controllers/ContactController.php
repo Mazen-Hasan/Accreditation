@@ -20,16 +20,12 @@ class ContactController extends Controller
     {
         if (request()->ajax()) {
             return datatables()->of(Contact::latest()->get())
-                // ->addColumn('name', function($row){
-                //     return $row->name.' '.$row->middle_name.' '.$row->last_name;
-                // })
                 ->addColumn('titleNames', function ($data) {
                     $result = '';
                     $titleNames = array();
                     $where = array('contact_id' => $data->id);
                     $titleIds = ContactTitle::where($where)->get()->all();
                     foreach ($titleIds as $titleId) {
-                        //$result = $result.$titleId->title_id;
                         $where = array('id' => $titleId->title_id);
                         $titles = Title::where($where)->first();
                         $titleNames[] = $titles->title_label;
@@ -39,13 +35,10 @@ class ContactController extends Controller
                         $result .= '&nbsp;&nbsp;';
                     }
                     return $result;
-                    // getContactTitles($data->id);
                 })
                 ->addColumn('action', function ($data) {
-                    //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                    $button = '<a href="' . route('contactEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    $button = '<a href="' . route('contactEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    //$button .= '<a href="javascript:void(0);" id="delete-post" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">   Delete</a>';
                     return $button;
                 })
                 ->rawColumns(['titleNames', 'action'])

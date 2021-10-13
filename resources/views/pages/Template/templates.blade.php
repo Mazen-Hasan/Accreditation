@@ -187,7 +187,7 @@
                 $('#template-modal').modal('show');
             });
 
-            $('body').on('click', '.edit-template', function () {
+            $('body').on('click', '#edit-template', function () {
                 var template_id = $(this).data('id');
                 $.get('templateController/' + template_id + '/edit', function (data) {
                     $('#name-error').hide();

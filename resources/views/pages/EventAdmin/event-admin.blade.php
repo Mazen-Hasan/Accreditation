@@ -104,7 +104,6 @@
                                             </div>
                                             <div>
                                                 <div class="col-12">
-                                                <!-- <a href="{{route('companyAccreditCategories',['eventId' => $event->id])}}" class="ha_btn">company categories</a> -->
                                                     <a href='event-company-participants/0/{{$event->id}}'
                                                        class="ha_btn">Event Participants</a>
                                                 </div>

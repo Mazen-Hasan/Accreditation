@@ -28,31 +28,33 @@ class CompanyAdminController extends Controller
 {
     public function index()
     {
-        if (request()->ajax()) {
-            //$companies = DB::select('select * from companies_view where event_id = ?' ,$event_id );
-            $companies = DB::select('select * from companies_view');
-            return datatables()->of($companies)
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('companyEdit', $data->id) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    return $button;
-                })
-//                ->addColumn('event_id', function($event_id){
-//                    return $event_id;
-//                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
+//         if (request()->ajax()) {
+//             //$companies = DB::select('select * from companies_view where event_id = ?' ,$event_id );
+//             $companies = DB::select('select * from companies_view');
+//             return datatables()->of($companies)
+//                 ->addColumn('action', function ($data) {
+//                     $button = '<a href="' . route('companyEdit', $data->id) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+//                     $button .= '&nbsp;&nbsp;';
+//                     $button .= '<a href="javascript:void(0);" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+//                     $button .= '&nbsp;&nbsp;';
+//                     $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
+//                     return $button;
+//                 })
+// //                ->addColumn('event_id', function($event_id){
+// //                    return $event_id;
+// //                })
+//                 ->rawColumns(['action'])
+//                 ->make(true);
+//         }
 
-        $events = DB::select('select c.* , cc.need_management need_management , cc.name company_name from events_view c inner join companies cc on c.id = cc.event_id where cc.company_admin_id = ? and cc.status <> ?', [Auth::user()->id, 0]);
+        $events = DB::select('select c.* , cc.need_management need_management , cc.name company_name , cc.id company_id from events_view c inner join companies cc on c.id = cc.event_id where cc.company_admin_id = ? and cc.status <> ?', [Auth::user()->id, 0]);
         $subCompany_nav = 1;
         $where = array('company_admin_id' => Auth::user()->id);
         $company = Company::where($where)->first();
-        if ($company->subCompany_id != null) {
-            $subCompany_nav = 0;
+        if($company != null){
+            if ($company->subCompany_id != null) {
+                $subCompany_nav = 0;
+            }
         }
         return view('pages.CompanyAdmin.company-admin')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }
@@ -330,11 +332,11 @@ class CompanyAdminController extends Controller
         return view('pages.CompanyAdmin.company-participant-edit')->with('post', $post)->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption', $religions);;
     }
 
-    public function companyAccreditCategories($eventId)
+    public function companyAccreditCategories($eventId, $companyId)
     {
         //$eventId = $request->eventId;
 
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' => $companyId,'event_id' => $eventId);
         $company = Company::where($where)->get()->first();
 
         $where = array('id' => $eventId);
@@ -357,7 +359,7 @@ class CompanyAdminController extends Controller
         }
 
         if (request()->ajax()) {
-            $where = array('company_admin_id' => Auth::user()->id, 'event_id' => $eventId);
+            $where = array('id' => $companyId, 'event_id' => $eventId);
             $company = Company::where($where)->get()->first();
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
             $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories_view where company_id = ? and event_id = ?', [$company->id, $eventId]);
@@ -398,11 +400,11 @@ class CompanyAdminController extends Controller
             }
         }
         $subCompany_nav = 1;
-        $where = array('company_admin_id' => Auth::user()->id);
-        $company = Company::where($where)->first();
-        if ($company->subCompany_id != null) {
-            $subCompany_nav = 0;
-        }
+        // $where = array('id' => $companyId);
+        // $company = Company::where($where)->first();
+        // if ($company->subCompany_id != null) {
+        //     $subCompany_nav = 0;
+        // }
         return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('subCompany_nav', $subCompany_nav);
     }
 

@@ -173,13 +173,14 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            var companyId = $('#company_id').val();
             var eventId = $('#event_id').val();
             var status = $('#status').val();
             $('#laravel_datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../company-accreditation-size/' + eventId,
+                    url: '../../company-accreditation-size/' + eventId + '/' + companyId,
                     type: 'GET',
                 },
                 columns: [

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AccreditationCategory;
 use Illuminate\Http\Request;
 use Redirect;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 
 class AccreditationCategoryController extends Controller

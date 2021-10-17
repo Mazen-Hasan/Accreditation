@@ -28,7 +28,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
 
     Route::resource('companyAdminController', 'App\Http\Controllers\CompanyAdminController');
     Route::get('/company-admin', [App\Http\Controllers\CompanyAdminController::class, 'index'])->name('company-admin');
-    Route::get('/company-participants', [App\Http\Controllers\CompanyAdminController::class, 'companyParticipants'])->name('companyParticipants');
+    Route::get('/company-participants/{companyId}', [App\Http\Controllers\CompanyAdminController::class, 'companyParticipants'])->name('companyParticipants');
     Route::get('/company-participant-add', [App\Http\Controllers\CompanyAdminController::class, 'companyParticipantAdd'])->name('companyParticipantAdd');
     Route::get('/company-participant-edit/{id}', [App\Http\Controllers\CompanyAdminController::class, 'edit'])->name('companyParticipantEdit');
     Route::get('/company-accreditation-size/{eventId}/{companyId}', [App\Http\Controllers\CompanyAdminController::class, 'companyAccreditCategories'])->name('companyAccreditCategories');
@@ -39,7 +39,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('companyAdminController/sendRequest/{staffId}', 'App\Http\Controllers\CompanyAdminController@sendRequest');
 
     Route::resource('templateFormController', 'App\Http\Controllers\TemplateFormController');
-    Route::get('/template-form/{template_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
+    Route::get('/template-form/{template_id}/{company_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
     Route::get('/template-form-details/{participant_id}', [App\Http\Controllers\TemplateFormController::class, 'details'])->name('templateFormDetails');
 
     //Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate');
@@ -53,7 +53,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
 
     Route::get('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
 
-    Route::get('/subCompanies', [App\Http\Controllers\CompanyAdminController::class, 'subCompanies'])->name('subCompanies');
+    Route::get('/subCompanies/{companyId}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanies'])->name('subCompanies');
     Route::get('/subCompany-add/{eventid}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanyAdd'])->name('subCompanyAdd');
     Route::get('/subCompany-edit/{id}/{eventid}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanyEdit'])->name('subCompanyEdit');
     Route::post('storeSubCompnay', [App\Http\Controllers\CompanyAdminController::class, 'storeSubCompnay'])->name('storeSubCompnay');
@@ -61,7 +61,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('companyAdminController/Invite/{companyId}', 'App\Http\Controllers\CompanyAdminController@Invite');
 
     Route::resource('dataentryController', 'App\Http\Controllers\DataEntryController');
-    Route::get('/dataentrys', [App\Http\Controllers\DataEntryController::class, 'index'])->name('dataentrys');
+    Route::get('/dataentrys/{companyId}', [App\Http\Controllers\DataEntryController::class, 'index'])->name('dataentrys');
     Route::get('/dataentry-add', [App\Http\Controllers\DataEntryController::class, 'focalpointAdd'])->name('dataentryAdd');
     Route::get('/dataentry-edit/{id}', [App\Http\Controllers\DataEntryController::class, 'edit'])->name('dataentryEdit');
     Route::get('dataentryController/reset_password/{id}/{password}', 'App\Http\Controllers\DataEntryController@resetPassword');

@@ -24,7 +24,7 @@
                                     <div class="card">
                                         <div>
                                             {{--                                        <a href="{{route('participants')}}">--}}
-                                            <a href="{{route('companyParticipants')}}">
+                                            <a href="{{route('companyParticipants',$event->company_id)}}">
                                                 <img class="card-img-top"
                                                      style="border-top-left-radius: 20px; border-top-right-radius: 20px"
                                                      src="{{ asset('images/event.png') }}" alt="Event">

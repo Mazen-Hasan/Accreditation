@@ -45,11 +45,18 @@ class AccreditationCategoryController extends Controller
 
     public function store(Request $request)
     {
+        try{
         $postId = $request->post_id;
         $post = AccreditationCategory::updateOrCreate(['id' => $postId],
             ['name' => $request->name,
                 'status' => $request->status
             ]);
+        } catch (\Exception $e) {
+            return Response::json(array(
+                'code' => 400,
+                'message' => $e->getMessage()
+            ), 400);
+        }
         return Response::json($post);
     }
 

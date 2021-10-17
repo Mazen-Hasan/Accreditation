@@ -69,7 +69,7 @@
                         <div class="form-group">
                             <label for="name">Event Type</label>
                             <div class="col-sm-12">
-                                <input type="text" id="name" name="name" placeholder="enter name" required="">
+                                <input type="text" id="name" minlength="1" maxlength="30" name="name" placeholder="enter name" required="">
                             </div>
                         </div>
 
@@ -77,10 +77,14 @@
                             <label>Status</label>
                             <div class="col-sm-12">
                                 <select id="status" name="status" value="" required="">
+                                    <option value="default">Please select status</option>
                                     <option value="1">Active</option>
                                     <option value="0">InActive</option>
                                 </select>
                             </div>
+                        </div>
+                        <div>
+                            <p id="error" style="margin-left: 30px;margin-bottom: 10px;color: red;"></p>
                         </div>
                         <div class="col-sm-12">
                             <button type="submit" id="btn-save" value="create">Save
@@ -172,6 +176,12 @@
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
+                $('#name').val("");
+                $('#error').html("");
+                $form = $("#postForm");
+                $validator = $form.validate();
+                $validator.resetForm();
+                $('#status').val('default');
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("New Event Type");
                 $('#ajax-crud-modal').modal('show');
@@ -183,9 +193,13 @@
                 $.get('eventTypeController/' + post_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#email-error').hide();
+                    $('#error').html("");
                     $('#postCrudModal').html("Edit Event Type");
                     $('#btn-save').val("edit-post");
                     $('#ajax-crud-modal').modal('show');
+                    $form = $("#postForm");
+                    $validator = $form.validate();
+                    $validator.resetForm();
                     $('#post_id').val(data.id);
                     $('#name').val(data.name);
                     $('#status').val(data.status);
@@ -264,9 +278,12 @@
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
+                rules: {
+                    status: {valueNotEquals: "default"}
+                },
                 submitHandler: function (form) {
+                    $('#error').html("");
                     $('#btn-save').html('Sending..');
-
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('eventTypeController.store') }}",
@@ -281,11 +298,17 @@
                         },
                         error: function (data) {
                             console.log('Error:', data);
-                            $('#btn-save').html('Save Changes');
+                            $('#btn-save').html('Save');
+                            $('#error').html("Duplicate event type name");
+                            //$('#btn-save').html('Save Changes');
                         }
                     });
                 }
             })
         }
+        jQuery.validator.addMethod("valueNotEquals",
+            function (value, element, params) {
+                return params !== value;
+            }, " Please select a value");
     </script>
 @endsection

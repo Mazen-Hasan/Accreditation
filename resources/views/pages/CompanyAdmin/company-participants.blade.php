@@ -12,6 +12,26 @@
     <script src="{{ URL::asset('js/pdfmake.min.js') }}"></script>
     <script src="{{ URL::asset('js/print.min.js') }}"></script>
 @endsection
+@section('custom_navbar')
+<li id="subsidiaries_nav" class="nav-item"> 
+                     <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}" 
+                        href="{{ route('subCompanies',$companyId) }} "> 
+                         <i class="logout"> 
+                             <img src="{{ asset('images/menu.png') }}" alt="My Sidries"> 
+                         </i> 
+                         <span class="menu-title">Subsidiaries</span> 
+                     </a> 
+                 </li> 
+                 <li class="nav-item"> 
+                     <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}" 
+                        href="{{ route('dataentrys',$companyId) }}"> 
+                         <i class="logout"> 
+                             <img src="{{ asset('images/menu.png') }}" alt="Data Entry"> 
+                         </i> 
+                         <span class="menu-title">Data Entry</span> 
+                     </a> 
+                 </li> 
+@endsection
 @section('content')
     <div class="content-wrapper">
         <br>
@@ -19,6 +39,7 @@
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <input type="hidden" id="data_values" name="data_values" value=""/>
+                <input type="hidden" id="company_id" name="company_id" value="{{$companyId}}"/>
                 <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
                 <div class="card">
                     <div class="card-body">
@@ -35,7 +56,7 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('company-admin')
-                                <a href="{{route('templateForm',0)}}" id="add-new-post" class="add-hbtn">
+                                <a href="{{route('templateForm',[0,$companyId])}}" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
@@ -61,14 +82,14 @@
                                 @endforeach
                                 <!-- <th>ID</th>
                                     <th>Name</th>
-                                    {{--                                    <th>Location</th>--}}
+                                                                         <th>Location</th> 
                                     <th>Nationality</th>
                                     <th>Class</th>
                                     <th>Email</th>
                                     <th>Mobile</th>
                                     <th>Position</th>
                                     <th>Accreditation Category</th>
-                                    <th>Religion</th>--}} -->
+                                    <th>Religion</th>  -->
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -166,6 +187,7 @@
 @section('script')
     <script>
         $(document).ready(function () {
+            var companyId = $('#company_id').val();
             var subCompany_status = $('#subCompnay_status').val();
             if (subCompany_status == 0) {
                 $('#subsidiaries_nav').hide();
@@ -199,7 +221,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: 'company-participants',
+                    url: '../company-participants/' + companyId,
                     type: 'GET',
                 },
                 columns: myColumns,

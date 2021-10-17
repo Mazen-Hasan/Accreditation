@@ -78,10 +78,14 @@
                             <label class="col-sm-2 control-label">Status</label>
                             <div class="col-sm-12">
                                 <select id="status" name="status" required="">
+                                    <option value="default">Please select status</option>
                                     <option value="1">Active</option>
                                     <option value="0">InActive</option>
                                 </select>
                             </div>
+                        </div>
+                        <div>
+                            <p id="error" style="margin-left: 30px;margin-bottom: 10px;color: red;"></p>
                         </div>
                         <div class="modal-footer">
                             <div class="col-sm-12">
@@ -176,6 +180,12 @@
             $('#add-new-category').click(function () {
                 $('#btn-save').val("create-category");
                 $('#category_id').val('');
+                $('#name').val("");
+                $('#status').val('default');
+                $('#error').html("");
+                $form = $("#categoryForm");
+                $validator = $form.validate();
+                $validator.resetForm();
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("New Company Category");
                 $('#ajax-crud-modal').modal('show');
@@ -187,7 +197,11 @@
                     $('#name-error').hide();
                     $('#postCrudModal').html("Edit Company Category");
                     $('#btn-save').val("edit-category");
+                    $('#error').html("");
                     $('#ajax-crud-modal').modal('show');
+                    $form = $("#categoryForm");
+                    $validator = $form.validate();
+                    $validator.resetForm();
                     $('#category_id').val(data.id);
                     $('#name').val(data.name);
                     $('#status').val(data.status);
@@ -239,7 +253,11 @@
 
         if ($("#categoryForm").length > 0) {
             $("#categoryForm").validate({
+                rules: {
+                    status: {valueNotEquals: "default"}
+                },
                 submitHandler: function (form) {
+                    $('#error').html("");
                     $('#btn-save').html('Sending..');
 
                     $.ajax({
@@ -256,11 +274,17 @@
                         },
                         error: function (data) {
                             console.log('Error:', data);
-                            $('#btn-save').html('Save Changes');
+                            $('#btn-save').html('Save');
+                            $('#error').html("Duplicate company category name");
+                            //$('#btn-save').html('Save Changes');
                         }
                     });
                 }
             })
         }
+        jQuery.validator.addMethod("valueNotEquals",
+            function (value, element, params) {
+                return params !== value;
+            }, " Please select a value");
     </script>
 @endsection

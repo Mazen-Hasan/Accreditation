@@ -14,10 +14,10 @@ use Illuminate\Support\Facades\Response;
 
 class TemplateFormController extends Controller
 {
-    public function index($participant_id)
+    public function index($participant_id,$companyId)
     {
 
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
 
         $where = array('id' => $company->event_id);
@@ -139,7 +139,7 @@ class TemplateFormController extends Controller
         if ($company->subCompany_id != null) {
             $subCompany_nav = 0;
         }
-        return view('pages.TemplateForm.template-form-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav);
+        return view('pages.TemplateForm.template-form-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId);
     }
 
     public function createHiddenField($id, $label, $value)
@@ -275,7 +275,7 @@ class TemplateFormController extends Controller
 
     public function store(Request $request)
     {
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' =>  $request->company_id);
         $company = Company::where($where)->get()->first();
         $participant_id = $request->participant_id;
         $companyStaff = CompanyStaff::updateOrCreate(['id' => $participant_id],
@@ -320,8 +320,10 @@ class TemplateFormController extends Controller
 
     public function details($participant_id)
     {
+        $where = array('id'=> $participant_id);
+        $compnyStaff = CompanyStaff::where($where)->first();
 
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' => $compnyStaff->company_id);
         $company = Company::where($where)->get()->first();
 
         $where = array('id' => $company->event_id);
@@ -482,7 +484,7 @@ class TemplateFormController extends Controller
 
             case 0:
                 $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="' . route('templateForm', $participant_id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                 $buttons .= '&nbsp;&nbsp;';
                 $buttons .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $participant_id . '" class="delete btn btn-danger">Send Request</a>';
                 break;
@@ -495,14 +497,14 @@ class TemplateFormController extends Controller
                 $buttons .= '<a href="' . route('templateForm', $participant_id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                 break;
         }
-        return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons);
+        //return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons);
         $subCompany_nav = 1;
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' => $company->id);
         $company = Company::where($where)->first();
         if ($company->subCompany_id != null) {
             $subCompany_nav = 0;
         }
-        return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('subCompany_nav', $subCompany_nav);
+        return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('subCompany_nav', $subCompany_nav)->with('companyId',$company->id);
     }
 
     public function createStatusFieldLabel($label, $mandatory, $value)

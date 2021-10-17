@@ -13,6 +13,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Participant - New</h4>
                         <form class="form-sample" id="templateForm" name="templateForm">
+                        <input type="hidden" id="company_id" value={{$companyId}} />
                             <?php echo $form ?>
                         </form>
                         <br>
@@ -44,6 +45,7 @@
         if ($("#templateForm").length > 0) {
             $("#templateForm").validate({
                 submitHandler: function (form) {
+                    var compnayId = $('#company_id').val();
                     $('#btn-save').html('Sending..');
 
                     $.ajax({
@@ -57,7 +59,7 @@
                             // $('#btn-save').html('Save Changes');
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
-                            window.location.href = "{{ route('companyParticipants')}}";
+                            window.location.href = "{{ route('companyParticipants',$companyId)}}";
                         },
                         error: function (data) {
                             console.log('Error:', data);

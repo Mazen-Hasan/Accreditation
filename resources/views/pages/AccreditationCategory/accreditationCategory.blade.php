@@ -69,7 +69,7 @@
                         <div class="form-group">
                             <label>Accreditation Category</label>
                             <div class="col-sm-12">
-                                <input type="text" id="name" name="name" value="" required="">
+                                <input type="text" id="name" name="name" value="" placeholder="enter name" required="">
                             </div>
                         </div>
 
@@ -77,10 +77,14 @@
                             <label>Status</label>
                             <div class="col-sm-12">
                                 <select id="status" name="status" value="" required="">
+                                    <option value="default">Please select status</option>
                                     <option value="1">Active</option>
                                     <option value="0">InActive</option>
                                 </select>
                             </div>
+                        </div>
+                        <div>
+                            <p id="error" style="margin-left: 30px;margin-bottom: 10px;color: red;"></p>
                         </div>
                         <div class="col-sm-12">
                             <button type="submit" id="btn-save" value="create">Save
@@ -172,6 +176,13 @@
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
+                $('#name').val("");
+                $('#error').html("");
+                $('#status').val('default');
+                $('#error').html("");
+                $form = $("#postForm");
+                $validator = $form.validate();
+                $validator.resetForm();
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("New Accreditation Category");
                 $('#ajax-crud-modal').modal('show');
@@ -185,7 +196,11 @@
                     $('#email-error').hide();
                     $('#postCrudModal').html("Edit Accreditation Category");
                     $('#btn-save').val("edit-post");
+                    $('#error').html("");
                     $('#ajax-crud-modal').modal('show');
+                    $form = $("#postForm");
+                    $validator = $form.validate();
+                    $validator.resetForm();
                     $('#post_id').val(data.id);
                     $('#name').val(data.name);
                     $('#status').val(data.status);
@@ -264,9 +279,12 @@
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
+                rules: {
+                    status: {valueNotEquals: "default"}
+                },
                 submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
-
+                    $('#error').html("");
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('accreditationCategoryController.store') }}",
@@ -281,11 +299,16 @@
                         },
                         error: function (data) {
                             console.log('Error:', data);
-                            $('#btn-save').html('Save Changes');
+                            $('#btn-save').html('Save');
+                            $('#error').html("Duplicate accreditation category name");
                         }
                     });
                 }
             })
         }
+        jQuery.validator.addMethod("valueNotEquals",
+            function (value, element, params) {
+                return params !== value;
+            }, " Please select a value");
     </script>
 @endsection

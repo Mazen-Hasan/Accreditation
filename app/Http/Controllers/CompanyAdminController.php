@@ -59,11 +59,11 @@ class CompanyAdminController extends Controller
         return view('pages.CompanyAdmin.company-admin')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }
 
-    public function companyParticipants()
+    public function companyParticipants($companyId)
     {
         $dataTableColumuns = array();
 
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
 
         $where = array('id' => $company->event_id);
@@ -75,15 +75,15 @@ class CompanyAdminController extends Controller
         foreach ($templateFields as $templateField) {
             $dataTableColumuns[] = $templateField->label_en;
         }
-        Schema::dropIfExists('temp' . Auth::user()->id);
-        Schema::create('temp' . Auth::user()->id, function ($table) use ($templateFields) {
+        Schema::dropIfExists('temp_' . $companyId);
+        Schema::create('temp_' . $companyId, function ($table) use ($templateFields) {
             $table->string('id');
             foreach ($templateFields as $templateField) {
                 $dataTableColumuns[] = $templateField->label_en;
                 $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
             }
         });
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
 
         $where = array('event_id' => $company->event_id, 'company_id' => $company->id);
@@ -110,7 +110,7 @@ class CompanyAdminController extends Controller
         // exit;
         $query = '';
         foreach ($alldata as $data) {
-            $query = 'insert into temp' . Auth::user()->id . ' (id';
+            $query = 'insert into temp_' . $companyId . ' (id';
             foreach ($templateFields as $templateField) {
                 $query = $query . ',' . preg_replace('/\s+/', '_', $templateField->label_en);
             }
@@ -126,7 +126,7 @@ class CompanyAdminController extends Controller
         // var_dump($query);
         // exit;
         if (request()->ajax()) {
-            $participants = DB::select('select t.* , c.* from temp' . Auth::user()->id . ' t inner join company_staff c on t.id = c.id');
+            $participants = DB::select('select t.* , c.* from temp_' . $companyId . ' t inner join company_staff c on t.id = c.id');
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {
                     $status_value = "initaited";
@@ -189,7 +189,7 @@ class CompanyAdminController extends Controller
                     switch ($data->status) {
 
                         case 0:
-                            $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                            $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                             $button .= '&nbsp;&nbsp;';
                             $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger">Send Request</a>';
                             break;
@@ -210,12 +210,12 @@ class CompanyAdminController extends Controller
                 ->make(true);
         }
         $subCompany_nav = 1;
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' => $companyId);
         $company = Company::where($where)->first();
         if ($company->subCompany_id != null) {
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav);
+        return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId);
     }
 
 
@@ -498,9 +498,9 @@ class CompanyAdminController extends Controller
     }
 
 
-    public function subCompanies()
+    public function subCompanies($companyId)
     {
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' => $companyId);
         $company = Company::where($where)->first();
         $where = array('id' => $company->event_id);
         $event = Event::where($where)->first();
@@ -518,7 +518,7 @@ class CompanyAdminController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventid', $event->id);
+        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventid', $event->id)->with('companyId',$companyId);
     }
 
     public function storeSubCompnay(Request $request)

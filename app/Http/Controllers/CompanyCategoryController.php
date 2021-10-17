@@ -44,11 +44,18 @@ class CompanyCategoryController extends Controller
 
     public function store(Request $request)
     {
+        try{
         $categoryId = $request->category_id;
         $category = CompanyCategory::updateOrCreate(['id' => $categoryId],
             ['name' => $request->name,
                 'status' => $request->status
             ]);
+        } catch (\Exception $e) {
+            return Response::json(array(
+                'code' => 400,
+                'message' => $e->getMessage()
+            ), 400);
+        }
         return Response::json($category);
     }
 

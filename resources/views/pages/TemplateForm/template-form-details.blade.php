@@ -13,6 +13,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Participant - Detials</h4>
                         <form class="form-sample" id="templateForm" name="templateForm">
+                        <input type="hidden" id="company_id" value={{$companyId}} />
                             <?php echo $form ?>
                         </form>
                         <br>
@@ -118,7 +119,7 @@
                             type: "get",
                             url: "../companyAdminController/sendRequest/" + staffId,
                             success: function (data) {
-                                window.location.href = "{{ route('companyParticipants')}}";
+                                window.location.href = "{{ route('companyParticipants',$companyId)}}";
                             },
                             error: function (data) {
                                 console.log('Error:', data);

@@ -19,6 +19,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
+                            <input type="hidden" id="company_id" value={{$companyId}}>
                             <div class="col-md-8">
                                 <p class="card-title">{{$event_name}} / {{$company_name}} / Subsidiaries</p>
                             </div>
@@ -102,7 +103,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            var companyId = $('#company_id').val();
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
@@ -116,7 +117,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '/subCompanies',
+                    url: '/subCompanies/'+companyId,
                     type: 'GET',
                 },
                 columns: [

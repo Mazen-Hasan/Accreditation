@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EventType;
 use Illuminate\Http\Request;
 use Redirect;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class EventTypeController extends Controller
 {
@@ -44,11 +44,18 @@ class EventTypeController extends Controller
 
     public function store(Request $request)
     {
+        try{
         $postId = $request->post_id;
         $post = EventType::updateOrCreate(['id' => $postId],
             ['name' => $request->name,
                 'status' => $request->status
             ]);
+        } catch (\Exception $e) {
+            return Response::json(array(
+                'code' => 400,
+                'message' => $e->getMessage()
+            ), 400);
+        }
         return Response::json($post);
     }
 

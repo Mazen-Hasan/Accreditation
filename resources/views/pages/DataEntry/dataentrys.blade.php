@@ -18,6 +18,7 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
+                    <input type="hidden" id="company_id" value={{$companyId}}>
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
                                 <p class="card-title">Data Entries</p>
@@ -106,7 +107,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            var companyId = $('#company_id').val();
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
@@ -120,7 +121,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('dataentryController.index') }}",
+                    url: "/dataentrys/"+ companyId,
                     type: 'GET',
                 },
                 columns: [

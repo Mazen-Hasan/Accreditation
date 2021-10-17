@@ -25,10 +25,14 @@ class DataEntryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($companyId)
     {
+        // var_dump($companyId);
+        // exit;
         if (request()->ajax()) {
-            $focalpoint = DB::select('select * from data_entrys_view where company_admin_id = ?', [Auth::user()->id]);
+            $focalpoint = DB::select('select * from data_entrys_view where company_id = ?', [$companyId]);
+            // var_dump($focalpoint);
+            // exit;
             return datatables()->of($focalpoint)
                 ->addColumn('name', function ($row) {
                     return $row->name . ' ' . $row->middle_name . ' ' . $row->last_name;
@@ -44,7 +48,7 @@ class DataEntryController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.DataEntry.dataentrys');
+        return view('pages.DataEntry.dataentrys')->with('companyId',$companyId);
     }
 
 

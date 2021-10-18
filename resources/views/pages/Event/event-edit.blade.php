@@ -299,7 +299,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('EventController.edit',[$event->id]) }}",
+                    url: "{{ route('eventEdit',[$event->id]) }}",
                     type: 'GET',
                 },
                 columns: [

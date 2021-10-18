@@ -29,8 +29,13 @@ class EventController extends Controller
         if (request()->ajax()) {
             $events = DB::select('select * from events_view');
             return datatables()->of($events)
+
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('eventAdmins', $data->id) . '" data-toggle="tooltip"  id="event-admins" data-id="' . $data->id . '" data-original-title="Edit" title="Event admins"><i class="fas fa-user-cog"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     return $button;
                 })
@@ -40,13 +45,79 @@ class EventController extends Controller
         return view('pages.Event.events');
     }
 
+    public function eventAdmins($event_id)
+    {
+        if (request()->ajax()) {
+            $event = DB::select('select * from event_admins_info_view where event_id=?',[$event_id]);
+            return datatables()->of($event)
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+                ->addColumn('action', function ($data) {
+                    $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-admin"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        $event = DB::select('select * from event_admins_info_view where event_id=?',[$event_id]);
+
+        $event_admins = DB::select('select * from event_admin_users_view e where e.user_id NOT in (select ea.user_id from event_admins ea where ea.event_id = ? )',[$event_id]);
+        return view('pages.Event.eventAdmins')->with('event', $event[0])->with('eventAdmins',$event_admins);
+    }
+
+    public function eventAdminsAdd(Request $request)
+    {
+        $post = EventAdmin::updateOrCreate(['id' => 0],
+            ['event_id' => $request->event_id,
+                'user_id' => $request->admin_id,
+            ]);
+        return Response::json($post);
+    }
+
+    public function eventAdminsRemove($event_admin_id)
+    {
+        $where = array('id' => $event_admin_id);
+        $post = EventAdmin::where($where)->delete();
+        return Response::json($post);
+    }
+
+    public function eventSecurityOfficers($event_id)
+    {
+        if (request()->ajax()) {
+            $event = DB::select('select * from event_security_officers_info_view where event_id=?',[$event_id]);
+            return datatables()->of($event)
+
+                ->addColumn('action', function ($data) {
+                    $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-security-officer"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        $event = DB::select('select * from event_security_officers_info_view where event_id=?',[$event_id]);
+
+        $security_officer = DB::select('select * from security_officer_users_view s where s.user_id NOT in (select eso.user_id from event_security_officers eso where eso.event_id = ? )',[$event_id]);
+        return view('pages.Event.eventSecurityOfficers')->with('event', $event[0])->with('securityOfficers',$security_officer);
+    }
+
+    public function eventSecurityOfficersAdd(Request $request)
+    {
+        $post = EventSecurityOfficer::updateOrCreate(['id' => 0],
+            ['event_id' => $request->event_id,
+                'user_id' => $request->security_officer_id,
+            ]);
+        return Response::json($post);
+    }
+
+    public function eventSecurityOfficersRemove($event_admin_id)
+    {
+        $where = array('id' => $event_admin_id);
+        $post = EventSecurityOfficer::where($where)->delete();
+        return Response::json($post);
+    }
 
     public function store(Request $request)
     {
@@ -114,10 +185,6 @@ class EventController extends Controller
         return Response::json($post);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     */
     public function eventAdd()
     {
         $sql = 'select CONCAT(COALESCE(c.name,"")," ",COALESCE(c.middle_name,"")," ",COALESCE(c.last_name,"")) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Organizer")';
@@ -189,7 +256,6 @@ class EventController extends Controller
             ->with('securityOfficers', $securityOfficers)->with('approvalOptions', $approvalOptions)->with('eventTypes', $eventTypesSelectOption)
             ->with('eventStatuss', $eventStatuss)->with('eventForms', $templatesSelectOption)->with('securityCategories', $securityCategoriesSelectOption);
     }
-
 
     public function edit($id)
     {
@@ -305,11 +371,6 @@ class EventController extends Controller
 //        return Response::json($post);
 //    }
 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     */
     public function destroy($id)
     {
         $post = Event::where('id', $id)->delete();
@@ -320,9 +381,6 @@ class EventController extends Controller
 
     public function storeEventSecurityCategory($event_id, $security_category_id)
     {
-        //xdebug_break();
-//        $contactId = $request->post_id;
-//        $titleId = $request->contactTitle;
         $post = EventSecurityCategory::updateOrCreate(['id' => 0],
             ['event_id' => $event_id,
                 'security_category_id' => $security_category_id,

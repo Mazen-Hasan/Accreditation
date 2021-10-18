@@ -70,7 +70,6 @@
             </div>
         </div>
     </div>
-
     <!-- add new field modal-->
     <div class="modal fade" id="field-modal" aria-hidden="true">
         <div class="modal-dialog">

@@ -114,7 +114,7 @@
                             <div class="col-lg-6 grid-margin stretch-card">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h4 class="card-title">Contact Title Table</h4>
+                                        <h4 class="card-title">Titles</h4>
                                         <div class="table-responsive">
                                             <table class="table table-hover" id="laravel_datatable"
                                                    style="text-align: center">
@@ -122,7 +122,6 @@
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>Title</th>
-                                                    {{--                                                    <th style="color: black">Status</th>--}}
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -134,8 +133,9 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
-                        <a href="javascript:void(0)" class="ha_btn" id="add-new-post">Add Contact Title</a>
+                        <div class="col-sm-offset-2 col-sm-2">
+                        <a href="javascript:void(0)" class="ha_btn" id="add-new-post">Add Title</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -150,7 +150,7 @@
                 <div class="modal-body">
                     <input type="hidden" name="contact_id" id="contact_id" value="{{$post->id}}">
                     <div class="form-group">
-                        <label>Status</label>
+                        <label>Title</label>
                         <div class="col-sm-12">
                             <select id="contactTitle" name="contactTitle" value="" required="">
                                 @foreach ($titlesSelectOptions as $titlesSelectOptions)
@@ -194,15 +194,6 @@
                 columns: [
                     {data: 'id', name: 'id', 'visible': false},
                     {data: 'title_label', name: 'title_label'},
-                    // {
-                    //     data: 'status', render: function (data) {
-                    //         if (data == 1) {
-                    //             return "<p style='color: green'>Active</p>"
-                    //         } else {
-                    //             return "<p style='color: red'>InActive</p>"
-                    //         }
-                    //     }
-                    // },
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
@@ -212,13 +203,12 @@
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Contact Title");
+                $('#postCrudModal').html("Add Title");
                 $('#ajax-crud-modal').modal('show');
             });
 
             $('body').on('click', '#remove-contact_title', function () {
                 var post_id = $(this).data("id");
-                // var contact_id = $('#contact_id').val();
                 confirm("Are You sure want to remove contact title ?!");
                 $.ajax({
                     type: "get",
@@ -235,8 +225,6 @@
             $('body').on('click', '#btn-contact_title-save', function () {
                 var contact_id = $('#contact_id').val();
                 var title_id = $('#contactTitle').val();
-                //alert('hey hey');
-                //confirm("Are You sure want to deActivate ?!");
                 $.ajax({
                     type: "get",
                     url: "../contactController/storeContactTitle/" + contact_id + "/" + title_id,
@@ -255,10 +243,7 @@
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 submitHandler: function (form) {
-                    //$('#post_id').val('');
-                    var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    //alert($('#post_id').val());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('contactController.store') }}",
@@ -269,8 +254,6 @@
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Edited successfully');
                             window.location.href = "{{ route('contacts')}}";
-                            // var oTable = $('#laravel_datatable').dataTable();
-                            // oTable.fnDraw(false);
                         },
                         error: function (data) {
                             console.log('Error:', data);

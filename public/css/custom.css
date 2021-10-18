@@ -1057,12 +1057,13 @@ a.disabled {
 }
 
 /*Font awesome*/
+
 .fa-edit{
-    color: green;
+    color: #0c63e4;
 }
 
 .fa-ban{
-    color: red;
+    color: #ff0000;
 }
 
 .fa-check-circle{
@@ -1077,4 +1078,12 @@ a.disabled {
 .fa-minus-circle{
     color: red;
     font-size: 25px;
+}
+
+.fa-trash-alt{
+    color: #ff0000;
+}
+
+.fa-user-cog{
+    color: #30c93e;
 }

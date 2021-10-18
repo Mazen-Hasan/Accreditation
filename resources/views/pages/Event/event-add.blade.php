@@ -374,7 +374,6 @@
                     $('#btn-save').html('Sending..');
                     $.ajax({
                         data: $('#postForm').serialize(),
-                        // data: $('#postForm').serialize() + "&event_admins=" + event_admins,
                         url: "{{ route('EventController.store') }}",
                         type: "POST",
                         dataType: 'json',

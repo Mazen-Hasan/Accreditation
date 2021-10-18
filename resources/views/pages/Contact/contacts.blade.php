@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Contacts</p>
+                                <p class="card-title">Event Organizer/Owner</p>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">

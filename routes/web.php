@@ -114,6 +114,15 @@ Route::group(['middleware' => 'role:event-admin'], function () {
 Route::group(['middleware' => 'role:super-admin'], function () {
     Route::resource('EventController', 'App\Http\Controllers\EventController');
     Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events');
+
+    Route::get('/event-admins/{event_id}', [App\Http\Controllers\EventController::class, 'eventAdmins'])->name('eventAdmins');
+    Route::get('/event-admins-remove/{id}', [App\Http\Controllers\EventController::class, 'eventAdminsRemove'])->name('eventAdminsRemove');
+    Route::post('/event-admins-add', [App\Http\Controllers\EventController::class, 'eventAdminsAdd'])->name('eventAdminsAdd');
+    Route::get('/event-security-officers/{id}', [App\Http\Controllers\EventController::class, 'eventSecurityOfficers'])->name('eventSecurityOfficers');
+    Route::get('/event-security-officers-remove/{id}', [App\Http\Controllers\EventController::class, 'eventSecurityOfficersRemove'])->name('eventSecurityOfficersRemove');
+    Route::post('/event-security-officers-add', [App\Http\Controllers\EventController::class, 'eventSecurityOfficersAdd'])->name('eventSecurityOfficersAdd');
+
+
     Route::get('/event-add', [App\Http\Controllers\EventController::class, 'eventAdd'])->name('eventAdd');
     Route::get('/event-edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('eventEdit');
     Route::get('EventController/remove/{event_security_category_id}', 'App\Http\Controllers\EventController@remove');

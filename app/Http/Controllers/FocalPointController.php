@@ -23,7 +23,8 @@ class FocalPointController extends Controller
         if (request()->ajax()) {
             // $where = array('event_admin' => Auth::user()->id);
             // $event = Event::where($where)->get()->first();
-            $focalpoint = DB::select('select * from focal_points_view where event_admin_id = ?', [Auth::user()->id]);
+            //$focalpoint = DB::select('select * from focal_points_view where event_admin_id = ?', [Auth::user()->id]);
+            $focalpoint = DB::select('select * from focal_points_view');
             return datatables()->of($focalpoint)
                 ->addColumn('name', function ($row) {
                     return $row->name . ' ' . $row->middle_name . ' ' . $row->last_name;
@@ -92,7 +93,7 @@ class FocalPointController extends Controller
                     'email' => $request->email,
                     'telephone' => $request->telephone,
                     'mobile' => $request->mobile,
-                    'event_admin_id' => Auth::user()->id,
+                    //'event_admin_id' => Auth::user()->id,
                     'password' => $request->password,
                     'account_id' => $user->id,
                     'status' => $request->status,

@@ -242,6 +242,7 @@
                         url: "../../companyController/storeCompanyAccrCatSize/" + post_id + "/" + accredit_cat_id + "/" + size + "/" + company_id + "/" + eventId,
                         success: function (data) {
                             $('#ajax-crud-modal').modal('hide');
+                            //alert('i am here');
                             var oTable = $('#laravel_datatable').dataTable();
                             oTable.fnDraw(false);
                             var remaining_size = parseInt($('#remaining_size').val());
@@ -288,7 +289,7 @@
                                     oTable.fnDraw(false);
                                     var remaining_size = parseInt($('#remaining_size').val());
                                     var inserted_size = parseInt($('#curr_size').val());
-                                    alert(inserted_size);
+                                    //alert(inserted_size);
                                     var new_remaining_size = remaining_size + inserted_size;
                                     $('#remaining_size').val(new_remaining_size);
                                     $('#curr_size').val('0');

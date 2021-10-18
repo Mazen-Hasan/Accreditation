@@ -11,6 +11,6 @@ class Company extends Model
 
     protected $fillable = [
         'name', 'address', 'telephone', 'website', 'focal_point_id', 'company_admin_id', 'subCompany_id',
-        'country_id', 'city_id', 'category_id', 'size', 'event_id', 'need_management', 'status'
+        'country_id', 'city_id', 'category_id', 'size', 'event_id', 'need_management', 'status','parent_id'
     ];
 }

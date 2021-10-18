@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\AccreditationCategory;
 use App\Models\City;
 use App\Models\Company;
+use App\Models\EventCompany;
 use App\Models\CompanyAccreditaionCategory;
 use App\Models\CompanyCategory;
 use App\Models\Country;
 use App\Models\Event;
+use App\Models\EventCompnay;
+use App\Models\EventCompanyAccreditaionCategory;
 use App\Models\FocalPoint;
 use App\Models\SelectOption;
 use Illuminate\Http\Request;
@@ -81,30 +84,25 @@ class CompanyController extends Controller
         if ($companyId == null) {
             $company = Company::updateOrCreate(['id' => $companyId],
                 ['name' => $request->name,
-                    'event_id' => $request->event_id,
+                    //'event_id' => $request->event_id,
                     'address' => $request->address,
                     'telephone' => $request->telephone,
                     'website' => $request->website,
-                    'focal_point_id' => $request->focal_point,
-                    'company_admin_id' => $focal_point->account_id,
+                    //'focal_point_id' => $request->focal_point,
+                    //'company_admin_id' => $focal_point->account_id,
                     'country_id' => $request->country,
                     'city_id' => $request->city,
                     'category_id' => $request->category,
                     'size' => $request->size,
-                    'need_management' => $request->need_management,
-                    'status' => $request->status,
+                    'need_management' => $request->need_management
+                    //'status' => $request->status,
                 ]);
-
-            // foreach ($request->accreditationCategories as $accreditationCategory) {
-            //     $help = CompanyAccreditaionCategory::updateOrCreate(['id' => 0],
-            //         ['accredit_cat_id' => $accreditationCategory,
-            //             'company_id' => $company->id,
-            //             'subcompany_id' => $company->id,
-            //             'status' => 0,
-            //             'event_id' => $request->event_id,
-            //             'size' => 0
-            //         ]);
-            // }
+            $event_company = EventCompany::updateOrCreate(['id' => 0],
+                ['event_id' => $request->event_id,
+                'company_id' => $company->id,
+                'status' => 1,
+                'focal_point_id' => $request->focal_point
+            ]);                
         } else {
 
             $where = array('id' => $companyId);
@@ -119,19 +117,26 @@ class CompanyController extends Controller
             }
             $company = Company::updateOrCreate(['id' => $companyId],
                 ['name' => $request->name,
-                    'event_id' => $request->event_id,
+                    //'event_id' => $request->event_id,
                     'address' => $request->address,
                     'telephone' => $request->telephone,
                     'website' => $request->website,
-                    'focal_point_id' => $request->focal_point,
-                    'company_admin_id' => $focal_point->account_id,
+                    //'focal_point_id' => $request->focal_point,
+                    //'company_admin_id' => $focal_point->account_id,
                     'country_id' => $request->country,
                     'city_id' => $request->city,
                     'category_id' => $request->category,
                     'size' => $request->size,
                     'need_management' => $request->need_management,
-                    'status' => $status
+                    //'status' => $status
                 ]);
+                $event_company = EventCompany::updateOrCreate(['event_id' => $request->event_id,'company_id' => $companyId],
+                [
+                //'event_id' => $request->event_id,
+                //'company_id' => $company->id,
+                'status' => 1,
+                'focal_point_id' => $request->focal_point
+            ]); 
         }
 
         return Response::json($company);
@@ -145,7 +150,8 @@ class CompanyController extends Controller
         $where = array('id' => $id);
         $post = Company::where($where)->first();
 
-        $where = array('event_admin_id' => Auth::user()->id);
+        //$where = array('event_admin_id' => Auth::user()->id);
+        $where = array('status' => 1);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
         foreach ($contacts as $contact) {
@@ -296,9 +302,11 @@ class CompanyController extends Controller
             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
-        $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?', [$Id, $eventId]);
+        $companyAccreditationCategories = DB::select('select * from event_compnay_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
         $status = 0;
         $remainingSize = $company->size;
+        // var_dump($remainingSize);
+        // exit;
         foreach ($companyAccreditationCategories as $companyAccreditationCategory) {
             $status = $companyAccreditationCategory->status;
             $remainingSize = $remainingSize - $companyAccreditationCategory->size;
@@ -306,7 +314,7 @@ class CompanyController extends Controller
 
         if (request()->ajax()) {
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
+            $companyAccreditationCategories = DB::select('select * from event_compnay_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
             return datatables()->of($companyAccreditationCategories)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
@@ -330,23 +338,17 @@ class CompanyController extends Controller
 
     public function storeCompanyAccrCatSize($id, $accredit_cat_id, $size, $company_id, $event_id)
     {
-        // $where = array('event_admin' => Auth::user()->id);
-        // $event = Event::where($where)->get()->first();
-        // $post = CompanyAccreditaionCategory::updateOrCreate(['id' => $id],
-        //     ['size' => $size,
-        //         'accredit_cat_id' => $accredit_cat_id,
-        //         'company_id'=> $company_id,
-        //         'subcompany_id' =>$company_id,
-        //         'event_id' => $event_id,
-        //         'status'=> 2
-        //     ]);
-        // return Response::json($post);
+        $where = array('company_id'=>$company_id, 'event_id' => $event_id);
+        $eventcompnay = EventCompany::where($where)->first();
+        // var_dump($eventcompnay);
+        // exit;
         try {
             $post = CompanyAccreditaionCategory::updateOrCreate(['id' => $id],
                 ['size' => $size,
+                    'event_company_id' => $eventcompnay->id,
                     'accredit_cat_id' => $accredit_cat_id,
                     'company_id' => $company_id,
-                    'subcompany_id' => $company_id,
+                    'parent_id' => $eventcompnay->parent_id,
                     'event_id' => $event_id,
                     'status' => 0
                 ]);

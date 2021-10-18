@@ -49,7 +49,7 @@
                                     <th>Mobile</th>
                                     <th>Account Name</th>
                                     <th>Account Email</th>
-                                    <th>Company</th>
+                                    <!-- <th>Company</th> -->
                                     <th>Status</th>
                                     {{--                                    <th style="color: black">Status</th>--}}
                                     <th>Action</th>
@@ -131,7 +131,7 @@
                     {data: 'mobile', name: 'mobile'},
                     {data: 'account_name', name: 'account_name'},
                     {data: 'account_email', name: 'account_email'},
-                    {data: 'company_name', name: 'company_name'},
+                    // {data: 'company_name', name: 'company_name'},
                     {
                         data: 'status', render: function (data) {
                             if (data == 1) {

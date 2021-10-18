@@ -23,7 +23,7 @@
                                     <a class="url-nav" href="{{route('events')}}">
                                         <span>Events:</span>
                                     </a>
-                                    {{$event->event_name}} /
+                                    {{$event->name}} /
                                     security Officers</h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
@@ -73,7 +73,7 @@
                 <div class="modal-body">
                     <form id="eventSecurityOfficerForm" name="eventSecurityOfficerForm" class="form-horizontal">
                         <input style="visibility: hidden" type="text" name="event_id" id="event_id"
-                               value="{{$event->event_id}}">
+                               value="{{$event->id}}">
 
                         <div class="row">
                             <div class="col-md-12">
@@ -154,7 +154,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('eventSecurityOfficers',[$event->event_id]) }}",
+                    url: "{{ route('eventSecurityOfficers',[$event->id]) }}",
                     type: 'GET',
                 },
                 columns: [
@@ -212,7 +212,7 @@
         if ($("#eventSecurityOfficerForm").length > 0) {
             $("#eventSecurityOfficerForm").validate({
                 rules: {
-                    admin_id: {valueNotEquals: "default"}
+                    security_officer_id: {valueNotEquals: "default"}
                 },
 
                 submitHandler: function (form) {

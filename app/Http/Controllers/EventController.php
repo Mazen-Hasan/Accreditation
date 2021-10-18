@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Mail\EventAdminAssign;
 use App\Models\Event;
 use App\Models\EventAdmin;
 use App\Models\EventSecurityCategory;
@@ -15,6 +16,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 
 class EventController extends Controller
@@ -32,6 +34,8 @@ class EventController extends Controller
 
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('eventSecurityCategories', $data->id) . '" data-toggle="tooltip"  id="event-security-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event security categories"><i class="fas fa-users-cog"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventAdmins', $data->id) . '" data-toggle="tooltip"  id="event-admins" data-id="' . $data->id . '" data-original-title="Edit" title="Event admins"><i class="fas fa-user-cog"></i></a>';
                     $button .= '&nbsp;&nbsp;';
@@ -60,10 +64,11 @@ class EventController extends Controller
                 ->make(true);
         }
 
-        $event = DB::select('select * from event_admins_info_view where event_id=?',[$event_id]);
+        $where = array('id' => $event_id);
+        $event = Event::where($where)->first();
 
         $event_admins = DB::select('select * from event_admin_users_view e where e.user_id NOT in (select ea.user_id from event_admins ea where ea.event_id = ? )',[$event_id]);
-        return view('pages.Event.eventAdmins')->with('event', $event[0])->with('eventAdmins',$event_admins);
+        return view('pages.Event.eventAdmins')->with('event', $event)->with('eventAdmins',$event_admins);
     }
 
     public function eventAdminsAdd(Request $request)
@@ -97,10 +102,11 @@ class EventController extends Controller
                 ->make(true);
         }
 
-        $event = DB::select('select * from event_security_officers_info_view where event_id=?',[$event_id]);
+        $where = array('id' => $event_id);
+        $event = Event::where($where)->first();
 
         $security_officer = DB::select('select * from security_officer_users_view s where s.user_id NOT in (select eso.user_id from event_security_officers eso where eso.event_id = ? )',[$event_id]);
-        return view('pages.Event.eventSecurityOfficers')->with('event', $event[0])->with('securityOfficers',$security_officer);
+        return view('pages.Event.eventSecurityOfficers')->with('event', $event)->with('securityOfficers',$security_officer);
     }
 
     public function eventSecurityOfficersAdd(Request $request)
@@ -112,10 +118,48 @@ class EventController extends Controller
         return Response::json($post);
     }
 
-    public function eventSecurityOfficersRemove($event_admin_id)
+    public function eventSecurityOfficersRemove($security_officer_id)
     {
-        $where = array('id' => $event_admin_id);
+        $where = array('id' => $security_officer_id);
         $post = EventSecurityOfficer::where($where)->delete();
+        return Response::json($post);
+    }
+
+    public function eventSecurityCategories($event_id)
+    {
+        if (request()->ajax()) {
+            $event = DB::select('select * from event_security_categories_info_view where event_id=?',[$event_id]);
+            return datatables()->of($event)
+
+                ->addColumn('action', function ($data) {
+                    $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-security-category"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        $where = array('id' => $event_id);
+        $event = Event::where($where)->first();
+
+        $security_Categories = DB::select('select * from security_categories sc where sc.id NOT in (select esc.security_category_id from event_security_categories esc where esc.event_id = ? )',[$event_id]);
+        return view('pages.Event.eventSecurityCategories')->with('event', $event)->with('securityCategories',$security_Categories);
+    }
+
+    public function eventSecurityCategoriesAdd(Request $request)
+    {
+        $post = EventSecurityCategory::updateOrCreate(['id' => 0],
+            ['event_id' => $request->event_id,
+                'security_category_id' => $request->security_category_id,
+            ]);
+        return Response::json($post);
+    }
+
+    public function eventSecurityCategoriesRemove($security_category_id)
+    {
+        $where = array('id' => $security_category_id);
+        $post = EventSecurityCategory::where($where)->delete();
         return Response::json($post);
     }
 

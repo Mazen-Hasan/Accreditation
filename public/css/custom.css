@@ -1059,15 +1059,18 @@ a.disabled {
 /*Font awesome*/
 
 .fa-edit{
-    color: #0c63e4;
+    color: #30c93e;
+    font-size: 20px;
 }
 
 .fa-ban{
     color: #ff0000;
+    font-size: 20px;
 }
 
 .fa-check-circle{
     color: #30c93e;
+    font-size: 20px;
 }
 
 .fa-plus-circle{
@@ -1082,8 +1085,20 @@ a.disabled {
 
 .fa-trash-alt{
     color: #ff0000;
+    font-size: 20px;
 }
 
 .fa-user-cog{
-    color: #30c93e;
+    color: dodgerblue;
+    font-size: 18px;
+}
+
+.fa-users-cog{
+    color: dodgerblue;
+    font-size: 20px;
+}
+
+.fa-user-shield{
+    color: dodgerblue;
+    font-size: 18px;
 }

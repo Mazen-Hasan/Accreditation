@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EventAdminAssign;
 use App\Models\FieldType;
 use App\Models\PreDefinedFieldElement;
 use App\Models\SelectOption;
@@ -102,6 +103,9 @@ class TemplateController extends Controller
                 'is_locked' => $request->has('locked'),
                 'creator' => Auth::user()->id
             ]);
+
+        Mail::to('e.mazen.hasan@gmail.com')->send(new EventAdminAssign($post));
+
 
         if ($template_id == null) {
 

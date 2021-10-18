@@ -34,7 +34,7 @@ class EventAdminController extends Controller
                 ->make(true);
         }
 
-        $events = DB::select('select * from events_view where event_admin_id = ?', [Auth::user()->id]);
+        $events = DB::select('select * from event_admins_view where event_admin = ?', [Auth::user()->id]);
         return view('pages.EventAdmin.event-admin')->with('events', $events);
     }
 

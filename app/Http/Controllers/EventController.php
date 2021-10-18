@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Event;
+use App\Models\EventAdmin;
 use App\Models\EventSecurityCategory;
+use App\Models\EventSecurityOfficer;
 use App\Models\EventType;
 use App\Models\SecurityCategory;
 use App\Models\SelectOption;
@@ -63,7 +65,7 @@ class EventController extends Controller
         $accredition_period_days = $interval->format('%a');
         $post = Event::updateOrCreate(['id' => $postId],
             ['name' => $request->name,
-                'event_admin' => $request->event_admin,
+//                'event_admin' => $request->event_admin,
                 'location' => $request->location,
                 'size' => $request->size,
                 'organizer' => $request->organizer,
@@ -73,7 +75,7 @@ class EventController extends Controller
                 'accreditation_period' => $accredition_period_days,
                 'status' => $request->status,
                 'approval_option' => $request->approval_option,
-                'security_officer' => $request->security_officer,
+//                'security_officer' => $request->security_officer,
                 'event_form' => $request->event_form,
                 'event_start_date' => $request->event_start_date,
                 'event_end_date' => $request->event_end_date,
@@ -93,6 +95,20 @@ class EventController extends Controller
                         'creator' => $request->creator
                     ]);
                 $counter = $counter + 1;
+            }
+
+            foreach ($request->event_admins as $event_admin) {
+                $help = EventAdmin::updateOrCreate(['id' => $postId],
+                    ['event_id' => $post->id,
+                        'user_id' => $event_admin
+                    ]);
+            }
+
+            foreach ($request->security_officers as $security_officer) {
+                $help = EventSecurityOfficer::updateOrCreate(['id' => $postId],
+                    ['event_id' => $post->id,
+                        'user_id' => $security_officer
+                    ]);
             }
         }
         return Response::json($post);

@@ -1050,3 +1050,31 @@ a.disabled {
     cursor: default;
     color: lightgray;
 }
+
+#add {
+    margin-left: -20px;
+    padding-top: 15px;
+}
+
+/*Font awesome*/
+.fa-edit{
+    color: green;
+}
+
+.fa-ban{
+    color: red;
+}
+
+.fa-check-circle{
+    color: #30c93e;
+}
+
+.fa-plus-circle{
+    color: dodgerblue;
+    font-size: 25px;
+}
+
+.fa-minus-circle{
+    color: red;
+    font-size: 25px;
+}

@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
+use Illuminate\Support\Facades\Mail;
+
 class TemplateController extends Controller
 {
     /**
@@ -79,6 +81,20 @@ class TemplateController extends Controller
 
     public function store(Request $request)
     {
+
+//        $info = array(
+//            'name' => "Alex"
+//        );
+//
+//        Mail::send([], $info, function ($message)
+//        {
+//            $message->to('e.mazen.hasan@gmail.com', 'Mazen')
+//                ->subject('Basic test eMail from Laravel.');
+//            $message->from('admin@accrediation.com', 'Admin');
+//        });
+
+//        echo "Successfully sent the email";
+
         $template_id = $request->template_id;
         $post = Template::updateOrCreate(['id' => $template_id],
             ['name' => $request->name,

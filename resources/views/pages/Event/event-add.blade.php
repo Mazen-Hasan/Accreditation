@@ -84,43 +84,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Event Admin</label>
-                                        <div class="col-sm-12">
-                                            <select id="event_admin" name="event_admin" required="">
-                                                <option value="default">Please select Event Admin</option>
-                                                @foreach ($eventAdmins as $eventAdmin)
-                                                    <option value="{{ $eventAdmin->key }}"
-                                                            @if ($eventAdmin->key == -1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $eventAdmin->value }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Registration Form Template</label>
-                                        <div class="col-sm-12">
-                                            <select id="event_form" name="event_form" required="">
-                                                <option value="default">Please select Registration Form Template
-                                                </option>
-                                                @foreach ($eventForms as $eventForm)
-                                                    <option value="{{ $eventForm->key }}"
-                                                            @if ($eventForm->key == -1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $eventForm->value }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
@@ -157,16 +121,8 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Location</label>
-                                        <div class="col-sm-12">
-                                            <input type="text" id="location" minlength="1" maxlength="100" name="location" value=""
-                                                   placeholder="enter location" required=""/>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Event Type</label>
@@ -184,44 +140,36 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Security Option</label>
+                                        <label>Registration Form Template</label>
                                         <div class="col-sm-12">
-                                            <select id="approval_option" name="approval_option" required="">
-                                                <option value="default">Please select Security Option</option>
-                                                @foreach ($approvalOptions as $approvalOption)
-                                                    <option value="{{ $approvalOption->key }}"
-                                                            @if ($approvalOption->key == -1)
+                                            <select id="event_form" name="event_form" required="">
+                                                <option value="default">Please select Registration Form Template
+                                                </option>
+                                                @foreach ($eventForms as $eventForm)
+                                                    <option value="{{ $eventForm->key }}"
+                                                            @if ($eventForm->key == -1)
                                                             selected="selected"
                                                         @endif
-                                                    >{{ $approvalOption->value }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Security Officer</label>
-                                        <div class="col-sm-12">
-                                            <select id="security_officer" name="security_officer" required="">
-                                                <option value="default">Please select Security Officer</option>
-                                                @foreach ($securityOfficers as $securityOfficer)
-                                                    <option value="{{ $securityOfficer->key }}"
-                                                            @if ($securityOfficer->key == -1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $securityOfficer->value }}</option>
+                                                    >{{ $eventForm->value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Location</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="location" minlength="1" maxlength="100" name="location" value=""
+                                                   placeholder="enter location" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Status</label>
@@ -234,6 +182,26 @@
                                                             selected="selected"
                                                         @endif
                                                     >{{ $eventStatus->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Event Admin</label>
+                                        <div class="col-sm-12">
+                                            <select id="event_admins" name="event_admins[]" required="" multiple>
+                                                <option value="default">Please select Event Admin</option>
+                                                @foreach ($eventAdmins as $eventAdmin)
+                                                    <option value="{{ $eventAdmin->key }}"
+                                                            @if ($eventAdmin->key == -1)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $eventAdmin->value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -258,6 +226,82 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Security Option</label>
+                                        <div class="col-sm-12">
+                                            <select id="approval_option" name="approval_option" required="" >
+                                                <option value="default">Please select Security Option</option>
+                                                @foreach ($approvalOptions as $approvalOption)
+                                                    <option value="{{ $approvalOption->key }}"
+                                                            @if ($approvalOption->key == -1)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $approvalOption->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Security Officer</label>
+                                        <div class="col-sm-12">
+                                            <select id="security_officers" name="security_officers[]" required="" multiple>
+                                                <option value="default">Please select Security Officer</option>
+                                                @foreach ($securityOfficers as $securityOfficer)
+                                                    <option value="{{ $securityOfficer->key }}"
+                                                            @if ($securityOfficer->key == -1)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $securityOfficer->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+{{--                            <div class="row">--}}
+{{--                                <div class="col-md-6">--}}
+{{--                                    <div class="form-group col">--}}
+{{--                                        <label>Event Admin</label>--}}
+{{--                                        <div class="row">--}}
+{{--                                            <div class="col-sm-12">--}}
+{{--                                                <select id="event_admin_multi" name="event_admin_multi" required="" multiple>--}}
+{{--                                                    <option value="default">Please select Event Admin</option>--}}
+{{--                                                    @foreach ($eventAdmins as $eventAdmin)--}}
+{{--                                                        <option value="{{ $eventAdmin->key }}"--}}
+{{--                                                                @if ($eventAdmin->key == -1)--}}
+{{--                                                                selected="selected"--}}
+{{--                                                            @endif--}}
+{{--                                                        >{{ $eventAdmin->value }}</option>--}}
+{{--                                                    @endforeach--}}
+{{--                                                </select>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="col-sm-1" id="add">--}}
+{{--                                                <a href="javascript:void(0)" id="event_admin_add">--}}
+{{--                                                    <i class="fas fa-plus-circle"></i>--}}
+{{--                                                </a>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="row">--}}
+{{--                                            <label>Event Admin list</label>--}}
+{{--                                            <div class="col-sm-12">--}}
+{{--                                                <div id="event_admin_list" style="margin: 10px; overflow:scroll; height:200px;">--}}
+
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="col-md-6">--}}
+
+{{--                                </div>--}}
+{{--                            </div>--}}
+
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" id="btn-save" value="create">Save
                                 </button>
@@ -271,7 +315,9 @@
 @endsection
 @section('script')
     <script>
+        // var event_admins = [];
         $(document).ready(function () {
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -285,12 +331,13 @@
                 $('#postCrudModal').html("Add New Post");
                 $('#ajax-crud-modal').modal('show');
             });
+
             $(document).on('change', '#approval_option', function () {
                 var choosed = $('#approval_option').find(":selected").val();
                 if (choosed == 1) {
-                    $("#security_officer").prop('disabled', true);
+                    $("#security_officers").prop('disabled', true);
                 } else {
-                    $('#security_officer').prop('disabled', false);
+                    $('#security_officers').prop('disabled', false);
                 }
             });
 
@@ -304,7 +351,7 @@
                     accreditation_start_date: {greaterThan: "#event_start_date"},
                     accreditation_end_date: {greaterThan: "#accreditation_start_date"},
                     accreditation_end_date: {lessThan: "#event_end_date"},
-                    security_officer: {valueNotEquals: "default"},
+                    security_officers: {valueNotEquals: "default"},
                     security_categories: {valueNotEquals: "default"},
                     status: {valueNotEquals: "default"},
                     approval_option: {valueNotEquals: "default"},
@@ -312,7 +359,7 @@
                     owner: {valueNotEquals: "default"},
                     organizer: {valueNotEquals: "default"},
                     event_form: {valueNotEquals: "default"},
-                    event_admin: {valueNotEquals: "default"}
+                    event_admins: {valueNotEquals: "default"}
                 },
                 messages: {
                     event_end_date: {greaterThan: "Must be greater than event start date."},
@@ -324,10 +371,10 @@
 
                 submitHandler: function (form) {
                     $('#post_id').val('');
-                    var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
                     $.ajax({
                         data: $('#postForm').serialize(),
+                        // data: $('#postForm').serialize() + "&event_admins=" + event_admins,
                         url: "{{ route('EventController.store') }}",
                         type: "POST",
                         dataType: 'json',
@@ -345,6 +392,7 @@
                 }
             })
         }
+
         jQuery.validator.addMethod("greaterThan",
             function (value, element, params) {
                 if (!/Invalid|NaN/.test(new Date(value))) {
@@ -353,6 +401,7 @@
                 return isNaN(value) && isNaN($(params).val())
                     || (Number(value) > Number($(params).val()));
             }, 'Must be greater than {0}.');
+
         jQuery.validator.addMethod("lessThan",
             function (value, element, params) {
                 if (!/Invalid|NaN/.test(new Date(value))) {
@@ -361,9 +410,39 @@
                 return isNaN(value) && isNaN($(params).val())
                     || (Number(value) < Number($(params).val()));
             }, 'Must be less than {0}.');
+
         jQuery.validator.addMethod("valueNotEquals",
             function (value, element, params) {
                 return params !== value;
             }, " Please select a value");
+
+        // $("#event_admin_add").click(function () {
+        //     var event_admin_id = $("#event_admin_multi").val();
+        //     var event_admin_val = $("#event_admin_multi").find(":selected").text();
+        //
+        //     if(event_admin_id !== 'default'){
+        //         event_admins.push(event_admin_id);
+        //         var html = '';
+        //         html += '<div id="eventAdminRow">';
+        //         html += '<div class="input-group mb-3">';
+        //         html += '<input type="hidden" class="form-control m-input" value="' + event_admin_id + '">';
+        //         html += '<label class="form-control m-input">' + event_admin_val + '</label>';
+        //         html += '<div class="input-group-append">';
+        //         html += '<a href="javascript:void(0)" id="remove"><i class="fas fa-minus-circle"></i></a>';
+        //         html += '</div>';
+        //         html += '</div>';
+        //
+        //         $("#event_admin_list").append(html);
+        //
+        //         console.log(event_admins);
+        //     }
+        // });
+        //
+        // $(document).on('click', '#remove', function () {
+        //     $(this).closest('#eventAdminRow').remove();
+        //     console.log($(this));
+        //     // event_admins.remove($(this));
+        //     console.log(event_admins);
+        // });
     </script>
 @endsection

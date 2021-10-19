@@ -24,7 +24,7 @@
                                         <span>Events:</span>
                                     </a>
                                     {{$event->name}} /
-                                    Admins</h4>
+                                    Security Categories</h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -35,7 +35,7 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('super-admin')
-                                <a href="javascript:void(0)" id="add-event-admin" class="add-hbtn">
+                                <a href="javascript:void(0)" id="add-event-security-category" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
@@ -49,7 +49,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
+                                    <th>Security Category</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -63,27 +63,27 @@
         </div>
     </div>
 
-    <!-- add new admin modal-->
-    <div class="modal fade" id="event-admin-modal" aria-hidden="true">
+    <!-- add new security officer modal-->
+    <div class="modal fade" id="event-security-category-modal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="modalTitle"></h4>
                 </div>
                 <div class="modal-body">
-                    <form id="eventAdminForm" name="eventAdminForm" class="form-horizontal">
+                    <form id="eventSecurityCategoryForm" name="eventSecurityCategoryForm" class="form-horizontal">
                         <input style="visibility: hidden" type="text" name="event_id" id="event_id"
                                value="{{$event->id}}">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group col">
-                                    <label>Event admin</label>
+                                    <label>Event Security Category</label>
                                     <div class="col-sm-12">
-                                        <select id="admin_id" name="admin_id" required="">
-                                            <option value="default">Please select Event Admin</option>
-                                            @foreach ($eventAdmins as $eventAdmin)
-                                                <option value="{{ $eventAdmin->user_id }}"
-                                                >{{ $eventAdmin->user_name }}</option>
+                                        <select id="security_category_id" name="security_category_id" required="">
+                                            <option value="default">Please select Security Category</option>
+                                            @foreach ($securityCategories as $securityCategory)
+                                                <option value="{{ $securityCategory->id }}"
+                                                >{{ $securityCategory->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -102,7 +102,7 @@
         </div>
     </div>
     <!-- delete confirm modal -->
-    <div class="modal fade" id="delete-event-admin-confirm-modal" tabindex="-1" data-bs-backdrop="static"
+    <div class="modal fade" id="delete-event-security-category-confirm-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -111,7 +111,7 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <input type="hidden" id="curr_event_admin_id">
+                        <input type="hidden" id="curr_security_category_id">
                         <label class="col-sm-12 confirm-text" id="confirmText"></label>
                     </div>
 
@@ -139,12 +139,11 @@
                 }
             });
 
-
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',
-                    title: 'Event-Admins',
+                    title: 'Event-Security-Categories',
                     exportOptions: {
                         columns: [ 1]
                     }
@@ -153,11 +152,11 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('eventAdmins',[$event->id]) }}",
+                    url: "{{ route('eventSecurityCategories',[$event->id]) }}",
                     type: 'GET',
                 },
                 columns: [
-                    {data: 'admin_id', name: 'admin_id', 'visible': false},
+                    {data: 'security_category_id', name: 'security_category_id', 'visible': false},
                     {data: 'name', name: 'name'},
                     {data: 'action', name: 'action', orderable: false},
                 ],
@@ -168,30 +167,30 @@
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
-            $('#add-event-admin').click(function () {
-                $('#btn-save').val("add-event-admin");
-                $('#event-admin-modal').trigger("reset");
-                $('#modalTitle').html("Add Event Admin");
-                $('#event-admin-modal').modal('show');
+            $('#add-event-security-category').click(function () {
+                $('#btn-save').val("add-event-security-officer");
+                $('#event-security-category-modal').trigger("reset");
+                $('#modalTitle').html("Add Security Category");
+                $('#event-security-category-modal').modal('show');
             });
 
-            $('body').on('click', '#delete-event-admin', function () {
-                var event_admin_id = $(this).data("id");
-                $('#confirmTitle').html('Remove event admin');
-                $('#curr_event_admin_id').val(event_admin_id);
-                var confirmText = 'Are you sure you want to remove this event admin?';
+            $('body').on('click', '#delete-event-security-category', function () {
+                var security_category_id = $(this).data("id");
+                $('#confirmTitle').html('Remove security category');
+                $('#curr_security_category_id').val(security_category_id);
+                var confirmText = 'Are you sure you want to remove this event security category?';
                 $('#confirmText').html(confirmText);
-                $('#delete-event-admin-confirm-modal').modal('show');
+                $('#delete-event-security-category-confirm-modal').modal('show');
             });
 
-            $('#delete-event-admin-confirm-modal button').on('click', function (event) {
+            $('#delete-event-security-category-confirm-modal button').on('click', function (event) {
                 var $button = $(event.target);
 
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
                     if ($button[0].id === 'btn-yes') {
-                        var event_admin_id = $('#curr_event_admin_id').val();
-                        var url = "{{ route('eventAdminsRemove', ":id") }}";
-                        url = url.replace(':id', event_admin_id);
+                        var security_category_id = $('#curr_security_category_id').val();
+                        var url = "{{ route('eventSecurityCategoriesRemove', ":id") }}";
+                        url = url.replace(':id', security_category_id);
                         $.ajax({
                             type: "get",
                             url: url,
@@ -208,22 +207,22 @@
             });
         });
 
-        if ($("#eventAdminForm").length > 0) {
-            $("#eventAdminForm").validate({
+        if ($("#eventSecurityCategoryForm").length > 0) {
+            $("#eventSecurityCategoryForm").validate({
                 rules: {
-                    admin_id: {valueNotEquals: "default"}
+                    security_category_id: {valueNotEquals: "default"}
                 },
 
                 submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
                     $.ajax({
-                        data: $('#eventAdminForm').serialize(),
-                        url: "{{ route('eventAdminsAdd') }}",
+                        data: $('#eventSecurityCategoryForm').serialize(),
+                        url: "{{ route('eventSecurityCategoriesAdd') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
-                            $('#eventAdminForm').trigger("reset");
-                            $('#event-admin-modal').modal('hide');
+                            $('#eventSecurityCategoryForm').trigger("reset");
+                            $('#event-security-category-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
                             var oTable = $('#laravel_datatable').dataTable();
                             oTable.fnDraw(false);

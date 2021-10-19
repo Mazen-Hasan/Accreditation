@@ -22,6 +22,7 @@
                             <input type="hidden" name="need_management" id="need_management"
                                    value="{{$company->need_management}}">
                             <input type="hidden" name="company_Id" id="company_Id" value="{{$company->id}}">
+                            <input type="hidden" name="parent_id" id="parent_id" value="{{$company->parent_id}}">
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
@@ -214,7 +215,8 @@
                 submitHandler: function (form) {
                     //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
-                    var $eventid = $('#event_id').val();
+                    var eventid = $('#event_id').val();
+                    var parentId = $('#parent_id').val();
                     // if($('#needManagmentCheckbox').is(':checked')){
                     //     $('#need_management').val('1');
                     // }else{
@@ -231,7 +233,7 @@
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Edited successfully');
-                            window.location.href = "../../subCompanies";
+                            window.location.href = "../../subCompanies/"+parentId + "/" + eventid;
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },

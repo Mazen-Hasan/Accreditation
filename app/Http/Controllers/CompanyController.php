@@ -84,24 +84,20 @@ class CompanyController extends Controller
         if ($companyId == null) {
             $company = Company::updateOrCreate(['id' => $companyId],
                 ['name' => $request->name,
-                    //'event_id' => $request->event_id,
                     'address' => $request->address,
                     'telephone' => $request->telephone,
                     'website' => $request->website,
-                    //'focal_point_id' => $request->focal_point,
-                    //'company_admin_id' => $focal_point->account_id,
                     'country_id' => $request->country,
                     'city_id' => $request->city,
                     'category_id' => $request->category,
-                    'size' => $request->size,
-                    'need_management' => $request->need_management
-                    //'status' => $request->status,
                 ]);
             $event_company = EventCompany::updateOrCreate(['id' => 0],
                 ['event_id' => $request->event_id,
                 'company_id' => $company->id,
-                'status' => 1,
-                'focal_point_id' => $request->focal_point
+                'status' => $request->status,
+                'focal_point_id' => $request->focal_point,
+                'size' => $request->size,
+                'need_management' => $request->need_management
             ]);                
         } else {
 
@@ -117,25 +113,19 @@ class CompanyController extends Controller
             }
             $company = Company::updateOrCreate(['id' => $companyId],
                 ['name' => $request->name,
-                    //'event_id' => $request->event_id,
                     'address' => $request->address,
                     'telephone' => $request->telephone,
                     'website' => $request->website,
-                    //'focal_point_id' => $request->focal_point,
-                    //'company_admin_id' => $focal_point->account_id,
                     'country_id' => $request->country,
                     'city_id' => $request->city,
                     'category_id' => $request->category,
-                    'size' => $request->size,
-                    'need_management' => $request->need_management,
-                    //'status' => $status
                 ]);
                 $event_company = EventCompany::updateOrCreate(['event_id' => $request->event_id,'company_id' => $companyId],
                 [
-                //'event_id' => $request->event_id,
-                //'company_id' => $company->id,
-                'status' => 1,
-                'focal_point_id' => $request->focal_point
+                'status' => $request->status,
+                'focal_point_id' => $request->focal_point,
+                'size' => $request->size,
+                'need_management' => $request->need_management
             ]); 
         }
 
@@ -147,8 +137,13 @@ class CompanyController extends Controller
         $where = array('id' => $eventid);
         $event = Event::where($where)->first();
 
-        $where = array('id' => $id);
-        $post = Company::where($where)->first();
+        // $where = array('id' => $id);
+        // $post = Company::where($where)->first();
+
+        $companies = DB::select('select * from companies_view where id = ? and event_id = ?', [$id,$eventid]);
+        foreach($companies as $company){
+            $post = $company;
+        }
 
         //$where = array('event_admin_id' => Auth::user()->id);
         $where = array('status' => 1);

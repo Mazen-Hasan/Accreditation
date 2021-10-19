@@ -19,6 +19,7 @@
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="need_management" id="need_management" value="0">
+                            <input type="hidden" name="parent_id" id="parent_id" value="{{$companyId}}">
                             <input style="visibility: hidden" name="event_id" id="event_id" value="{{$eventid}}">
                             <input type="hidden" name="post_id" id="post_id">
                             <br>
@@ -317,7 +318,7 @@
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
-                            window.location.href = "../subCompany-accreditation-size/" + data.id + "/" + data.event_id
+                            window.location.href = "../subCompany-accreditation-size/" + data.id + "/" + $eventid
                             //window.location.href = "{{ route('companies')}}";
                             // alert(data);
                             // alert(data.id);

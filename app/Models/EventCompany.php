@@ -10,6 +10,6 @@ class EventCompany extends Model
     use HasFactory;
 
     protected $fillable = [
-        'event_id', 'company_id', 'focal_point_id','parent_id','status','id'
+        'event_id', 'company_id', 'focal_point_id','parent_id','status','id','size','need_management'
     ];
 }

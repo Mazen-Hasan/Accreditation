@@ -31,7 +31,7 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                <a href="../subCompany-add/{{$eventid}}" id="add-new-company" class="add-hbtn">
+                                <a href="../../subCompany-add/{{$eventId}}/{{$companyId}}" id="add-new-company" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
@@ -97,7 +97,6 @@
 @section('script')
     <script>
         $(document).ready(function () {
-            //alert({{$eventid}});
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -117,7 +116,8 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '/subCompanies/'+companyId,
+                    //url: '/subCompanies/'+companyId,
+                    url: "{{ route('subCompanies',[$companyId,$eventId]) }}",
                     type: 'GET',
                 },
                 columns: [

@@ -15,7 +15,7 @@
 @section('custom_navbar')
 <li id="subsidiaries_nav" class="nav-item"> 
                      <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}" 
-                        href="{{ route('subCompanies',$companyId) }} "> 
+                        href="{{ route('subCompanies',[$companyId,$eventId]) }} "> 
                          <i class="logout"> 
                              <img src="{{ asset('images/menu.png') }}" alt="My Sidries"> 
                          </i> 
@@ -40,6 +40,7 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <input type="hidden" id="data_values" name="data_values" value=""/>
                 <input type="hidden" id="company_id" name="company_id" value="{{$companyId}}"/>
+                <input type="hidden" id="event_id" name="event_id" value="{{$eventId}}"/>
                 <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
                 <div class="card">
                     <div class="card-body">
@@ -56,7 +57,7 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('company-admin')
-                                <a href="{{route('templateForm',[0,$companyId])}}" id="add-new-post" class="add-hbtn">
+                                <a href="{{route('templateForm',[0,$companyId,$eventId])}}" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
@@ -188,6 +189,7 @@
     <script>
         $(document).ready(function () {
             var companyId = $('#company_id').val();
+            var eventId = $('#event_id').val();
             var subCompany_status = $('#subCompnay_status').val();
             if (subCompany_status == 0) {
                 $('#subsidiaries_nav').hide();
@@ -221,7 +223,8 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../company-participants/' + companyId,
+                    //url: '../../company-participants/' + companyId + '/' + eventId,
+                    url: "{{ route('companyParticipants',[$companyId,$eventId]) }}",
                     type: 'GET',
                 },
                 columns: myColumns,

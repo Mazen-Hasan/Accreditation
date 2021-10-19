@@ -59,7 +59,7 @@
                             // $('#btn-save').html('Save Changes');
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
-                            window.location.href = "{{ route('companyParticipants',$companyId)}}";
+                            window.location.href = "{{ route('companyParticipants',[$companyId,$eventId])}}";
                         },
                         error: function (data) {
                             console.log('Error:', data);

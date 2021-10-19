@@ -28,45 +28,27 @@ class CompanyAdminController extends Controller
 {
     public function index()
     {
-//         if (request()->ajax()) {
-//             //$companies = DB::select('select * from companies_view where event_id = ?' ,$event_id );
-//             $companies = DB::select('select * from companies_view');
-//             return datatables()->of($companies)
-//                 ->addColumn('action', function ($data) {
-//                     $button = '<a href="' . route('companyEdit', $data->id) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-//                     $button .= '&nbsp;&nbsp;';
-//                     $button .= '<a href="javascript:void(0);" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-//                     $button .= '&nbsp;&nbsp;';
-//                     $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
-//                     return $button;
-//                 })
-// //                ->addColumn('event_id', function($event_id){
-// //                    return $event_id;
-// //                })
-//                 ->rawColumns(['action'])
-//                 ->make(true);
-//         }
-
-        $events = DB::select('select c.* , cc.need_management need_management , cc.name company_name , cc.id company_id from events_view c inner join companies cc on c.id = cc.event_id where cc.company_admin_id = ? and cc.status <> ?', [Auth::user()->id, 0]);
+        //$events = DB::select('select c.* , cc.need_management need_management , cc.name company_name , cc.id company_id from events_view c inner join companies cc on c.id = cc.event_id where cc.company_admin_id = ? and cc.status <> ?', [Auth::user()->id, 0]);
+        $events = DB::select('select * from company_admins_view cc where cc.account_id = ? and cc.status <> ?', [Auth::user()->id, 0]);
         $subCompany_nav = 1;
-        $where = array('company_admin_id' => Auth::user()->id);
-        $company = Company::where($where)->first();
-        if($company != null){
-            if ($company->subCompany_id != null) {
-                $subCompany_nav = 0;
-            }
-        }
+        // $where = array('company_admin_id' => Auth::user()->id);
+        // $company = Company::where($where)->first();
+        // if($company != null){
+        //     if ($company->subCompany_id != null) {
+        //         $subCompany_nav = 0;
+        //     }
+        // }
         return view('pages.CompanyAdmin.company-admin')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }
 
-    public function companyParticipants($companyId)
+    public function companyParticipants($companyId, $eventId)
     {
         $dataTableColumuns = array();
 
         $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
 
-        $where = array('id' => $company->event_id);
+        $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
 
         $where = array('template_id' => $event->event_form);
@@ -91,7 +73,6 @@ class CompanyAdminController extends Controller
         $alldata = array();
         foreach ($companyStaffs as $companyStaff) {
             $where = array('staff_id' => $companyStaff->id);
-            // $staffDatas = StaffData::where($where)->get()->all();
             $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
             $staffDataValues = array();
             $staffDataValues[] = $companyStaff->id;
@@ -106,8 +87,6 @@ class CompanyAdminController extends Controller
             }
             $alldata[] = $staffDataValues;
         }
-        // var_dump($alldata);
-        // exit;
         $query = '';
         foreach ($alldata as $data) {
             $query = 'insert into temp_' . $companyId . ' (id';
@@ -215,7 +194,7 @@ class CompanyAdminController extends Controller
         if ($company->subCompany_id != null) {
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId);
+        return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
 
@@ -498,11 +477,11 @@ class CompanyAdminController extends Controller
     }
 
 
-    public function subCompanies($companyId)
+    public function subCompanies($companyId, $eventId)
     {
         $where = array('id' => $companyId);
         $company = Company::where($where)->first();
-        $where = array('id' => $company->event_id);
+        $where = array('id' => $eventId);
         $event = Event::where($where)->first();
         if (request()->ajax()) {
             $companies = DB::select('select * from companies_view where parent_id = ?', [$company->id]);
@@ -518,7 +497,7 @@ class CompanyAdminController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventid', $event->id)->with('companyId',$companyId);
+        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventId', $event->id)->with('companyId',$companyId);
     }
 
     public function storeSubCompnay(Request $request)
@@ -664,15 +643,16 @@ class CompanyAdminController extends Controller
         return Response::json($post);
     }
 
-    public function subCompanyAdd($id)
+    public function subCompanyAdd($id,$companyId)
     {
         $where = array('id' => $id);
         $event = Event::where($where)->first();
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' => $companyId);
         $company = Company::where($where)->first();
         // $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Focal Point")';
         // $query = $sql;
-        $where = array('event_admin_id' => $event->event_admin, 'company_id' => null);
+        //$where = array('event_admin_id' => $event->event_admin, 'company_id' => null);
+        $where = array('status' => 1);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
         foreach ($contacts as $contact) {

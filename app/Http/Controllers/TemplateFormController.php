@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Response;
 
 class TemplateFormController extends Controller
 {
-    public function index($participant_id,$companyId)
+    public function index($participant_id,$companyId,$eventId)
     {
 
         $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
 
-        $where = array('id' => $company->event_id);
+        $where = array('id' => $eventId);
         $event = Event::where($where)->first();
 
         $template_id = $event->event_form;
@@ -134,12 +134,12 @@ class TemplateFormController extends Controller
         }
 
         $subCompany_nav = 1;
-        $where = array('company_admin_id' => Auth::user()->id);
-        $company = Company::where($where)->first();
-        if ($company->subCompany_id != null) {
-            $subCompany_nav = 0;
-        }
-        return view('pages.TemplateForm.template-form-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId);
+        // $where = array('company_admin_id' => Auth::user()->id);
+        // $company = Company::where($where)->first();
+        // if ($company->subCompany_id != null) {
+        //     $subCompany_nav = 0;
+        // }
+        return view('pages.TemplateForm.template-form-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
     public function createHiddenField($id, $label, $value)

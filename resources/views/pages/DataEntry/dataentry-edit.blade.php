@@ -20,6 +20,8 @@
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id" value="{{$focalpoint->id}}">
+                            <input type="hidden" name="company_id" id="company_id" value="{{$companyId}}">
+                            <input type="hidden" name="event_id" id="event_id" value="{{$eventId}}">
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
@@ -104,8 +106,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6" style="display:none;">
+                            <div class="row" style="display:none;">
+                                <div class="col-md-6" >
                                     <div class="form-group col">
                                         <label>Account Pasword</label>
                                         <div class="col-sm-12">
@@ -176,7 +178,7 @@
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
-                            window.location.href = "{{ route('dataentrys')}}";
+                            window.location.href = "{{ route('dataentrys',[$companyId,$eventId])}}";
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },

@@ -43,8 +43,6 @@ class HomeController extends Controller
                 return Redirect::to('security-officer-admin');
                 break;
             case 'data-entry':
-                // var_dump('here');
-                // exit;
                 return Redirect::to('dataentry-participants');
                 break;
         }

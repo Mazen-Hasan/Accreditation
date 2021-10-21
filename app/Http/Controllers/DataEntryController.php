@@ -6,6 +6,8 @@ use App\Models\Company;
 use App\Models\CompanyStaff;
 use App\Models\DataEntry;
 use App\Models\Event;
+use App\Models\EventCompany;
+use App\Models\EventCompanyDataEntry;
 use App\Models\SelectOption;
 use App\Models\StaffData;
 use App\Models\TemplateField;
@@ -25,12 +27,12 @@ class DataEntryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($companyId)
+    public function index($companyId,$eventId)
     {
         // var_dump($companyId);
         // exit;
         if (request()->ajax()) {
-            $focalpoint = DB::select('select * from data_entrys_view where company_id = ?', [$companyId]);
+            $focalpoint = DB::select('select * from event_company_data_entries_view where company_id = ? and event_id = ?', [$companyId,$eventId]);
             // var_dump($focalpoint);
             // exit;
             return datatables()->of($focalpoint)
@@ -39,7 +41,7 @@ class DataEntryController extends Controller
                 })
                 ->addColumn('action', function ($data) {
                     //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                    $button = '<a href="' . route('dataentryEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    $button = '<a href="' . route('dataentryEdit', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="javascript:void(0);" id="reset_password" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->account_id . '" class="delete btn btn-google">Reset Password</a>';
                     //$button .= '<a href="javascript:void(0);" id="delete-post" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">   Delete</a>';
@@ -48,7 +50,7 @@ class DataEntryController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.DataEntry.dataentrys')->with('companyId',$companyId);
+        return view('pages.DataEntry.dataentrys')->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
 
@@ -61,7 +63,7 @@ class DataEntryController extends Controller
 
     public function store(Request $request)
     {
-        $where = array('company_admin_id' => Auth::user()->id);
+        $where = array('id' => $request->company_id);
         $company = Company::where($where)->first();
         $postId = $request->post_id;
         if ($postId == null) {
@@ -83,21 +85,32 @@ class DataEntryController extends Controller
                     'email' => $request->email,
                     'telephone' => $request->telephone,
                     'mobile' => $request->mobile,
-                    'company_id' => $company->id,
-                    'company_admin_id' => Auth::user()->id,
+                    //'company_id' => $company->id,
+                    //'company_admin_id' => Auth::user()->id,
                     'password' => $request->password,
                     'account_id' => $user->id,
-                    'status' => $request->status,
+                    //'status' => $request->status,
                 ]);
+            $where = array('event_id'=> $request->event_id,'company_id'=>$request->company_id);
+            $eventCompnay = EventCompany::where($where)->first();
+            $eventCompnayDataentries = EventCompanyDataEntry::updateOrCreate(['id' => 0],
+            [
+                'data_entry_id' => $post->id,
+                'event_companies_id' => $eventCompnay->id,
+                'event_id' => $request->event_id,
+                'company_id' => $request->company_id,
+                'status' => $request->status,
+            ]);
         } else {
             $post = DataEntry::updateOrCreate(['id' => $postId],
-                ['name' => $request->name,
+                [
+                    'name' => $request->name,
                     'middle_name' => $request->middle_name,
                     'last_name' => $request->last_name,
                     'email' => $request->email,
                     'telephone' => $request->telephone,
                     'mobile' => $request->mobile,
-                    'status' => $request->status,
+                    //'status' => $request->status,
                 ]);
         }
 
@@ -109,7 +122,7 @@ class DataEntryController extends Controller
      * Show the form for editing the specified resource.
      *
      */
-    public function focalpointAdd()
+    public function dataEntryAdd($companyId,$eventId)
     {
         $where = array('status' => 1);
         $titlesSelectOptions = array();
@@ -117,18 +130,18 @@ class DataEntryController extends Controller
         $contactStatus2 = new SelectOption(0, 'InActive');
         $contactStatuss = [$contactStatus1, $contactStatus2];
 
-        return view('pages.DataEntry.dataentry-add')->with('contactStatuss', $contactStatuss);
+        return view('pages.DataEntry.dataentry-add')->with('contactStatuss', $contactStatuss)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
 
-    public function edit($id)
+    public function edit($id,$companyId,$eventId)
     {
         $where = array('id' => $id);
         $focalpoint = DataEntry::where($where)->first();
         $contactStatus1 = new SelectOption(1, 'Active');
         $contactStatus2 = new SelectOption(0, 'InActive');
         $contactStatuss = [$contactStatus1, $contactStatus2];
-        return view('pages.DataEntry.dataentry-edit')->with('focalpoint', $focalpoint)->with('contactStatuss', $contactStatuss);
+        return view('pages.DataEntry.dataentry-edit')->with('focalpoint', $focalpoint)->with('contactStatuss', $contactStatuss)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
 

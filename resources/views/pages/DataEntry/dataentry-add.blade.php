@@ -19,6 +19,8 @@
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id">
+                            <input type="hidden" name="event_id" id="event_id" value={{$eventId}}>
+                            <input type="hidden" name="company_id" id="company_id" value={{$companyId}}>
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
@@ -172,7 +174,7 @@
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
-                            window.location.href = "{{ route('dataentrys')}}";
+                            window.location.href = "{{ route('dataentrys',[$companyId,$eventId])}}";
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },

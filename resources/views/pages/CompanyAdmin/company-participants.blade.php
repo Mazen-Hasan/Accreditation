@@ -24,7 +24,7 @@
                  </li> 
                  <li class="nav-item"> 
                      <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}" 
-                        href="{{ route('dataentrys',$companyId) }}"> 
+                        href="{{ route('dataentrys',[$companyId,$eventId]) }}"> 
                          <i class="logout"> 
                              <img src="{{ asset('images/menu.png') }}" alt="Data Entry"> 
                          </i> 

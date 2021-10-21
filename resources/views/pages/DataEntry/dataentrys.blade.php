@@ -19,6 +19,7 @@
                 <div class="card">
                     <div class="card-body">
                     <input type="hidden" id="company_id" value={{$companyId}}>
+                    <input type="hidden" id="event_id" value={{$eventId}}>
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
                                 <p class="card-title">Data Entries</p>
@@ -31,7 +32,7 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                <a href="{{route('dataentryAdd')}}" id="add-new-post" class="add-hbtn">
+                                <a href="{{route('dataentryAdd',[$companyId,$eventId])}}" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
@@ -50,7 +51,7 @@
                                     <th>Mobile</th>
                                     <th>Account Name</th>
                                     <th>Account Email</th>
-                                    <th>Company</th>
+                                    <!-- <th>Company</th> -->
                                     <th>Status</th>
                                     {{--                                    <th style="color: black">Status</th>--}}
                                     <th>Action</th>
@@ -121,7 +122,8 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "/dataentrys/"+ companyId,
+                    // url: "/dataentrys/"+ companyId,
+                    url: "{{ route('dataentrys',[$companyId,$eventId]) }}",
                     type: 'GET',
                 },
                 columns: [
@@ -132,7 +134,7 @@
                     {data: 'mobile', name: 'mobile'},
                     {data: 'account_name', name: 'account_name'},
                     {data: 'account_email', name: 'account_email'},
-                    {data: 'company_name', name: 'company_name'},
+                    // {data: 'company_name', name: 'company_name'},
                     {
                         data: 'status', render: function (data) {
                             if (data == 1) {

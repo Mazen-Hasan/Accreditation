@@ -61,9 +61,9 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('companyAdminController/Invite/{companyId}', 'App\Http\Controllers\CompanyAdminController@Invite');
 
     Route::resource('dataentryController', 'App\Http\Controllers\DataEntryController');
-    Route::get('/dataentrys/{companyId}', [App\Http\Controllers\DataEntryController::class, 'index'])->name('dataentrys');
-    Route::get('/dataentry-add', [App\Http\Controllers\DataEntryController::class, 'focalpointAdd'])->name('dataentryAdd');
-    Route::get('/dataentry-edit/{id}', [App\Http\Controllers\DataEntryController::class, 'edit'])->name('dataentryEdit');
+    Route::get('/dataentrys/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'index'])->name('dataentrys');
+    Route::get('/dataentry-add/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'dataEntryAdd'])->name('dataentryAdd');
+    Route::get('/dataentry-edit/{id}/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'edit'])->name('dataentryEdit');
     Route::get('dataentryController/reset_password/{id}/{password}', 'App\Http\Controllers\DataEntryController@resetPassword');
 
 });

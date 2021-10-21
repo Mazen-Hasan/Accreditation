@@ -30,7 +30,12 @@
                 <a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown"
                    aria-expanded="false">
                     <i>
-                        <img src="{{ asset('images/notification.png') }}" alt="Notifications" id="notify">
+                        @if (auth()->user()->unreadNotifications->count() == '0')
+                            <img src="{{ asset('images/notification-0.png') }}" alt="Notifications" id="notify" onblur="hide()">
+                        @else
+                            <img src="{{ asset('images/notification-empty.png') }}" alt="Notifications" id="notify">
+                        @endif
+
                     </i>
                     {{--                    <span class="count"></span>--}}
                 </a>
@@ -98,8 +103,9 @@
 </nav>
 <script>
     var selected = 0;
+
     $('#notify').click(function () {
-        if (selected == 0) {
+        if (selected === 0) {
             $('#notify-container').show();
             selected = 1;
         } else {

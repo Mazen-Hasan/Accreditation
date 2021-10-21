@@ -17,7 +17,9 @@
                             <a class="url-nav" href="{{route('events')}}">
                                 <span>Events:</span>
                             </a>
-                            {{$event->name}} / Edit
+                            <a class="url-nav" href="{{route('EventController.show',[$event->id])}}">
+                                {{$event->name}}
+                            </a> / Edit
                         </h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">

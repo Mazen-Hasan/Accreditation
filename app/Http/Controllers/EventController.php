@@ -33,7 +33,9 @@ class EventController extends Controller
             return datatables()->of($events)
 
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                    $button = '<a href="' . route('EventController.show', $data->id) . '" data-toggle="tooltip"  id="event-details" data-id="' . $data->id . '" data-original-title="Details" title="Details"><i class="far fa-list-alt"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventSecurityCategories', $data->id) . '" data-toggle="tooltip"  id="event-security-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event security categories"><i class="fas fa-users-cog"></i></a>';
                     $button .= '&nbsp;&nbsp;';
@@ -77,6 +79,14 @@ class EventController extends Controller
             ['event_id' => $request->event_id,
                 'user_id' => $request->admin_id,
             ]);
+
+        if($post != null){
+            $where = array('id' => $request->event_id);
+            $event = Event::where($where)->first();
+
+            NotificationController::sendNotification($event->name, '', $request->admin_id, '','', '/event-admin');
+        }
+
         return Response::json($post);
     }
 
@@ -400,6 +410,37 @@ class EventController extends Controller
             ->with('eventStatuss', $eventStatuss)->with('eventForms', $templatesSelectOption)->with('event', $event)->with('securityCategories', $securityCategoriesSelectOption);;
     }
 
+    public function show($id)
+    {
+        $event = DB::select('select * from event_datals_view where id=?',[$id]);
+
+
+        $securityCategories = DB::select('select * from  event_security_categories_info_view where event_id=?',[$id]);
+        $securityCategoriesSelectOption = array();
+        foreach ($securityCategories as $securityCategory) {
+            $securityCategorieSelectOption = new SelectOption($securityCategory->id, $securityCategory->name);
+            $securityCategoriesSelectOption[] = $securityCategorieSelectOption;
+        }
+
+        $eventAdminUsers = DB::select('select * from event_admins_info_view  where event_id=?',[$id]);
+        $eventAdmins = array();
+        foreach ($eventAdminUsers as $eventAdminUser) {
+            $eventAdminSelectOption = new SelectOption($eventAdminUser->id, $eventAdminUser->name);
+            $eventAdmins[] = $eventAdminSelectOption;
+        }
+
+        $securityOfficerUsers = DB::select('select * from event_security_officers_info_view where event_id=?',[$id]);
+        $securityOfficers = array();
+        foreach ($securityOfficerUsers as $securityOfficerUser) {
+            $securityOfficerSelectOption = new SelectOption($securityOfficerUser->id, $securityOfficerUser->name);
+            $securityOfficers[] = $securityOfficerSelectOption;
+        }
+
+        return view('pages.Event.event-details')->with('eventAdmins', $eventAdmins)
+            ->with('securityOfficers', $securityOfficers)->with('event', $event[0])
+            ->with('securityCategories', $securityCategoriesSelectOption);;
+    }
+
     public function remove($event_security_category_id)
     {
         $where = array('id' => $event_security_category_id);
@@ -407,21 +448,12 @@ class EventController extends Controller
         return Response::json($post);
     }
 
-//    public function removeEventSecurityCategory($event_id,$security_category_id)
-//    {
-//        //var_dump($event_id);
-//        $where = array('event_id'=> $event_id, 'security_category_id'=> $security_category_id);
-//        $post = EventSecurityCategory::where($where)->delete();
-//        return Response::json($post);
-//    }
-
     public function destroy($id)
     {
         $post = Event::where('id', $id)->delete();
 
         return Response::json($post);
     }
-
 
     public function storeEventSecurityCategory($event_id, $security_category_id)
     {

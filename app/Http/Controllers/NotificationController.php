@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Notifications\AlertNotification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Response;
 
@@ -24,25 +25,7 @@ class NotificationController extends Controller
         ];
 
         Notification::send($userSchema, new AlertNotification($participantData));
-
-        //dd('Task completed!');
     }
-
-    // public static function sendAlertNotification($userId , $participantId, $eventName , $companyName, $participantName , $action, $url) {
-    //     $userSchema = User::where(array('id' => $userId))->first();
-    //     $participantData = [
-    //         'event_name' => $eventName,
-    //         'participant_name' => $participantName,
-    //         'company_name' => $companyName,
-    //         'action' => $action,
-    //         'Url' => url($url),
-    //         'participant_id' => $participantId
-    //     ];
-
-    //     Notification::send($userSchema, new AlertNotification($participantData));
-
-    //     //dd('Task completed!');
-    // }
 
     public function index()
     {

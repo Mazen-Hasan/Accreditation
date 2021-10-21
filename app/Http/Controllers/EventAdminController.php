@@ -50,7 +50,7 @@ class EventAdminController extends Controller
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" title="Invite"><i class="far fa-share-square"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('companyAccreditCat', [$data->id, $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" itle="Accreditation Size"><i class="fas fa-sitemap"></i></a>';
+                    $button .= '<a href="' . route('companyAccreditCat', [$data->id, $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Accreditation Size"><i class="fas fa-sitemap"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventCompanyParticipants', [$data->id, $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Participants"><i class="fas fa-users"></i></a>';
                     return $button;

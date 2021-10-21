@@ -1102,3 +1102,33 @@ a.disabled {
     color: dodgerblue;
     font-size: 18px;
 }
+
+.fa-unlock{
+    font-size: 20px;
+}
+
+.fa-lock{
+    font-size: 20px;
+}
+
+.fa-list-alt{
+    font-size: 20px;
+}
+
+.fa-eye{
+    font-size: 20px;
+}
+
+.fa-share-square{
+    font-size: 20px;
+}
+
+.fa-sitemap{
+    font-size: 20px;
+}
+
+.fa-users{
+    font-size: 20px;
+}
+
+

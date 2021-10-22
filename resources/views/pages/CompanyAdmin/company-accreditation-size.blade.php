@@ -63,7 +63,7 @@
                             </table>
                         </div>
                         @if($status == 0)
-                            <a href="javascript:void(0)" class="ha_btn" id="send-approval-request">
+                            <a href="javascript:void(0)" class="ha_btn" id="send-approval-request" style="width:200px">
                             <!-- @if ($status == 1)
                                 style="background-color:green"
 @endif>

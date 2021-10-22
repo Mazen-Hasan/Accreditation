@@ -66,10 +66,10 @@ class CompanyAdminController extends Controller
                 $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
             }
         });
-        $where = array('id' => $companyId);
-        $company = Company::where($where)->get()->first();
+        // $where = array('id' => $companyId);
+        // $company = Company::where($where)->get()->first();
 
-        $where = array('event_id' => $company->event_id, 'company_id' => $company->id);
+        $where = array('event_id' => $eventId, 'company_id' => $companyId);
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach ($companyStaffs as $companyStaff) {
@@ -169,7 +169,7 @@ class CompanyAdminController extends Controller
                     switch ($data->status) {
 
                         case 0:
-                            $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                            $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                             $button .= '&nbsp;&nbsp;';
                             $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger">Send Request</a>';
                             break;
@@ -316,12 +316,12 @@ class CompanyAdminController extends Controller
     {
         //$eventId = $request->eventId;
 
-        $where = array('id' => $companyId,'event_id' => $eventId);
+        $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
 
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
-        $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?', [$company->id, $eventId]);
+        $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$company->id, $eventId]);
         $status = 0;
         $remainingSize = $company->size;
         foreach ($companyAccreditationCategories as $companyAccreditationCategory) {
@@ -339,11 +339,11 @@ class CompanyAdminController extends Controller
         }
 
         if (request()->ajax()) {
-            $where = array('id' => $companyId, 'event_id' => $eventId);
-            $company = Company::where($where)->get()->first();
+            // $where = array('id' => $companyId);
+            // $company = Company::where($where)->get()->first();
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories_view where company_id = ? and event_id = ?', [$company->id, $eventId]);
-            $companyAccreditationCategoriesStatuss = DB::select('select * from company_accreditaion_categories where company_id = ? and event_id = ?', [$company->id, $eventId]);
+            $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$companyId, $eventId]);
+            $companyAccreditationCategoriesStatuss = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$companyId, $eventId]);
             $status = 0;
             foreach ($companyAccreditationCategoriesStatuss as $companyAccreditationCategoriesStatus) {
                 $status = $companyAccreditationCategoriesStatus->status;
@@ -759,7 +759,7 @@ class CompanyAdminController extends Controller
 
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
-        $companyAccreditationCategories = DB::select('select * from event_compnay_accrediation_categories_view where company_id = ? and event_id = ?', [$company->id, $eventId]);
+        $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$company->id, $eventId]);
         $status = 0;
         $remainingSize = $company->size;
         foreach ($companyAccreditationCategories as $companyAccreditationCategory) {
@@ -780,8 +780,8 @@ class CompanyAdminController extends Controller
             // $where = array('id' => $companyId, 'event_id' => $eventId);
             // $company = Company::where($where)->get()->first();
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories = DB::select('select * from event_compnay_accrediation_categories_view where company_id = ? and event_id = ?', [$companyId, $eventId]);
-            $companyAccreditationCategoriesStatuss = DB::select('select * from event_compnay_accrediation_categories_view where company_id = ? and event_id = ?', [$companyId, $eventId]);
+            $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$companyId, $eventId]);
+            $companyAccreditationCategoriesStatuss = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$companyId, $eventId]);
             $status = 1;
             foreach ($companyAccreditationCategoriesStatuss as $companyAccreditationCategoriesStatus) {
                 $status = $companyAccreditationCategoriesStatus->status;

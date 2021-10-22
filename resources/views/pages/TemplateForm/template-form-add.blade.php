@@ -13,7 +13,8 @@
                     <div class="card-body">
                         <h4 class="card-title">Participant - New</h4>
                         <form class="form-sample" id="templateForm" name="templateForm">
-                        <input type="hidden" id="company_id" value={{$companyId}} />
+                        <!-- <input type="hidden" id="company_id" value={{$companyId}} />
+                        <input type="hidden" id="event_id" value={{$eventId}} /> -->
                             <?php echo $form ?>
                         </form>
                         <br>
@@ -47,7 +48,7 @@
                 submitHandler: function (form) {
                     var compnayId = $('#company_id').val();
                     $('#btn-save').html('Sending..');
-
+                    alert($('#templateForm').serialize());
                     $.ajax({
                         data: $('#templateForm').serialize(),
                         url: "{{ route('templateFormController.store') }}",
@@ -132,6 +133,7 @@
 
                 error: function (data) {
                     $("#file_type_error").html('Error uploading file');
+                    alert('error');
                     console.log(data);
                 }
             });

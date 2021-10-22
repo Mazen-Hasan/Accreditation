@@ -41,6 +41,8 @@ class TemplateFormController extends Controller
         } else {
             $form .= $this->createHiddenField('participant_id', 'participant_id', $participant_id);
         }
+        $form .= $this->createHiddenField('company_id', 'company_id', $companyId);
+        $form .= $this->createHiddenField('event_id', 'event_id', $eventId);
         foreach ($templateFields as $templateField) {
             $options = [];
             if ($fieldsCount % 2 == 0) {
@@ -275,12 +277,12 @@ class TemplateFormController extends Controller
 
     public function store(Request $request)
     {
-        $where = array('id' =>  $request->company_id);
-        $company = Company::where($where)->get()->first();
+        // $where = array('id' =>  $request->company_id);
+        // $company = Company::where($where)->get()->first();
         $participant_id = $request->participant_id;
         $companyStaff = CompanyStaff::updateOrCreate(['id' => $participant_id],
-            ['event_id' => $company->event_id,
-                'company_id' => $company->id,
+            ['event_id' => $request->event_id,
+                'company_id' => $request->company_id,
                 'security_officer_id' => '0',
                 'security_officer_decision' => '0',
                 'security_officer_decision_date' => null,
@@ -292,9 +294,11 @@ class TemplateFormController extends Controller
                 'status' => '0'
             ]);
 
-        $where = array('id' => $company->event_id);
+        $where = array('id' => $request->event_id);
         $event = Event::where($where)->get()->first();
-
+        // var_dump($request->event_id);
+        // //var_dump($event->event_form);
+        // exit;
         $query = 'update templates t set t.is_locked = 1 where t.id = ' . $event->event_form;
         DB::update($query);
 
@@ -326,7 +330,7 @@ class TemplateFormController extends Controller
         $where = array('id' => $compnyStaff->company_id);
         $company = Company::where($where)->get()->first();
 
-        $where = array('id' => $company->event_id);
+        $where = array('id' => $compnyStaff->event_id);
         $event = Event::where($where)->first();
 
         $template_id = $event->event_form;
@@ -335,7 +339,7 @@ class TemplateFormController extends Controller
         } else {
             $templateFields = DB::select('select * from template_fields_view v where v.template_id = ? order by v.field_order', [$template_id]);
         }
-        $participants = DB::select('select t.* , c.* from temp' . Auth::user()->id . ' t inner join company_staff c on t.id = c.id where c.id = ?', [$participant_id]);
+        $participants = DB::select('select t.* , c.* from temp_' . $company->id . ' t inner join company_staff c on t.id = c.id where c.id = ?', [$participant_id]);
         $status_value = "initaited";
         $status = 0;
         $event_reject_reason = '';
@@ -484,7 +488,7 @@ class TemplateFormController extends Controller
 
             case 0:
                 $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id,$event->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                 $buttons .= '&nbsp;&nbsp;';
                 $buttons .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $participant_id . '" class="delete btn btn-danger">Send Request</a>';
                 break;
@@ -504,7 +508,7 @@ class TemplateFormController extends Controller
         if ($company->subCompany_id != null) {
             $subCompany_nav = 0;
         }
-        return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('subCompany_nav', $subCompany_nav)->with('companyId',$company->id);
+        return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('subCompany_nav', $subCompany_nav)->with('companyId',$company->id)->with('eventId',$event->id);
     }
 
     public function createStatusFieldLabel($label, $mandatory, $value)

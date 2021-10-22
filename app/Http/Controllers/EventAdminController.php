@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\CompanyStaff;
 use App\Models\Event;
+use App\Models\EventCompany;
 use App\Models\FocalPoint;
 use App\Models\SelectOption;
 use App\Models\TemplateField;
@@ -61,21 +62,21 @@ class EventAdminController extends Controller
         return view('pages.EventAdmin.event-companies')->with('eventid', $id)->with('event_name', $event->name);
     }
 
-    public function Invite($companyId)
+    public function Invite($companyId, $eventId)
     {
-        $where = array('id' => $companyId);
-        $company = Company::where($where)->first();
-        $where = array('id' => $company->focal_point_id);
-        $focalpoint = FocalPoint::where($where)->first();
-        $post = Company::updateOrCreate(['id' => $companyId],
+        // $where = array('id' => $companyId);
+        // $company = Company::where($where)->first();
+        // $where = array('id' => $company->focal_point_id);
+        // $focalpoint = FocalPoint::where($where)->first();
+        $post = EventCompany::updateOrCreate(['company_id' => $companyId,'event_id'=>$eventId],
             [
-                'company_admin_id' => $focalpoint->account_id,
+                //'company_admin_id' => $focalpoint->account_id,
                 'status' => 3
             ]);
-        $focalpointUpdate = FocalPoint::updateOrCreate(['id' => $focalpoint->id],
-            [
-                'company_id' => $companyId
-            ]);
+        // $focalpointUpdate = FocalPoint::updateOrCreate(['id' => $focalpoint->id],
+        //     [
+        //         'company_id' => $companyId
+        //     ]);
         return Response::json($post);
     }
 

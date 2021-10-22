@@ -297,7 +297,7 @@ class CompanyController extends Controller
             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
-        $companyAccreditationCategories = DB::select('select * from event_compnay_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
+        $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
         $status = 0;
         $remainingSize = $company->size;
         // var_dump($remainingSize);
@@ -309,7 +309,7 @@ class CompanyController extends Controller
 
         if (request()->ajax()) {
             //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
-            $companyAccreditationCategories = DB::select('select * from event_compnay_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
+            $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
             return datatables()->of($companyAccreditationCategories)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';

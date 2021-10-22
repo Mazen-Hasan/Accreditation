@@ -183,9 +183,10 @@
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
                     if ($button[0].id === 'btn-yes') {
                         var company_id = $('#curr_element_id').val();
+                        var eventId = $('#h_event_id').val();
                         $.ajax({
                             type: "get",
-                            url: "../eventAdminController/Invite/" + company_id,
+                            url: "../eventAdminController/Invite/" + company_id + "/" + eventId,
                             success: function (data) {
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);

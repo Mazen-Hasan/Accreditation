@@ -7,6 +7,7 @@ use App\Mail\EventAdminAssign;
 use App\Models\Event;
 use App\Models\EventAdmin;
 use App\Models\EventCompany;
+use App\Models\EventCompanyDataEntry;
 use App\Models\EventSecurityCategory;
 use App\Models\EventSecurityOfficer;
 use App\Models\EventType;
@@ -217,6 +218,8 @@ class EventController extends Controller
 
             $where = array('event_id' =>  $event->id);
             $event_companies = EventCompany::where($where)->get()->all();
+
+            $event_company_data_entries = EventCompanyDataEntry::where($where)->get()->all();
         }
 
         $post = Event::updateOrCreate(['id' => $postId],
@@ -273,10 +276,22 @@ class EventController extends Controller
                         'company_id' => $row->company_id,
                         'focal_point_id' => $row->focal_point_id,
                         'parent_id' => $row->parent_id,
-                        'status' => $row->status,
-                        'size' => $row->size,
-                        'need_management' => $row->need_management,
+                        'status' => 1,
+                        'size' => 0,
+                        'need_management' => 0,
                     ]);
+
+                foreach ($event_company_data_entries as $row1){
+                    if($row1->company_id == $row->company_id){
+                        $new_event_company_data_entry = EventCompanyDataEntry::updateOrCreate(['id' => 0],
+                            ['event_id' => $post->id,
+                                'company_id' => $row1->company_id,
+                                'event_companies_id' => $new_event_company->id,
+                                'data_entry_id' => $row1->data_entry_id,
+                                'status' => 1,
+                            ]);
+                    }
+                }
             }
 
         }

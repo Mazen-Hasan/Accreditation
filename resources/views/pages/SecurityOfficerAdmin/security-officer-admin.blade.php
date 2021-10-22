@@ -81,7 +81,7 @@
                                                     <p class="card_event_label">Template:</p>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p class="card_event_text">{{ $event->event_form}}</p>
+                                                    <p class="card_event_text">{{ $event->template_name}}</p>
                                                 </div>
                                             </div>
                                             {{--                                        <div class="row">--}}

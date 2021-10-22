@@ -38,7 +38,7 @@ class SecurityOfficerAdminController extends Controller
                 ->make(true);
         }
 
-        $events = DB::select('select * from events_view where security_officer_id = ? and approval_option in (1,3) ', [Auth::user()->id]);
+        $events = DB::select('select * from event_security_officers_view where security_officer_id = ? and approval_option in (1,3) ', [Auth::user()->id]);
 //        var_dump($events);
 //        exit;
 //        $events = DB::select('select * from events_view  , events_view v');
@@ -96,7 +96,7 @@ class SecurityOfficerAdminController extends Controller
 
         $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
-        $company_admin_id = $company->company_admin_id;
+        $company_admin_id = $company->id;
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
 
@@ -106,8 +106,8 @@ class SecurityOfficerAdminController extends Controller
         foreach ($templateFields as $templateField) {
             $dataTableColumuns[] = $templateField->label_en;
         }
-        Schema::dropIfExists('temp' . $company_admin_id);
-        Schema::create('temp' . $company_admin_id, function ($table) use ($templateFields) {
+        Schema::dropIfExists('temp_' . $company_admin_id);
+        Schema::create('temp_' . $company_admin_id, function ($table) use ($templateFields) {
             $table->string('id');
             foreach ($templateFields as $templateField) {
                 $dataTableColumuns[] = $templateField->label_en;
@@ -117,7 +117,7 @@ class SecurityOfficerAdminController extends Controller
         // $where = array('company_admin_id' => Auth::user()->id);
         // $company = Company::where($where)->get()->first();
 
-        $where = array('event_id' => $company->event_id, 'company_id' => $company->id);
+        $where = array('event_id' => $eventId, 'company_id' => $companyId);
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach ($companyStaffs as $companyStaff) {
@@ -141,7 +141,7 @@ class SecurityOfficerAdminController extends Controller
         // exit;
         $query = '';
         foreach ($alldata as $data) {
-            $query = 'insert into temp' . $company_admin_id . ' (id';
+            $query = 'insert into temp_' . $company_admin_id . ' (id';
             foreach ($templateFields as $templateField) {
                 $query = $query . ',' . preg_replace('/\s+/', '_', $templateField->label_en);
             }
@@ -157,7 +157,7 @@ class SecurityOfficerAdminController extends Controller
         // var_dump($query);
         // exit;
         if (request()->ajax()) {
-            $participants = DB::select('select t.* , c.* from temp' . $company_admin_id . ' t inner join company_staff c on t.id = c.id');
+            $participants = DB::select('select t.* , c.* from temp_' . $company_admin_id . ' t inner join company_staff c on t.id = c.id');
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {
                     $status_value = "initaited";

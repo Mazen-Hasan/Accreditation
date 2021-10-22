@@ -48,7 +48,6 @@
                 submitHandler: function (form) {
                     var compnayId = $('#company_id').val();
                     $('#btn-save').html('Sending..');
-                    alert($('#templateForm').serialize());
                     $.ajax({
                         data: $('#templateForm').serialize(),
                         url: "{{ route('templateFormController.store') }}",
@@ -133,7 +132,6 @@
 
                 error: function (data) {
                     $("#file_type_error").html('Error uploading file');
-                    alert('error');
                     console.log(data);
                 }
             });

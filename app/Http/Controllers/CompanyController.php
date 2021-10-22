@@ -272,15 +272,12 @@ class CompanyController extends Controller
     public function companyAccreditCat($Id, $eventId)
     {
         $companies = DB::select('select * from companies_view where id = ? and event_id = ?', [$Id,$eventId]);
-        foreach($companies as $company){
-            $post = $company;
+        foreach($companies as $company1){
+            $company = $company1;
         }
 
         $where = array('id' => $eventId);
         $event = Event::where($where)->first();
-
-        // $where = array('id' => $Id);
-        // $company = Company::where($where)->first();
 
         $where = array('status' => 1);
         $accreditationCategorysSelectOptions = array();

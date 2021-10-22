@@ -73,12 +73,12 @@
                                     <span class="dt-hbtn">Add</span>
                                 </a>
 
-                                <a href="{{route('pdf-generate')}}" id="generate" class="add-hbtn">
+                                <!-- <a href="{{route('pdf-generate')}}" id="generate" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Generate</span>
-                                </a>
+                                </a> -->
                                 @endrole
                             </div>
                         </div>

@@ -20,6 +20,7 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <input type="hidden" id="company_id" value={{$companyId}}>
+                            <input type="hidden" id="event_id" value={{$eventId}}>
                             <div class="col-md-8">
                                 <p class="card-title">{{$event_name}} / {{$company_name}} / Subsidiaries</p>
                             </div>
@@ -177,9 +178,10 @@
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
                     if ($button[0].id === 'btn-yes') {
                         var company_id = $('#curr_element_id').val();
+                        var event_id = $('#event_id').val();
                         $.ajax({
                             type: "get",
-                            url: "../companyAdminController/Invite/" + company_id,
+                            url: "../../companyAdminController/Invite/" + company_id + "/" + event_id,
                             success: function (data) {
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);

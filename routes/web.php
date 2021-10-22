@@ -58,7 +58,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('/subCompany-edit/{id}/{eventid}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanyEdit'])->name('subCompanyEdit');
     Route::post('storeSubCompnay', [App\Http\Controllers\CompanyAdminController::class, 'storeSubCompnay'])->name('storeSubCompnay');
     Route::get('/subCompany-accreditation-size/{eventId}/{companyId}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanyAccreditCategories'])->name('subCompanyAccreditCategories');
-    Route::get('companyAdminController/Invite/{companyId}', 'App\Http\Controllers\CompanyAdminController@Invite');
+    Route::get('companyAdminController/Invite/{companyId}/{eventId}', 'App\Http\Controllers\CompanyAdminController@Invite');
 
     Route::resource('dataentryController', 'App\Http\Controllers\DataEntryController');
     Route::get('/dataentrys/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'index'])->name('dataentrys');

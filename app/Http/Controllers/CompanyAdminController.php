@@ -273,8 +273,10 @@ class CompanyAdminController extends Controller
 
     public function companyAccreditCategories($eventId, $companyId)
     {
-        $where = array('id' => $companyId);
-        $company = Company::where($where)->get()->first();
+        $companies = DB::select('select * from companies_view where id = ? and event_id = ?', [$companyId,$eventId]);
+        foreach($companies as $company1){
+            $company = $company1;
+        }
 
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
@@ -706,20 +708,11 @@ class CompanyAdminController extends Controller
         return view('pages.CompanyAdmin.subCompany-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize);
     }
 
-    public function Invite($companyId)
+    public function Invite($companyId,$eventId)
     {
-        $where = array('id' => $companyId);
-        $company = Company::where($where)->first();
-        $where = array('id' => $company->focal_point_id);
-        $focalpoint = FocalPoint::where($where)->first();
-        $post = Company::updateOrCreate(['id' => $companyId],
+        $post = EventCompany::updateOrCreate(['company_id' => $companyId,'event_id'=>$eventId],
             [
-                'company_admin_id' => $focalpoint->account_id,
                 'status' => 3
-            ]);
-        $focalpointUpdate = FocalPoint::updateOrCreate(['id' => $focalpoint->id],
-            [
-                'company_id' => $companyId
             ]);
         return Response::json($post);
     }

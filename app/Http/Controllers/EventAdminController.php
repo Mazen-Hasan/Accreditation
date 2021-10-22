@@ -47,7 +47,8 @@ class EventAdminController extends Controller
             $companies = DB::select('select * from companies_view where event_id = ? and parent_id is null', [$id]);
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="../company-edit/' . $data->id . '/' . $data->event_id . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                    $button = '<a href="' . route('companyEdit', [$data->id, $data->event_id]) . '"  data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                    //href="../company-edit/' . $data->id . '/' . $data->event_id . '"
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" title="Invite"><i class="far fa-share-square"></i></a>';
                     $button .= '&nbsp;&nbsp;';
@@ -64,19 +65,10 @@ class EventAdminController extends Controller
 
     public function Invite($companyId, $eventId)
     {
-        // $where = array('id' => $companyId);
-        // $company = Company::where($where)->first();
-        // $where = array('id' => $company->focal_point_id);
-        // $focalpoint = FocalPoint::where($where)->first();
         $post = EventCompany::updateOrCreate(['company_id' => $companyId,'event_id'=>$eventId],
             [
-                //'company_admin_id' => $focalpoint->account_id,
                 'status' => 3
             ]);
-        // $focalpointUpdate = FocalPoint::updateOrCreate(['id' => $focalpoint->id],
-        //     [
-        //         'company_id' => $companyId
-        //     ]);
         return Response::json($post);
     }
 
@@ -120,7 +112,6 @@ class EventAdminController extends Controller
         $alldata = array();
         foreach ($companyStaffs as $companyStaff) {
             $where = array('staff_id' => $companyStaff->id);
-            // $staffDatas = StaffData::where($where)->get()->all();
             if ($companyId != 0) {
                 $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
             } else {

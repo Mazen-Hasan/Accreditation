@@ -79,11 +79,7 @@ Route::group(['middleware' => 'role:event-admin'], function () {
     Route::get('eventAdminController/Reject/{staffId}', 'App\Http\Controllers\EventAdminController@Reject');
     Route::get('eventAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\EventAdminController@RejectToCorrect');
 
-    Route::resource('focalpointController', 'App\Http\Controllers\FocalPointController');
-    Route::get('/focalpoints', [App\Http\Controllers\FocalPointController::class, 'index'])->name('focalpoints');
-    Route::get('/focalpoint-add', [App\Http\Controllers\FocalPointController::class, 'focalpointAdd'])->name('focalpointAdd');
-    Route::get('/focalpoint-edit/{id}', [App\Http\Controllers\FocalPointController::class, 'edit'])->name('focalpointEdit');
-    Route::get('focalpointController/reset_password/{id}/{password}', 'App\Http\Controllers\FocalPointController@resetPassword');
+
 
     Route::resource('companyController', 'App\Http\Controllers\CompanyController');
 
@@ -227,6 +223,12 @@ Route::group(['middleware' => 'role:data-entry'], function () {
 Route::get('/send-notification', [App\Http\Controllers\NotificationController::class, 'sendAlertNotification']);
 Route::get('/get-notification', [App\Http\Controllers\NotificationController::class, 'getNotifications']);
 Route::get('/markAsRead-notification/{id}', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
+
+Route::resource('focalpointController', 'App\Http\Controllers\FocalPointController');
+Route::get('/focalpoints', [App\Http\Controllers\FocalPointController::class, 'index'])->name('focalpoints');
+Route::get('/focalpoint-add', [App\Http\Controllers\FocalPointController::class, 'focalpointAdd'])->name('focalpointAdd');
+Route::get('/focalpoint-edit/{id}', [App\Http\Controllers\FocalPointController::class, 'edit'])->name('focalpointEdit');
+Route::get('focalpointController/reset_password/{id}/{password}', 'App\Http\Controllers\FocalPointController@resetPassword');
 
 //Route::any('{query}',
 //    function () {

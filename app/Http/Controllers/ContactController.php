@@ -157,11 +157,6 @@ class ContactController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post" id="remove-contact_title">Remove</a>';
                     $button .= '&nbsp;&nbsp;';
-//                    if ($data->status == 1) {
-//                        $button .= '<a href="javascript:void(0);" id="deActivate-title" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger">  Deactivate</a>';
-//                    }else{
-//                        $button .= '<a href="javascript:void(0);" id="activate-title" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-outline-google">  &nbsp;Activate&nbsp;</a>';
-//                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -194,9 +189,6 @@ class ContactController extends Controller
 
     public function storeContactTitle($contactId, $titleId)
     {
-        //xdebug_break();
-//        $contactId = $request->post_id;
-//        $titleId = $request->contactTitle;
         $post = ContactTitle::updateOrCreate(['id' => 0],
             ['contact_id' => $contactId,
                 'title_id' => $titleId,

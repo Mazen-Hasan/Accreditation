@@ -29,22 +29,16 @@ class DataEntryController extends Controller
      */
     public function index($companyId,$eventId)
     {
-        // var_dump($companyId);
-        // exit;
         if (request()->ajax()) {
             $focalpoint = DB::select('select * from event_company_data_entries_view where company_id = ? and event_id = ?', [$companyId,$eventId]);
-            // var_dump($focalpoint);
-            // exit;
             return datatables()->of($focalpoint)
                 ->addColumn('name', function ($row) {
                     return $row->name . ' ' . $row->middle_name . ' ' . $row->last_name;
                 })
                 ->addColumn('action', function ($data) {
-                    //$button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$data->id.'" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button = '<a href="' . route('dataentryEdit', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="javascript:void(0);" id="reset_password" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->account_id . '" class="delete btn btn-google">Reset Password</a>';
-                    //$button .= '<a href="javascript:void(0);" id="delete-post" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">   Delete</a>';
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -85,11 +79,8 @@ class DataEntryController extends Controller
                     'email' => $request->email,
                     'telephone' => $request->telephone,
                     'mobile' => $request->mobile,
-                    //'company_id' => $company->id,
-                    //'company_admin_id' => Auth::user()->id,
                     'password' => $request->password,
                     'account_id' => $user->id,
-                    //'status' => $request->status,
                 ]);
             $where = array('event_id'=> $request->event_id,'company_id'=>$request->company_id);
             $eventCompnay = EventCompany::where($where)->first();
@@ -110,7 +101,6 @@ class DataEntryController extends Controller
                     'email' => $request->email,
                     'telephone' => $request->telephone,
                     'mobile' => $request->mobile,
-                    //'status' => $request->status,
                 ]);
         }
 
@@ -179,9 +169,6 @@ class DataEntryController extends Controller
     {
         $dataTableColumuns = array();
 
-        // $where = array('account_id' => Auth::user()->id);
-        // $dataentry = DataEntry::where($where)->first();
-
         $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
 
@@ -202,15 +189,12 @@ class DataEntryController extends Controller
                 $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
             }
         });
-        // $where = array('company_admin_id' => Auth::user()->id);
-        // $company = Company::where($where)->get()->first();
 
         $where = array('event_id' => $eventId, 'company_id' => $companyId);
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach ($companyStaffs as $companyStaff) {
             $where = array('staff_id' => $companyStaff->id);
-            // $staffDatas = StaffData::where($where)->get()->all();
             $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
             $staffDataValues = array();
             $staffDataValues[] = $companyStaff->id;
@@ -225,8 +209,6 @@ class DataEntryController extends Controller
             }
             $alldata[] = $staffDataValues;
         }
-        // var_dump($alldata);
-        // exit;
         $query = '';
         foreach ($alldata as $data) {
             $query = 'insert into temp_dataentry_' . Auth::user()->id . ' (id';
@@ -241,9 +223,6 @@ class DataEntryController extends Controller
             $query = $query . ')';
             DB::insert($query);
         }
-        //DB::insert($query);
-        // var_dump($query);
-        // exit;
         if (request()->ajax()) {
             $participants = DB::select('select t.* , c.* from temp_dataentry_' . Auth::user()->id . ' t inner join company_staff c on t.id = c.id');
             return datatables()->of($participants)
@@ -285,29 +264,15 @@ class DataEntryController extends Controller
                             break;
                     }
                     return $status_value;
-                    //return $row->first_name.' '.$row->last_name;
                 })
                 ->addColumn('action', function ($data) {
                     $button = '';
-                    // $button .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
-                    // $button .= '&nbsp;&nbsp;';
                     switch ($data->status) {
 
                         case 0:
                             $button .= '<a href="' . route('participantAdd', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                             $button .= '&nbsp;&nbsp;';
-                            //$button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">Send Request</a>';
                             break;
-                        // case 7:
-                        //     $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                        //     $button .= '&nbsp;&nbsp;';
-                        //     $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->security_officer_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
-                        //     break;
-                        // case 8:
-                        //     $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                        //     $button .= '&nbsp;&nbsp;';
-                        //     $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->event_admin_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
-                        //     break;
                     }
                     return $button;
                 })
@@ -315,19 +280,11 @@ class DataEntryController extends Controller
                 ->make(true);
         }
         $subCompany_nav = 1;
-        // $where = array('company_admin_id' => Auth::user()->id);
-        // $company = Company::where($where)->first();
-        if ($company->subCompany_id != null) {
-            $subCompany_nav = 0;
-        }
         return view('pages.DataEntry.dataentry-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
     public function participantAdd($participant_id,$companyId,$eventId)
     {
-        // $where = array('account_id' => Auth::user()->id);
-        // $dataentry = DataEntry::where($where)->first();
-
         $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
 
@@ -340,10 +297,7 @@ class DataEntryController extends Controller
         } else {
             $templateFields = DB::select('select * from template_fields_view v where v.template_id = ? order by v.field_order', [$template_id]);
         }
-
-        //var_dump($templateFields);
         $fieldsCount = 0;
-
         $options = array();
         $form = '<div class="row">';
         $attachmentForm = '';
@@ -448,11 +402,6 @@ class DataEntryController extends Controller
         }
 
         $subCompany_nav = 1;
-        // $where = array('company_admin_id' => Auth::user()->id);
-        // $company = Company::where($where)->first();
-        // if($company->subCompany_id != null){
-        //     $subCompany_nav = 0;
-        // }
         return view('pages.DataEntry.dataentry-participant-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
@@ -589,11 +538,6 @@ class DataEntryController extends Controller
 
     public function storeParticipant(Request $request)
     {
-        //$this->uploadFile($request);
-        // $where = array('account_id' => Auth::user()->id);
-        // $dataentry = DataEntry::where($where)->first();
-        // $where = array('company_admin_id' => $dataentry->company_admin_id);
-        // $company = Company::where($where)->get()->first();
         $participant_id = $request->participant_id;
         $companyStaff = CompanyStaff::updateOrCreate(['id' => $participant_id],
             ['event_id' => $request->event_id,

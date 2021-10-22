@@ -84,7 +84,7 @@ class EventController extends Controller
             $where = array('id' => $request->event_id);
             $event = Event::where($where)->first();
 
-            NotificationController::sendNotification($event->name, '', $request->admin_id, '','', '/event-admin');
+            //NotificationController::sendNotification($event->name, '', $request->admin_id, '','', '/event-admin');
         }
 
         return Response::json($post);
@@ -190,7 +190,6 @@ class EventController extends Controller
         $accredition_period_days = $interval->format('%a');
         $post = Event::updateOrCreate(['id' => $postId],
             ['name' => $request->name,
-//                'event_admin' => $request->event_admin,
                 'location' => $request->location,
                 'size' => $request->size,
                 'organizer' => $request->organizer,
@@ -200,7 +199,6 @@ class EventController extends Controller
                 'accreditation_period' => $accredition_period_days,
                 'status' => $request->status,
                 'approval_option' => $request->approval_option,
-//                'security_officer' => $request->security_officer,
                 'event_form' => $request->event_form,
                 'event_start_date' => $request->event_start_date,
                 'event_end_date' => $request->event_end_date,
@@ -394,11 +392,6 @@ class EventController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post" id="remove-event-security-category">Remove</a>';
                     $button .= '&nbsp;&nbsp;';
-//                    if ($data->status == 1) {
-//                        $button .= '<a href="javascript:void(0);" id="deActivate-title" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger">  Deactivate</a>';
-//                    }else{
-//                        $button .= '<a href="javascript:void(0);" id="activate-title" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-outline-google">  &nbsp;Activate&nbsp;</a>';
-//                    }
                     return $button;
                 })
                 ->rawColumns(['action'])

@@ -318,7 +318,7 @@
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
-                            window.location.href = "../subCompany-accreditation-size/" + data.id + "/" + $eventid
+                            window.location.href = "../../subCompany-accreditation-size/" + data.id + "/" + $eventid
                             //window.location.href = "{{ route('companies')}}";
                             // alert(data);
                             // alert(data.id);

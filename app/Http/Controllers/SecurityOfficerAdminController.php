@@ -20,7 +20,6 @@ class SecurityOfficerAdminController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            //$companies = DB::select('select * from companies_view where event_id = ?' ,$event_id );
             $companies = DB::select('select * from companies_view');
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
@@ -31,17 +30,11 @@ class SecurityOfficerAdminController extends Controller
                     $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     return $button;
                 })
-//                ->addColumn('event_id', function($event_id){
-//                    return $event_id;
-//                })
                 ->rawColumns(['action'])
                 ->make(true);
         }
 
         $events = DB::select('select * from event_security_officers_view where security_officer_id = ? and approval_option in (1,3) ', [Auth::user()->id]);
-//        var_dump($events);
-//        exit;
-//        $events = DB::select('select * from events_view  , events_view v');
         return view('pages.SecurityOfficerAdmin.security-officer-admin')->with('events', $events);
     }
 
@@ -51,21 +44,11 @@ class SecurityOfficerAdminController extends Controller
         $event = Event::where($where)->first();
         if (request()->ajax()) {
             $companies = DB::select('select * from companies_view where event_id = ?', [$id]);
-//            $companies = DB::select('select * from companies_view');
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
-                    // $button = '<a href="../company-edit/'.$data->id.'/'.$data->event_id.'" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    // $button .= '&nbsp;&nbsp;';
-                    // $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="'.$data->name.'" data-focalpoint="'.$data->focal_point.'" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    // $button .= '&nbsp;&nbsp;';
-                    // $button .= '<a href="' . route('companyAccreditCat',[$data->id , $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    // $button .= '&nbsp;&nbsp;';
                     $button = '<a href="' . route('securityOfficerCompanyParticipants', [$data->id, $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook" title="Company Participants"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     return $button;
                 })
-//                ->addColumn('event_id', function($event_id){
-//                    return $event_id;
-//                })
                 ->rawColumns(['action'])
                 ->make(true);
         }
@@ -114,15 +97,11 @@ class SecurityOfficerAdminController extends Controller
                 $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
             }
         });
-        // $where = array('company_admin_id' => Auth::user()->id);
-        // $company = Company::where($where)->get()->first();
-
         $where = array('event_id' => $eventId, 'company_id' => $companyId);
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach ($companyStaffs as $companyStaff) {
             $where = array('staff_id' => $companyStaff->id);
-            // $staffDatas = StaffData::where($where)->get()->all();
             $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
             $staffDataValues = array();
             $staffDataValues[] = $companyStaff->id;
@@ -137,8 +116,6 @@ class SecurityOfficerAdminController extends Controller
             }
             $alldata[] = $staffDataValues;
         }
-        // var_dump($alldata);
-        // exit;
         $query = '';
         foreach ($alldata as $data) {
             $query = 'insert into temp_' . $company_admin_id . ' (id';
@@ -153,9 +130,6 @@ class SecurityOfficerAdminController extends Controller
             $query = $query . ')';
             DB::insert($query);
         }
-        //DB::insert($query);
-        // var_dump($query);
-        // exit;
         if (request()->ajax()) {
             $participants = DB::select('select t.* , c.* from temp_' . $company_admin_id . ' t inner join company_staff c on t.id = c.id');
             return datatables()->of($participants)
@@ -197,7 +171,6 @@ class SecurityOfficerAdminController extends Controller
                             break;
                     }
                     return $status_value;
-                    //return $row->first_name.' '.$row->last_name;
                 })
                 ->addColumn('action', function ($data) {
                     $button = '';
@@ -214,9 +187,6 @@ class SecurityOfficerAdminController extends Controller
                         case 7:
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" class="delete btn btn-danger">Reject Reason</a>';
                             break;
-                        // case 8:
-                        //     $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" data-reason="'.$data->event_admin_reject_reason.'" class="delete btn btn-danger">Reject Reason</a>';
-                        //     break;
                     }
                     return $button;
                 })
@@ -242,7 +212,6 @@ class SecurityOfficerAdminController extends Controller
 
         } else {
             if ($approval == 3) {
-                //DB::update('update company_staff set event_admin_id = ? where id = ?',[$event->event_admin,$staffId]);
                 DB::update('update company_staff set status = ? where id = ?', [3, $staffId]);
             }
         }
@@ -265,7 +234,6 @@ class SecurityOfficerAdminController extends Controller
 
         } else {
             if ($approval == 3) {
-                //DB::update('update company_staff set security_officer_id = ? where id = ?',[$event->security_officer,$staffId]);
                 DB::update('update company_staff set status = ? where id = ?', [4, $staffId]);
             }
         }
@@ -362,9 +330,6 @@ class SecurityOfficerAdminController extends Controller
                     break;
             }
         }
-
-
-        //var_dump($templateFields);
         $fieldsCount = 0;
         $form = '';
         $options = array();
@@ -466,7 +431,6 @@ class SecurityOfficerAdminController extends Controller
         }
         if ($fieldsCount % 2 == 1) {
             $form .= '<div class="col-md-6"><div class="form-group col"></div></div>';
-            //$form .= $this->createStatusFieldLabel("status","Status",0,1,1,$status_value);
         }
         $buttons = '';
         switch ($status) {
@@ -478,7 +442,6 @@ class SecurityOfficerAdminController extends Controller
                 $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject with correction</a>';
                 break;
         }
-        //var_dump($form);
         return view('pages.SecurityOfficerAdmin.security-officer-participant-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('companyId', $participant->company_id)->with('eventId', $participant->event_id);
     }
 
@@ -490,22 +453,11 @@ class SecurityOfficerAdminController extends Controller
             $required = 'required=""';
         }
 
-        /*$textfield = '<div class="col-md-6" style="height:70px"><div>';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
-        $textfield .= '<span><label>' . $label. ": ";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
-        $textfield .= '<span>'.$value.'</span>';
-        //$textfield .= '</div></div></div>';
-        $textfield .= '</label></sapn></div></div>';*/
-
         $textfield = '<div class="col-md-8" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
         $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger; color:red;
         text-align: center;
         padding:10px">' . $value . '</label></div>';
-        //$textfield .= '</div></div></div>';
         $textfield .= '</div></div>';
 
         return $textfield;
@@ -526,14 +478,11 @@ class SecurityOfficerAdminController extends Controller
         }
 
         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
         $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
         text-align: center;
         background-color: darkgray;
         padding:10px">' . $value . '</label></div>';
-        //$textfield .= '</div></div></div>';
         $textfield .= '</div></div>';
 
         return $textfield;
@@ -548,14 +497,11 @@ class SecurityOfficerAdminController extends Controller
 
 
         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
         $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
         text-align: center;
         background-color: darkgray;
         padding:10px">' . $value . '</label></div>';
-        //$textfield .= '</div></div></div>';
         $textfield .= '</div></div>';
 
         return $textfield;
@@ -585,14 +531,11 @@ class SecurityOfficerAdminController extends Controller
 
 
         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
         $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
         text-align: center;
         background-color: darkgray;
         padding:10px">' . $value . '</label></div>';
-        //$textfield .= '</div></div></div>';
         $textfield .= '</div></div>';
 
         return $textfield;
@@ -608,14 +551,11 @@ class SecurityOfficerAdminController extends Controller
             }
         }
         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
         $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
         text-align: center;
         background-color: darkgray;
         padding:10px">' . $selectValue . '</label></div>';
-        //$textfield .= '</div></div></div>';
         $textfield .= '</div></div>';
 
 
@@ -631,17 +571,10 @@ class SecurityOfficerAdminController extends Controller
 
 
         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        //$textfield .= '<label class="col-sm-6" for="'. $id  .  '">' . $label . '</label><div class="col-sm-6">';
         $textfield .= '<label>' . $label . "  : </label></div>";
-        //$textfield .= '<input type="text" id="'. $id  .  '" name="'. $id .'" placeholder="enter ' . $label . '" minlength="' . $min_char . '"maxlength="' . $max_char . '"'. $required. ' value="'.$value.'" />';
         $button = '<a href="javascript:void(0)" data-toggle="tooltip" data-label="' . $label . '"  data-src="' . $value . '" data-original-title="Preview" class="edit btn btn-danger preview-badge">Preview</a>';
         $textfield .= '<div class="col-md-6" style="height:70px">' . $button . '</div>';
-        //$textfield .= '</div></div></div>';
         $textfield .= '</div></div>';
-        //<button class="preview-badge" data-id="'.$value.'">Preview</button>
-
-        //return $textfield;
-
         return $textfield;
     }
 

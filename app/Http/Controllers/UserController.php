@@ -87,7 +87,6 @@ class UserController extends Controller
 
     public function userEdit($id)
     {
-        //$where = array('id' => $id);
         $users = DB::select('select * from users_view where user_id = ?', [$id]);
         foreach ($users as $row) {
             $user = $row;

@@ -39,7 +39,6 @@ class NotificationController extends Controller
             $notifications[] = $notification;
         }
         return Response::json($notifications);
-        //dd('Task completed!');
     }
 
     public function markAsRead($id)

@@ -48,7 +48,6 @@ class CompanyController extends Controller
     public function eventCompanies()
     {
         if (request()->ajax()) {
-            //$companies = DB::select('select * from companies_view where event_id = ?' ,$event_id );
             $companies = DB::select('select * from companies_view');
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
@@ -59,9 +58,6 @@ class CompanyController extends Controller
                     $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     return $button;
                 })
-//                ->addColumn('event_id', function($event_id){
-//                    return $event_id;
-//                })
                 ->rawColumns(['action'])
                 ->make(true);
         }
@@ -140,16 +136,10 @@ class CompanyController extends Controller
     {
         $where = array('id' => $eventid);
         $event = Event::where($where)->first();
-
-        // $where = array('id' => $id);
-        // $post = Company::where($where)->first();
-
         $companies = DB::select('select * from companies_view where id = ? and event_id = ?', [$id,$eventid]);
         foreach($companies as $company){
             $post = $company;
         }
-
-        //$where = array('event_admin_id' => Auth::user()->id);
         $where = array('status' => 1);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
@@ -194,11 +184,9 @@ class CompanyController extends Controller
 
         $companyStatus1 = new SelectOption(1, 'Active');
         $companyStatus2 = new SelectOption(0, 'InActive');
-        //$companyStatus3 = new SelectOption(3,'Invited');
         $companyStatuss = [$companyStatus1, $companyStatus2];
 
         if (request()->ajax()) {
-            //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
             $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories_view where company_id = ?', [$id]);
             return datatables()->of($companyAccreditationCategories)
                 ->addColumn('action', function ($data) {
@@ -231,9 +219,6 @@ class CompanyController extends Controller
     {
         $where = array('id' => $id);
         $event = Event::where($where)->first();
-        // $sql = 'select CONCAT(c.name," ",c.middle_name," ",c.last_name) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Focal Point")';
-        // $query = $sql;
-        //$where = array('event_admin_id' => Auth::user()->id, 'company_id' => null);
         $where = array('status' => 1);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
@@ -278,7 +263,6 @@ class CompanyController extends Controller
 
         $companyStatus1 = new SelectOption(1, 'Active');
         $companyStatus2 = new SelectOption(0, 'InActive');
-        //$companyStatus3 = new SelectOption(3,'Invited');
         $companyStatuss = [$companyStatus1, $companyStatus2];
 
         return view('pages.Company.company-add')->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
@@ -304,15 +288,12 @@ class CompanyController extends Controller
         $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
         $status = 0;
         $remainingSize = $company->size;
-        // var_dump($remainingSize);
-        // exit;
         foreach ($companyAccreditationCategories as $companyAccreditationCategory) {
             $status = $companyAccreditationCategory->status;
             $remainingSize = $remainingSize - $companyAccreditationCategory->size;
         }
 
         if (request()->ajax()) {
-            //$companyAccreditationCategories= DB::select('select * from company_accreditaion_categories_view where company_id = ?',$companyId);
             $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
             return datatables()->of($companyAccreditationCategories)
                 ->addColumn('action', function ($data) {
@@ -339,8 +320,6 @@ class CompanyController extends Controller
     {
         $where = array('company_id'=>$company_id, 'event_id' => $event_id);
         $eventcompnay = EventCompany::where($where)->first();
-        // var_dump($eventcompnay);
-        // exit;
         try {
             $post = CompanyAccreditaionCategory::updateOrCreate(['id' => $id],
                 ['size' => $size,
@@ -371,7 +350,6 @@ class CompanyController extends Controller
     public function Approve($companyId, $eventId)
     {
         $where = array('company_id' => $companyId, 'event_id' => $eventId);
-        //$post = CompanyAccreditaionCategory::where($where);
         $companyAccreditCategories = CompanyAccreditaionCategory::where($where)
             ->update(['status' => 2]);
         return Response::json($companyAccreditCategories);

@@ -136,11 +136,6 @@ class TemplateFormController extends Controller
         }
 
         $subCompany_nav = 1;
-        // $where = array('company_admin_id' => Auth::user()->id);
-        // $company = Company::where($where)->first();
-        // if ($company->subCompany_id != null) {
-        //     $subCompany_nav = 0;
-        // }
         return view('pages.TemplateForm.template-form-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
@@ -277,8 +272,6 @@ class TemplateFormController extends Controller
 
     public function store(Request $request)
     {
-        // $where = array('id' =>  $request->company_id);
-        // $company = Company::where($where)->get()->first();
         $participant_id = $request->participant_id;
         $companyStaff = CompanyStaff::updateOrCreate(['id' => $participant_id],
             ['event_id' => $request->event_id,
@@ -296,9 +289,6 @@ class TemplateFormController extends Controller
 
         $where = array('id' => $request->event_id);
         $event = Event::where($where)->get()->first();
-        // var_dump($request->event_id);
-        // //var_dump($event->event_form);
-        // exit;
         $query = 'update templates t set t.is_locked = 1 where t.id = ' . $event->event_form;
         DB::update($query);
 
@@ -501,13 +491,7 @@ class TemplateFormController extends Controller
                 $buttons .= '<a href="' . route('templateForm', $participant_id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                 break;
         }
-        //return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons);
         $subCompany_nav = 1;
-        $where = array('id' => $company->id);
-        $company = Company::where($where)->first();
-        if ($company->subCompany_id != null) {
-            $subCompany_nav = 0;
-        }
         return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('subCompany_nav', $subCompany_nav)->with('companyId',$company->id)->with('eventId',$event->id);
     }
 

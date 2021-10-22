@@ -23,8 +23,11 @@
                                     <a class="url-nav" href="{{route('events')}}">
                                         <span>Events:</span>
                                     </a>
-                                    {{$event->name}} /
-                                    Admins</h4>
+                                    <a class="url-nav" href="{{route('EventController.show',[$event->id])}}">
+                                        {{$event->name}}
+                                    </a> /
+                                    Admins
+                                </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">

@@ -39,7 +39,7 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="email" name="email" placeholder="enter email"
+                                            <input type="email" id="email" name="email" placeholder="enter email"
                                                    required=""/>
                                         </div>
                                     </div>
@@ -90,11 +90,11 @@
                                     <div class="form-group col">
                                         <label>Title</label>
                                         <div class="col-sm-12">
-                                            <select multiple id="titles" name="titles[]" value="" required=""
-                                                    style="height:150px">
+                                            <select multiple id="titles" name="titles[]" required="">
+                                                <option value="default">Please select Contact Title</option>
                                                 @foreach ($titles as $titles)
                                                     <option value="{{ $titles->key }}"
-                                                            @if ($titles->key == 1)
+                                                            @if ($titles->key == -1)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $titles->value }}</option>
@@ -107,10 +107,11 @@
                                     <div class="form-group col">
                                         <label>Status</label>
                                         <div class="col-sm-12">
-                                            <select id="status" name="status" value="" required="">
+                                            <select id="status" name="status"  required="">
+                                                <option value="default">Please select Status</option>
                                                 @foreach ($contactStatuss as $contactStatus)
                                                     <option value="{{ $contactStatus->key }}"
-                                                            @if ($contactStatus->key == 1)
+                                                            @if ($contactStatus->key == -1)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $contactStatus->value }}</option>
@@ -151,6 +152,11 @@
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
+                rules: {
+                    titles: {valueNotEquals: "default"},
+                    status: {valueNotEquals: "default"}
+                },
+
                 submitHandler: function (form) {
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
@@ -177,5 +183,10 @@
                 }
             })
         }
+
+        jQuery.validator.addMethod("valueNotEquals",
+            function (value, element, params) {
+                return params !== value;
+            }, " Please select a value");
     </script>
 @endsection

@@ -40,7 +40,7 @@
                                     <div class="form-group col">
                                         <label>Size</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="size" name="size" value="{{$event->size}}"
+                                            <input type="number" min="1" max="10000" id="size" name="size" value="{{$event->size}}"
                                                    placeholder="enter size" required=""/>
                                         </div>
                                     </div>
@@ -90,48 +90,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Event Admin</label>
-                                        <div class="col-sm-12">
-                                            <select id="event_admin" name="event_admin" required="">
-                                                @foreach ($eventAdmins as $eventAdmin)
-                                                    <option value="{{ $eventAdmin->key }}"
-                                                            @if ($eventAdmin->key == $event->event_admin)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $eventAdmin->value }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Registration Form Template</label>
-                                        <div class="col-sm-12">
-                                            <select id="event_form" name="event_form" required="">
-                                                @foreach ($eventForms as $eventForm)
-                                                    <option value="{{ $eventForm->key }}"
-                                                           @if ($eventForm->key == $event->event_form)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $eventForm->value }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group col">
                                         <label>Owner</label>
                                         <div class="col-sm-12">
                                             <select id="owner" name="owner" required="">
                                                 @foreach ($owners as $owner)
                                                     <option value="{{ $owner->key }}"
-                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($owner->key == $event->owner)
-                                                            selected="selected"
+                                                    selected="selected"
                                                         @endif
                                                     >{{ $owner->value }}</option>
                                                 @endforeach
@@ -173,9 +138,7 @@
                                         <div class="col-sm-12">
                                             <select id="event_type" name="event_type" required="">
                                                 @foreach ($eventTypes as $eventType)
-                                                    <option value="{{ $eventType->key }}"
-                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($eventType->key == $event->event_type)
+                                                    <option value="{{ $eventType->key }}"@if ($eventType->key == $event->event_type)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $eventType->value }}</option>
@@ -192,8 +155,7 @@
                                         <div class="col-sm-12">
                                             <select id="approval_option" name="approval_option" required="">
                                                 @foreach ($approvalOptions as $approvalOption)
-                                                    <option value="{{ $approvalOption->key }}"
-                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                    <option value="{{ $approvalOption->key }}"{{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($approvalOption->key == $event->approval_option)
                                                             selected="selected"
                                                         @endif
@@ -205,20 +167,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Security Officer</label>
+                                        <label>Registration Form Template</label>
                                         <div class="col-sm-12">
-                                            <select id="security_officer"
-                                                    @if ($event->approval_option == 1)
-                                                    disabled=true
-                                                    @endif
-                                                    name="security_officer" required="">
-                                                @foreach ($securityOfficers as $securityOfficer)
-                                                    <option value="{{ $securityOfficer->key }}"
-                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
-                                                            @if ($securityOfficer->key == $event->security_officer)
+                                            <select id="event_form" name="event_form" required="">
+                                                @foreach ($eventForms as $eventForm)
+                                                    <option value="{{ $eventForm->key }}"
+                                                            @if ($eventForm->key == $event->event_form)
                                                             selected="selected"
                                                         @endif
-                                                    >{{ $securityOfficer->value }}</option>
+                                                    >{{ $eventForm->value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -233,7 +190,6 @@
                                             <select id="status" name="status" required="">
                                                 @foreach ($eventStatuss as $eventStatus)
                                                     <option value="{{ $eventStatus->key }}"
-                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($eventStatus->key == $event->status)
                                                             selected="selected"
                                                         @endif

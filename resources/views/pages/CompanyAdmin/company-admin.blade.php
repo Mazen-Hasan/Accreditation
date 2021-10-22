@@ -14,10 +14,7 @@
                     <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
                     <div class="card-body">
                         <h4 class="card-title">
-                            @if ($events != null)
-                                {{$events[0]->company_name}}
-                            @endif
-                            / My events</h4>
+                            My events</h4>
                         <div class="row">
                             @foreach($events as $event)
                                 <div class="col-sm-4">
@@ -33,7 +30,9 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <h5 class="card_event_title">{{ $event->name }}</h5>
+                                                    <h5 class="card_event_title">
+                                                        {{ $event->name }} / {{ $event->company_name }}
+                                                    </h5>
                                                 </div>
                                             </div>
                                             <div class="row">

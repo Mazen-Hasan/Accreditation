@@ -263,45 +263,6 @@
                                     </div>
                                 </div>
                             </div>
-
-{{--                            <div class="row">--}}
-{{--                                <div class="col-md-6">--}}
-{{--                                    <div class="form-group col">--}}
-{{--                                        <label>Event Admin</label>--}}
-{{--                                        <div class="row">--}}
-{{--                                            <div class="col-sm-12">--}}
-{{--                                                <select id="event_admin_multi" name="event_admin_multi" required="" multiple>--}}
-{{--                                                    <option value="default">Please select Event Admin</option>--}}
-{{--                                                    @foreach ($eventAdmins as $eventAdmin)--}}
-{{--                                                        <option value="{{ $eventAdmin->key }}"--}}
-{{--                                                                @if ($eventAdmin->key == -1)--}}
-{{--                                                                selected="selected"--}}
-{{--                                                            @endif--}}
-{{--                                                        >{{ $eventAdmin->value }}</option>--}}
-{{--                                                    @endforeach--}}
-{{--                                                </select>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="col-sm-1" id="add">--}}
-{{--                                                <a href="javascript:void(0)" id="event_admin_add">--}}
-{{--                                                    <i class="fas fa-plus-circle"></i>--}}
-{{--                                                </a>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="row">--}}
-{{--                                            <label>Event Admin list</label>--}}
-{{--                                            <div class="col-sm-12">--}}
-{{--                                                <div id="event_admin_list" style="margin: 10px; overflow:scroll; height:200px;">--}}
-
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <div class="col-md-6">--}}
-
-{{--                                </div>--}}
-{{--                            </div>--}}
-
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" id="btn-save" value="create">Save
                                 </button>
@@ -323,12 +284,9 @@
                     <div>
                         <label class="col-sm-12 confirm-text" id="confirmText"></label>
                     </div>
-
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-{{--                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel--}}
-{{--                            </button>--}}
                         </div>
                         <div class="col-sm-4">
                             <button type="button" data-dismiss="modal" id="btn-yes">Ok</button>
@@ -377,7 +335,7 @@
                     success: function (data) {
                         if(data.exist === 1){
                             $('#confirmTitle').html('Add new event');
-                            var confirmText = 'This organizer has another events, all companies, sub sydaries focal points, data entries will be copied to the new event';
+                            var confirmText = 'This organizer has another events, all companies, subsidiaries, focal points, data entries will be copied to the new event';
                             $('#confirmText').html(confirmText);
                             $('#event-organizer-copy-confirm-modal').modal('show');
                         }

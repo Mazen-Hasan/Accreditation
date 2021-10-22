@@ -23,8 +23,11 @@
                                     <a class="url-nav" href="{{route('events')}}">
                                         <span>Events:</span>
                                     </a>
-                                    {{$event->name}} /
-                                    Security Categories</h4>
+                                    <a class="url-nav" href="{{route('EventController.show',[$event->id])}}">
+                                        {{$event->name}}
+                                    </a> /
+                                    Security Categories
+                                </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">

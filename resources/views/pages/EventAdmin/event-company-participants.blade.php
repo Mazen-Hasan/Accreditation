@@ -28,7 +28,6 @@
                                     <a class="url-nav" href="{{ route('event-admin') }} ">
                                         <span>My Events:</span>
                                     </a>
-                                    /
                                     <a class="url-nav" href="{{route('eventCompanies',[$event_id])}}">
                                         <span>{{$event_name}}</span>
                                     </a>

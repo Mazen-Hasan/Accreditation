@@ -20,6 +20,8 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <input type="hidden" id="data_values" name="data_values" value=""/>
                 <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
+                <input type="hidden" id="event_id" value={{$eventId}} />
+                <input type="hidden" id="company_id" value={{$companyId}} />
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
@@ -35,19 +37,19 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('data-entry')
-                                <a href="{{route('participantAdd',0)}}" id="add-new-post" class="add-hbtn">
+                                <a href="{{route('participantAdd',[0,$companyId,$eventId])}}" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Add</span>
                                 </a>
 
-                                <a href="{{route('pdf-generate')}}" id="generate" class="add-hbtn">
+                                <!-- <a href="{{route('pdf-generate')}}" id="generate" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Generate</span>
-                                </a>
+                                </a> -->
                                 @endrole
                             </div>
                         </div>
@@ -199,7 +201,8 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: 'dataentry-participants',
+                    //url: 'dataentry-participants',
+                    url: "{{ route('dataEntryParticipants',[$companyId,$eventId]) }}",
                     type: 'GET',
                 },
                 columns: myColumns,

@@ -165,7 +165,7 @@ Route::group(['middleware' => 'role:super-admin'], function () {
 
     Route::resource('participantController', 'App\Http\Controllers\ParticipantController');
     Route::get('/participants', [App\Http\Controllers\ParticipantController::class, 'index'])->name('participants');
-    Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
+    //Route::get('/participant-add', [App\Http\Controllers\ParticipantController::class, 'participantAdd'])->name('participantAdd');
     Route::get('/participant-edit/{id}', [App\Http\Controllers\ParticipantController::class, 'edit'])->name('participantEdit');
 
     Route::get('/templates', [App\Http\Controllers\TemplateController::class, 'index'])->name('templates');
@@ -216,9 +216,10 @@ Route::group(['middleware' => 'role:security-officer'], function () {
 });
 
 Route::group(['middleware' => 'role:data-entry'], function () {
-    Route::get('/dataentry-participants', [App\Http\Controllers\DataEntryController::class, 'dataEntryParticipants'])->name('dataEntryParticipants');
+    Route::get('/data-entry', [App\Http\Controllers\DataEntryController::class, 'dataEntryEvents'])->name('dataEntryEvents');
+    Route::get('/dataentry-participants/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'dataEntryParticipants'])->name('dataEntryParticipants');
     //Route::resource('dataentryController', 'App\Http\Controllers\DataEntryController');
-    Route::get('/dataentry-participnat-add/{template_id}', [App\Http\Controllers\DataEntryController::class, 'participantAdd'])->name('participantAdd');
+    Route::get('/dataentry-participnat-add/{template_id}/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'participantAdd'])->name('participantAdd');
     Route::post('dataentryContoller/storeParticipant', [App\Http\Controllers\DataEntryController::class, 'storeParticipant'])->name('storeParticipant');
     Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
 });

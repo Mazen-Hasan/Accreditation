@@ -159,6 +159,17 @@
             </a>
         </li>
         @endrole
+        @role('data-entry')
+        <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'data-entry') =="1" ? "active" : "" }}"
+               href="{{ route('dataEntryEvents') }} ">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="My events">
+                </i>
+                <span class="menu-title">Events</span>
+            </a>
+        </li>
+        @endrole
         <br>
         <li class="nav-item">
             <a class="nav-link" href="{{ route('logout') }}"

@@ -175,17 +175,17 @@ class DataEntryController extends Controller
         return Response::json($user);
     }
 
-    public function dataEntryParticipants()
+    public function dataEntryParticipants($companyId, $eventId)
     {
         $dataTableColumuns = array();
 
-        $where = array('account_id' => Auth::user()->id);
-        $dataentry = DataEntry::where($where)->first();
+        // $where = array('account_id' => Auth::user()->id);
+        // $dataentry = DataEntry::where($where)->first();
 
-        $where = array('company_admin_id' => $dataentry->company_admin_id);
+        $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
 
-        $where = array('id' => $company->event_id);
+        $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
 
         $where = array('template_id' => $event->event_form);
@@ -205,7 +205,7 @@ class DataEntryController extends Controller
         // $where = array('company_admin_id' => Auth::user()->id);
         // $company = Company::where($where)->get()->first();
 
-        $where = array('event_id' => $company->event_id, 'company_id' => $company->id);
+        $where = array('event_id' => $eventId, 'company_id' => $companyId);
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach ($companyStaffs as $companyStaff) {
@@ -294,7 +294,7 @@ class DataEntryController extends Controller
                     switch ($data->status) {
 
                         case 0:
-                            $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                            $button .= '<a href="' . route('participantAdd', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                             $button .= '&nbsp;&nbsp;';
                             //$button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="'.$data->id.'" class="delete btn btn-danger">Send Request</a>';
                             break;
@@ -320,18 +320,18 @@ class DataEntryController extends Controller
         if ($company->subCompany_id != null) {
             $subCompany_nav = 0;
         }
-        return view('pages.DataEntry.dataentry-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav);
+        return view('pages.DataEntry.dataentry-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
-    public function participantAdd($participant_id)
+    public function participantAdd($participant_id,$companyId,$eventId)
     {
-        $where = array('account_id' => Auth::user()->id);
-        $dataentry = DataEntry::where($where)->first();
+        // $where = array('account_id' => Auth::user()->id);
+        // $dataentry = DataEntry::where($where)->first();
 
-        $where = array('company_admin_id' => $dataentry->company_admin_id);
+        $where = array('id' => $companyId);
         $company = Company::where($where)->get()->first();
 
-        $where = array('id' => $company->event_id);
+        $where = array('id' => $eventId);
         $event = Event::where($where)->first();
 
         $template_id = $event->event_form;
@@ -353,6 +353,8 @@ class DataEntryController extends Controller
         } else {
             $form .= $this->createHiddenField('participant_id', 'participant_id', $participant_id);
         }
+        $form .= $this->createHiddenField('company_id', 'company_id', $companyId);
+        $form .= $this->createHiddenField('event_id', 'event_id', $eventId);
         foreach ($templateFields as $templateField) {
             $options = [];
             if ($fieldsCount % 2 == 0) {
@@ -451,7 +453,7 @@ class DataEntryController extends Controller
         // if($company->subCompany_id != null){
         //     $subCompany_nav = 0;
         // }
-        return view('pages.DataEntry.dataentry-participant-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav);
+        return view('pages.DataEntry.dataentry-participant-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
     public function createHiddenField($id, $label, $value)
@@ -588,14 +590,14 @@ class DataEntryController extends Controller
     public function storeParticipant(Request $request)
     {
         //$this->uploadFile($request);
-        $where = array('account_id' => Auth::user()->id);
-        $dataentry = DataEntry::where($where)->first();
-        $where = array('company_admin_id' => $dataentry->company_admin_id);
-        $company = Company::where($where)->get()->first();
+        // $where = array('account_id' => Auth::user()->id);
+        // $dataentry = DataEntry::where($where)->first();
+        // $where = array('company_admin_id' => $dataentry->company_admin_id);
+        // $company = Company::where($where)->get()->first();
         $participant_id = $request->participant_id;
         $companyStaff = CompanyStaff::updateOrCreate(['id' => $participant_id],
-            ['event_id' => $company->event_id,
-                'company_id' => $company->id,
+            ['event_id' => $request->event_id,
+                'company_id' => $request->company_id,
                 'security_officer_id' => '0',
                 'security_officer_decision' => '0',
                 'security_officer_decision_date' => null,
@@ -626,5 +628,12 @@ class DataEntryController extends Controller
         }
 
         return Response::json($companyStaff);
+    }
+
+    public function dataEntryEvents()
+    {
+        $events = DB::select('select * from data_entries_view dd where dd.account_id = ? and dd.status <> ?', [Auth::user()->id, 0]);
+        $subCompany_nav = 1;
+        return view('pages.DataEntry.data-entry')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }
 }

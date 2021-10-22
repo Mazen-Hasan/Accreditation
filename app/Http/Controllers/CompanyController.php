@@ -98,7 +98,11 @@ class CompanyController extends Controller
                 'focal_point_id' => $request->focal_point,
                 'size' => $request->size,
                 'need_management' => $request->need_management
-            ]);                
+            ]);
+            $companies = DB::select('select * from companies_view where id = ? and event_id = ?',[$company->id,$request->event_id]);
+            foreach($companies as $company1){
+                $company = $company1;
+            }
         } else {
 
             $where = array('id' => $companyId);

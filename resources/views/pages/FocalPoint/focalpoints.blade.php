@@ -64,6 +64,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="ajax-crud-modal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -86,13 +87,12 @@
                                    placeholder="confirm password" required="">
                         </div>
                     </div>
-                    <div class="col-sm-offset-2 col-sm-10">
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-12">
                         <button id="reset-password-btn" value="create">Reset Password
                         </button>
                     </div>
-                </div>
-                <div class="modal-footer">
-
                 </div>
             </div>
         </div>

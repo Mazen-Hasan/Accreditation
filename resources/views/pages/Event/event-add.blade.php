@@ -312,6 +312,32 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="event-organizer-copy-confirm-modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="col-sm-12 confirm-text" id="confirmText"></label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+{{--                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel--}}
+{{--                            </button>--}}
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" data-dismiss="modal" id="btn-yes">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -339,6 +365,27 @@
                 } else {
                     $('#security_officers').prop('disabled', false);
                 }
+            });
+
+            $('#organizer').on('change', function () {
+                var organizer_id = $('#organizer').val();
+                var url = "{{ route('eventCheckSameEventOrganizer', ":id") }}";
+                url = url.replace(':id', organizer_id);
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    success: function (data) {
+                        if(data.exist === 1){
+                            $('#confirmTitle').html('Add new event');
+                            var confirmText = 'This organizer has another events, all companies, sub sydaries focal points, data entries will be copied to the new event';
+                            $('#confirmText').html(confirmText);
+                            $('#event-organizer-copy-confirm-modal').modal('show');
+                        }
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
             });
 
         });

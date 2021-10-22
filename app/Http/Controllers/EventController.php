@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Mail\EventAdminAssign;
 use App\Models\Event;
 use App\Models\EventAdmin;
+use App\Models\EventCompany;
 use App\Models\EventSecurityCategory;
 use App\Models\EventSecurityOfficer;
 use App\Models\EventType;
@@ -80,12 +81,12 @@ class EventController extends Controller
                 'user_id' => $request->admin_id,
             ]);
 
-        if($post != null){
-            $where = array('id' => $request->event_id);
-            $event = Event::where($where)->first();
-
-            //NotificationController::sendNotification($event->name, '', $request->admin_id, '','', '/event-admin');
-        }
+//        if($post != null){
+//            $where = array('id' => $request->event_id);
+//            $event = Event::where($where)->first();
+//
+//            NotificationController::sendNotification($event->name, '', $request->admin_id, '','', '/event-admin');
+//        }
 
         return Response::json($post);
     }
@@ -173,6 +174,26 @@ class EventController extends Controller
         return Response::json($post);
     }
 
+    public function eventCheckSameEventOrganizer($organizerId)
+    {
+        $where = array('organizer' =>  $organizerId);
+        $event = Event::where($where)->get()->first();
+
+        if ($event){
+            return Response()->json([
+                "success" => true,
+                "exist" => 1
+            ]);
+        }
+        else
+        {
+            return Response()->json([
+                "success" => true,
+                "exist" => 0
+            ]);
+        }
+    }
+
     public function store(Request $request)
     {
         $postId = $request->post_id;
@@ -188,6 +209,16 @@ class EventController extends Controller
         $datetime2 = new DateTime($accreditation_start_date);
         $interval = $datetime1->diff($datetime2);
         $accredition_period_days = $interval->format('%a');
+
+        $event_companies  =  null;
+        if($postId == null){
+            $where = array('organizer' =>  $request->organizer);
+            $event = Event::where($where)->get()->last();
+
+            $where = array('event_id' =>  $event->id);
+            $event_companies = EventCompany::where($where)->get()->all();
+        }
+
         $post = Event::updateOrCreate(['id' => $postId],
             ['name' => $request->name,
                 'location' => $request->location,
@@ -207,6 +238,8 @@ class EventController extends Controller
                 'creation_date' => $request->creation_date,
                 'creator' => Auth::user()->id
             ]);
+
+
         if ($postId == null) {
             $counter = 1;
             foreach ($request->security_categories as $security_category) {
@@ -233,6 +266,19 @@ class EventController extends Controller
                         'user_id' => $security_officer
                     ]);
             }
+
+            foreach ($event_companies as $row){
+                $new_event_company = EventCompany::updateOrCreate(['id' => 0],
+                    ['event_id' => $post->id,
+                        'company_id' => $row->company_id,
+                        'focal_point_id' => $row->focal_point_id,
+                        'parent_id' => $row->parent_id,
+                        'status' => $row->status,
+                        'size' => $row->size,
+                        'need_management' => $row->need_management,
+                    ]);
+            }
+
         }
         return Response::json($post);
     }

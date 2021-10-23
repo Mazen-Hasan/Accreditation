@@ -66,16 +66,6 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                 @endforeach
-                                <!-- <th>ID</th>
-                                    <th>Name</th>
-                                    {{--                                    <th>Location</th>--}}
-                                    <th>Nationality</th>
-                                    <th>Class</th>
-                                    <th>Email</th>
-                                    <th>Mobile</th>
-                                    <th>Position</th>
-                                    <th>Accreditation Category</th>
-                                    <th>Religion</th>--}} -->
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -194,7 +184,6 @@
             }
             myColumns.push({data: "status", name: "status"});
             myColumns.push({data: "action", name: "action", orderable: "false"});
-            //alert("val---" + JSON.stringify(myColumns));
             var companyId = $('#company_id').val();
             var eventId = $('#event_id').val();
             $('#laravel_datatable').DataTable({
@@ -253,18 +242,19 @@
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
+
             $('body').on('click', '#reject_with_correction', function () {
                 var post_id = $(this).data("id");
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
                 $('#confirmTitle-new').html('Reject Participation Request To Correct');
                 $('#curr_element_id-new').val(post_id);
-                // $('#action_button').val('approve');
                 $('#reason').val('');
                 var confirmText = "Insert Reason:";
                 $('#confirmText-new').html(confirmText);
                 $('#delete-element-confirm-modal-new').modal('show');
             });
+
             $('body').on('click', '#show_reason', function () {
                 var post_id = $(this).data("id");
                 var reason = $(this).data("reason");
@@ -272,7 +262,6 @@
                 var eventId = $('#event_id').val();
                 $('#confirmTitle-new').html('Reject Reason');
                 $('#curr_element_id-new').val(post_id);
-                // $('#action_button').val('approve');
                 $('#reason').val(reason);
                 $('#btn-yes-new').hide();
                 var confirmText = "Reason:";
@@ -361,7 +350,6 @@
                             });
                         }
                         if (action_button == 'reject') {
-                            // var company_id = $('#company_id').val();
                             var staffId = $('#curr_element_id').val();
                             $.ajax({
                                 type: "get",
@@ -380,6 +368,7 @@
                     }
                 });
             });
+
             $('#delete-element-confirm-modal-new button').on('click', function (event) {
                 var $button = $(event.target);
                 $(this).closest('.modal').one('hidden.bs.modal', function () {

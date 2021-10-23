@@ -26,10 +26,10 @@ class FocalPointController extends Controller
                 ->addColumn('name', function ($row) {
                     return $row->name . ' ' . $row->middle_name . ' ' . $row->last_name;
                 })
-                ->addColumn('action', function ($data) {                  
-                    $button = '<a href="' . route('focalpointEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                ->addColumn('action', function ($data) {
+                    $button = '<a href="' . route('focalpointEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="reset_password" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->account_id . '" class="delete btn btn-google">Reset Password</a>';                    
+                    $button .= '<a href="javascript:void(0);" id="reset_password" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->account_id . '" title="Reset password"><i class="fas fa-retweet"></i></a>';
                     return $button;
                 })
                 ->rawColumns(['action'])

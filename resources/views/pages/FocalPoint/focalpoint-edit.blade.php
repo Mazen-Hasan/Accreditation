@@ -14,8 +14,12 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">{{$focalpoint->name.' '.$focalpoint->middle_name.' '.$focalpoint->last_name}}
-                            (Focal Point) - Edit</h4>
+                        <h4 class="card-title">
+                            <a class="url-nav" href="{{route('focalpoints')}}">
+                                <span>Focal Points:</span>
+                            </a>
+                            {{$focalpoint->name.' '.$focalpoint->middle_name.' '.$focalpoint->last_name}}
+                            / Edit</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
@@ -57,7 +61,7 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="email" name="email" placeholder="enter email"
+                                            <input type="email" id="email" name="email" placeholder="enter email"
                                                    required="" value="{{$focalpoint->email}}"/>
                                         </div>
                                     </div>
@@ -107,7 +111,7 @@
                             <div class="row">
                                 <div class="col-md-6" style="display:none;">
                                     <div class="form-group col">
-                                        <label>Account Pasword</label>
+                                        <label>Account Password</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="password" name="password"
                                                    placeholder="enter account password" required=""/>
@@ -118,7 +122,7 @@
                                     <div class="form-group col">
                                         <label>Status</label>
                                         <div class="col-sm-12">
-                                            <select id="status" name="status" value="" required="">
+                                            <select id="status" name="status" required="">
                                                 @foreach ($contactStatuss as $contactStatus)
                                                     <option value="{{ $contactStatus->key }}"
                                                             @if ($contactStatus->key == $focalpoint->status)

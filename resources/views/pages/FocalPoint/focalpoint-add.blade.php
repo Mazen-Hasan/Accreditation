@@ -14,7 +14,12 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Focal Point - New</h4>
+                        <h4 class="card-title">
+                            <a class="url-nav" href="{{route('focalpoints')}}">
+                                <span>Focal Points:</span>
+                            </a>
+                             / New
+                        </h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
@@ -26,7 +31,7 @@
                                         <label>Name</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="name" name="name" placeholder="enter name"
-                                                   required=""/>
+                                                   minlength="1" maxlength="50" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -35,7 +40,7 @@
                                         <label>Middle Name</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="middle_name" name="middle_name"
-                                                   placeholder="enter middle name" required=""/>
+                                                   placeholder="enter middle name" minlength="1" maxlength="50" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -46,7 +51,7 @@
                                         <label>Last Name</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="last_name" name="last_name"
-                                                   placeholder="enter last name" required=""/>
+                                                   placeholder="enter last name" minlength="1" maxlength="50" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -54,7 +59,7 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="email" name="email" placeholder="enter email"
+                                            <input type="email" id="email" name="email" placeholder="enter email"
                                                    required=""/>
                                         </div>
                                     </div>
@@ -66,7 +71,7 @@
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="telephone" name="telephone"
-                                                   placeholder="enter telephone" required=""/>
+                                                   placeholder="enter telephone" minlength="1" maxlength="50" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -75,7 +80,7 @@
                                         <label>Mobile</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="mobile" name="mobile" placeholder="enter mobile"
-                                                   required=""/>
+                                                   minlength="1" maxlength="50" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -86,7 +91,7 @@
                                         <label>Account Name</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="account_name" name="account_name"
-                                                   placeholder="enter account name" required=""/>
+                                                   placeholder="enter account name" minlength="1" maxlength="50" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -94,8 +99,8 @@
                                     <div class="form-group col">
                                         <label>Account Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="account_email" name="account_email"
-                                                   placeholder="enter account email" required=""/>
+                                            <input type="email" id="account_email" name="account_email"
+                                                   placeholder="enter account email" minlength="1" maxlength="50" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -103,10 +108,16 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Account Pasword</label>
-                                        <div class="col-sm-12">
-                                            <input type="text" id="password" name="password"
-                                                   placeholder="enter account password" required=""/>
+                                        <label>Account Password</label>
+                                        <div class="row">
+                                            <div class="col-sm-11">
+                                                <input style="margin-left: 16px; width: 103%" type="password"
+                                                       id="password" name="password" placeholder="enter password"
+                                                       required=""/>
+                                            </div>
+                                            <div class="col-sm-1" id="eye">
+                                                <i class="fa fa-eye-slash" id="togglePassword"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -114,10 +125,11 @@
                                     <div class="form-group col">
                                         <label>Status</label>
                                         <div class="col-sm-12">
-                                            <select id="status" name="status" value="" required="">
+                                            <select id="status" name="status" required="">
+                                                <option value="default">Please select Status</option>
                                                 @foreach ($contactStatuss as $contactStatus)
                                                     <option value="{{ $contactStatus->key }}"
-                                                            @if ($contactStatus->key == 1)
+                                                            @if ($contactStatus->key == -1)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $contactStatus->value }}</option>
@@ -156,13 +168,29 @@
             });
         });
 
+        $('#togglePassword').click(function () {
+            var type = $('#password').attr('type') === 'password' ? 'text' : 'password';
+            $('#password').attr('type', type);
+            if (type === 'text') {
+                $('#togglePassword').removeClass('fa fa-eye-slash');
+                $('#togglePassword').addClass('fa fa-eye');
+            } else {
+                $('#togglePassword').removeClass('fa fa-eye');
+                $('#togglePassword').addClass('fa fa-eye-slash');
+            }
+        });
+
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
+
+                rules: {
+                    status: {valueNotEquals: "default"}
+                },
+
                 submitHandler: function (form) {
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    // alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('focalpointController.store') }}",
@@ -173,8 +201,6 @@
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
                             window.location.href = "{{ route('focalpoints')}}";
-                            // var oTable = $('#laravel_datatable').dataTable();
-                            // oTable.fnDraw(false);
                         },
                         error: function (data) {
                             console.log('Error:', data);
@@ -184,5 +210,10 @@
                 }
             })
         }
+
+        jQuery.validator.addMethod("valueNotEquals",
+            function (value, element, params) {
+                return params !== value;
+            }, " Please select a value");
     </script>
 @endsection

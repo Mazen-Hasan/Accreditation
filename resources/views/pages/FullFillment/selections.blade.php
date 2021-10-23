@@ -20,7 +20,7 @@
                                         <div class="form-group col">
                                             <label>Events</label>
                                             <div class="col-sm-12">
-                                                <select id="event" name="event" value="" required="">
+                                                <select id="event" name="event" required="">
                                                     @foreach ($eventsSelectOptions as $eventsSelectOption)
                                                         <option value="{{ $eventsSelectOption->key }}"
                                                                 @if ($eventsSelectOption->key == 1)
@@ -38,7 +38,7 @@
                                         <div class="form-group col">
                                             <label>Company</label>
                                             <div id="container" class="col-sm-12">
-                                                <select id="company" name="company" value="" required="">
+                                                <select id="company" name="company" required="">
                                                     @foreach ($companySelectOptions as $companySelectOption)
                                                         <option value="{{ $companySelectOption->key }}"
                                                                 @if ($companySelectOption->key == 0)
@@ -56,7 +56,7 @@
                                         <div class="form-group col">
                                             <label>Accreditation Category</label>
                                             <div class="col-sm-12">
-                                                <select id="category" name="category" value="" required="">
+                                                <select id="category" name="category" required="">
                                                     @foreach ($accrediationCategorySelectOptions as $accrediationCategorySelectOption)
                                                         <option value="{{ $accrediationCategorySelectOption->key }}"
                                                                 @if ($accrediationCategorySelectOption->key == 0)
@@ -121,21 +121,21 @@
                                     <div class="col-md-4">
                                         <div class="col-md-12">
                                             <a id="btn-generate" title="Generate" href='javascript:void(0)' class="ha_icon_btn  disabled">
-                                                <i class="fas fa-cogs" style="font-size: 25px"></i>&nbsp;
+                                                <i class="fas fa-cogs" style="font-size: 25px; color: white"></i>Generate
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="col-md-12">
                                             <a id="btn-Details" title="Details" href='javascript:void(0)' class="ha_icon_btn disabled">
-                                                <i class="fa fa-list" style="font-size: 25px"></i>&nbsp;
+                                                <i class="fa fa-list" style="font-size: 25px"></i>Details
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-5">
                                         <div class="col-md-12">
                                             <a id="btn-mark-printed" title="Mark as printed" href='javascript:void(0)' class="ha_icon_btn disabled">
-                                                <i class="fas fa-tasks" style="font-size: 25px"></i>&nbsp;
+                                                <i class="fas fa-tasks" style="font-size: 25px"></i>Mark as printed
                                             </a>
                                         </div>
                                     </div>
@@ -175,13 +175,18 @@
             // $('#lbl_select').html('');
             // $('#btn-filter').html('Filter');
             resetAll();
+
+            var url = "{{ route('getCompanies', ":id") }}";
+            url = url.replace(':id', this.value);
+
             $.ajax({
                 type: "get",
-                url: "fullFillmentController/getCompanies/" + this.value,
+                // url: "fullFillmentController/getCompanies/" + this.value,
+                url: url,
                 success: function (data) {
                     var companySelectOptions = data;
                     $('#container').html('');
-                    var html = '<select id="company" name="company" value="" required="">';
+                    var html = '<select id="company" name="company" required="">';
                     var count = 0;
                     while (count < companySelectOptions.length) {
                         if (count == 0) {
@@ -206,15 +211,24 @@
                 var selectedEvent = $('#event option:selected').val();
                 var selectedCompany = $('#company option:selected').val();
                 var selectedAccredit = $('#category option:selected').text();
+
+                var url = "{{ route('getParticipants', [":selectedEvent",":selectedCompany",":selectedAccredit"]) }}";
+                url = url.replace(':selectedEvent', selectedEvent);
+                url = url.replace(':selectedCompany', selectedCompany);
+                url = url.replace(':selectedAccredit', selectedAccredit);
+
                 $.ajax({
                     type: "get",
-                    url: "fullFillmentController/getParticipants/" + selectedEvent + "/" + selectedCompany + "/" + selectedAccredit,
+                    // url: "fullFillmentController/getParticipants/" + selectedEvent + "/" + selectedCompany + "/" + selectedAccredit,
+                    url: url,
                     success: function (data) {
                         companySelectOptions = data;
                         $('#lbl_select').html(companySelectOptions.length);
                         if(companySelectOptions.length>0){
+                            $('#lbl_select').css("color", "#54af36");
                             $('#btn-generate').removeClass('disabled');
-                            $('#btn-filter').addClass('disabled');
+                            $('#btn-generate').removeClass('disabled');
+                            $('#btn-Details').removeClass('disabled');
                         }
                         // $('#btn-filter').html('Generate');
                     },
@@ -277,14 +291,12 @@
                     type: "post",
                     data: {staff: staff},
                     dataType: "json",
-                    url: "{{ url('pdf-generate')}}",
+                    url: "{{ route('pdf-generate') }}",
+                    {{--url: "{{ url('pdf-generate')}}",--}}
                     success: function (data) {
-                        console.log(data);
                         window.open(data.file, '_blank');
-                        // $('#btn-filter').html('Fullfillment');
                         $('#lbl_generate').html(companySelectOptions.length);
                         $('#btn-mark-printed').removeClass('disabled')
-                        // ('#lbl_select').html('Total generated count: ' + companySelectOptions.length);
                     },
                     error: function (data) {
                         console.log('Error:', data);
@@ -300,7 +312,8 @@
                         type: "post",
                         data: {staff: staff},
                         dataType: "json",
-                        url: "{{ url('fullFillment')}}",
+                        {{--url: "{{ url('fullFillment')}}",--}}
+                        url: "{{ route('fullFillment')}}",
                         success: function (data) {
                             $('#btn-filter').html('Reset');
                             $('#lbl_print').html(companySelectOptions.length);
@@ -316,7 +329,14 @@
             var selectedEvent = $('#event option:selected').val();
             var selectedCompany = $('#company option:selected').val();
             var selectedAccredit = $('#category option:selected').text();
-            window.location.href = "all-participants/" + selectedEvent + "/" + selectedCompany + "/" + selectedAccredit + "/0";
+
+            var url = "{{ route('allParticipants', [":selectedEvent",":selectedCompany",":selectedAccredit","0"]) }}";
+            url = url.replace(':selectedEvent', selectedEvent);
+            url = url.replace(':selectedCompany', selectedCompany);
+            url = url.replace(':selectedAccredit', selectedAccredit);
+
+            // window.location.href = "all-participants/" + selectedEvent + "/" + selectedCompany + "/" + selectedAccredit + "/0";
+            window.location.href = url;
         });
 
         function  resetAll(){
@@ -329,6 +349,8 @@
             $('#btn-generate').addClass('disabled');
             $('#btn-Details').addClass('disabled');
             $('#btn-mark-printed').addClass('disabled');
+
+            $('#lbl_select').css("color", "#b8b5b5");
         }
     </script>
 @endsection

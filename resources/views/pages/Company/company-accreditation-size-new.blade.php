@@ -12,15 +12,22 @@
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
-                <!--
-                    @if($status == 0)
-                    <a href="javascript:void(0)" class="ha_btn" id="add-new-post" style="margin: 10px">Add Accreditation Size</a>
-                    @endif -->
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">{{$event_name}} / {{$company_name}} : Size ({{$company_size}}) /
-                                    Accreditation Size Management</p>
+                                <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('event-admin') }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    <a class="url-nav" href="{{route('eventCompanies',[$eventId])}}">
+                                        <span>{{$event_name}}</span>
+                                    </a>
+                                    <a class="url-nav" href="{{route('eventCompanyParticipants',[$companyId ,$eventId])}}">
+                                        <span>/ {{$company_name}}</span>
+                                    </a>
+                                      / : Size ({{$company_size}}) /
+                                    Accreditation Size Management
+                                </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -38,7 +45,6 @@
                                 </a>
                             </div>
                         </div>
-                        <!-- <h4 class="card-title">Accreditation Size Table</h4> -->
                         <div class="table-responsive">
                             <table class="table table-hover" id="laravel_datatable" style="text-align: center">
                                 <thead>
@@ -52,7 +58,6 @@
                                     @if($status != 0)
                                         <th>Status</th>
                                 @endif
-                                <!-- <th>Action</th> -->
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -76,7 +81,6 @@
                     <h4 class="modal-title" id="postCrudModal"></h4>
                 </div>
                 <div class="modal-body">
-                    {{--                    <form id="postForm" name="postForm" class="form-horizontal">--}}
                     <input type="hidden" name="company_id" id="company_id" value="{{$companyId}}">
                     <input type="hidden" name="event_id" id="event_id" value="{{$eventId}}">
                     <input type="hidden" name="status" id="status" value="{{$status}}">
@@ -89,7 +93,6 @@
                             <select id="accredit_cat_id" name="accredit_cat_id" value="" required="">
                                 @foreach ($accreditationCategorys as $accreditationCategory)
                                     <option value="{{ $accreditationCategory->key }}"
-                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                             @if ($accreditationCategory->key == 1)
                                             selected="selected"
                                         @endif

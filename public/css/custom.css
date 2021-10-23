@@ -783,7 +783,7 @@ select[multiple] {
 
 .card_event_text {
     font-family: Poppins-Bold;
-    font-size: 16px;
+    font-size: 22px;
     color: #b8b5b5;
 }
 
@@ -1018,7 +1018,7 @@ label.error {
     justify-content: center;
     place-content: space-evenly;
     align-items: center;
-    padding: 0 25px;
+    /*padding: 0 25px;*/
 
     -webkit-transition: all 0.4s;
     -o-transition: all 0.4s;
@@ -1120,19 +1120,32 @@ a.disabled {
 }
 
 .fa-share-square{
+    color: #0d6efd;
     font-size: 20px;
 }
 
 .fa-sitemap{
+    color: #cc8c00;
     font-size: 20px;
 }
 
 .fa-users{
+    color: #000000;
     font-size: 20px;
 }
 
 .fa-retweet{
     color: #ff0000;
+    font-size: 20px;
+}
+
+.fa-cogs{
+    color: #0c63e4;
+    font-size: 20px;
+}
+
+.fa-paper-plane{
+    color: #0c63e4;
     font-size: 20px;
 }
 

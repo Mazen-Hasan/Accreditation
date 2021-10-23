@@ -53,9 +53,7 @@
                                     <th>Name</th>
                                     <th>Category</th>
                                     <th>Country</th>
-                                    <th>City</th>
-                                    <!-- <th>Address</th> -->
-                                    <th>Website</th>
+                                    <th>City</th><th>Website</th>
                                     <th>Telephone</th>
                                     <th>Focal point</th>
                                     <th style="color: black">Status</th>
@@ -103,13 +101,13 @@
 @section('script')
     <script>
         $(document).ready(function () {
-            //alert({{$eventid}});
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
             var eventId = $('#h_event_id').val();
+
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
@@ -122,8 +120,9 @@
 
                 processing: true,
                 serverSide: true,
+
                 ajax: {
-                    url: '../event-companies/' + eventId,
+                    url: '',
                     type: 'GET',
                 },
                 columns: [
@@ -163,11 +162,9 @@
                 $('#company_id').val('');
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Company");
-                //$('#ajax-crud-modal').modal('show');
             });
 
             $('body').on('click', '#invite-company', function () {
-                //alert('helo');
                 var company_id = $(this).data("id");
                 var company_name = $(this).data("name");
                 var company_focalpoint = $(this).data("focalpoint");
@@ -184,9 +181,14 @@
                     if ($button[0].id === 'btn-yes') {
                         var company_id = $('#curr_element_id').val();
                         var eventId = $('#h_event_id').val();
+
+                        var url = "{{ route('eventAdminControllerInvite', [":company_id",":eventId"]) }}";
+                        url = url.replace(':company_id', company_id);
+                        url = url.replace(':eventId', eventId);
+
                         $.ajax({
                             type: "get",
-                            url: "../eventAdminController/Invite/" + company_id + "/" + eventId,
+                            url: url,
                             success: function (data) {
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);

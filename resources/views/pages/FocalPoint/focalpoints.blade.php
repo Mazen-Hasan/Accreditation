@@ -75,16 +75,31 @@
                     <input type="hidden" name="user_id" id="user_id" value="">
                     <div class="form-group">
                         <label for="name">Password</label>
-                        <div class="col-sm-12">
-                            <input type="password" id="password" name="password" placeholder="enter passsword"
-                                   required="">
+
+                        <div class="row">
+                            <div class="col-sm-11">
+                                <input style="margin-left: 16px; width: 103%" type="password"
+                                       id="password" name="password" placeholder="enter password"
+                                       required="" onblur="checkPassword()"/>
+                            </div>
+                            <div class="col-sm-1" id="eye">
+                                <i class="fa fa-eye-slash" id="togglePassword"></i>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="name">Confirm Password</label>
-                        <div class="col-sm-12">
-                            <input type="password" id="confirm_password" name="confirm_password"
-                                   placeholder="confirm password" required="">
+
+                        <div class="row">
+                            <div class="col-sm-11">
+                                <input style="margin-left: 16px; width: 103%" type="password"
+                                       id="confirm_password" name="confirm_password"
+                                       placeholder="confirm password" required="" onblur="checkPassword()"/>
+                            </div>
+                            <div class="col-sm-1" id="eye">
+                                <i class="fa fa-eye-slash" id="togglePasswordConfirm"></i>
+                            </div>
+                            <label id="lbl_error" class="error" for="name"></label>
                         </div>
                     </div>
                 </div>
@@ -111,9 +126,9 @@
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',
-                    title: 'Contacts',
+                    title: 'Focal-points',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
+                        columns: [1, 2, 3, 4, 5, 6, 7]
                     }
                 }],
 
@@ -131,7 +146,6 @@
                     {data: 'mobile', name: 'mobile'},
                     {data: 'account_name', name: 'account_name'},
                     {data: 'account_email', name: 'account_email'},
-                    // {data: 'company_name', name: 'company_name'},
                     {
                         data: 'status', render: function (data) {
                             if (data == 1) {
@@ -155,34 +169,82 @@
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Post");
-                //$('#ajax-crud-modal').modal('show');
             });
 
             $('body').on('click', '#reset_password', function () {
-                //alert('iam here');
-                //$('#btn-save').val("create-company");
                 $('#user_id').val($(this).data('id'));
-                //$('#postForm').trigger("reset");
                 $('#postCrudModal').html("Reset Password");
+                $('#togglePassword').removeClass('fa fa-eye');
+                $('#togglePassword').addClass('fa fa-eye-slash');
+                $('#togglePasswordConfirm').removeClass('fa fa-eye');
+                $('#togglePasswordConfirm').addClass('fa fa-eye-slash');
+                $('#password').attr('type', 'password');
+                $('#confirm_password').attr('type', 'password');
+                $('#password').val('');
+                $('#confirm_password').val('');
+                $('#lbl_error').html('');
                 $('#ajax-crud-modal').modal('show');
             });
 
+            $('#togglePassword').click(function () {
+                var type = $('#password').attr('type') === 'password' ? 'text' : 'password';
+                $('#password').attr('type', type);
+                if (type === 'text') {
+                    $('#togglePassword').removeClass('fa fa-eye-slash');
+                    $('#togglePassword').addClass('fa fa-eye');
+                } else {
+                    $('#togglePassword').removeClass('fa fa-eye');
+                    $('#togglePassword').addClass('fa fa-eye-slash');
+                }
+            });
+
+            $('#togglePasswordConfirm').click(function () {
+                var type = $('#confirm_password').attr('type') === 'password' ? 'text' : 'password';
+                $('#confirm_password').attr('type', type);
+                if (type === 'text') {
+                    $('#togglePasswordConfirm').removeClass('fa fa-eye-slash');
+                    $('#togglePasswordConfirm').addClass('fa fa-eye');
+                } else {
+                    $('#togglePasswordConfirm').removeClass('fa fa-eye');
+                    $('#togglePasswordConfirm').addClass('fa fa-eye-slash');
+                }
+            });
+
             $('body').on('click', '#reset-password-btn', function () {
-                //alert('iam here');
-                //$('#btn-save').val("create-company");
                 var userId = $('#user_id').val();
+
                 var password = $('#password').val();
-                $.ajax({
-                    type: "get",
-                    url: "focalpointController/reset_password/" + userId + "/" + password,
-                    success: function (data) {
-                        $('#ajax-crud-modal').modal('hide');
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
+                var confirm_password = $('#confirm_password').val();
+                if (password !== confirm_password) {
+                    $('#lbl_error').html('Please enter the same password');
+                }
+                else{
+                    var url = "{{ route('focalPointControllerResetPassword', [":userId",":password"]) }}";
+                    url = url.replace(':userId', userId);
+                    url = url.replace(':password', password);
+
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        success: function (data) {
+                            $('#ajax-crud-modal').modal('hide');
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                        }
+                    });
+                }
             });
         });
+
+        function checkPassword() {
+            var password = $('#password').val();
+            var confirm_password = $('#confirm_password').val();
+            if (password !== confirm_password) {
+                $('#lbl_error').html('Please enter the same password');
+            } else {
+                $('#lbl_error').html('');
+            }
+        }
     </script>
 @endsection

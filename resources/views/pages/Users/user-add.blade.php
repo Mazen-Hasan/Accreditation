@@ -81,7 +81,7 @@
                                     <div class="form-group col">
                                         <label>Role</label>
                                         <div class="col-sm-12">
-                                            <select id="role" name="role" value="" required="">
+                                            <select id="role" name="role" required="">
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role->key }}"
                                                             @if ($role->key == 1)

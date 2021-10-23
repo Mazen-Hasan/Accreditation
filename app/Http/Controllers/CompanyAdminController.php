@@ -98,60 +98,59 @@ class CompanyAdminController extends Controller
                     $status_value = "initaited";
                     switch ($data->status) {
                         case 0:
-                            $status_value = "Initaited";
+                            $status_value = "Initiated";
                             break;
                         case 1:
-                            $status_value = "waiting Security Officer Approval";
+                            $status_value = "Waiting Security Officer Approval";
                             break;
                         case 2:
-                            $status_value = "waiting Event Admin Approval";
+                            $status_value = "Waiting Event Admin Approval";
                             break;
                         case 3:
-                            $status_value = "approved by security officer";
+                            $status_value = "Approved by security officer";
                             break;
                         case 4:
-                            $status_value = "rejected by security officer";
+                            $status_value = "Rejected by security officer";
                             break;
                         case 5:
-                            $status_value = "rejected by event admin";
+                            $status_value = "Rejected by event admin";
                             break;
                         case 6:
-                            $status_value = "approved by event admin";
+                            $status_value = "Approved by event admin";
                             break;
                         case 7:
-                            $status_value = "rejected with correction by security officer";
+                            $status_value = "Rejected with correction by security officer";
                             break;
                         case 8:
-                            $status_value = "rejected with correction by event admin";
+                            $status_value = "Rejected with correction by event admin";
                             break;
                         case 9:
-                            $status_value = "badge generated";
+                            $status_value = "Badge generated";
                             break;
                         case 10:
-                            $status_value = "badge printed";
+                            $status_value = "Badge printed";
                             break;
                     }
                     return $status_value;
-                    //return $row->first_name.' '.$row->last_name;
                 })
                 ->addColumn('action', function ($data) {
                     $button = '';
-                    $button .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
+                    $button .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     switch ($data->status) {
 
                         case 0:
-                            $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                            $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger">Send Request</a>';
+                            $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Send request"><i class="far fa-paper-plane"></i></a>';
                             break;
                         case 7:
-                            $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                            $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                             $button .= '&nbsp;&nbsp;';
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" class="delete btn btn-danger">Reject Reason</a>';
                             break;
                         case 8:
-                            $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                            $button .= '<a href="' . route('templateForm', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                             $button .= '&nbsp;&nbsp;';
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->event_admin_reject_reason . '" class="delete btn btn-danger">Reject Reason</a>';
                             break;
@@ -308,7 +307,7 @@ class CompanyAdminController extends Controller
             if ($status == 0) {
                 return datatables()->of($companyAccreditationCategories)
                     ->addColumn('action', function ($data) {
-                        $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
+                        $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Size"><i class="fas fa-chart-pie"></i></a>';
                         $button .= '&nbsp;&nbsp;';
                         $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip"  data-size="' . $data->size . '" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
                         return $button;

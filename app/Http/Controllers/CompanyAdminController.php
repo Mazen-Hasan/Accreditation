@@ -398,20 +398,32 @@ class CompanyAdminController extends Controller
         $company = Company::where($companyWhere)->first();
 
         $approval = $event->approval_option;
+
+        $event_admins = DB::select('select * from event_admins_view e where e.id=?',[$eventId]);
+        $event_security_officers = DB::select('select * from event_security_officers_view e where e.id=?',[$eventId]);
+
         if ($approval == 1) {
-            NotificationController::sendAlertNotification($event->security_officer, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/security-officer-participant-details/' . $staffId);
-            $updateQuery = 'update company_staff set security_officer_id = ' . $event->security_officer . ' where id = ' . $staffId;
-            DB::update($updateQuery);
+            foreach ($event_security_officers as $event_security_officer){
+//                NotificationController::sendAlertNotification($event_security_officer->security_officer_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/security-officer-participant-details/' . $staffId);
+                NotificationController::sendAlertNotification($event_security_officer->security_officer_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', Route('securityParticipantDetails' , $staffId));
+            }
+
+//            $updateQuery = 'update company_staff set security_officer_id = ' . $event->security_officer . ' where id = ' . $staffId;
+//            DB::update($updateQuery);
             DB::update('update company_staff set status = ? where id = ?', [1, $staffId]);
 
         } else {
+            foreach ($event_admins as $event_admin){
+                NotificationController::sendAlertNotification($event_admin->event_admin, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', Route('participantDetails', $staffId));
+            }
+
             if ($approval == 2) {
-                NotificationController::sendAlertNotification($event->event_admin, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/event-participant-details/' . $staffId);
-                DB::update('update company_staff set event_admin_id = ? where id = ?', [$event->event_admin, $staffId]);
+//                NotificationController::sendAlertNotification($event->event_admin, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/event-participant-details/' . $staffId);
+//                DB::update('update company_staff set event_admin_id = ? where id = ?', [$event->event_admin, $staffId]);
                 DB::update('update company_staff set status = ? where id = ?', [2, $staffId]);
             } else {
-                NotificationController::sendAlertNotification($event->event_admin, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/event-participant-details/' . $staffId);
-                DB::update('update company_staff set event_admin_id = ? where id = ?', [$event->event_admin, $staffId]);
+//                NotificationController::sendAlertNotification($event->event_admin, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/event-participant-details/' . $staffId);
+//                DB::update('update company_staff set event_admin_id = ? where id = ?', [$event->event_admin, $staffId]);
                 DB::update('update company_staff set status = ? where id = ?', [2, $staffId]);
             }
         }
@@ -467,7 +479,7 @@ class CompanyAdminController extends Controller
                 'focal_point_id' => $request->focal_point,
                 'size' => $request->size,
                 'need_management' => 0
-            ]);  
+            ]);
         } else {
 
             $where = array('id' => $companyId);
@@ -495,7 +507,7 @@ class CompanyAdminController extends Controller
                 'focal_point_id' => $request->focal_point,
                 'size' => $request->size,
                 'need_management' => 0
-            ]); 
+            ]);
         }
 
         return Response::json($company);

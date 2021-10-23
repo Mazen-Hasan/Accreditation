@@ -379,16 +379,16 @@ class TemplateFormController extends Controller
 
         $options = array();
         $form = '<div class="row">';
-        $form .= $this->createStatusFieldLabel("status", "Status", 0, 1, 1, $status_value);
+        $form .= $this->createStatusFieldLabel("status",  $status_value);
         $form .= '</div>';
         if ($status == 8) {
             $form = '<div class="row">';
-            $form .= $this->createStatusFieldLabel("reject_reason", "Reject Reason", 0, 1, 1, $event_reject_reason);
+            $form .= $this->createStatusFieldLabel("reject_reason", $event_reject_reason);
             $form .= '</div>';
         }
         if ($status == 7) {
             $form = '<div class="row">';
-            $form .= $this->createStatusFieldLabel("reject_reason", "Reject Reason", 0, 1, 1, $security_officer_reject_reason);
+            $form .= $this->createStatusFieldLabel("reject_reason", $security_officer_reject_reason);
             $form .= '</div>';
         }
         $form .= '<div class="row">';
@@ -495,7 +495,7 @@ class TemplateFormController extends Controller
         return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('subCompany_nav', $subCompany_nav)->with('companyId',$company->id)->with('eventId',$event->id);
     }
 
-    public function createStatusFieldLabel($label, $mandatory, $value)
+    public function createStatusFieldLabel($label, $value)
     {
         $textfield = '<div class="col-md-8" style="height:100px"><div class="row"><div class="col-md-6">';
         $textfield .= '<label>' . $label . "  : </label></div>";

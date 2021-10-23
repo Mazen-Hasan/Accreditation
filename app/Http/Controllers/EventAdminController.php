@@ -242,13 +242,19 @@ class EventAdminController extends Controller
         $company = Company::where($companyWhere)->first();
 
         $approval = $event->approval_option;
+
+        $event_security_officers = DB::select('select * from event_security_officers_view e where e.id=?',[$eventId]);
+
         if ($approval == 2) {
             DB::update('update company_staff set status = ? where id = ?', [6, $staffId]);
 
         } else {
             if ($approval == 3) {
-                NotificationController::sendAlertNotification($event->security_officer, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/security-officer-participant-details/' . $staffId);
-                DB::update('update company_staff set security_officer_id = ? where id = ?', [$event->security_officer, $staffId]);
+                foreach ($event_security_officers as $event_security_officer){
+                    NotificationController::sendAlertNotification($event_security_officer->security_officer_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', Route('securityParticipantDetails' , $staffId));
+                }
+//                NotificationController::sendAlertNotification($event->security_officer, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/security-officer-participant-details/' . $staffId);
+//                DB::update('update company_staff set security_officer_id = ? where id = ?', [$event->security_officer, $staffId]);
                 DB::update('update company_staff set status = ? where id = ?', [1, $staffId]);
             }
         }

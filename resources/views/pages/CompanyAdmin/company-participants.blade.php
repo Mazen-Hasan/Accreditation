@@ -13,23 +13,23 @@
     <script src="{{ URL::asset('js/print.min.js') }}"></script>
 @endsection
 @section('custom_navbar')
-<li id="subsidiaries_nav" class="nav-item"> 
-                     <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}" 
-                        href="{{ route('subCompanies',[$companyId,$eventId]) }} "> 
-                         <i class="logout"> 
-                             <img src="{{ asset('images/menu.png') }}" alt="My Sidries"> 
-                         </i> 
-                         <span class="menu-title">Subsidiaries</span> 
-                     </a> 
-                 </li> 
-                 <li class="nav-item"> 
-                     <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}" 
-                        href="{{ route('dataentrys',[$companyId,$eventId]) }}"> 
-                         <i class="logout"> 
-                             <img src="{{ asset('images/menu.png') }}" alt="Data Entry"> 
-                         </i> 
-                         <span class="menu-title">Data Entry</span> 
-                     </a> 
+<li id="subsidiaries_nav" class="nav-item">
+                     <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}"
+                        href="{{ route('subCompanies',[$companyId,$eventId]) }} ">
+                         <i class="logout">
+                             <img src="{{ asset('images/menu.png') }}" alt="My Sidries">
+                         </i>
+                         <span class="menu-title">Subsidiaries</span>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}"
+                        href="{{ route('dataentrys',[$companyId,$eventId]) }}">
+                         <i class="logout">
+                             <img src="{{ asset('images/menu.png') }}" alt="Data Entry">
+                         </i>
+                         <span class="menu-title">Data Entry</span>
+                     </a>
                  </li>
                  <li class="nav-item">
                     <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
@@ -92,7 +92,7 @@
                                 @endforeach
                                 <!-- <th>ID</th>
                                     <th>Name</th>
-                                                                         <th>Location</th> 
+                                                                         <th>Location</th>
                                     <th>Nationality</th>
                                     <th>Class</th>
                                     <th>Email</th>
@@ -319,7 +319,7 @@
                 $('#confirmTitle').html('Send Participation Request');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('sendRequest');
-                var confirmText = "Are You sure you want to Send Event participation?";
+                var confirmText = "Are you sure you want to send event participation?";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
@@ -345,25 +345,13 @@
                     if ($button[0].id === 'btn-yes') {
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
-                        // if(action_button == 'delete'){
-                        //     $.ajax({
-                        //         type: "get",
-                        //         url: "../companyAdminController/destroyCompanyAccreditCat/"+post_id,
-                        //         success: function (data) {
-                        //             var oTable = $('#laravel_datatable').dataTable();
-                        //             oTable.fnDraw(false);
-                        //         },
-                        //         error: function (data) {
-                        //             console.log('Error:', data);
-                        //         }
-                        //     });
-                        // }
                         if (action_button == 'sendRequest') {
-                            // var company_id = $('#company_id').val();
                             var staffId = $('#curr_element_id').val();
+                            var url = "{{ route('companyAdminControllerSendRequest', ":id") }}";
+                            url = url.replace(':id', staffId);
                             $.ajax({
                                 type: "get",
-                                url: "companyAdminController/sendRequest/" + staffId,
+                                url: url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();

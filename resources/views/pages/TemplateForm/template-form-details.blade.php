@@ -37,7 +37,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <!--                        --><?php //var_dump(gd_info());  ?>
                     </div>
                     <div class="row">
                         <img id="badge" src="" alt="Badge">
@@ -103,7 +102,7 @@
             $('#confirmTitle').html('Send Participation Request');
             $('#curr_element_id').val(post_id);
             $('#action_button').val('sendRequest');
-            var confirmText = "Are You sure you want to Send Event participation?";
+            var confirmText = "Are you sure you want to Send event participation?";
             $('#confirmText').html(confirmText);
             $('#delete-element-confirm-modal').modal('show');
         });
@@ -114,11 +113,13 @@
                     var post_id = $('#curr_element_id').val();
                     var action_button = $('#action_button').val();
                     if (action_button == 'sendRequest') {
-                        // var company_id = $('#company_id').val();
                         var staffId = $('#curr_element_id').val();
+                        var url = "{{ route('companyAdminControllerSendRequest', ":id") }}";
+                        url = url.replace(':id', staffId);
+
                         $.ajax({
                             type: "get",
-                            url: "../companyAdminController/sendRequest/" + staffId,
+                            url: url,
                             success: function (data) {
                                 window.location.href = "{{ route('companyParticipants',[$companyId,$eventId])}}";
                             },
@@ -130,7 +131,5 @@
                 }
             });
         });
-
-
     </script>
 @endsection

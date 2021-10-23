@@ -48,9 +48,7 @@
                     <h5 class="modal-title" id="badgeTitle"></h5>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <!--                        --><?php //var_dump(gd_info());  ?>
-                    </div>
+                    <div class="row"></div>
                     <div class="row">
                         <img id="badge" src="" alt="Badge">
                     </div>
@@ -127,7 +125,6 @@
 
 
         $('body').on('click', '.preview-badge', function () {
-            //alert($(this).data("id"));
             var src = $(this).data("src");
             var label = $(this).data("label")
             $('#badge-modal').modal('show');
@@ -137,40 +134,39 @@
         });
         $('body').on('click', '#approve', function () {
             var post_id = $(this).data("id");
-            //alert(post_id);
             var company_id = $('#company_id').val();
             var eventId = $('#event_id').val();
             $('#confirmTitle').html('Approve Participation Request');
             $('#curr_element_id').val(post_id);
             $('#action_button').val('approve');
-            var confirmText = "Are You sure you want to Approve Event participation Request?";
+            var confirmText = "Are you sure you want to approve event participation request?";
             $('#confirmText').html(confirmText);
             $('#delete-element-confirm-modal').modal('show');
         });
         $('body').on('click', '#reject', function () {
             var post_id = $(this).data("id");
-            //alert(post_id);
             var company_id = $('#company_id').val();
             var eventId = $('#event_id').val();
             $('#confirmTitle').html('Reject Participation Request');
             $('#curr_element_id').val(post_id);
             $('#action_button').val('reject');
-            var confirmText = "Are You sure you want to reject Event participation Request?";
+            var confirmText = "Are you sure you want to reject event participation request?";
             $('#confirmText').html(confirmText);
             $('#delete-element-confirm-modal').modal('show');
         });
+
         $('body').on('click', '#reject_with_correction', function () {
             var post_id = $(this).data("id");
             var company_id = $('#company_id').val();
             var eventId = $('#event_id').val();
-            $('#confirmTitle-new').html('Reject Participation Request To Correct');
+            $('#confirmTitle-new').html('Return Participation Request To Correct');
             $('#curr_element_id-new').val(post_id);
-            // $('#action_button').val('approve');
             $('#reason').val('');
-            var confirmText = "Insert Reason:";
+            var confirmText = "Insert reason:";
             $('#confirmText-new').html(confirmText);
             $('#delete-element-confirm-modal-new').modal('show');
         });
+
         $('#delete-element-confirm-modal button').on('click', function (event) {
             var $button = $(event.target);
             $(this).closest('.modal').one('hidden.bs.modal', function () {
@@ -178,36 +174,38 @@
                     var post_id = $('#curr_element_id').val();
                     var action_button = $('#action_button').val();
                     if (action_button == 'approve') {
-                        var company_id = $('#company_id').val();
-                        var event_id = $('#event_id').val();
+                        // var company_id = $('#company_id').val();
+                        // var event_id = $('#event_id').val();
                         var staffId = $('#curr_element_id').val();
+                        var url = "{{ route('eventAdminControllerApprove', ":id") }}";
+                        url = url.replace(':id', staffId);
+
                         $.ajax({
                             type: "get",
-                            url: "../eventAdminController/Approve/" + staffId,
+                            url: url,
                             success: function (data) {
-                                // var oTable = $('#laravel_datatable').dataTable();
-                                // oTable.fnDraw(false);
-                                window.location.href = "../event-company-participants/" + company_id + "/" + event_id;
+                                // window.location.href = "../event-company-participants/" + company_id + "/" + event_id;
+                                window.location.href = "{{route('eventCompanyParticipants',[$companyId, $eventId])}}";
                             },
                             error: function (data) {
                                 console.log('Error:', data);
                             }
                         });
                     }
+
                     if (action_button == 'reject') {
                         // var company_id = $('#company_id').val();
-                        var company_id = $('#company_id').val();
-                        var event_id = $('#event_id').val();
+                        // var event_id = $('#event_id').val();
                         var staffId = $('#curr_element_id').val();
+                        var url = "{{ route('eventAdminControllerReject', ":id") }}";
+                        url = url.replace(':id', staffId);
+
                         $.ajax({
                             type: "get",
-                            url: "../eventAdminController/Reject/" + staffId,
+                            url: url,
                             success: function (data) {
-                                // var oTable = $('#laravel_datatable').dataTable();
-                                // $('#send-approval-request').hide();
-                                // $('#add-new-post').hide();
-                                // oTable.fnDraw(false);
-                                window.location.href = "../event-company-participants/" + company_id + "/" + event_id;
+                                // window.location.href = "../event-company-participants/" + company_id + "/" + event_id;
+                                window.location.href = "{{route('eventCompanyParticipants',[$companyId, $eventId])}}";
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -217,22 +215,27 @@
                 }
             });
         });
+
         $('#delete-element-confirm-modal-new button').on('click', function (event) {
             var $button = $(event.target);
             $(this).closest('.modal').one('hidden.bs.modal', function () {
                 if ($button[0].id === 'btn-yes-new') {
                     var staffId = $('#curr_element_id-new').val();
                     var reason = $('#reason').val();
-                    var company_id = $('#company_id').val();
-                    var event_id = $('#event_id').val();
+                    // var company_id = $('#company_id').val();
+                    // var event_id = $('#event_id').val();
+
+                    var url = "{{ route('eventAdminControllerRejectToCorrect', [":id",":res"]) }}";
+                    url = url.replace(':id', staffId);
+                    url = url.replace(':res', reason);
+
                     $.ajax({
                         type: "get",
-                        url: "../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
+                        // url: "../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
+                        url: url,
                         success: function (data) {
-                            // var oTable = $('#laravel_datatable').dataTable();
-                            // oTable.fnDraw(false);
-                            //window.location.href = "{{ route('eventCompanyParticipants',['company_id','event_id'])}}";
-                            window.location.href = "../event-company-participants/" + company_id + "/" + event_id;
+                            // window.location.href = "../event-company-participants/" + company_id + "/" + event_id;
+                            window.location.href = "{{route('eventCompanyParticipants',[$companyId, $eventId])}}";
                         },
                         error: function (data) {
                             console.log('Error:', data);
@@ -241,7 +244,5 @@
                 }
             });
         });
-
-
     </script>
 @endsection

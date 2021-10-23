@@ -22,14 +22,12 @@ class FullFillmentController extends Controller
         $eventsSelectOptions = array();
         $companySelectOptions = array();
         $accrediationCategorySelectOptions = array();
-        $where = array('status' => 1,'event_admin' => Auth::user()->id);
-        $events = Event::where($where)->get()->all();
+        $events = DB::select('select * from event_admins_view e where e.event_admin=?',[Auth::user()->id]);
 
         $count = 0;
         foreach ($events as $event) {
             if ($count == 0) {
-                $where = array('status' => 3, 'event_id' => $event->id);
-                $companies = Company::where($where)->get()->all();
+                $companies = DB::select('select * from companies_view e where e.event_id=? and e.status=?',[$event->id, 3]);
                 $subcount = 0;
                 foreach ($companies as $company) {
                     if ($subcount == 0) {
@@ -45,6 +43,7 @@ class FullFillmentController extends Controller
             $eventSelectOption = new SelectOption($event->id, $event->name);
             $eventsSelectOptions[] = $eventSelectOption;
         }
+
         $where = array('predefined_field_id' => 14);
         $acrrediationCategories = PreDefinedFieldElement::where($where)->get()->all();
         $mycount = 0;
@@ -62,9 +61,10 @@ class FullFillmentController extends Controller
 
     public function getCompanies($eventId)
     {
-        $where = array('status' => 3, 'event_id' => $eventId);
-        $companies = Company::where($where)->get()->all();
+        $companies = DB::select('select * from companies_view e where e.event_id=? and e.status=?',[$eventId, 3]);
+
         $subcount = 0;
+        $companySelectOptions = array();
         foreach ($companies as $company) {
             if ($subcount == 0) {
                 $compnaySelectOption = new SelectOption(0, 'All');

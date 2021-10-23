@@ -36,7 +36,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('companyAdminController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}/{event_id}', 'App\Http\Controllers\CompanyAdminController@storeCompanyAccrCatSize');
     Route::get('companyAdminController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyAdminController@destroyCompanyAccreditCat');
     Route::get('companyAdminController/sendApproval/{companyId}/{eventId}', 'App\Http\Controllers\CompanyAdminController@sendApproval');
-    Route::get('companyAdminController/sendRequest/{staffId}', 'App\Http\Controllers\CompanyAdminController@sendRequest');
+    Route::get('companyAdminController/sendRequest/{staffId}', 'App\Http\Controllers\CompanyAdminController@sendRequest')->name('companyAdminControllerSendRequest');
 
     Route::resource('templateFormController', 'App\Http\Controllers\TemplateFormController');
     Route::get('/template-form/{template_id}/{company_id}/{event_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
@@ -75,9 +75,9 @@ Route::group(['middleware' => 'role:event-admin'], function () {
     Route::get('/event-companies/{id}', [App\Http\Controllers\EventAdminController::class, 'eventCompanies'])->name('eventCompanies');
     Route::get('/event-company-participants/{companyId}/{eventId}', [App\Http\Controllers\EventAdminController::class, 'eventCompanyParticipants'])->name('eventCompanyParticipants');
     Route::get('eventAdminController/Invite/{companyId}/{eventId}', 'App\Http\Controllers\EventAdminController@Invite');
-    Route::get('eventAdminController/Approve/{staffId}', 'App\Http\Controllers\EventAdminController@Approve');
-    Route::get('eventAdminController/Reject/{staffId}', 'App\Http\Controllers\EventAdminController@Reject');
-    Route::get('eventAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\EventAdminController@RejectToCorrect');
+    Route::get('eventAdminController/Approve/{staffId}', 'App\Http\Controllers\EventAdminController@Approve')->name('eventAdminControllerApprove');
+    Route::get('eventAdminController/Reject/{staffId}', 'App\Http\Controllers\EventAdminController@Reject')->name('eventAdminControllerReject');
+    Route::get('eventAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\EventAdminController@RejectToCorrect')->name('eventAdminControllerRejectToCorrect');
 
 
 

@@ -19,21 +19,6 @@ class SecurityOfficerAdminController extends Controller
 
     public function index()
     {
-        if (request()->ajax()) {
-            $companies = DB::select('select * from companies_view');
-            return datatables()->of($companies)
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('companyEdit', $data->id) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    return $button;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-
         $events = DB::select('select * from event_security_officers_view where security_officer_id = ? and approval_option in (1,3) ', [Auth::user()->id]);
         return view('pages.SecurityOfficerAdmin.security-officer-admin')->with('events', $events);
     }
@@ -46,7 +31,7 @@ class SecurityOfficerAdminController extends Controller
             $companies = DB::select('select * from companies_view where event_id = ?', [$id]);
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('securityOfficerCompanyParticipants', [$data->id, $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-facebook" title="Company Participants"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button = '<a href="' . route('securityOfficerCompanyParticipants', [$data->id, $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Participants"><i class="fas fa-users"></i></a>';
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -140,28 +125,28 @@ class SecurityOfficerAdminController extends Controller
                             $status_value = "Initiated";
                             break;
                         case 1:
-                            $status_value = "waiting Security Officer Approval";
+                            $status_value = "Waiting Security Officer Approval";
                             break;
                         case 2:
-                            $status_value = "waiting Event Admin Approval";
+                            $status_value = "Waiting Event Admin Approval";
                             break;
                         case 3:
-                            $status_value = "approved by security officer";
+                            $status_value = "Approved by security officer";
                             break;
                         case 4:
-                            $status_value = "rejected by security officer";
+                            $status_value = "Rejected by security officer";
                             break;
                         case 5:
-                            $status_value = "rejected by event admin";
+                            $status_value = "Rejected by event admin";
                             break;
                         case 6:
-                            $status_value = "approved by event admin";
+                            $status_value = "Approved by event admin";
                             break;
                         case 7:
-                            $status_value = "rejected with correction by security officer";
+                            $status_value = "Rejected with correction by security officer";
                             break;
                         case 8:
-                            $status_value = "rejected with correction by event admin";
+                            $status_value = "Rejected with correction by event admin";
                             break;
                         case 9:
                             $status_value = "Badge generated";
@@ -174,18 +159,18 @@ class SecurityOfficerAdminController extends Controller
                 })
                 ->addColumn('action', function ($data) {
                     $button = '';
-                    $button .= '<a href="' . route('securityParticipantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-facebook edit-post">Details</a>';
+                    $button .= '<a href="' . route('securityParticipantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     switch ($data->status) {
                         case 1:
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Aprrove</a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' . $data->id . '" data-original-title="Edit" title="Approve"><i class="fas fa-vote-yea"></i></a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject</a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" title="Reject"><i class="fas fa-ban"></i></a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject with correction</a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" title="Reject with correction"><i class="far fa-window-close"></i></a>';
                             break;
                         case 7:
-                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" class="delete btn btn-danger">Reject Reason</a>';
+                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
                             break;
                     }
                     return $button;

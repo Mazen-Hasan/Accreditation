@@ -19,7 +19,6 @@
                                     <div class="card">
                                         <div>
                                             <a href="{{route('securityOfficerCompanies',[$event->id])}}">
-                                                {{--                                        <a href="{{route('eventCompanies')}}">--}}
                                                 <img class="card-img-top"
                                                      style="border-top-left-radius: 20px; border-top-right-radius: 20px"
                                                      src="{{ asset('images/event.png') }}" alt="Event">
@@ -84,11 +83,6 @@
                                                     <p class="card_event_text">{{ $event->template_name}}</p>
                                                 </div>
                                             </div>
-                                            {{--                                        <div class="row">--}}
-                                            {{--                                            <div class="col-12">--}}
-                                            {{--                                                <a href="{{route('companies',['event_id'=> $event->id])}}" class="ha_btn">view</a>--}}
-                                            {{--                                            </div>--}}
-                                            {{--                                        </div>--}}
                                         </div>
                                     </div>
                                     <br>

@@ -20,21 +20,6 @@ class EventAdminController extends Controller
 
     public function index()
     {
-        if (request()->ajax()) {
-            $companies = DB::select('select * from companies_view');
-            return datatables()->of($companies)
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('companyEdit', $data->id) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
-                    return $button;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-
         $events = DB::select('select * from event_admins_view where event_admin = ?', [Auth::user()->id]);
         return view('pages.EventAdmin.event-admin')->with('events', $events);
     }
@@ -213,10 +198,10 @@ class EventAdminController extends Controller
                             $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" title="Reject with correction"><i class="far fa-window-close"></i></a>';
                             break;
                         case 7:
-                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" class="delete btn btn-danger">Reject Reason</a>';
+                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
                             break;
                         case 8:
-                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->event_admin_reject_reason . '" class="delete btn btn-danger">Reject Reason</a>';
+                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->event_admin_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
                             break;
                     }
                     return $button;

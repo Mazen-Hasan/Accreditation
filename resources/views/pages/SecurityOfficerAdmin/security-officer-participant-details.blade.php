@@ -36,7 +36,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <!--                        --><?php //var_dump(gd_info());  ?>
                     </div>
                     <div class="row">
                         <img id="badge" src="" alt="Badge">
@@ -45,6 +44,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -73,6 +73,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="delete-element-confirm-modal-new" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -119,6 +120,7 @@
             var image_path = "{{URL::asset('badges/')}}/";
             $('#badge').attr('src', image_path + src);
         });
+
         $('body').on('click', '#approve', function () {
             var post_id = $(this).data("id");
             var company_id = $('#company_id').val();
@@ -126,10 +128,11 @@
             $('#confirmTitle').html('Approve Participation Request');
             $('#curr_element_id').val(post_id);
             $('#action_button').val('approve');
-            var confirmText = "Are You sure you want to Approve Event participation Request?";
+            var confirmText = "Are you sure you want to approve event participation request?";
             $('#confirmText').html(confirmText);
             $('#delete-element-confirm-modal').modal('show');
         });
+
         $('body').on('click', '#reject', function () {
             var post_id = $(this).data("id");
             var company_id = $('#company_id').val();
@@ -137,10 +140,11 @@
             $('#confirmTitle').html('Reject Participation Request');
             $('#curr_element_id').val(post_id);
             $('#action_button').val('reject');
-            var confirmText = "Are You sure you want to reject Event participation Request?";
+            var confirmText = "Are You sure you want to reject event participation request?";
             $('#confirmText').html(confirmText);
             $('#delete-element-confirm-modal').modal('show');
         });
+
         $('body').on('click', '#reject_with_correction', function () {
             var post_id = $(this).data("id");
             var company_id = $('#company_id').val();
@@ -152,6 +156,7 @@
             $('#confirmText-new').html(confirmText);
             $('#delete-element-confirm-modal-new').modal('show');
         });
+
         $('#delete-element-confirm-modal button').on('click', function (event) {
             var $button = $(event.target);
             $(this).closest('.modal').one('hidden.bs.modal', function () {
@@ -162,11 +167,22 @@
                         var staffId = $('#curr_element_id').val();
                         var company_id = $('#company_id').val();
                         var event_id = $('#event_id').val();
+
+                        var url = "{{ route('securityOfficerAdminControllerApprove', ":staffId") }}";
+                        url = url.replace(':staffId', staffId);
+
                         $.ajax({
                             type: "get",
-                            url: "../securityOfficerAdminController/Approve/" + staffId,
+                            // url: "../securityOfficerAdminController/Approve/" + staffId,
+                            url: url,
                             success: function (data) {
-                                window.location.href = "../security-officer-company-participants/" + company_id + "/" + event_id;
+
+                                var url = "{{ route('securityOfficerCompanyParticipants', [":company_id",":event_id"]) }}";
+                                url = url.replace(':company_id', company_id);
+                                url = url.replace(':event_id', event_id);
+
+                                // window.location.href = "../security-officer-company-participants/" + company_id + "/" + event_id;
+                                window.location.href = url;
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -177,11 +193,21 @@
                         var company_id = $('#company_id').val();
                         var event_id = $('#event_id').val();
                         var staffId = $('#curr_element_id').val();
+
+                        var url = "{{ route('securityOfficerAdminControllerReject', ":staffId") }}";
+                        url = url.replace(':staffId', staffId);
+
                         $.ajax({
                             type: "get",
-                            url: "../securityOfficerAdminController/Reject/" + staffId,
+                            // url: "../securityOfficerAdminController/Reject/" + staffId,
+                            url: url,
                             success: function (data) {
-                                window.location.href = "../security-officer-company-participants/" + company_id + "/" + event_id;
+                                var url = "{{ route('securityOfficerCompanyParticipants', [":company_id",":event_id"]) }}";
+                                url = url.replace(':company_id', company_id);
+                                url = url.replace(':event_id', event_id);
+
+                                // window.location.href = "../security-officer-company-participants/" + company_id + "/" + event_id;
+                                window.location.href = url;
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -200,11 +226,23 @@
                     var reason = $('#reason').val();
                     var company_id = $('#company_id').val();
                     var event_id = $('#event_id').val();
+
+                    var url = "{{ route('securityOfficerAdminControllerRejectToCorrect', [":staffId",":reason"]) }}";
+                    url = url.replace(':staffId', staffId);
+                    url = url.replace(':eventId', reason);
+
                     $.ajax({
                         type: "get",
-                        url: "../securityOfficerAdminController/RejectToCorrect/" + staffId + "/" + reason,
+                        // url: "../securityOfficerAdminController/RejectToCorrect/" + staffId + "/" + reason,
+                        url: url,
                         success: function (data) {
-                            window.location.href = "../security-officer-company-participants/" + company_id + "/" + event_id;
+                            var url = "{{ route('securityOfficerCompanyParticipants', [":company_id",":event_id"]) }}";
+                            url = url.replace(':company_id', company_id);
+                            url = url.replace(':event_id', event_id);
+
+                            // window.location.href = "../security-officer-company-participants/" + company_id + "/" + event_id;
+
+                            window.location.href = url;
                         },
                         error: function (data) {
                             console.log('Error:', data);

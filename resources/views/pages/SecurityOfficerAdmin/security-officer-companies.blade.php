@@ -20,7 +20,12 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">{{$event_name}} / Companies</p>
+                                <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('event-admin') }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    {{$event_name}} / Companies
+                                </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -30,14 +35,6 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                @role('event-admin')
-                                <a href="../company-add/{{$eventid}}" id="add-new-company" class="add-hbtn">
-                                    <i>
-                                        <img src="{{ asset('images/add.png') }}" alt="Add">
-                                    </i>
-                                    <span class="dt-hbtn">Add</span>
-                                </a>
-                                @endrole
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -50,7 +47,6 @@
                                     <th>Category</th>
                                     <th>Country</th>
                                     <th>City</th>
-                                    <!-- <th>Address</th> -->
                                     <th>Website</th>
                                     <th>Telephone</th>
                                     <th>Focal point</th>
@@ -67,38 +63,10 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
-         data-bs-keyboard="false" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmTitle"></h5>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <input type="hidden" id="curr_element_id">
-                        <label class="col-sm-12 confirm-text" id="confirmText"></label>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-4"></div>
-                        <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
-                            </button>
-                        </div>
-                        <div class="col-sm-4">
-                            <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 @section('script')
     <script>
         $(document).ready(function () {
-            //alert({{$eventid}});
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -118,7 +86,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../security-officer-companies/' + {{$eventid}},
+                    url: "{{ route('securityOfficerCompanies', $eventid) }}",
                     type: 'GET',
                 },
                 columns: [
@@ -158,39 +126,6 @@
                 $('#company_id').val('');
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Company");
-                //$('#ajax-crud-modal').modal('show');
-            });
-
-            $('body').on('click', '#invite-company', function () {
-                //alert('helo');
-                var company_id = $(this).data("id");
-                var company_name = $(this).data("name");
-                var company_focalpoint = $(this).data("focalpoint");
-                $('#confirmTitle').html('Company Invitation');
-                $('#curr_element_id').val(company_id);
-                var confirmText = 'Are you sure you want to invite Company: ' + company_name + ' to focal point: ' + company_focalpoint + '?';
-                $('#confirmText').html(confirmText);
-                $('#delete-element-confirm-modal').modal('show');
-            });
-
-            $('#delete-element-confirm-modal button').on('click', function (event) {
-                var $button = $(event.target);
-                $(this).closest('.modal').one('hidden.bs.modal', function () {
-                    if ($button[0].id === 'btn-yes') {
-                        var company_id = $('#curr_element_id').val();
-                        $.ajax({
-                            type: "get",
-                            url: "../eventAdminController/Invite/" + company_id,
-                            success: function (data) {
-                                var oTable = $('#laravel_datatable').dataTable();
-                                oTable.fnDraw(false);
-                            },
-                            error: function (data) {
-                                console.log('Error:', data);
-                            }
-                        });
-                    }
-                });
             });
         });
     </script>

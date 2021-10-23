@@ -93,9 +93,9 @@ Route::group(['middleware' => 'role:event-admin'], function () {
     Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat');
     Route::get('companyController/Approve/{companyId}/{eventId}', 'App\Http\Controllers\CompanyController@Approve');
 
-    Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate');
-    Route::get('badge-preview/{staffId}', 'App\Http\Controllers\GenerateBadgeController@getBadgePath');
-    Route::get('badge-print/{staffId}', 'App\Http\Controllers\GenerateBadgeController@printBadge');
+    Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate')->name('badgeGenerate');
+    Route::get('badge-preview/{staffId}', 'App\Http\Controllers\GenerateBadgeController@getBadgePath')->name('badgePreview');
+    Route::get('badge-print/{staffId}', 'App\Http\Controllers\GenerateBadgeController@printBadge')->name('badgePrint');
     Route::get('/event-participant-details/{participant_id}', [App\Http\Controllers\EventAdminController::class, 'details'])->name('participantDetails');
 
     Route::resource('fullFillmentController', 'App\Http\Controllers\FullFillmentController');
@@ -206,9 +206,9 @@ Route::group(['middleware' => 'role:security-officer'], function () {
     Route::get('/security-officer-admin', [App\Http\Controllers\SecurityOfficerAdminController::class, 'index'])->name('security-officer-admin');
     Route::get('/security-officer-companies/{id}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'securityOfficerCompanies'])->name('securityOfficerCompanies');
     Route::get('/security-officer-company-participants/{id}/{companyId}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'securityOfficerCompanyParticipants'])->name('securityOfficerCompanyParticipants');
-    Route::get('securityOfficerAdminController/Approve/{staffId}', 'App\Http\Controllers\SecurityOfficerAdminController@Approve');
-    Route::get('securityOfficerAdminController/Reject/{staffId}', 'App\Http\Controllers\SecurityOfficerAdminController@Reject');
-    Route::get('securityOfficerAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\SecurityOfficerAdminController@RejectToCorrect');
+    Route::get('securityOfficerAdminController/Approve/{staffId}', 'App\Http\Controllers\SecurityOfficerAdminController@Approve')->name('securityOfficerAdminControllerApprove');
+    Route::get('securityOfficerAdminController/Reject/{staffId}', 'App\Http\Controllers\SecurityOfficerAdminController@Reject')->name('securityOfficerAdminControllerReject');
+    Route::get('securityOfficerAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\SecurityOfficerAdminController@RejectToCorrect')->name('securityOfficerAdminControllerRejectToCorrect');
     Route::get('/security-officer-participant-details/{participant_id}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'details'])->name('securityParticipantDetails');
 
 });

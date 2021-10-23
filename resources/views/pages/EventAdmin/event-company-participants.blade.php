@@ -131,6 +131,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="delete-element-confirm-modal-new" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -141,14 +142,13 @@
                 <div class="modal-body">
                     <div>
                         <input type="hidden" id="curr_element_id-new">
-                        <!-- <input type="hidden" id="action_button"> -->
                         <label class="col-sm-12 confirm-text" id="confirmText-new"></label>
                         <textarea id="reason" style="margin-bottom:10px"></textarea>
                     </div>
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel-new">Cancel
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel-new">Ok
                             </button>
                         </div>
                         <div class="col-sm-4">
@@ -174,10 +174,6 @@
             var myColumns = [];
             var i = 0;
             myColumns.push({data: "id", name: "id", 'visible': false});
-            // if(company_id == 0){
-            //     myColumns.push({data: "company",name: "company"});
-            // }
-            //myColumns.push({data: "company",name: "company"});
             while (i < jqueryarray.length) {
                 myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
                 i++;
@@ -186,6 +182,11 @@
             myColumns.push({data: "action", name: "action", orderable: "false"});
             var companyId = $('#company_id').val();
             var eventId = $('#event_id').val();
+
+            var url = "{{ route('eventCompanyParticipants', [":companyId",":eventId"]) }}";
+            url = url.replace(':companyId', companyId);
+            url = url.replace(':eventId', eventId);
+
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
@@ -199,7 +200,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../../event-company-participants/' + companyId + '/' + eventId,
+                    url: url,
                     type: 'GET',
                 },
                 columns: myColumns,
@@ -215,30 +216,28 @@
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Post");
-                //$('#ajax-crud-modal').modal('show');
             });
 
             $('body').on('click', '#approve', function () {
                 var post_id = $(this).data("id");
-                //alert(post_id);
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
                 $('#confirmTitle').html('Approve Participation Request');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('approve');
-                var confirmText = "Are You sure you want to Approve Event participation Request?";
+                var confirmText = "Are you sure you want to approve event participation request?";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
+
             $('body').on('click', '#reject', function () {
                 var post_id = $(this).data("id");
-                //alert(post_id);
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
                 $('#confirmTitle').html('Reject Participation Request');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('reject');
-                var confirmText = "Are You sure you want to reject Event participation Request?";
+                var confirmText = "Are you sure you want to reject event participation request?";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
@@ -272,9 +271,14 @@
             $('body').on('click', '#generate-badge', function () {
                 var staff_id = $(this).data("id");
                 $('#print_staff_id').val(staff_id);
+
+                var url = "{{ route('badgeGenerate', ":staff_id") }}";
+                url = url.replace(':staff_id', staff_id);
+
                 $.ajax({
                     type: "get",
-                    url: "../../badge-generate/" + staff_id,
+                    // url: "../../badge-generate/" + staff_id,
+                    url: url,
                     success: function (data) {
                         $('#badge-modal').modal('show');
                         var imag = data;
@@ -293,10 +297,14 @@
             $('body').on('click', '#preview-badge', function () {
                 var staff_id = $(this).data("id");
                 $('#print_staff_id').val(staff_id);
-                console.log(staff_id);
+
+                var url = "{{ route('badgePreview', ":staff_id") }}";
+                url = url.replace(':staff_id', staff_id);
+
                 $.ajax({
                     type: "get",
-                    url: "../../badge-preview/" + staff_id,
+                    // url: "../../badge-preview/" + staff_id,
+                    url: url,
                     success: function (data) {
                         console.log($('#btn-print').attr('class'));
                         $('#badge-modal').modal('show');
@@ -313,9 +321,14 @@
 
             $('body').on('click', '#btn-print', function () {
                 var staff_id = $('#print_staff_id').val();
+
+                var url = "{{ route('badgePrint', ":staff_id") }}";
+                url = url.replace(':staff_id', staff_id);
+
                 $.ajax({
                     type: "get",
-                    url: "../../badge-print/" + staff_id,
+                    // url: "../../badge-print/" + staff_id,
+                    url: url,
                     success: function (data) {
                         $('#badge-modal').modal('show');
                         printJS($('#badge').attr('src'), 'image');
@@ -336,10 +349,15 @@
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
                         if (action_button == 'approve') {
-                            var staffId = $('#curr_element_id').val();
+                            var staff_id = $('#curr_element_id').val();
+
+                            var url = "{{ route('eventAdminControllerApprove', ":staff_id") }}";
+                            url = url.replace(':staff_id', staff_id);
+
                             $.ajax({
                                 type: "get",
-                                url: "../../eventAdminController/Approve/" + staffId,
+                                // url: "../../eventAdminController/Approve/" + staffId,
+                                url: url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -349,11 +367,17 @@
                                 }
                             });
                         }
+
                         if (action_button == 'reject') {
-                            var staffId = $('#curr_element_id').val();
+                            var staff_id = $('#curr_element_id').val();
+
+                            var url = "{{ route('eventAdminControllerReject', ":staff_id") }}";
+                            url = url.replace(':staff_id', staff_id);
+
                             $.ajax({
                                 type: "get",
-                                url: "../../eventAdminController/Reject/" + staffId,
+                                // url: "../../eventAdminController/Reject/" + staffId,
+                                url: url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
@@ -375,9 +399,15 @@
                     if ($button[0].id === 'btn-yes-new') {
                         var staffId = $('#curr_element_id-new').val();
                         var reason = $('#reason').val();
+
+                        var url = "{{ route('eventAdminControllerRejectToCorrect', [":staffId",":reason"]) }}";
+                        url = url.replace(':staffId', staffId);
+                        url = url.replace(':reason', reason);
+
                         $.ajax({
                             type: "get",
-                            url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
+                            // url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
+                            url: url,
                             success: function (data) {
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);

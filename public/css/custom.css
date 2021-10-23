@@ -1149,4 +1149,20 @@ a.disabled {
     font-size: 20px;
 }
 
+.fa-vote-yea{
+    color: #30c93e;
+    font-size: 20px;
+}
+
+.fa-window-close{
+    color: #ff0000;
+    font-size: 20px;
+}
+
+.fa-comment-alt{
+    color: #b8a92d;
+    font-size: 20px;
+}
+
+
 

@@ -72,13 +72,6 @@
                                     </i>
                                     <span class="dt-hbtn">Add</span>
                                 </a>
-
-                                <!-- <a href="{{route('pdf-generate')}}" id="generate" class="add-hbtn">
-                                    <i>
-                                        <img src="{{ asset('images/add.png') }}" alt="Add">
-                                    </i>
-                                    <span class="dt-hbtn">Generate</span>
-                                </a> -->
                                 @endrole
                             </div>
                         </div>
@@ -90,16 +83,6 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                 @endforeach
-                                <!-- <th>ID</th>
-                                    <th>Name</th>
-                                                                         <th>Location</th>
-                                    <th>Nationality</th>
-                                    <th>Class</th>
-                                    <th>Email</th>
-                                    <th>Mobile</th>
-                                    <th>Position</th>
-                                    <th>Accreditation Category</th>
-                                    <th>Religion</th>  -->
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -159,7 +142,7 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel-new">Cancel
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel-new">Ok
                             </button>
                         </div>
                         <div class="col-sm-4">

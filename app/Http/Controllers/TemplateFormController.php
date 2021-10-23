@@ -136,6 +136,9 @@ class TemplateFormController extends Controller
         }
 
         $subCompany_nav = 1;
+        if($company->parent_id != null){
+            $subCompany_nav = 0;
+        }
         return view('pages.TemplateForm.template-form-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
@@ -492,6 +495,9 @@ class TemplateFormController extends Controller
                 break;
         }
         $subCompany_nav = 1;
+        if($company->parent_id != null){
+            $subCompany_nav = 0;
+        }
         return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('subCompany_nav', $subCompany_nav)->with('companyId',$company->id)->with('eventId',$event->id);
     }
 

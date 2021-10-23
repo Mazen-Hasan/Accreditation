@@ -13,7 +13,8 @@
     <script src="{{ URL::asset('js/print.min.js') }}"></script>
 @endsection
 @section('custom_navbar')
-<li id="subsidiaries_nav" class="nav-item">
+            @if($subCompany_nav == 1)
+                <li id="subsidiaries_nav" class="nav-item">
                      <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}"
                         href="{{ route('subCompanies',[$companyId,$eventId]) }} ">
                          <i class="logout">
@@ -40,6 +41,7 @@
                         <span class="menu-title">Focal Points</span>
                     </a>
                 </li>
+                @endif
 @endsection
 @section('content')
     <div class="content-wrapper">

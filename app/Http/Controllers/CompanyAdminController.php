@@ -161,9 +161,7 @@ class CompanyAdminController extends Controller
                 ->make(true);
         }
         $subCompany_nav = 1;
-        $where = array('id' => $companyId);
-        $company = Company::where($where)->first();
-        if ($company->subCompany_id != null) {
+        if($company->parent_id != null){
             $subCompany_nav = 0;
         }
         return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
@@ -335,6 +333,9 @@ class CompanyAdminController extends Controller
             }
         }
         $subCompany_nav = 1;
+        if($company->parent_id != null){
+            $subCompany_nav = 0;
+        }
         return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('subCompany_nav', $subCompany_nav);
     }
 
@@ -451,7 +452,11 @@ class CompanyAdminController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventId', $event->id)->with('companyId',$companyId);
+        $subCompany_nav = 1;
+        if($company->parent_id != null){
+            $subCompany_nav = 0;
+        }
+        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventId', $event->id)->with('companyId',$companyId)->with('subCompany_nav',$subCompany_nav);
     }
 
     public function storeSubCompnay(Request $request)
@@ -579,9 +584,12 @@ class CompanyAdminController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-
+        $subCompany_nav = 1;
+        if($company->parent_id != null){
+            $subCompany_nav = 0;
+        }
         return view('pages.CompanyAdmin.subCompany-edit')->with('company', $post)->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss)->with('subCompany_nav',$subCompany_nav);
     }
 
 
@@ -648,9 +656,12 @@ class CompanyAdminController extends Controller
         $companyStatus2 = new SelectOption(0, 'InActive');
         //$companyStatus3 = new SelectOption(3,'Invited');
         $companyStatuss = [$companyStatus1, $companyStatus2];
-
+        $subCompany_nav = 1;
+        if($company->parent_id != null){
+            $subCompany_nav = 0;
+        }
         return view('pages.CompanyAdmin.subCompany-add')->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $id)->with('event_name', $event->name)->with('statuss', $companyStatuss)->with('company_name', $company->name)->with('companyId',$companyId);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $id)->with('event_name', $event->name)->with('statuss', $companyStatuss)->with('company_name', $company->name)->with('companyId',$companyId)->with('subCompany_nav',$subCompany_nav);
     }
 
     public function subCompanyAccreditCategories($companyId, $eventId)
@@ -716,7 +727,11 @@ class CompanyAdminController extends Controller
                 }
             }
         }
-        return view('pages.CompanyAdmin.subCompany-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize);
+        $subCompany_nav = 1;
+        if($company->parent_id != null){
+            $subCompany_nav = 0;
+        }
+        return view('pages.CompanyAdmin.subCompany-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('subCompany_nav',$subCompany_nav);
     }
 
     public function Invite($companyId,$eventId)

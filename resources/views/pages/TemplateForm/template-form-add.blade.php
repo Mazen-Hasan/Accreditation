@@ -3,6 +3,37 @@
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
+@section('custom_navbar')
+            @if($subCompany_nav == 1)
+                <li id="subsidiaries_nav" class="nav-item">
+                     <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}"
+                        href="{{ route('subCompanies',[$companyId,$eventId]) }} ">
+                         <i class="logout">
+                             <img src="{{ asset('images/menu.png') }}" alt="My Sidries">
+                         </i>
+                         <span class="menu-title">Subsidiaries</span>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}"
+                        href="{{ route('dataentrys',[$companyId,$eventId]) }}">
+                         <i class="logout">
+                             <img src="{{ asset('images/menu.png') }}" alt="Data Entry">
+                         </i>
+                         <span class="menu-title">Data Entry</span>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                    <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
+                    href="{{ route('focalpoints') }}">
+                        <i class="logout">
+                            <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
+                        </i>
+                        <span class="menu-title">Focal Points</span>
+                    </a>
+                </li>
+                @endif
+@endsection
 @section('content')
     <div class="content-wrapper">
         <br><br>

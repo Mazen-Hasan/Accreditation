@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <input type="hidden" id="company_id" value="{{$companyId}}">
                         <input type="hidden" id="event_id" value="{{$eventId}}">
-                        <h4 class="card-title">Participant - Detials</h4>
+                        <h4 class="card-title">Participant - Details</h4>
                         <form class="form-sample" id="templateForm" name="templateForm">
                             <?php echo $form ?>
                         </form>
@@ -27,6 +27,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="badge-modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
          role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">

@@ -25,7 +25,12 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Participants</p>
+                                <p class="card-title">
+                                    <a class="url-nav" href="{{ route('Selections') }} ">
+                                        <span>Fulfillment Selections:</span>
+                                    </a>
+                                    / Details
+                                </p>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">

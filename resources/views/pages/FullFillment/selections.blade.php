@@ -92,7 +92,7 @@
                                                     <label class="card_event_label">Total selected</label>
                                                 </div>
                                                 <div class="col-md-7">
-                                                    <label id="lbl_select" class="card_event_text">0</label>
+                                                    <label id="lbl_select" class="fulfillment_text">0</label>
                                                 </div>
                                             </div>
 
@@ -101,7 +101,7 @@
                                                     <label class="card_event_label">Total generated</label>
                                                 </div>
                                                 <div class="col-md-7">
-                                                    <label id="lbl_generate" class="card_event_text">0</label>
+                                                    <label id="lbl_generate" class="fulfillment_text">0</label>
                                                 </div>
                                             </div>
 
@@ -110,7 +110,7 @@
                                                     <label class="card_event_label">Total printed</label>
                                                 </div>
                                                 <div class="col-md-7">
-                                                    <label id="lbl_print" class="card_event_text">0</label>
+                                                    <label id="lbl_print" class="fulfillment_text">0</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -325,7 +325,8 @@
                 }
             });
 
-        $('#btn-details').click(function () {
+        $('#btn-Details').click(function () {
+            console.log('kkk');
             var selectedEvent = $('#event option:selected').val();
             var selectedCompany = $('#company option:selected').val();
             var selectedAccredit = $('#category option:selected').text();

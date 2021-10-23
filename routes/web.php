@@ -42,14 +42,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('/template-form/{template_id}/{company_id}/{event_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
     Route::get('/template-form-details/{participant_id}', [App\Http\Controllers\TemplateFormController::class, 'details'])->name('templateFormDetails');
 
-    //Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate');
-    //Route::get('badge-preview/{staffId}', 'App\Http\Controllers\GenerateBadgeController@getBadgePath');
-    //Route::get('badge-print/{staffId}', 'App\Http\Controllers\GenerateBadgeController@printBadge');
-
-
     Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
-
-//    Route::get('pdf-generate', 'App\Http\Controllers\pdfController@generate');
 
     Route::get('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
 
@@ -79,11 +72,8 @@ Route::group(['middleware' => 'role:event-admin'], function () {
     Route::get('eventAdminController/Reject/{staffId}', 'App\Http\Controllers\EventAdminController@Reject')->name('eventAdminControllerReject');
     Route::get('eventAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\EventAdminController@RejectToCorrect')->name('eventAdminControllerRejectToCorrect');
 
-
-
     Route::resource('companyController', 'App\Http\Controllers\CompanyController');
 
-    //Route::get('/eventCompanies', [App\Http\Controllers\CompanyController::class, 'eventCompanies'])->name('eventCompanies');
     Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('companies');
     Route::get('/company-add/{eventid}', [App\Http\Controllers\CompanyController::class, 'companyAdd'])->name('companyAdd');
     Route::get('/company-edit/{id}/{eventid}', [App\Http\Controllers\CompanyController::class, 'edit'])->name('companyEdit');
@@ -122,11 +112,8 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::post('/event-security-categories-add', [App\Http\Controllers\EventController::class, 'eventSecurityCategoriesAdd'])->name('eventSecurityCategoriesAdd');
     Route::get('/event-check-same-organizer/{id}', [App\Http\Controllers\EventController::class, 'eventCheckSameEventOrganizer'])->name('eventCheckSameEventOrganizer');
 
-
     Route::get('/event-add', [App\Http\Controllers\EventController::class, 'eventAdd'])->name('eventAdd');
     Route::get('/event-edit/{id}', [App\Http\Controllers\EventController::class, 'edit'])->name('eventEdit');
-//    Route::get('EventController/remove/{event_security_category_id}', 'App\Http\Controllers\EventController@remove');
-//    Route::get('EventController/storeEventSecurityCategory/{event_id}/{security_category_id}', 'App\Http\Controllers\EventController@storeEventSecurityCategory');
 
     Route::get('/titles', [App\Http\Controllers\TitleController::class, 'index'])->name('titles');
     Route::get('/companyCategories', [App\Http\Controllers\CompanyCategoryController::class, 'index'])->name('companyCategories');

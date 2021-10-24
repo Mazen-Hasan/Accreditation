@@ -238,7 +238,6 @@ class EventController extends Controller
                 'event_end_date' => $request->event_end_date,
                 'accreditation_start_date' => $request->accreditation_start_date,
                 'accreditation_end_date' => $request->accreditation_end_date,
-                'creation_date' => $request->creation_date,
                 'creator' => Auth::user()->id
             ]);
 
@@ -250,7 +249,6 @@ class EventController extends Controller
                     ['event_id' => $post->id,
                         'security_category_id' => $security_category,
                         'order' => $counter,
-                        'creation_date' => $request->creation_date,
                         'creator' => $request->creator
                     ]);
                 $counter = $counter + 1;

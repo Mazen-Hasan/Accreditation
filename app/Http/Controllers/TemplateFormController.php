@@ -382,24 +382,24 @@ class TemplateFormController extends Controller
 
         $options = array();
         $form = '<div class="row">';
-        $form .= $this->createStatusFieldLabel("status",  $status_value);
+        $form .= $this->createStatusFieldLabel("Status",  $status_value);
         $form .= '</div>';
         if ($status == 8) {
             $form = '<div class="row">';
-            $form .= $this->createStatusFieldLabel("reject_reason", $event_reject_reason);
+            $form .= $this->createStatusFieldLabel("Reject reason", $event_reject_reason);
             $form .= '</div>';
         }
         if ($status == 7) {
             $form = '<div class="row">';
-            $form .= $this->createStatusFieldLabel("reject_reason", $security_officer_reject_reason);
+            $form .= $this->createStatusFieldLabel("Reject reason", $security_officer_reject_reason);
             $form .= '</div>';
         }
         $form .= '<div class="row">';
         $attachmentForm = '';
         if ($participant_id == 0) {
-            $form .= $this->createHiddenFieldLabel('participant_id', 'participant_id', '');
+            $form .= $this->createHiddenFieldLabel('participant_id',  '');
         } else {
-            $form .= $this->createHiddenFieldLabel('participant_id', 'participant_id', $participant_id);
+            $form .= $this->createHiddenFieldLabel('participant_id',  $participant_id);
         }
         foreach ($templateFields as $templateField) {
             $options = [];
@@ -487,18 +487,20 @@ class TemplateFormController extends Controller
                 break;
             case 7:
                 $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="' . route('templateForm', $participant_id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id,$event->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                 break;
             case 8:
                 $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="' . route('templateForm', $participant_id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id,$event->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
                 break;
         }
         $subCompany_nav = 1;
         if($company->parent_id != null){
             $subCompany_nav = 0;
         }
-        return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('subCompany_nav', $subCompany_nav)->with('companyId',$company->id)->with('eventId',$event->id);
+        return view('pages.TemplateForm.template-form-details')->with('form', $form)->with('attachmentForm', $attachmentForm)
+            ->with('buttons', $buttons)->with('subCompany_nav', $subCompany_nav)->with('companyId',$company->id)
+            ->with('eventId',$event->id)->with('event_name', $event->name)->with('company_name', $company->name);
     }
 
     public function createStatusFieldLabel($label, $value)

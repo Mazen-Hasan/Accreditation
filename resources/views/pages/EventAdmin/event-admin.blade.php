@@ -105,10 +105,9 @@
                                             <div class="row">
                                                 <div class="col-2"></div>
                                                 <div class="col-8">
-{{--                                                    <a href='event-company-participants/0/{{$event->id}}'--}}
                                                     <a href="{{route('eventCompanyParticipants',[0,$event->id])}}"
                                                        class="ha_icon_btn">
-                                                        <i class="fa fa-users" style="font-size: 25px"></i>&nbsp;
+                                                        <i class="fa fa-users" style="font-size: 25px; color: white"></i>&nbsp;
                                                         Participants
                                                     </a>
                                                 </div>

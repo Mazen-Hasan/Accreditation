@@ -164,7 +164,8 @@ class CompanyAdminController extends Controller
         if($company->parent_id != null){
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
+        return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)
+            ->with('eventId',$eventId)->with('event_name', $event->name)->with('company_name', $company->name);
     }
 
 

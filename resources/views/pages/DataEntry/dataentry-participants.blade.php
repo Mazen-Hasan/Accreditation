@@ -26,7 +26,14 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Company / Participants</p>
+                                <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('dataentrys', [$companyId, $eventId]) }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    {{$event_name}}
+                                    / {{$company_name}}
+                                     / Participants
+                                </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -43,13 +50,6 @@
                                     </i>
                                     <span class="dt-hbtn">Add</span>
                                 </a>
-
-                                <!-- <a href="{{route('pdf-generate')}}" id="generate" class="add-hbtn">
-                                    <i>
-                                        <img src="{{ asset('images/add.png') }}" alt="Add">
-                                    </i>
-                                    <span class="dt-hbtn">Generate</span>
-                                </a> -->
                                 @endrole
                             </div>
                         </div>
@@ -61,16 +61,6 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                 @endforeach
-                                <!-- <th>ID</th>
-                                    <th>Name</th>
-                                    {{--                                    <th>Location</th>--}}
-                                    <th>Nationality</th>
-                                    <th>Class</th>
-                                    <th>Email</th>
-                                    <th>Mobile</th>
-                                    <th>Position</th>
-                                    <th>Accreditation Category</th>
-                                    <th>Religion</th>--}} -->
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -84,6 +74,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -123,7 +114,6 @@
                 <div class="modal-body">
                     <div>
                         <input type="hidden" id="curr_element_id-new">
-                        <!-- <input type="hidden" id="action_button"> -->
                         <label class="col-sm-12 confirm-text" id="confirmText-new"></label>
                         <textarea id="reason" style="margin-bottom:10px"></textarea>
                     </div>
@@ -187,7 +177,6 @@
             }
             myColumns.push({data: "status", name: "status"});
             myColumns.push({data: "action", name: "action", orderable: "false"});
-            //alert("val---" + JSON.stringify(myColumns));
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
@@ -219,153 +208,6 @@
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Post");
                 //$('#ajax-crud-modal').modal('show');
-            });
-
-
-            $('body').on('click', '#generate-badge', function () {
-                var staff_id = $(this).data("id");
-                $('#print_staff_id').val(staff_id);
-                $.ajax({
-                    type: "get",
-                    url: "badge-generate/" + staff_id,
-                    success: function (data) {
-                        $('#badge-modal').modal('show');
-                        var imag = data;
-                        var image_path = "{{URL::asset('badges/')}}/";
-
-                        $('#badge').attr('src', image_path + imag);
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
-
-            $('body').on('click', '#preview-badge', function () {
-                var staff_id = $(this).data("id");
-                $('#print_staff_id').val(staff_id);
-                $.ajax({
-                    type: "get",
-                    url: "badge-preview/" + staff_id,
-                    success: function (data) {
-                        console.log($('#btn-print').attr('class'));
-                        $('#badge-modal').modal('show');
-                        var imag = data;
-                        var image_path = "{{URL::asset('badges/')}}/";
-
-                        $('#badge').attr('src', image_path + imag);
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
-
-            $('body').on('click', '#btn-print', function () {
-                var staff_id = $('#print_staff_id').val();
-                $.ajax({
-                    type: "get",
-                    url: "badge-print/" + staff_id,
-                    success: function (data) {
-                        $('#badge-modal').modal('show');
-                        printJS($('#badge').attr('src'), 'image');
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
-                        return false;
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
-
-            $('body').on('click', '#send_request', function () {
-                var post_id = $(this).data("id");
-                var company_id = $('#company_id').val();
-                var eventId = $('#event_id').val();
-                $('#confirmTitle').html('Send Participation Request');
-                $('#curr_element_id').val(post_id);
-                $('#action_button').val('sendRequest');
-                var confirmText = "Are You sure you want to Send Event participation?";
-                $('#confirmText').html(confirmText);
-                $('#delete-element-confirm-modal').modal('show');
-            });
-
-            $('body').on('click', '#show_reason', function () {
-                var post_id = $(this).data("id");
-                var reason = $(this).data("reason");
-                var company_id = $('#company_id').val();
-                var eventId = $('#event_id').val();
-                $('#confirmTitle-new').html('Reject Reason');
-                $('#curr_element_id-new').val(post_id);
-                // $('#action_button').val('approve');
-                $('#reason').val(reason);
-                $('#btn-yes-new').hide();
-                var confirmText = "Reason:";
-                $('#confirmText-new').html(confirmText);
-                $('#delete-element-confirm-modal-new').modal('show');
-            });
-
-            $('#delete-element-confirm-modal button').on('click', function (event) {
-                var $button = $(event.target);
-                $(this).closest('.modal').one('hidden.bs.modal', function () {
-                    if ($button[0].id === 'btn-yes') {
-                        var post_id = $('#curr_element_id').val();
-                        var action_button = $('#action_button').val();
-                        // if(action_button == 'delete'){
-                        //     $.ajax({
-                        //         type: "get",
-                        //         url: "../companyAdminController/destroyCompanyAccreditCat/"+post_id,
-                        //         success: function (data) {
-                        //             var oTable = $('#laravel_datatable').dataTable();
-                        //             oTable.fnDraw(false);
-                        //         },
-                        //         error: function (data) {
-                        //             console.log('Error:', data);
-                        //         }
-                        //     });
-                        // }
-                        if (action_button == 'sendRequest') {
-                            // var company_id = $('#company_id').val();
-                            var staffId = $('#curr_element_id').val();
-                            $.ajax({
-                                type: "get",
-                                url: "companyAdminController/sendRequest/" + staffId,
-                                success: function (data) {
-                                    var oTable = $('#laravel_datatable').dataTable();
-                                    $('#send-approval-request').hide();
-                                    $('#add-new-post').hide();
-                                    oTable.fnDraw(false);
-                                },
-                                error: function (data) {
-                                    console.log('Error:', data);
-                                }
-                            });
-                        }
-                    }
-                });
-            });
-            $('#delete-element-confirm-modal-new button').on('click', function (event) {
-                var $button = $(event.target);
-                $(this).closest('.modal').one('hidden.bs.modal', function () {
-                    if ($button[0].id === 'btn-yes-new') {
-                        var staffId = $('#curr_element_id-new').val();
-                        var reason = $('#reason').val();
-                        $.ajax({
-                            type: "get",
-                            url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
-                            success: function (data) {
-                                var oTable = $('#laravel_datatable').dataTable();
-                                oTable.fnDraw(false);
-                            },
-                            error: function (data) {
-                                console.log('Error:', data);
-                            }
-                        });
-                    }
-                });
             });
         });
     </script>

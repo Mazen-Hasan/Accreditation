@@ -180,14 +180,6 @@ class EventAdminController extends Controller
                     $button = '';
                     $button .= '<a href="' . route('participantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    if ($data->print_status == 0) {
-                        $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="' . $data->id . '" title="Generate"><i class="fas fa-cogs"></i></a>';
-                        $button .= '&nbsp;&nbsp;';
-                    } else {
-                        $printed = $data->print_status == 2 ? 'printed' : '';
-                        $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="' . $data->id . '" class="preview-badge"' . $printed . '" title="Preview"><i class="far fa-eye"></i></a>';
-                        $button .= '&nbsp;&nbsp;';
-                    }
 
                     switch ($data->status) {
                         case 2:
@@ -202,6 +194,16 @@ class EventAdminController extends Controller
                             break;
                         case 8:
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->event_admin_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
+                            break;
+                        case 6 || 3:
+                            if ($data->print_status == 0) {
+                                $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="' . $data->id . '" title="Generate"><i class="fas fa-cogs"></i></a>';
+                                $button .= '&nbsp;&nbsp;';
+                            } else {
+                                $printed = $data->print_status == 2 ? 'printed' : '';
+                                $button .= '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="' . $data->id . '" class="preview-badge"' . $printed . '" title="Preview"><i class="far fa-eye"></i></a>';
+                                $button .= '&nbsp;&nbsp;';
+                            }
                             break;
                     }
                     return $button;

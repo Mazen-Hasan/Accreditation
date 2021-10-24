@@ -57,7 +57,14 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Company / Participants</p>
+                                <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('company-admin') }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    {{$event_name}}
+                                    / {{$company_name}}
+                                    / Participants
+                                </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -203,7 +210,6 @@
             }
             myColumns.push({data: "status", name: "status"});
             myColumns.push({data: "action", name: "action", orderable: "false"});
-            //alert("val---" + JSON.stringify(myColumns));
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
@@ -241,9 +247,14 @@
             $('body').on('click', '#generate-badge', function () {
                 var staff_id = $(this).data("id");
                 $('#print_staff_id').val(staff_id);
+
+                var url = "{{ route('badgeGenerate', ":staff_id") }}";
+                url = url.replace(':staff_id', staff_id);
+
                 $.ajax({
                     type: "get",
-                    url: "badge-generate/" + staff_id,
+                    // url: "badge-generate/" + staff_id,
+                    url: url,
                     success: function (data) {
                         $('#badge-modal').modal('show');
                         var imag = data;
@@ -262,9 +273,14 @@
             $('body').on('click', '#preview-badge', function () {
                 var staff_id = $(this).data("id");
                 $('#print_staff_id').val(staff_id);
+
+                var url = "{{ route('badgePreview', ":staff_id") }}";
+                url = url.replace(':staff_id', staff_id);
+
                 $.ajax({
                     type: "get",
-                    url: "badge-preview/" + staff_id,
+                    // url: "badge-preview/" + staff_id,
+                    url: url,
                     success: function (data) {
                         console.log($('#btn-print').attr('class'));
                         $('#badge-modal').modal('show');
@@ -281,9 +297,14 @@
 
             $('body').on('click', '#btn-print', function () {
                 var staff_id = $('#print_staff_id').val();
+
+                var url = "{{ route('badgePrint', ":staff_id") }}";
+                url = url.replace(':staff_id', staff_id);
+
                 $.ajax({
                     type: "get",
-                    url: "badge-print/" + staff_id,
+                    // url: "badge-print/" + staff_id,
+                    url: url,
                     success: function (data) {
                         $('#badge-modal').modal('show');
                         printJS($('#badge').attr('src'), 'image');
@@ -351,15 +372,22 @@
                     }
                 });
             });
+
             $('#delete-element-confirm-modal-new button').on('click', function (event) {
                 var $button = $(event.target);
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
                     if ($button[0].id === 'btn-yes-new') {
                         var staffId = $('#curr_element_id-new').val();
                         var reason = $('#reason').val();
+
+                        var url = "{{ route('eventAdminControllerRejectToCorrect', [":staffId",":reason"]) }}";
+                        url = url.replace(':staffId', staffId);
+                        url = url.replace(':reason', reason);
+
                         $.ajax({
                             type: "get",
-                            url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
+                            // url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
+                            url: url,
                             success: function (data) {
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);

@@ -51,7 +51,9 @@
                     <input type="hidden" id="event_id" value={{$eventId}}>
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Data Entries</p>
+                                <h4 class="card-title">
+                                    Data Entries
+                                </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">

@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Templates')
+@section('subtitle',' Participants - Details')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
@@ -42,7 +42,15 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Participant - Detials</h4>
+                        <h4 class="card-title">
+                            <a class="url-nav" href="{{ route('company-admin') }} ">
+                                <span>My Events:</span>
+                            </a>
+                            <a class="url-nav" href="{{ route('companyParticipants',[$companyId,$eventId]) }} ">
+                                <span>{{$event_name}} - {{$company_name}}</span>
+                            </a>
+                            / Participants - Details
+                        </h4>
                         <form class="form-sample" id="templateForm" name="templateForm">
                         <input type="hidden" id="company_id" value={{$companyId}} />
                         <input type="hidden" id="event_id" value={{$eventId}} />

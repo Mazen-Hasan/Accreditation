@@ -36,9 +36,9 @@ class DataEntryController extends Controller
                     return $row->name . ' ' . $row->middle_name . ' ' . $row->last_name;
                 })
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('dataentryEdit', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    $button = '<a href="' . route('dataentryEdit', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="reset_password" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->account_id . '" class="delete btn btn-google">Reset Password</a>';
+                    $button .= '<a href="javascript:void(0);" id="reset_password" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->account_id . '" title="Reset password"><i class="fas fa-retweet"></i></a>';
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -227,40 +227,40 @@ class DataEntryController extends Controller
             $participants = DB::select('select t.* , c.* from temp_dataentry_' . Auth::user()->id . ' t inner join company_staff c on t.id = c.id');
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {
-                    $status_value = "initaited";
+                    $status_value = "Initiated";
                     switch ($data->status) {
                         case 0:
-                            $status_value = "Initaited";
+                            $status_value = "Initiated";
                             break;
                         case 1:
-                            $status_value = "waiting Security Officer Approval";
+                            $status_value = "Waiting Security Officer Approval";
                             break;
                         case 2:
-                            $status_value = "waiting Event Admin Approval";
+                            $status_value = "Waiting Event Admin Approval";
                             break;
                         case 3:
-                            $status_value = "approved by security officer";
+                            $status_value = "Approved by security officer";
                             break;
                         case 4:
-                            $status_value = "rejected by security officer";
+                            $status_value = "Rejected by security officer";
                             break;
                         case 5:
-                            $status_value = "rejected by event admin";
+                            $status_value = "Rejected by event admin";
                             break;
                         case 6:
-                            $status_value = "approved by event admin";
+                            $status_value = "Approved by event admin";
                             break;
                         case 7:
-                            $status_value = "rejected with correction by security officer";
+                            $status_value = "Rejected with correction by security officer";
                             break;
                         case 8:
-                            $status_value = "rejected with correction by event admin";
+                            $status_value = "Rejected with correction by event admin";
                             break;
                         case 9:
-                            $status_value = "badge generated";
+                            $status_value = "Badge generated";
                             break;
                         case 10:
-                            $status_value = "badge printed";
+                            $status_value = "Badge printed";
                             break;
                     }
                     return $status_value;
@@ -270,7 +270,7 @@ class DataEntryController extends Controller
                     switch ($data->status) {
 
                         case 0:
-                            $button .= '<a href="' . route('participantAdd', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                            $button .= '<a href="' . route('participantAdd', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                             $button .= '&nbsp;&nbsp;';
                             break;
                     }
@@ -280,7 +280,8 @@ class DataEntryController extends Controller
                 ->make(true);
         }
         $subCompany_nav = 1;
-        return view('pages.DataEntry.dataentry-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
+        return view('pages.DataEntry.dataentry-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)
+            ->with('companyId',$companyId)->with('eventId',$eventId)->with('event_name',$event->name)->with('company_name',$company->name);
     }
 
     public function participantAdd($participant_id,$companyId,$eventId)

@@ -44,8 +44,6 @@
                     <div class="card-body">
                         <h4 class="card-title">Participant - New</h4>
                         <form class="form-sample" id="templateForm" name="templateForm">
-                        <!-- <input type="hidden" id="company_id" value={{$companyId}} />
-                        <input type="hidden" id="event_id" value={{$eventId}} /> -->
                             <?php echo $form ?>
                         </form>
                         <br>

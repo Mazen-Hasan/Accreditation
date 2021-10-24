@@ -166,7 +166,8 @@
                 serverSide: true,
                 ajax: {
                     //url: '../company-accreditation-size/' + eventId,
-                    url: '../../company-accreditation-size-new/' + companyId + '/' + eventId,
+                    //url: '../../company-accreditation-size-new/' + companyId + '/' + eventId,
+                    url: "{{route('companyAccreditCat',[$companyId,$eventId])}}",
                     type: 'GET',
                 },
                 columns: [
@@ -197,7 +198,9 @@
             });
             $('body').on('click', '#edit-company-accreditation', function () {
                 var post_id = $(this).data('id');
-                $.get('../../companyController/editCompanyAccreditSize/' + post_id, function (data) {
+                var url = "{{ route('companyControllerEditCompanyAccreditSize', ':id') }}";
+                url = url.replace(':id', post_id);
+                $.get(url, function (data) {
                     $('#name-error').hide();
                     $('#email-error').hide();
                     $('#postCrudModal').html("Edit Company Accreditation Category");
@@ -240,9 +243,16 @@
                     $('#error_message').text('Size has to be more than 0 and less than ' + remaining_size);
                     $('#error_message').show();
                 } else {
+                    var url = "{{ route('companyControllerStoreCompanyAccrCatSize',[ ':id',':accredit_cat_id',':size',':company_id',':eventId']) }}";
+                    url = url.replace(':id', post_id);
+                    url = url.replace(':accredit_cat_id', accredit_cat_id);
+                    url = url.replace(':size', size);
+                    url = url.replace(':company_id', company_id);
+                    url = url.replace(':eventId', eventId);
                     $.ajax({
                         type: "get",
-                        url: "../../companyController/storeCompanyAccrCatSize/" + post_id + "/" + accredit_cat_id + "/" + size + "/" + company_id + "/" + eventId,
+                        // url: "../../companyController/storeCompanyAccrCatSize/" + post_id + "/" + accredit_cat_id + "/" + size + "/" + company_id + "/" + eventId,
+                        url:url,
                         success: function (data) {
                             $('#ajax-crud-modal').modal('hide');
                             //alert('i am here');
@@ -284,9 +294,12 @@
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
                         if (action_button == 'delete') {
+                            var url = "{{ route('companyControllerDestroyCompanyAccreditCat', ':id') }}";
+                            url = url.replace(':id', post_id);
                             $.ajax({
                                 type: "get",
-                                url: "../../companyController/destroyCompanyAccreditCat/" + post_id,
+                                // url: "../../companyController/destroyCompanyAccreditCat/" + post_id,
+                                url:url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -305,9 +318,13 @@
                         if (action_button == 'approve') {
                             var company_id = $('#company_id').val();
                             var eventId = $('#event_id').val();
+                            var url = "{{ route('companyControllerApprove', [':company_id',':eventId']) }}";
+                            url = url.replace(':company_id', company_id);
+                            url = url.replace(':eventId', eventId);
                             $.ajax({
                                 type: "get",
-                                url: "../../companyController/Approve/" + company_id + "/" + eventId,
+                                // url: "../../companyController/Approve/" + company_id + "/" + eventId,
+                                url:url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();

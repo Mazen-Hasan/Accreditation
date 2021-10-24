@@ -299,9 +299,9 @@ class CompanyController extends Controller
             $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
             return datatables()->of($companyAccreditationCategories)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
+                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Size"><i class="fas fa-chart-pie"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip" data-original-title="Delete" data-size="' . $data->size . '" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
+                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip" data-original-title="Delete" data-size="' . $data->size . '" data-id="' . $data->id . '" title="Delete"><i class="far fa-trash-alt"></i></a>';
                     return $button;
                 })
                 ->rawColumns(['action'])

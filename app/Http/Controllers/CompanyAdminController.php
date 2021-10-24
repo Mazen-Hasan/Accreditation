@@ -169,46 +169,37 @@ class CompanyAdminController extends Controller
     }
 
 
-    public function companyParticipantAdd()
-    {
-        $accreditationCategories = AccreditationCategory::get()->all();
-        $accreditationCategoriesSelectOption = array();
-        foreach ($accreditationCategories as $accreditationCategory) {
-            $accreditationCategorySelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
-            $accreditationCategoriesSelectOption[] = $accreditationCategorySelectOption;
-        }
-        $nationalClassess = NationalityClass::get()->all();
-        $classess = array();
-        foreach ($nationalClassess as $nationalClass) {
-            $class = new SelectOption($nationalClass->id, $nationalClass->name);
-            $classess[] = $class;
-        }
-        $gendersItems = Gender::get()->all();
-        $genders = array();
-        foreach ($gendersItems as $gendersItem) {
-            $gender = new SelectOption($gendersItem->id, $gendersItem->name);
-            $genders[] = $gender;
-        }
-        $religionsItems = Religion::get()->all();
-        $religions = array();
-        foreach ($religionsItems as $religionsItem) {
-            $religion = new SelectOption($religionsItem->id, $religionsItem->name);
-            $religions[] = $religion;
-        }
-        return view('pages.CompanyAdmin.company-participant-add')->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption', $religions);
-    }
-
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+//    public function companyParticipantAdd()
+//    {
+//        $accreditationCategories = AccreditationCategory::get()->all();
+//        $accreditationCategoriesSelectOption = array();
+//        foreach ($accreditationCategories as $accreditationCategory) {
+//            $accreditationCategorySelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
+//            $accreditationCategoriesSelectOption[] = $accreditationCategorySelectOption;
+//        }
+//        $nationalClassess = NationalityClass::get()->all();
+//        $classess = array();
+//        foreach ($nationalClassess as $nationalClass) {
+//            $class = new SelectOption($nationalClass->id, $nationalClass->name);
+//            $classess[] = $class;
+//        }
+//        $gendersItems = Gender::get()->all();
+//        $genders = array();
+//        foreach ($gendersItems as $gendersItem) {
+//            $gender = new SelectOption($gendersItem->id, $gendersItem->name);
+//            $genders[] = $gender;
+//        }
+//        $religionsItems = Religion::get()->all();
+//        $religions = array();
+//        foreach ($religionsItems as $religionsItem) {
+//            $religion = new SelectOption($religionsItem->id, $religionsItem->name);
+//            $religions[] = $religion;
+//        }
+//        return view('pages.CompanyAdmin.company-participant-add')->with('classess', $classess)->with('genders', $genders)->with('accreditationCategoriesSelectOption', $accreditationCategoriesSelectOption)->with('religionsSelectOption', $religions);
+//    }
 
     public function store(Request $request)
     {
-        //xdebug_break();
         $where = array('company_admin_id' => Auth::user()->id);
         $company = Company::where($where)->get()->first();
         $postId = $request->post_id;
@@ -432,7 +423,6 @@ class CompanyAdminController extends Controller
 
     }
 
-
     public function subCompanies($companyId, $eventId)
     {
         $where = array('id' => $companyId);
@@ -443,11 +433,11 @@ class CompanyAdminController extends Controller
             $companies = DB::select('select * from companies_view where parent_id = ?', [$company->id]);
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('subCompanyEdit', [$data->id, $data->event_id]) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button = '<a href="' . route('subCompanyEdit', [$data->id, $data->event_id]) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" class="delete btn btn-danger" title="Invite Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" title="Invite"><i class="far fa-share-square"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('subCompanyAccreditCategories', [$data->id, $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="' . route('subCompanyAccreditCategories', [$data->id, $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Accreditation Size"><i class="fas fa-sitemap"></i></a>';
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -517,7 +507,6 @@ class CompanyAdminController extends Controller
 
         return Response::json($company);
     }
-
 
     public function subCompanyEdit($id, $eventid)
     {
@@ -593,11 +582,6 @@ class CompanyAdminController extends Controller
             ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss)->with('subCompany_nav',$subCompany_nav);
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     */
     public function destroy($id)
     {
         $post = Company::where('id', $id)->delete();
@@ -662,7 +646,8 @@ class CompanyAdminController extends Controller
             $subCompany_nav = 0;
         }
         return view('pages.CompanyAdmin.subCompany-add')->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventId', $id)->with('event_name', $event->name)->with('statuss', $companyStatuss)->with('company_name', $company->name)->with('companyId',$companyId)->with('subCompany_nav',$subCompany_nav);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventId', $id)->with('event_name', $event->name)->with('statuss', $companyStatuss)->with('company_name', $company->name)
+            ->with('companyId',$companyId)->with('subCompany_nav',$subCompany_nav);
     }
 
     public function subCompanyAccreditCategories($companyId, $eventId)

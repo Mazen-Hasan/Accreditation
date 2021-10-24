@@ -42,7 +42,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('/template-form/{template_id}/{company_id}/{event_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
     Route::get('/template-form-details/{participant_id}', [App\Http\Controllers\TemplateFormController::class, 'details'])->name('templateFormDetails');
 
-    Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
+
 
     Route::get('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
 
@@ -206,8 +206,10 @@ Route::group(['middleware' => 'role:data-entry'], function () {
     //Route::resource('dataentryController', 'App\Http\Controllers\DataEntryController');
     Route::get('/dataentry-participnat-add/{template_id}/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'participantAdd'])->name('participantAdd');
     Route::post('dataentryContoller/storeParticipant', [App\Http\Controllers\DataEntryController::class, 'storeParticipant'])->name('storeParticipant');
-    Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
+//    Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
 });
+
+Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
 
 Route::get('/send-notification', [App\Http\Controllers\NotificationController::class, 'sendAlertNotification']);
 Route::get('/get-notification', [App\Http\Controllers\NotificationController::class, 'getNotifications']);

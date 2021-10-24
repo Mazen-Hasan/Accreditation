@@ -215,11 +215,11 @@ class EventController extends Controller
         if($postId == null){
             $where = array('organizer' =>  $request->organizer);
             $event = Event::where($where)->get()->last();
-
-            $where = array('event_id' =>  $event->id);
-            $event_companies = EventCompany::where($where)->get()->all();
-
-            $event_company_data_entries = EventCompanyDataEntry::where($where)->get()->all();
+            if($event != null){
+                $where = array('event_id' =>  $event->id);
+                $event_companies = EventCompany::where($where)->get()->all();
+                $event_company_data_entries = EventCompanyDataEntry::where($where)->get()->all();
+            }
         }
 
         $post = Event::updateOrCreate(['id' => $postId],

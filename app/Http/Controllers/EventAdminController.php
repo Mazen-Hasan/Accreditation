@@ -267,13 +267,20 @@ class EventAdminController extends Controller
         $eventWhere = array('id' => $eventId);
         $event = Event::where($eventWhere)->first();
 
+        $companyWhere = array('id' => $companyId);
+        $company = Company::where($companyWhere)->first();
+
         $approval = $event->approval_option;
+        $eventCompanies = EventCompany::where(['company_id'=> $companyId ,'event_id'=> $eventId])->first();
+        $focalPoint = FocalPoint::where(['id'=>$eventCompanies->focal_point_id])->first();
         if ($approval == 2) {
             DB::update('update company_staff set status = ? where id = ?', [5, $staffId]);
+            NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
 
         } else {
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [5, $staffId]);
+                NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
             }
         }
         return Response::json($event);

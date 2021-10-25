@@ -92,6 +92,10 @@ class DataEntryController extends Controller
                 'company_id' => $request->company_id,
                 'status' => $request->status,
             ]);
+            //$focal_point = DB::select('select * from focal_points f where f.id = ?', [$post->focal_point_id]);
+            $event = Event::where(['id'=>$request->event_id])->first();
+            $company = Company::where(['id'=>$request->company_id])->first();
+            NotificationController::sendAlertNotification($user->id, 0, $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('dataEntryParticipants' , [$request->company_id, $request->event_id]));
         } else {
             $post = DataEntry::updateOrCreate(['id' => $postId],
                 [

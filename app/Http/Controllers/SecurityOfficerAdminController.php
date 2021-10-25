@@ -192,13 +192,22 @@ class SecurityOfficerAdminController extends Controller
         $eventWhere = array('id' => $eventId);
         $event = Event::where($eventWhere)->first();
 
+        $companyWhere = array('id' => $companyId);
+        $company = Company::where($companyWhere)->first();
+
         $approval = $event->approval_option;
         if ($approval == 1) {
             DB::update('update company_staff set status = ? where id = ?', [3, $staffId]);
+            $event_companies = EventCompany::where(['event_id'=>$eventId, 'company_id'=> $companyId])->first();
+            $focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
+            NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
 
         } else {
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [3, $staffId]);
+                $event_companies = EventCompany::where(['event_id'=>$eventId, 'company_id'=> $companyId])->first();
+                $focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
+                NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
             }
         }
         return Response::json($event);

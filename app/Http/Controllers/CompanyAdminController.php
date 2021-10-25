@@ -726,6 +726,10 @@ class CompanyAdminController extends Controller
             [
                 'status' => 3
             ]);
+            $focal_point = DB::select('select * from focal_points f where f.id = ?', [$post->focal_point_id]);
+            $event = Event::where(['id'=>$eventId])->first();
+            $company = Company::where(['id'=>$companyId])->first();
+            NotificationController::sendAlertNotification($focal_point[0]->account_id, 0, $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('companyParticipants' , [$companyId, $eventId]));
         return Response::json($post);
     }
 }

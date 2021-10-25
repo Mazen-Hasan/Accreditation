@@ -81,7 +81,8 @@ class EventController extends Controller
             ['event_id' => $request->event_id,
                 'user_id' => $request->admin_id,
             ]);
-
+            $event = Event::where(['id'=>$request->event_id,])->first();
+            NotificationController::sendAlertNotification($request->admin_id, 0, $event->name . ':' . 'Event assignment', Route('eventCompanies' , [$request->event_id]));
 //        if($post != null){
 //            $where = array('id' => $request->event_id);
 //            $event = Event::where($where)->first();
@@ -127,6 +128,8 @@ class EventController extends Controller
             ['event_id' => $request->event_id,
                 'user_id' => $request->security_officer_id,
             ]);
+            $event = Event::where(['id'=>$request->event_id,])->first();
+            NotificationController::sendAlertNotification($request->security_officer_id, 0, $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies' , [$request->event_id]));
         return Response::json($post);
     }
 
@@ -259,6 +262,8 @@ class EventController extends Controller
                     ['event_id' => $post->id,
                         'user_id' => $event_admin
                     ]);
+                    $event = Event::where(['id'=>$post->id])->first();
+                    NotificationController::sendAlertNotification($event_admin, 0, $event->name . ':' . 'Event assignment', Route('eventCompanies' , [$post->id]));
             }
 
             foreach ($request->security_officers as $security_officer) {
@@ -266,6 +271,8 @@ class EventController extends Controller
                     ['event_id' => $post->id,
                         'user_id' => $security_officer
                     ]);
+                    $event = Event::where(['id'=>$post->id])->first();
+                    NotificationController::sendAlertNotification($security_officer, 0, $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies' , [$post->id]));
             }
 
             foreach ($event_companies as $row){

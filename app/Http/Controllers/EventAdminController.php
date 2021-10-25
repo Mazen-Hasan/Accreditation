@@ -53,6 +53,12 @@ class EventAdminController extends Controller
             [
                 'status' => 3
             ]);
+
+        $focal_point = DB::select('select * from focal_points f where f.id = ?', [$post->focal_point_id]);
+        $event = Event::where(['id'=>$eventId])->first();
+        $company = Company::where(['id'=>$companyId])->first();
+        NotificationController::sendAlertNotification($focal_point[0]->account_id, 0, $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('companyParticipants' , [$companyId, $eventId]));
+
         return Response::json($post);
     }
 
@@ -234,6 +240,10 @@ class EventAdminController extends Controller
         if ($approval == 2) {
             DB::update('update company_staff set status = ? where id = ?', [6, $staffId]);
 
+            $event_companies = EventCompany::where(['event_id'=>$eventId, 'company_id'=> $companyId])->first();
+            $focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
+            NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
+
         } else {
             if ($approval == 3) {
                 foreach ($event_security_officers as $event_security_officer){
@@ -314,7 +324,7 @@ class EventAdminController extends Controller
         $company = Company::where($where)->first();
         $company_name = $company->name;
 
-        $company_admin_id = '_Event' . $event->event_admin;
+        $company_admin_id = '_Event' . $event->id;
 
         $template_id = $event->event_form;
         if ($participant_id != 0) {

@@ -29,7 +29,7 @@
             <a class="nav-link {{ str_contains( Request::route()->getName(),'companyCategories') =="1" ? "active" : "" }}"
                href="{{ route('companyCategories') }}">
                 <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Company Categories">
+                    <img src="{{ asset('images/company.png') }}" alt="Company Categories">
                 </i>
                 <span class="menu-title">Company categories</span>
             </a>
@@ -38,7 +38,7 @@
             <a class="nav-link {{ str_contains( Request::route()->getName(),'securityCategories') =="1" ? "active" : "" }}"
                href="{{ route('securityCategories') }}">
                 <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Security Category">
+                    <img src="{{ asset('images/security.png') }}" alt="Security Category">
                 </i>
                 <span class="menu-title">Security categories</span>
             </a>
@@ -92,7 +92,7 @@
             <a class="nav-link {{ str_contains( Request::route()->getName(),'contact') =="1" ? "active" : "" }}"
                href="{{ route('contacts') }}">
                 <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Contact">
+                    <img src="{{ asset('images/participant.png') }}" alt="Contact">
                 </i>
                 <span class="menu-title">Event Organizer/Owner</span>
             </a>

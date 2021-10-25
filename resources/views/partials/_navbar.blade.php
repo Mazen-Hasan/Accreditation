@@ -33,7 +33,7 @@
                         @if (auth()->user()->unreadNotifications->count() == '0')
                             <img src="{{ asset('images/notification-0.png') }}" alt="Notifications" id="notify" onblur="hide()">
                         @else
-                            <img src="{{ asset('images/notification-empty.png') }}" alt="Notifications" id="notify">
+                            <img src="{{ asset('images/notification.png') }}" alt="Notifications" id="notify">
                         @endif
 
                     </i>

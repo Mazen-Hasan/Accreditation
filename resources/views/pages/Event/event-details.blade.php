@@ -26,7 +26,7 @@
                                 @role('super-admin')
                                 <a href="{{route('eventEdit', [$event->id])}}" id="add-new-post" class="add-hbtn">
                                     <i>
-                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                        <img src="{{ asset('images/edit.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Edit</span>
                                 </a>

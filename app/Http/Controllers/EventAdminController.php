@@ -279,15 +279,22 @@ class EventAdminController extends Controller
         $eventWhere = array('id' => $eventId);
         $event = Event::where($eventWhere)->first();
 
+        $companyWhere = array('id' => $companyId);
+        $company = Company::where($companyWhere)->first();
+
         $approval = $event->approval_option;
+        $eventCompanies = EventCompany::where(['company_id'=> $companyId ,'event_id'=> $eventId])->first();
+        $focalPoint = FocalPoint::where(['id'=>$eventCompanies->focal_point_id])->first();
         if ($approval == 2) {
             DB::update('update company_staff set status = ? where id = ?', [8, $staffId]);
             DB::update('update company_staff set event_admin_reject_reason = ? where id = ?', [$reason, $staffId]);
+            NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
 
         } else {
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [8, $staffId]);
                 DB::update('update company_staff set event_admin_reject_reason = ? where id = ?', [$reason, $staffId]);
+                NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
             }
         }
         return Response::json($event);
@@ -315,7 +322,8 @@ class EventAdminController extends Controller
         } else {
             $templateFields = DB::select('select * from template_fields_view v where v.template_id = ? order by v.field_order', [$template_id]);
         }
-        $participants = DB::select('select t.* , c.* from temp' . $company_admin_id . ' t inner join company_staff c on t.id = c.id where c.id = ?', [$participant_id]);
+        //$participants = DB::select('select t.* , c.* from temp' . $company_admin_id . ' t inner join company_staff c on t.id = c.id where c.id = ?', [$participant_id]);
+        $participants = DB::select('select * from company_staff c where c.id = ?', [$participant_id]);
         $status_value = "initaited";
         $status = 0;
         $event_reject_reason = '';
@@ -373,7 +381,7 @@ class EventAdminController extends Controller
             $form .= '</div>';
         }
         if ($status == 7) {
-            $form = '<div class="row">';
+            $form .= '<div class="row">';
             $form .= $this->createStatusFieldLabel("Reject Reason", $security_officer_reject_reason);
             $form .= '</div>';
         }

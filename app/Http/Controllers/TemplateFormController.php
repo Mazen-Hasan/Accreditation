@@ -332,7 +332,8 @@ class TemplateFormController extends Controller
         } else {
             $templateFields = DB::select('select * from template_fields_view v where v.template_id = ? order by v.field_order', [$template_id]);
         }
-        $participants = DB::select('select t.* , c.* from temp_' . $company->id . ' t inner join company_staff c on t.id = c.id where c.id = ?', [$participant_id]);
+        //$participants = DB::select('select t.* , c.* from temp_' . $company->id . ' t inner join company_staff c on t.id = c.id where c.id = ?', [$participant_id]);
+        $participants = DB::select('select * from company_staff c where c.id = ?', [$participant_id]);
         $status_value = "initaited";
         $status = 0;
         $event_reject_reason = '';
@@ -341,7 +342,7 @@ class TemplateFormController extends Controller
             $status = $participant->status;
             $event_reject_reason = $participant->event_admin_reject_reason;
             $security_officer_reject_reason = $participant->security_officer_reject_reason;
-            switch ($participant->status) {
+            switch ($status) {
                 case 0:
                     $status_value = "Initiated";
                     break;
@@ -385,12 +386,12 @@ class TemplateFormController extends Controller
         $form .= $this->createStatusFieldLabel("Status",  $status_value);
         $form .= '</div>';
         if ($status == 8) {
-            $form = '<div class="row">';
+            $form .= '<div class="row">';
             $form .= $this->createStatusFieldLabel("Reject reason", $event_reject_reason);
             $form .= '</div>';
         }
         if ($status == 7) {
-            $form = '<div class="row">';
+            $form .= '<div class="row">';
             $form .= $this->createStatusFieldLabel("Reject reason", $security_officer_reject_reason);
             $form .= '</div>';
         }

@@ -63,12 +63,16 @@ class SecurityOfficerAdminController extends Controller
     {
         $dataTableColumuns = array();
 
-        $where = array('id' => $companyId);
-        $company = Company::where($where)->get()->first();
-        $company_admin_id = $company->id;
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
-
+        if($companyId != 0){
+            $where = array('id' => $companyId);
+            $company = Company::where($where)->get()->first();
+            $company_admin_id = $company->id;
+        }else{
+            $company_admin_id = $event->id;
+        }
+    
         $where = array('template_id' => $event->event_form);
         $templateFields = TemplateField::where($where)->get()->all();
 
@@ -83,12 +87,21 @@ class SecurityOfficerAdminController extends Controller
                 $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
             }
         });
-        $where = array('event_id' => $eventId, 'company_id' => $companyId);
+        if ($companyId == 0) {
+            $where = array('event_id' => $eventId,'status'=>1);
+        } else {
+            $where = array('event_id' => $eventId, 'company_id' => $company->id,'status'=>1);
+        }
         $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach ($companyStaffs as $companyStaff) {
             $where = array('staff_id' => $companyStaff->id);
-            $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
+            if ($companyId != 0) {
+                $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
+            } else {
+                $staffDatas = DB::select('select * from event_staff_data_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
+            }
+            //$staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
             $staffDataValues = array();
             $staffDataValues[] = $companyStaff->id;
             foreach ($staffDatas as $staffData) {

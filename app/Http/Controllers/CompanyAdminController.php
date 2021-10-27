@@ -341,9 +341,12 @@ class CompanyAdminController extends Controller
 
     public function storeCompanyAccrCatSize($id, $accredit_cat_id, $size, $company_id, $event_id)
     {
+        $where = array('company_id'=>$company_id, 'event_id' => $event_id);
+        $eventcompnay = EventCompany::where($where)->first();
         try {
             $post = CompanyAccreditaionCategory::updateOrCreate(['id' => $id],
                 ['size' => $size,
+                    'event_company_id' => $eventcompnay->id,
                     'accredit_cat_id' => $accredit_cat_id,
                     'company_id' => $company_id,
                     'subcompany_id' => $company_id,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\CompanyStaff;
 use App\Models\Event;
+use App\Models\CompanyAccreditaionCategory;
 use App\Models\SelectOption;
 use App\Models\StaffData;
 use Illuminate\Http\Request;
@@ -100,20 +101,38 @@ class TemplateFormController extends Controller
                     break;
 
                 case 'select':
-                    if ($participant_id == 0) {
-                        $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?', [$templateField->id]);
-                        foreach ($fieldElements as $fieldElement) {
-                            $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
-                            $options [] = $option;
+                    if (strtolower($templateField->label_en) == 'accreditation category') {
+                        if ($participant_id == 0) {
+                            $fieldElements = DB::select('select * from template_field_elements f inner join event_company_accrediation_categories_view e on e.accredit_cat_id = f.value_id where f.template_field_id = ? and e.size <> e.inserted and company_id =? and event_id = ?', [$templateField->id,$companyId,$eventId]);
+                            foreach ($fieldElements as $fieldElement) {
+                                $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
+                                $options [] = $option;
+                            }
+                            $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, '');
+                        } else {
+                            $fieldElements = DB::select('select * from template_field_elements f inner join event_company_accrediation_categories_view e on e.accredit_cat_id = f.value_id where f.template_field_id = ? and company_id =? and event_id = ?', [$templateField->template_field_id,$companyId,$eventId]);
+                            foreach ($fieldElements as $fieldElement) {
+                                $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
+                                $options [] = $option;
+                            }
+                            $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, $templateField->value);
                         }
-                        $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, '');
-                    } else {
-                        $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?', [$templateField->template_field_id]);
-                        foreach ($fieldElements as $fieldElement) {
-                            $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
-                            $options [] = $option;
-                        }
-                        $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, $templateField->value);
+                    }else{
+                        if ($participant_id == 0) {
+                            $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?', [$templateField->id]);
+                            foreach ($fieldElements as $fieldElement) {
+                                $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
+                                $options [] = $option;
+                            }
+                            $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, '');
+                        } else {
+                            $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?', [$templateField->template_field_id]);
+                            foreach ($fieldElements as $fieldElement) {
+                                $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
+                                $options [] = $option;
+                            }
+                            $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, $templateField->value);
+                        } 
                     }
                     break;
 
@@ -300,6 +319,15 @@ class TemplateFormController extends Controller
         foreach ($data as $key => $value) {
             if ($key != 'participant_id') {
                 if ($participant_id != null) {
+                    if($key == 'Accreditation_category'){
+                        $staffdata = StaffData::where(['staff_id'=>$companyStaff->id,'key'=>$key])->first();
+                        if($staffdata->value != $value){
+                            $query = 'update company_accreditaion_categories set inserted = inserted - 1 where accredit_cat_id = ? and company_id = ? and event_id = ?';
+                            DB::update($query,[$staffdata->value,$request->company_id,$request->event_id]);
+                            $query = 'update company_accreditaion_categories set inserted = inserted + 1 where accredit_cat_id = ? and company_id = ? and event_id = ?';
+                            DB::update($query,[$value,$request->company_id,$request->event_id]);
+                        }  
+                    }
                     $query = 'update staff_data s set s.value = "' . $value . '" where s.staff_id = ' . $companyStaff->id . ' and s.key ="' . $key . '" ';
                     DB::update($query);
                 } else {
@@ -308,6 +336,11 @@ class TemplateFormController extends Controller
                             'key' => $key,
                             'value' => $value
                         ]);
+                        if($key == 'Accreditation_category'){
+                            $query = 'update company_accreditaion_categories set inserted = inserted + 1 where accredit_cat_id = ? and company_id = ? and event_id = ?';
+                            DB::update($query,[$value,$request->company_id,$request->event_id]);
+                        }
+
                 }
             }
         }

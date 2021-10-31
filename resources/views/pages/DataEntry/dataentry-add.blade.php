@@ -50,6 +50,8 @@
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id">
+                            <input type="hidden" name="action_type" id="action_type" value="">
+                            <input type="hidden" name="account_id" id="account_id" value="">
                             <input type="hidden" name="event_id" id="event_id" value={{$eventId}}>
                             <input type="hidden" name="company_id" id="company_id" value={{$companyId}}>
                             <br>
@@ -170,6 +172,30 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="event-organizer-copy-confirm-modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="col-sm-12 confirm-text" id="confirmText"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                            </button>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -187,6 +213,21 @@
                 $('#postCrudModal').html("Add New Contact");
                 $('#ajax-crud-modal').modal('show');
             });
+            $('#btn-cancel').click(function () {
+                $('#action_type').val("");
+                $('#account_id').val("");
+                $('#event-organizer-copy-confirm-modal').modal('hide');
+                window.location.href = "{{ route('dataentrys',[$companyId,$eventId])}}";
+            });
+            $('#btn-yes').click(function () {
+                var account_id = $('#account_id').val();
+                if(account_id != 0){
+                    $('#action_type').val("add_existed");
+                    $("#postForm").submit();
+                }else{
+                    window.location.href = "{{ route('dataentrys',[$companyId,$eventId])}}";
+                }
+            });
         });
 
         if ($("#postForm").length > 0) {
@@ -202,12 +243,32 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
-                            $('#postForm').trigger("reset");
-                            $('#ajax-crud-modal').modal('hide');
-                            $('#btn-save').html('Add successfully');
-                            window.location.href = "{{ route('dataentrys',[$companyId,$eventId])}}";
-                            // var oTable = $('#laravel_datatable').dataTable();
-                            // oTable.fnDraw(false);
+                            $('#action_type').val("");
+                            $('#account_id').val("");
+                            $('#btn-cancel').show();
+                            if(data.code == 400){
+                                $('#account_id').val(data.id);
+                                $('#confirmTitle').html('Add new data entry');
+                                var confirmText = data.message;
+                                $('#confirmText').html(confirmText);
+                                $('#btn-cancel').show();
+                                $('#event-organizer-copy-confirm-modal').modal('show');
+                            }else{
+                                if(data.code == 401){
+                                    $('#account_id').val(data.id);
+                                    $('#confirmTitle').html('Add new data entry');
+                                    var confirmText = data.message;
+                                    $('#confirmText').html(confirmText);
+                                    $('#btn-cancel').hide();
+                                    $('#btn-yes').html('OK');
+                                    $('#event-organizer-copy-confirm-modal').modal('show');
+                                }else{
+                                    $('#postForm').trigger("reset");
+                                    $('#ajax-crud-modal').modal('hide');
+                                    $('#btn-save').html('Add successfully');
+                                    window.location.href = "{{ route('dataentrys',[$companyId,$eventId])}}";
+                                }
+                            }
                         },
                         error: function (data) {
                             console.log('Error:', data);

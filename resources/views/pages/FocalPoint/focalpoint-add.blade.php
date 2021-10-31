@@ -149,6 +149,28 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="event-organizer-copy-confirm-modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="col-sm-12 confirm-text" id="confirmText"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" data-dismiss="modal" id="btn-yes">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -165,6 +187,10 @@
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Contact");
                 $('#ajax-crud-modal').modal('show');
+            });
+            $('#btn-yes').click(function () {
+                $('#event-organizer-copy-confirm-modal').modal('hide');
+                window.location.href = "{{ route('focalpoints')}}";
             });
         });
 
@@ -197,10 +223,17 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
-                            $('#postForm').trigger("reset");
-                            $('#ajax-crud-modal').modal('hide');
-                            $('#btn-save').html('Add successfully');
-                            window.location.href = "{{ route('focalpoints')}}";
+                            if(data.code == 401){
+                                $('#confirmTitle').html('Add new focal point');
+                                var confirmText = data.message;
+                                $('#confirmText').html(confirmText);
+                                $('#event-organizer-copy-confirm-modal').modal('show');
+                            }else{
+                                $('#postForm').trigger("reset");
+                                $('#ajax-crud-modal').modal('hide');
+                                $('#btn-save').html('Add successfully');
+                                window.location.href = "{{ route('focalpoints')}}";
+                            }
                         },
                         error: function (data) {
                             console.log('Error:', data);

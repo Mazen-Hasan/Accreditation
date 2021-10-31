@@ -105,9 +105,9 @@ class FullFillmentController extends Controller
             }
         });
         if ($companyId == 0) {
-            $where = array('event_id' => $eventId);
+            $where = array('event_id' => $eventId,'status' => 9);
         } else {
-            $where = array('event_id' => $eventId, 'company_id' => $company->id);
+            $where = array('event_id' => $eventId, 'company_id' => $company->id,'status' => 9);
         }
 
         $companyStaffs = CompanyStaff::where($where)->get()->all();

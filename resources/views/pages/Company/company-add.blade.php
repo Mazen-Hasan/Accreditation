@@ -35,17 +35,26 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" value="" required=""
+                                            <input type="text" id="name" name="name" minlength="1" maxlength="100" value="" required=""
                                                    placeholder="enter name"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Address</label>
+                                        <label>Focal Point</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="address" name="address" value="" required=""
-                                                   placeholder="enter address"/>
+                                            <select id="focal_point" name="focal_point" value="" required="">
+                                                <option value="default">Please select focal point</option>
+                                                <option value="-2" id="instant_add">add new focal point</option>
+                                                @foreach ($focalPoints as $focalPoint)
+                                                    <option value="{{ $focalPoint->key }}"
+                                                        @if ($focalPoint->key == -1)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $focalPoint->value }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -55,7 +64,7 @@
                                     <div class="form-group col">
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="telephone" name="telephone" value="" required=""
+                                            <input type="number" id="telephone" name="telephone" value="" required=""
                                                    placeholder="enter telephone"/>
                                         </div>
                                     </div>
@@ -75,23 +84,17 @@
                                     <div class="form-group col">
                                         <label>Size</label>
                                         <div class="col-sm-12">
-                                            <input type="number" id="size" name="size" value="" required=""
+                                            <input type="number" id="size" name="size"  min="1" max="20000" value="" required=""
                                                    placeholder="enter size"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Focal Point</label>
+                                        <label>Address</label>
                                         <div class="col-sm-12">
-                                            <select id="focal_point" name="focal_point" value="" required="">
-                                                @foreach ($focalPoints as $focalPoint)
-                                                    <option value="{{ $focalPoint->key }}"@if ($focalPoint->key == 1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $focalPoint->value }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" id="address" minlength="1" maxlength="150" name="address" value="" required=""
+                                                   placeholder="enter address"/>
                                         </div>
                                     </div>
                                 </div>
@@ -101,9 +104,10 @@
                                     <div class="form-group col">
                                         <label>Country</label>
                                         <div class="col-sm-12"><select id="country" name="country" value="" required="">
+                                        <option value="default">Please select country</option>
                                                 @foreach ($countrys as $country)
                                                     <option value="{{ $country->key }}"
-                                                            @if ($country->key == 1)
+                                                            @if ($country->key == -1)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $country->value }}</option>
@@ -117,9 +121,10 @@
                                         <label>City</label>
                                         <div class="col-sm-12">
                                             <select id="city" name="city" required="">
+                                            <option value="default">Please select city</option>
                                                 @foreach ($citys as $city)
                                                     <option value="{{ $city->key }}"
-                                                            @if ($city->key == 1)
+                                                            @if ($city->key == -1)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $city->value }}</option>
@@ -135,9 +140,10 @@
                                         <label>Company Category</label>
                                         <div class="col-sm-12">
                                             <select id="category" name="category" required="">
+                                            <option value="default">Please select category</option>
                                                 @foreach ($categorys as $category)
                                                     <option value="{{ $category->key }}"
-                                                            @if ($category->key == 1)
+                                                            @if ($category->key == -1)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $category->value }}</option>
@@ -151,9 +157,10 @@
                                         <label>Status</label>
                                         <div class="col-sm-12">
                                             <select id="status" name="status" required="">
+                                            <option value="default">Please select status</option>
                                                 @foreach ($statuss as $status)
                                                     <option value="{{ $status->key }}"
-                                                            @if ($status->key == 1)
+                                                            @if ($status->key == -1)
                                                             selected="selected"
                                                         @endif
                                                     >{{ $status->value }}</option>
@@ -228,17 +235,30 @@
                 $('#need_management').val('0');
                 if ($button[0].id === 'btn-yes') {
                     $('#need_management').val('1');
-
                 }
                 $("#postForm").submit();
             });
         });
+        $('#focal_point').on('change', function () {
+                //alert('i am here');
+                var selectedFocal = $('#focal_point option:selected').val();
+                if(selectedFocal == -2){
+                    window.location.href = "{{ route('focalpointAdd')}}";
+                }
+            });
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
+                rules: {
+                    status: {valueNotEquals: "default"},
+                    category: {valueNotEquals: "default"},
+                    city: {valueNotEquals: "default"},
+                    country: {valueNotEquals: "default"},
+                    focal_point: {valueNotEquals: "default"}
+                },
                 submitHandler: function (form) {
                     $('#post_id').val('');
-                    var $eventid = $('#event_id').val();
+                    //var $eventid = $('#event_id').val();
                     var actionType = $('#btn-save').val();
                     $(":input,:hidden").serialize();
                     $.ajax({
@@ -252,10 +272,12 @@
                             $('#btn-save').html('Add successfully');
 
                             if (data.need_management == '1') {
-                                window.location.href = "../event-companies/" + $eventid;
+                                window.location.href = "{{ route('eventCompanies',$eventid)}}";
                             }
                             if (data.need_management == '0') {
-                                window.location.href = "../company-accreditation-size-new/" + data.id + "/" + data.event_id
+                                var url = "{{ route('companyAccreditCat', [':id',$eventid]) }}";
+                                url = url.replace(':id', data.id);
+                                window.location.href = url;
                             }
                         },
                         error: function (data) {
@@ -266,5 +288,9 @@
                 }
             })
         }
+        jQuery.validator.addMethod("valueNotEquals",
+            function (value, element, params) {
+                return params !== value;
+            }, " Please select a value");
     </script>
 @endsection

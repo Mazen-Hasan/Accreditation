@@ -433,7 +433,7 @@ class CompanyAdminController extends Controller
         $where = array('id' => $eventId);
         $event = Event::where($where)->first();
         if (request()->ajax()) {
-            $companies = DB::select('select * from companies_view where parent_id = ?', [$company->id]);
+            $companies = DB::select('select * from companies_view where parent_id = ? and event_id = ?', [$company->id,$eventId]);
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('subCompanyEdit', [$data->id, $data->event_id]) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
@@ -582,7 +582,7 @@ class CompanyAdminController extends Controller
             $subCompany_nav = 0;
         }
         return view('pages.CompanyAdmin.subCompany-edit')->with('company', $post)->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss)->with('subCompany_nav',$subCompany_nav);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventId', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss)->with('subCompany_nav',$subCompany_nav);
     }
 
     public function destroy($id)

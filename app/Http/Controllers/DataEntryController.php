@@ -60,55 +60,93 @@ class DataEntryController extends Controller
         $where = array('id' => $request->company_id);
         $company = Company::where($where)->first();
         $postId = $request->post_id;
-        if ($postId == null) {
-            $user = User::updateOrCreate(['id' => $postId],
-                ['name' => $request->account_name,
-                    'password' => Hash::make($request->password),
-                    'email' => $request->account_email,
-                ]);
-            DB::table('users_roles')->insert(
-                array(
-                    'user_id' => $user->id,
-                    'role_id' => 5
-                )
-            );
-            $post = DataEntry::updateOrCreate(['id' => $postId],
-                ['name' => $request->name,
-                    'middle_name' => $request->middle_name,
-                    'last_name' => $request->last_name,
-                    'email' => $request->email,
-                    'telephone' => $request->telephone,
-                    'mobile' => $request->mobile,
-                    'password' => $request->password,
-                    'account_id' => $user->id,
-                ]);
+        if($request->action_type == "add_existed"){
+            $dataentry = DataEntry::where(['account_id'=> $request->account_id])->first();
             $where = array('event_id'=> $request->event_id,'company_id'=>$request->company_id);
             $eventCompnay = EventCompany::where($where)->first();
             $eventCompnayDataentries = EventCompanyDataEntry::updateOrCreate(['id' => 0],
             [
-                'data_entry_id' => $post->id,
+                'data_entry_id' => $dataentry->id,
                 'event_companies_id' => $eventCompnay->id,
                 'event_id' => $request->event_id,
                 'company_id' => $request->company_id,
                 'status' => $request->status,
             ]);
-            //$focal_point = DB::select('select * from focal_points f where f.id = ?', [$post->focal_point_id]);
             $event = Event::where(['id'=>$request->event_id])->first();
             $company = Company::where(['id'=>$request->company_id])->first();
-            NotificationController::sendAlertNotification($user->id, 0, $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('dataEntryParticipants' , [$request->company_id, $request->event_id]));
-        } else {
-            $post = DataEntry::updateOrCreate(['id' => $postId],
-                [
-                    'name' => $request->name,
-                    'middle_name' => $request->middle_name,
-                    'last_name' => $request->last_name,
-                    'email' => $request->email,
-                    'telephone' => $request->telephone,
-                    'mobile' => $request->mobile,
-                ]);
+            NotificationController::sendAlertNotification($request->account_id, 0, $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('dataEntryParticipants' , [$request->company_id, $request->event_id]));
+            return Response::json($dataentry);
+        }else{
+            if ($postId == null) {
+                $users = User::where(['email' => $request->account_email])->first();
+                if($users == null){
+                    $user = User::updateOrCreate(['id' => $postId],
+                        ['name' => $request->account_name,
+                            'password' => Hash::make($request->password),
+                            'email' => $request->account_email,
+                        ]);
+                    DB::table('users_roles')->insert(
+                        array(
+                            'user_id' => $user->id,
+                            'role_id' => 5
+                        )
+                    );
+                    $post = DataEntry::updateOrCreate(['id' => $postId],
+                        ['name' => $request->name,
+                            'middle_name' => $request->middle_name,
+                            'last_name' => $request->last_name,
+                            'email' => $request->email,
+                            'telephone' => $request->telephone,
+                            'mobile' => $request->mobile,
+                            'password' => $request->password,
+                            'account_id' => $user->id,
+                        ]);
+                    $where = array('event_id'=> $request->event_id,'company_id'=>$request->company_id);
+                    $eventCompnay = EventCompany::where($where)->first();
+                    $eventCompnayDataentries = EventCompanyDataEntry::updateOrCreate(['id' => 0],
+                    [
+                        'data_entry_id' => $post->id,
+                        'event_companies_id' => $eventCompnay->id,
+                        'event_id' => $request->event_id,
+                        'company_id' => $request->company_id,
+                        'status' => $request->status,
+                    ]);
+                    //$focal_point = DB::select('select * from focal_points f where f.id = ?', [$post->focal_point_id]);
+                    $event = Event::where(['id'=>$request->event_id])->first();
+                    $company = Company::where(['id'=>$request->company_id])->first();
+                    NotificationController::sendAlertNotification($user->id, 0, $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('dataEntryParticipants' , [$request->company_id, $request->event_id]));
+                }else{
+                    $dataentry = DataEntry::where(['account_id'=> $users->id])->first();
+                    $where = array('event_id'=> $request->event_id,'company_id'=>$request->company_id,'data_entry_id'=>$dataentry->id);
+                    $eventCompnayDataEntry = EventCompanyDataEntry::where($where)->first();
+                    if($eventCompnayDataEntry == null){
+                        return Response()->json([
+                            "success" => true,
+                            "id" => $users->id,
+                            "code" => 400,
+                            "message" => 'Entered data entry account email already existed in the system, Do you want to add him/her to the company?'
+                        ]);
+                    }else{
+                        return Response()->json([
+                            "success" => true,
+                            "id" => 0,
+                            "code" => 401,
+                            "message" => 'Entered data entry account email already existed in the company'
+                        ]);
+                    }
+                }
+            } else {
+                $post = DataEntry::updateOrCreate(['id' => $postId],
+                    [
+                        'name' => $request->name,
+                        'middle_name' => $request->middle_name,
+                        'last_name' => $request->last_name,
+                        'email' => $request->email,
+                        'telephone' => $request->telephone,
+                        'mobile' => $request->mobile,
+                    ]);
+            }
         }
-
-
         return Response::json($post);
     }
 

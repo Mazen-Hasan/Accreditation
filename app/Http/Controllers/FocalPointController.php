@@ -48,41 +48,51 @@ class FocalPointController extends Controller
 
     public function store(Request $request)
     {
-        $postId = $request->post_id;
-        if ($postId == null) {
-            $user = User::updateOrCreate(['id' => $postId],
-                ['name' => $request->account_name,
-                    'password' => Hash::make($request->password),
-                    'email' => $request->account_email,
-                ]);
-            DB::table('users_roles')->insert(
-                array(
-                    'user_id' => $user->id,
-                    'role_id' => 3
-                )
-            );
-            $post = FocalPoint::updateOrCreate(['id' => $postId],
-                ['name' => $request->name,
-                    'middle_name' => $request->middle_name,
-                    'last_name' => $request->last_name,
-                    'email' => $request->email,
-                    'telephone' => $request->telephone,
-                    'mobile' => $request->mobile,
-                    'password' => $request->password,
-                    'account_id' => $user->id,
-                    'status' => $request->status,
-                ]);
-        } else {
-            $post = FocalPoint::updateOrCreate(['id' => $postId],
-                ['name' => $request->name,
-                    'middle_name' => $request->middle_name,
-                    'last_name' => $request->last_name,
-                    'email' => $request->email,
-                    'telephone' => $request->telephone,
-                    'mobile' => $request->mobile,
-                    'status' => $request->status,
-                ]);
-        }
+            $postId = $request->post_id;
+            if ($postId == null) {
+                $users = User::where(['email' => $request->account_email])->first();
+                if($users == null){
+                    $user = User::updateOrCreate(['id' => $postId],
+                        ['name' => $request->account_name,
+                            'password' => Hash::make($request->password),
+                            'email' => $request->account_email,
+                        ]);
+                    DB::table('users_roles')->insert(
+                        array(
+                            'user_id' => $user->id,
+                            'role_id' => 3
+                        )
+                    );
+                    $post = FocalPoint::updateOrCreate(['id' => $postId],
+                        ['name' => $request->name,
+                            'middle_name' => $request->middle_name,
+                            'last_name' => $request->last_name,
+                            'email' => $request->email,
+                            'telephone' => $request->telephone,
+                            'mobile' => $request->mobile,
+                            'password' => $request->password,
+                            'account_id' => $user->id,
+                            'status' => $request->status,
+                        ]);
+                }else{
+                    return Response()->json([
+                        "success" => true,
+                        "id" => 0,
+                        "code" => 401,
+                        "message" => 'Entered focal point account email already existed in the system'
+                    ]);
+                }
+            } else {
+                $post = FocalPoint::updateOrCreate(['id' => $postId],
+                    ['name' => $request->name,
+                        'middle_name' => $request->middle_name,
+                        'last_name' => $request->last_name,
+                        'email' => $request->email,
+                        'telephone' => $request->telephone,
+                        'mobile' => $request->mobile,
+                        'status' => $request->status,
+                    ]);
+            }
 
 
         return Response::json($post);

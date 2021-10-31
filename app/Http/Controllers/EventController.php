@@ -274,27 +274,28 @@ class EventController extends Controller
                     $event = Event::where(['id'=>$post->id])->first();
                     NotificationController::sendAlertNotification($security_officer, 0, $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies' , [$post->id]));
             }
+            if($event_companies != null){
+                foreach ($event_companies as $row){
+                    $new_event_company = EventCompany::updateOrCreate(['id' => 0],
+                        ['event_id' => $post->id,
+                            'company_id' => $row->company_id,
+                            'focal_point_id' => $row->focal_point_id,
+                            'parent_id' => $row->parent_id,
+                            'status' => 1,
+                            'size' => 0,
+                            'need_management' => 0,
+                        ]);
 
-            foreach ($event_companies as $row){
-                $new_event_company = EventCompany::updateOrCreate(['id' => 0],
-                    ['event_id' => $post->id,
-                        'company_id' => $row->company_id,
-                        'focal_point_id' => $row->focal_point_id,
-                        'parent_id' => $row->parent_id,
-                        'status' => 1,
-                        'size' => 0,
-                        'need_management' => 0,
-                    ]);
-
-                foreach ($event_company_data_entries as $row1){
-                    if($row1->company_id == $row->company_id){
-                        $new_event_company_data_entry = EventCompanyDataEntry::updateOrCreate(['id' => 0],
-                            ['event_id' => $post->id,
-                                'company_id' => $row1->company_id,
-                                'event_companies_id' => $new_event_company->id,
-                                'data_entry_id' => $row1->data_entry_id,
-                                'status' => 1,
-                            ]);
+                    foreach ($event_company_data_entries as $row1){
+                        if($row1->company_id == $row->company_id){
+                            $new_event_company_data_entry = EventCompanyDataEntry::updateOrCreate(['id' => 0],
+                                ['event_id' => $post->id,
+                                    'company_id' => $row1->company_id,
+                                    'event_companies_id' => $new_event_company->id,
+                                    'data_entry_id' => $row1->data_entry_id,
+                                    'status' => 1,
+                                ]);
+                        }
                     }
                 }
             }

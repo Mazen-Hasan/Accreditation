@@ -501,6 +501,10 @@ class TemplateFormController extends Controller
                     } else {
                         $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->value);
                         $form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->value);
+                        if($templateField->label_en == 'Personal Image'){
+                            $image = $this->createPersonalImage($templateField->value);
+                            $form = $image.$form;
+                        }
                     }
 
 
@@ -646,6 +650,15 @@ class TemplateFormController extends Controller
 
         $selectField .= '</select></div></div></div>';
         return $selectField;
+    }
+
+    public function createPersonalImage($value){
+        $personalImage = '';
+        $personalImage = $personalImage .'<div class="row>';
+        $personalImage = $personalImage .'<div class="form-group col">';
+        $personalImage = $personalImage .'<img id="paticipant_iamge" src="'. asset('storage/badges/'.$value).'" alt="Personal" class="pic-img">';
+        $personalImage = $personalImage .'</div></div>';
+        return $personalImage;
     }
 }
 

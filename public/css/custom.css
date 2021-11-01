@@ -1175,5 +1175,13 @@ a.disabled {
     font-size: 20px;
 }
 
+.pic-img{
+    border-radius: 50%;
+    width:120px;
+    height:120px;
+    float:right;
+    margin-right:50px
+}
+
 
 

@@ -31,7 +31,7 @@
                         </form>
                         <br>
                         <?php echo $attachmentForm ?>
-                        <div class="col-sm-offset-2 col-sm-12">
+                        <div class="col-sm-offset-2 col-sm-12" style="margin: 20px;>
                             <a class="btn btn-reddit" href="{{ URL::previous() }}">Go Back</a>
                             <?php echo $buttons ?>
                         </div>

@@ -58,7 +58,7 @@
                         </form>
                         <br>
                         <?php echo $attachmentForm ?>
-                        <div class="col-sm-offset-2 col-sm-12">
+                        <div class="col-sm-offset-2 col-sm-12" style="margin: 20px;">
                             <a class="btn btn-reddit" href="{{ URL::previous() }}">Go Back</a>
                             <?php echo $buttons ?>
                         </div>
@@ -131,7 +131,7 @@
             var label = $(this).data("label")
             $('#badge-modal').modal('show');
             $('#badgeTitle').html(label);
-            var image_path = "{{URL::asset('badges/')}}/";
+            var image_path = "{{URL::asset('storage/badges/')}}/";
             $('#badge').attr('src', image_path + src);
         });
         $('body').on('click', '#send_request', function () {
@@ -153,7 +153,7 @@
                     var action_button = $('#action_button').val();
                     if (action_button == 'sendRequest') {
                         var staffId = $('#curr_element_id').val();
-                        var url = "{{ route('companyAdminControllerSendRequest', ":id") }}";
+                        var url = "{{ route('companyAdminControllerSendRequest', ':id') }}";
                         url = url.replace(':id', staffId);
 
                         $.ajax({

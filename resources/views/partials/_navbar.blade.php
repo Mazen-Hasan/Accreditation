@@ -14,12 +14,12 @@
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-top" style="background: transparent">
         <ul class="navbar-nav ms-auto">
-        {{--            <li class="nav-item">--}}
-        {{--                <form class="search-form" action="#">--}}
-        {{--                    <i class="icon-search"></i>--}}
-        {{--                    <input type="search" class="form-control" placeholder="Search Here" title="Search here">--}}
-        {{--                </form>--}}
-        {{--            </li>--}}
+        <li class="nav-item">
+        <form class="search-form" action="#">
+        <i class="icon-search"></i>
+        <input type="search" class="form-control" placeholder="Search Here" title="Search here">
+        </form>
+        </li>
         <!-- <li class="nav-item dropdown">
             <a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
               <i class="icon-mail icon-lg"></i>

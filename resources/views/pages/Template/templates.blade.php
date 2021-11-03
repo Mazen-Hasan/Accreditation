@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Templates')
+@section('subtitle',' | Templates')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
@@ -189,6 +189,7 @@
 
             $('body').on('click', '#edit-template', function () {
                 var template_id = $(this).data('id');
+
                 $.get('templateController/' + template_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Template");
@@ -247,10 +248,16 @@
                     if ($button[0].id === 'btn-yes') {
                         var template_id = $('#curr_template_id').val();
                         var mode_id = $('#mode_id').val();
+
+                        var url = "{{ route('templateControllerChangeStatus', [':template_id',':mode_id']) }}";
+                        url = url.replace(':template_id', template_id);
+                        url = url.replace(':mode_id', mode_id);
+
                         if (mode_id == 0 || mode_id == 1) {
                             $.ajax({
                                 type: "get",
-                                url: "templateController/changeStatus/" + template_id + "/" + mode_id,
+                                // url: "templateController/changeStatus/" + template_id + "/" + mode_id,
+                                url: url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -260,9 +267,14 @@
                                 }
                             });
                         } else {
+                            var url = "{{ route('templateControllerChangeLock', [':template_id',':mode_id']) }}";
+                            url = url.replace(':template_id', template_id);
+                            url = url.replace(':mode_id', mode_id);
+
                             $.ajax({
                                 type: "get",
-                                url: "templateController/changeLock/" + template_id + "/" + mode_id,
+                                // url: "templateController/changeLock/" + template_id + "/" + mode_id,
+                                url: url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);

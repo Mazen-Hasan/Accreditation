@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EventAdminAssign extends Mailable
+class Email extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -26,7 +26,7 @@ class EventAdminAssign extends Mailable
      */
     public function build()
     {
-        return $this->subject('New Event assigned')
-            ->view('pages.Email.Event.adminAssign')->with('email', $this->emailData);
+        return $this->subject($this->emailData['subject'])
+            ->view('pages.Email.content')->with('content', $this->emailData['content']);
     }
 }

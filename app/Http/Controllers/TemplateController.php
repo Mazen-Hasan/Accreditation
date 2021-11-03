@@ -37,8 +37,11 @@ class TemplateController extends Controller
                     $button .= '<a href="' . route('templateFields', $data->id) . '" id="template-fields" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Fields"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     if ($data->is_locked == 1) {
-                        $button .= '<a href="javascript:void(0);" id="unLock-template" data-toggle="tooltip" data-original-title="Unlock" data-id="' . $data->id . '" title="Un-Lock"><i class="fas fa-unlock"></i></a>';
-                    } else {
+                        if($data->can_unlock == 1){
+                            $button .= '<a href="javascript:void(0);" id="unLock-template" data-toggle="tooltip" data-original-title="Unlock" data-id="' . $data->id . '" title="Un-Lock"><i class="fas fa-unlock"></i></a>';
+                        }
+                    }
+                    else {
                         $button .= '<a href="javascript:void(0);" id="lock-template" data-toggle="tooltip" data-original-title="Lock" data-id="' . $data->id . '" title="Lock"><i class="fas fa-lock"></i></a>';
                     }
                     $button .= '&nbsp;&nbsp;';
@@ -83,19 +86,6 @@ class TemplateController extends Controller
     public function store(Request $request)
     {
 
-//        $info = array(
-//            'name' => "Alex"
-//        );
-//
-//        Mail::send([], $info, function ($message)
-//        {
-//            $message->to('e.mazen.hasan@gmail.com', 'Mazen')
-//                ->subject('Basic test eMail from Laravel.');
-//            $message->from('admin@accrediation.com', 'Admin');
-//        });
-
-//        echo "Successfully sent the email";
-
         $template_id = $request->template_id;
         $post = Template::updateOrCreate(['id' => $template_id],
             ['name' => $request->name,
@@ -104,8 +94,14 @@ class TemplateController extends Controller
                 'creator' => Auth::user()->id
             ]);
 
-        Mail::to('e.mazen.hasan@gmail.com')->send(new EventAdminAssign($post));
+        $emailData = array(
+            'greeting' => 'Dear Event Admin',
+            'body' => 'You have been assigned as event admin for the event' .  $post->name,
+            'linkText' => 'Kindly follow the link: ',
+            'url' => Route('events'),
+            'linkName' => 'Events');
 
+        Mail::to('e.mazen.hasan@gmail.com')->send(new EventAdminAssign($emailData));
 
         if ($template_id == null) {
 

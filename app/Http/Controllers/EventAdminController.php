@@ -305,13 +305,13 @@ class EventAdminController extends Controller
         if ($approval == 2) {
             DB::update('update company_staff set status = ? where id = ?', [8, $staffId]);
             DB::update('update company_staff set event_admin_reject_reason = ? where id = ?', [$reason, $staffId]);
-            NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
+            NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction', Route('templateFormDetails' , $staffId));
 
         } else {
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [8, $staffId]);
                 DB::update('update company_staff set event_admin_reject_reason = ? where id = ?', [$reason, $staffId]);
-                NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
+                NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction', Route('templateFormDetails' , $staffId));
             }
         }
         return Response::json($event);

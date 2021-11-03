@@ -83,6 +83,9 @@ class EventController extends Controller
             ]);
             $event = Event::where(['id'=>$request->event_id,])->first();
             NotificationController::sendAlertNotification($request->admin_id, 0, $event->name . ':' . 'Event assignment', Route('eventCompanies' , [$request->event_id]));
+
+
+            NotificationController::sendNotification('assign-event-admin', $event->name, '', $request->admin_id, 0, $event->name . ':' . 'Event assignment', Route('eventCompanies' , [$request->event_id]));
 //        if($post != null){
 //            $where = array('id' => $request->event_id);
 //            $event = Event::where($where)->first();

@@ -82,6 +82,10 @@ class GenerateBadgeController extends Controller
         }
 
         imagedestroy($badgeImg);
+
+        $query = 'update template_badges tb set tb.is_locked = 1, tb.can_unlock = 0 where t.id = ' . $event->event_form;
+        DB::update($query);
+
         return Response::json($path);
     }
 

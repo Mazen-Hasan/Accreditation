@@ -119,7 +119,7 @@
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',
-                    title: 'Templates',
+                    title: 'Users',
                     exportOptions: {
                         columns: [2, 3, 4]
                     }
@@ -188,9 +188,15 @@
                 if (password !== confirm_password) {
                     $('#lbl_error').html('Please enter the same password');
                 } else {
+
+                    var url = "{{ route('userControllerResetPassword', [':userId',':password']) }}";
+                    url = url.replace(':userId', userId);
+                    url = url.replace(':password', password);
+
                     $.ajax({
                         type: "get",
-                        url: "userController/reset_password/" + userId + "/" + password,
+                        // url: "userController/reset_password/" + userId + "/" + password,
+                        url: url,
                         success: function (data) {
                             $('#ajax-crud-modal').modal('hide');
                         },

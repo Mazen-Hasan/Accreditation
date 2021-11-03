@@ -56,7 +56,7 @@
                                     <th>ID</th>
                                     <th>Value (Arabic)</th>
                                     <th>Value (English)</th>
-                                    <th>Value (ID)</th>
+{{--                                    <th>Value (ID)</th>--}}
                                     <th>order</th>
                                     <th>Action</th>
                                 </tr>
@@ -113,13 +113,13 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group col">
-                                    <label>Value (ID)</label>
-                                    <div class="col-sm-12">
-                                        <input type="number" id="value_id" min="1" max="20" name="value_id"
-                                               placeholder="enter value ID" required="">
-                                    </div>
-                                </div>
+{{--                                <div class="form-group col">--}}
+{{--                                    <label>Value (ID)</label>--}}
+{{--                                    <div class="col-sm-12">--}}
+{{--                                        <input type="number" id="value_id" min="1" max="20" name="value_id"--}}
+{{--                                               placeholder="enter value ID" required="">--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                             </div>
                         </div>
 
@@ -182,7 +182,7 @@
                     extend: 'excelHtml5',
                     title: 'Templates',
                     exportOptions: {
-                        columns: [1, 2, 3, 4]
+                        columns: [1, 2, 3]
                     }
                 }],
 
@@ -196,7 +196,7 @@
                     {data: 'id', name: 'id', 'visible': false},
                     {data: 'value_ar', name: 'value_ar'},
                     {data: 'value_en', name: 'value_en'},
-                    {data: 'value_id', name: 'value_id'},
+                    // {data: 'value_id', name: 'value_id'},
                     {data: 'order', name: 'order'},
                     {data: 'action', name: 'action', orderable: false}
                 ],

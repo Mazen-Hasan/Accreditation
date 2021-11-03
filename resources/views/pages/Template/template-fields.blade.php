@@ -241,7 +241,7 @@
                     // { data: 'mandatory', name: 'mandatory' },
                     {
                         "data": "mandatory",
-                        "render": function (val, type, row) {
+                        "render": function (val) {
                             return val == 1 ? "Yes" : "No";
                         }
                     },

@@ -157,14 +157,18 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::get('/template-add', [App\Http\Controllers\TemplateController::class, 'templateAdd'])->name('templateAdd');
     Route::resource('templateController', 'App\Http\Controllers\TemplateController');
     Route::get('templateController/destroy/{id}', 'App\Http\Controllers\TemplateController@destroy');
-    Route::get('templateController/changeStatus/{id}/{status}', 'App\Http\Controllers\TemplateController@changeStatus');
-    Route::get('templateController/changeLock/{id}/{status}', 'App\Http\Controllers\TemplateController@changeLock');
+    Route::get('templateController/changeStatus/{id}/{status}', 'App\Http\Controllers\TemplateController@changeStatus')->name('templateControllerChangeStatus');
+    Route::get('templateController/changeLock/{id}/{status}', 'App\Http\Controllers\TemplateController@changeLock')->name('templateControllerChangeLock');
+
+    Route::resource('emailTemplateController', 'App\Http\Controllers\EmailTemplateController');
+    Route::get('email-templates', [App\Http\Controllers\EmailTemplateController::class, 'index'])->name('emailTemplates');
+
 
     Route::resource('userController', 'App\Http\Controllers\UserController');
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users');
     Route::get('/users-add', [App\Http\Controllers\UserController::class, 'userAdd'])->name('userAdd');
     Route::get('/users-edit/{id}', [App\Http\Controllers\UserController::class, 'userEdit'])->name('userEdit');
-    Route::get('userController/reset_password/{id}/{password}', 'App\Http\Controllers\UserController@resetPassword');
+    Route::get('userController/reset_password/{id}/{password}', 'App\Http\Controllers\UserController@resetPassword')->name('userControllerResetPassword');
 
     Route::get('/template-fields/{template_id}', [App\Http\Controllers\TemplateFieldController::class, 'index'])->name('templateFields');
     Route::resource('templateFieldController', 'App\Http\Controllers\TemplateFieldController');

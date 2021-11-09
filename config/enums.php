@@ -1,11 +1,12 @@
 <?php
 return [
     'notification_types' => [
-        'EAA' => "assign-event-admin",
-        'CAA' => "Company admin assign",
-        'PAR' => "Participant approval request",
-        'PAP' => "Participant approved",
-        'PRE' => "Participant rejected",
-        'PRC' => "Participant returned for correction",
+        'AEA' => 'assign-event-admin',
+        'ASO' => 'assign-security-officer',
+        'EIN' => 'event-invitation',
+        'PAR' => 'participant-approval',
+        'PAP' => 'participant-approved',
+        'PRE' => 'participant-rejected',
+        'PRC' => 'participant-returned-for-correction',
     ]
 ];

@@ -114,7 +114,7 @@
                                     <div class="form-group col">
                                         <label>Event Type</label>
                                         <div class="col-sm-12">
-                                            <input type="event_type" id="event_type" name="event_type" value="{{$event->event_type}}" disabled/>
+                                            <input type="text" id="event_type" name="event_type" value="{{$event->event_type}}" disabled/>
                                         </div>
                                     </div>
                                 </div>
@@ -122,7 +122,7 @@
                                     <div class="form-group col">
                                         <label>Registration Form Template</label>
                                         <div class="col-sm-12">
-                                            <input type="event_form" id="event_form" name="event_form" value="{{$event->template_name}}" disabled/>
+                                            <input type="text" id="event_form" name="event_form" value="{{$event->template_name}}" disabled/>
                                         </div>
                                     </div>
                                 </div>

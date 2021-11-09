@@ -22,7 +22,7 @@
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Events">
                 </i>
-                <span class="menu-title">Event Management</span>
+                <span class="menu-title">Events Management</span>
             </a>
         </li>
         <li class="nav-item">
@@ -31,7 +31,7 @@
                 <i class="logout">
                     <img src="{{ asset('images/company.png') }}" alt="Company Categories">
                 </i>
-                <span class="menu-title">Company categories</span>
+                <span class="menu-title">Company Categories</span>
             </a>
         </li>
         <li class="nav-item">
@@ -40,7 +40,7 @@
                 <i class="logout">
                     <img src="{{ asset('images/security.png') }}" alt="Security Category">
                 </i>
-                <span class="menu-title">Security categories</span>
+                <span class="menu-title">Security Categories</span>
             </a>
         </li>
         <li class="nav-item">
@@ -49,16 +49,16 @@
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Event Type">
                 </i>
-                <span class="menu-title">Event types</span>
+                <span class="menu-title">Event Types</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{ str_contains( Request::route()->getName(),'templates') =="1" ? "active" : "" }}"
                href="{{ route('templates') }}">
                 <i class="logout">
-                    <img src="{{ asset('images/menu.png') }}" alt="Templates">
+                    <img src="{{ asset('images/menu.png') }}" alt="Registration Forms">
                 </i>
-                <span class="menu-title">Templates</span>
+                <span class="menu-title">Registration Forms</span>
             </a>
         </li>
         <li class="nav-item">
@@ -94,7 +94,7 @@
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Accreditation Categories">
                 </i>
-                <span class="menu-title">Accreditation Category</span>
+                <span class="menu-title">Accreditation Categories</span>
             </a>
         </li>
         <li class="nav-item">

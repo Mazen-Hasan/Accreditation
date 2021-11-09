@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' | Templates')
+@section('subtitle',' Registration Forms')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
@@ -21,7 +21,7 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">Templates</p>
+                                <p class="card-title">Registration Forms</p>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -44,7 +44,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Template Name</th>
+                                    <th>Registration Form Name</th>
                                     <th>Locked</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
@@ -59,6 +59,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="template-modal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -140,7 +141,7 @@
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',
-                    title: 'Templates',
+                    title: 'Registration-Forms',
                     exportOptions: {
                         columns: [1, 2, 3]
                     }
@@ -183,7 +184,7 @@
                 $('#btn-save').val("create-template");
                 $('#template_id').val('');
                 $('#templateForm').trigger("reset");
-                $('#modalTitle').html("New template");
+                $('#modalTitle').html("New Registration Form");
                 $('#template-modal').modal('show');
             });
 
@@ -192,7 +193,7 @@
 
                 $.get('templateController/' + template_id + '/edit', function (data) {
                     $('#name-error').hide();
-                    $('#modalTitle').html("Edit Template");
+                    $('#modalTitle').html("Edit Registration Form");
                     $('#btn-save').val("edit-template");
                     $('#template-modal').modal('show');
                     $('#template_id').val(data.id);

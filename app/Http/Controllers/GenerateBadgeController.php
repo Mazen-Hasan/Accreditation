@@ -54,7 +54,8 @@ class GenerateBadgeController extends Controller
 
         $badgeImg = $this->imgGenerate($badge->width, $badge->high, $badge->bg_color, $bg_image_path);
 
-        $fontPath = public_path('fonts/poppins/Poppins-Regular');
+//        $fontPath = public_path('fonts/poppins/Poppins-Regular');
+        $fontPath = public_path('fonts/Courier_Prime/CourierPrime-Regular');
 
         foreach ($staffInfo as $staff) {
             if (str_contains($staff->value, '.png')) {
@@ -141,7 +142,7 @@ class GenerateBadgeController extends Controller
 
         $text_color = imagecolorallocate($img, $r, $g, $b);
 
-        //imagefttext($img, $text_size, 0, $position_x, $position_y, $text_color, $fontPath, $text);
+        imagefttext($img, $text_size, 0, $position_x, $position_y, $text_color, $fontPath, $text);
     }
 
     public function generatePreview($badge_id)

@@ -21,6 +21,7 @@ use App\Models\TemplateField;
 use App\Models\TemplateFieldElement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
@@ -424,6 +425,11 @@ class CompanyAdminController extends Controller
             foreach ($event_security_officers as $event_security_officer){
 //                NotificationController::sendAlertNotification($event_security_officer->security_officer_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/security-officer-participant-details/' . $staffId);
                 NotificationController::sendAlertNotification($event_security_officer->security_officer_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', Route('securityParticipantDetails' , $staffId));
+
+                $notification_type = Config::get('enums.notification_types.PAR');
+                NotificationController::sendNotification($notification_type, $event->name, $company->name, $event_security_officer->security_officer_id, $staffId,
+                    $event->name . ': ' . $company->name . ': ' . 'Participant approval',
+                    Route('securityParticipantDetails' , $staffId));
             }
 
 //            $updateQuery = 'update company_staff set security_officer_id = ' . $event->security_officer . ' where id = ' . $staffId;
@@ -756,7 +762,12 @@ class CompanyAdminController extends Controller
             $focal_point = DB::select('select * from focal_points f where f.id = ?', [$post->focal_point_id]);
             $event = Event::where(['id'=>$eventId])->first();
             $company = Company::where(['id'=>$companyId])->first();
-            NotificationController::sendAlertNotification($focal_point[0]->account_id, 0, $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('companyParticipants' , [$companyId, $eventId]));
+//            NotificationController::sendAlertNotification($focal_point[0]->account_id, 0, $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('companyParticipants' , [$companyId, $eventId]));
+
+            $notification_type = Config::get('enums.notification_types.EIN');
+            NotificationController::sendNotification($notification_type, $event->name, '', $focal_point[0]->account_id, 0, $event->name . ':' . 'Event invitation',
+            Route('companyParticipants' , [$companyId, $eventId]));
+
         return Response::json($post);
     }
 }

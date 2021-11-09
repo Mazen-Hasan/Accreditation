@@ -101,8 +101,6 @@ class TemplateController extends Controller
             'url' => Route('events'),
             'linkName' => 'Events');
 
-        Mail::to('e.mazen.hasan@gmail.com')->send(new EventAdminAssign($emailData));
-
         if ($template_id == null) {
 
             $query = 'select p.id, p.label_ar, p.label_en, p.mandatory, p.min_char, p.max_char, p.field_type_id  from pre_defined_fields  p';

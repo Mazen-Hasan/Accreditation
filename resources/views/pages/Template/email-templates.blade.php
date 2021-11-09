@@ -20,10 +20,10 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <p class="card-title">Email Templates</p>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
+                            <div class="col-md-3 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
@@ -38,6 +38,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Email Template Name</th>
+                                    <th>Subject</th>
+                                    <th>Full Content</th>
                                     <th>Content</th>
                                     <th>Type</th>
                                     <th>Action</th>
@@ -65,6 +67,13 @@
                             <label for="name" class="col-sm-2 control-label">Name</label>
                             <div class="col-sm-12">
                                 <input type="text" id="name" name="name" disabled>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject" class="col-sm-2 control-label">Subject</label>
+                            <div class="col-sm-12">
+                                <input type="text" id="subject" name="subject">
                             </div>
                         </div>
 
@@ -118,7 +127,7 @@
                     extend: 'excelHtml5',
                     title: 'Email-Templates',
                     exportOptions: {
-                        columns: [1, 2, 3]
+                        columns: [1, 2, 3, 5]
                     }
                 }],
 
@@ -131,17 +140,17 @@
                 columns: [
                     {data: 'id', name: 'id', 'visible': false},
                     {data: 'email_template_name', name: 'email_template_name'},
-                    // {data: 'content', name: 'content'},
+                    {data: 'email_template_subject', name: 'email_template_subject'},
+                    {data: 'content', name: 'content','visible': false},
                     {
                         "data": "content",
                         "render": function (val) {
-                            return val.substring(0, 70) + '  ...';
+                            return val.substring(0, 50) + '  ...';
                         }
                     },
                     {data: 'email_template_type', name: 'email_template_type'},
                     {data: 'action', name: 'action', orderable: false}
-                ],
-                order: [[0, 'desc']]
+                ]
             });
 
             $('.export-to-excel').click(function () {
@@ -157,6 +166,7 @@
                     $('#email_template-modal').modal('show');
                     $('#email_template_id').val(data.id);
                     $('#name').val(data.name);
+                    $('#subject').val(data.subject);
                     $('#email_template_content').val(data.content);
                 })
             });

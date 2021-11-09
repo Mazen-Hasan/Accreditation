@@ -20,7 +20,6 @@
                                 <div class="col-sm-4">
                                     <div class="card">
                                         <div>
-                                            {{--                                        <a href="{{route('participants')}}">--}}
                                             <a href="{{route('companyParticipants',[$event->company_id,$event->id])}}">
                                                 <img class="card-img-top"
                                                      style="border-top-left-radius: 20px; border-top-right-radius: 20px"
@@ -105,9 +104,9 @@
 
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <p class="card_event_label">Template:</p>
+                                                    <p class="card_event_label">Registration form:</p>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-6" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                                     <p class="card_event_text">{{ $event->template_name}}</p>
                                                 </div>
                                             </div>

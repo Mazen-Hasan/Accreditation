@@ -45,7 +45,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Template ID</th>
-                                    <th>Template Name</th>
+                                    <th>Registration Form</th>
                                     <th>Width (Pixel)</th>
                                     <th>High (Pixel)</th>
                                     <th>Background Color</th>
@@ -142,10 +142,10 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group col">
-                                    <label>Template</label>
+                                    <label>Registration form</label>
                                     <div class="col-sm-12">
                                         <select id="template_id" name="template_id" required="">
-                                            <option value="default">Please select Template</option>
+                                            <option value="default">Please select Registration form</option>
                                             @foreach ($templates as $template)
                                                 <option value="{{ $template->id }}" data-slug="{{$template->name}}"
                                                         @if ($template->id == 1)

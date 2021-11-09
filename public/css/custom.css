@@ -94,6 +94,7 @@ textarea {
 
 textarea:focus, input:focus {
     border-color: transparent !important;
+    background-color: #e7f0fe;
 }
 
 input:focus::-webkit-input-placeholder {
@@ -574,14 +575,15 @@ iframe {
     text-transform: capitalize;
 }
 
-select {
-    border: none;
-}
+/*select {*/
+/*    border: none;*/
+/*}*/
 
 select {
     /* styling */
     display: inline-block;
     padding: 0.5em 3.5em 0.5em 1em;
+    border: none;
     /* reset */
     margin: 0;
     -webkit-box-sizing: border-box;
@@ -696,6 +698,14 @@ input {
     padding: 0 5px 0 25px;
 }
 
+input:disabled {
+    background: #a7a2a28c;
+}
+
+input[type="file"]{
+    padding-top: 10px;
+    padding-left: 4px;
+}
 
 input::placeholder {
     text-transform: capitalize;
@@ -750,6 +760,7 @@ select {
 select[multiple] {
     height: 150px;
     background-image: none;
+    padding-top: 15px;
 }
 
 .user_name {
@@ -1055,6 +1066,22 @@ a.disabled {
     pointer-events: none;
     cursor: default;
     color: lightgray;
+}
+
+.card-img-top {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px;
+
+    -webkit-transition: background-color 2s ease-out;
+    -moz-transition: background-color 2s ease-out;
+    -o-transition: background-color 2s ease-out;
+    transition: background-color 2s ease-out;
+}
+
+.card-img-top:hover {
+    background-color: #B93131;
+    cursor: pointer;
 }
 
 #add {

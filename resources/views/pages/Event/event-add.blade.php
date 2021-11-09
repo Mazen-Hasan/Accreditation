@@ -353,7 +353,7 @@
                 rules: {
                     event_end_date: {greaterThan: "#event_start_date"},
                     accreditation_start_date: {lessThan: "#event_end_date"},
-                    accreditation_start_date: {greaterThan: "#event_start_date"},
+                    // accreditation_start_date: {greaterThan: "#event_start_date"},
                     accreditation_end_date: {greaterThan: "#accreditation_start_date"},
                     accreditation_end_date: {lessThan: "#event_end_date"},
                     security_officers: {valueNotEquals: "default"},

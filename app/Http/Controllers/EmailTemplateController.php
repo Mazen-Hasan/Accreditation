@@ -16,7 +16,7 @@ class EmailTemplateController extends Controller
 
             return datatables()->of($emailTemplates)
                 ->addColumn('action', function ($data) {
-                        $button = '<a href="javascript:void(0)" id="edit-email-template" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                    $button = '<a href="javascript:void(0)" id="edit-email-template" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -30,7 +30,8 @@ class EmailTemplateController extends Controller
         $emailTemplateId = $request->email_template_id;
 
         $emailTemplate = EmailTemplate::updateOrCreate(['id' => $emailTemplateId],
-            ['content' => $request->email_template_content
+            ['content' => $request->email_template_content,
+                'subject' => $request->subject
             ]);
         return Response::json($emailTemplate);
     }

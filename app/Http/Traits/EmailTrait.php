@@ -6,8 +6,12 @@ trait EmailTrait {
 
     static public function getEmailTemplate($emailTemplateType, $event_name, $company_name, $url) {
 
-        $emailTemplate  = DB::select('select v.content from email_view v where v.slug=?',[$emailTemplateType]);
+        $emailTemplate  = DB::select('select * from email_view v where v.slug=?',[$emailTemplateType]);
 
-        return str_ireplace(['@event_name','@company_name','@url'],[$event_name, $company_name, $url], $emailTemplate[0]->content);
+        $emailData = array(
+            'subject' => $emailTemplate[0]->email_template_subject,
+            'content' => str_ireplace(['@event_name','@company_name','@url'],[$event_name, $company_name, $url], $emailTemplate[0]->content));
+
+        return $emailData;
     }
 }

@@ -105,12 +105,15 @@ class FullFillmentController extends Controller
             }
         });
         if ($companyId == 0) {
-            $where = array('event_id' => $eventId,'status' => 9);
+            $where = array('event_id' => $eventId,'status' ,'>', 8);
+            $companyStaffs = DB::select('select * from company_staff c where c.event_id = ? and c.status>8',[$eventId]);
+
         } else {
-            $where = array('event_id' => $eventId, 'company_id' => $company->id,'status' => 9);
+//            $where = array('event_id' => $eventId, 'company_id' => $company->id,'status' , '>', 8);
+            $companyStaffs = DB::select('select * from company_staff c where c.event_id = ? and c.company_id=? and c.status>8',[$eventId, $companyId]);
+
         }
 
-        $companyStaffs = CompanyStaff::where($where)->get()->all();
         $alldata = array();
         foreach ($companyStaffs as $companyStaff) {
             $where = array('staff_id' => $companyStaff->id);

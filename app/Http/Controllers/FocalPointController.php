@@ -23,7 +23,7 @@ class FocalPointController extends Controller
         if (request()->ajax()) {
             $role = Auth::user()->roles->first()->slug;
             if($role == 'event-admin'){
-                $focalpoint = DB::select('SELECT f.* from focal_points_view f where f.id in (select distinct(id) from event_focal_points1_view where user_id = ?)',[Auth::user()->id]);
+                $focalpoint = DB::select('SELECT f.* from focal_points_view f where f.id in (select distinct(id) from event_companies_focal_points_view where user_id = ?)',[Auth::user()->id]);
             }
             if($role == 'company-admin'){
                 $focalpoint = DB::select('SELECT fff.* FROM focal_points_view fff WHERE fff.id IN( SELECT DISTINCT (ff.id) FROM event_companies ee INNER JOIN focal_points_view ff ON ff.id = ee.focal_point_id WHERE ee.parent_id IN( SELECT e.company_id FROM event_companies e INNER JOIN focal_points_view f ON e.focal_point_id = f.id where f.account_id = ? ) )',[Auth::user()->id]);

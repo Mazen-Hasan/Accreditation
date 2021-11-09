@@ -132,7 +132,7 @@ class TemplateFormController extends Controller
                                 $options [] = $option;
                             }
                             $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, $templateField->value);
-                        } 
+                        }
                     }
                     break;
 
@@ -314,7 +314,7 @@ class TemplateFormController extends Controller
 
         $where = array('id' => $request->event_id);
         $event = Event::where($where)->get()->first();
-        $query = 'update templates t set t.is_locked = 1 where t.id = ' . $event->event_form;
+        $query = 'update templates t set t.is_locked = 1, t.can_unlock = 0 where t.id = ' . $event->event_form;
         DB::update($query);
 
         $data = $request->all();
@@ -329,7 +329,7 @@ class TemplateFormController extends Controller
                             DB::update($query,[$staffdata->value,$request->company_id,$request->event_id]);
                             $query = 'update company_accreditaion_categories set inserted = inserted + 1 where accredit_cat_id = ? and company_id = ? and event_id = ?';
                             DB::update($query,[$value,$request->company_id,$request->event_id]);
-                        }  
+                        }
                     }
                     $query = 'update staff_data s set s.value = "' . $value . '" where s.staff_id = ' . $companyStaff->id . ' and s.key ="' . $key . '" ';
                     DB::update($query);

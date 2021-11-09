@@ -22,13 +22,15 @@ class TemplateBadgeController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '';
                     if ($data->is_locked == 0) {
-                        $button = '<a href="javascript:void(0)" id="edit-badge" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                        $button .= '&nbsp;&nbsp;';
+                            $button = '<a href="javascript:void(0)" id="edit-badge" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                            $button .= '&nbsp;&nbsp;';
                     }
                     $button .= '<a href="' . route('templateBadgeFields', $data->id) . '" id="template-badge-fields" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Fields"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     if ($data->is_locked == 1) {
-                        $button .= '<a href="javascript:void(0);" id="unLock-badge" data-toggle="tooltip" data-original-title="Unlock" data-id="' . $data->id . '" title="Un-Lock"><i class="fas fa-unlock"></i></a>';
+                        if($data->can_unlock == 1) {
+                            $button .= '<a href="javascript:void(0);" id="unLock-badge" data-toggle="tooltip" data-original-title="Unlock" data-id="' . $data->id . '" title="Un-Lock"><i class="fas fa-unlock"></i></a>';
+                        }
                     } else {
                         $button .= '<a href="javascript:void(0);" id="lock-badge" data-toggle="tooltip" data-original-title="Lock" data-id="' . $data->id . '" title="Lock"><i class="fas fa-lock"></i></a>';
                     }

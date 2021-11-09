@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Add User')
+@section('subtitle',' Edit User')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">

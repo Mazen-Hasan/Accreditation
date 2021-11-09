@@ -70,6 +70,15 @@
                 <span class="menu-title">Badges</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'email') =="1" ? "active" : "" }}"
+               href="{{ route('emailTemplates') }}">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="Email Templates">
+                </i>
+                <span class="menu-title">Email Templates</span>
+            </a>
+        </li>
         {{--        <li class="nav-item">--}}
         {{--            <a class="nav-link {{ str_contains( Request::route()->getName(),'companies') =="1" ? "active" : "" }}"--}}
         {{--               href="{{ route('companies') }}">--}}

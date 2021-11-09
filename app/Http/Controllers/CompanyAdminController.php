@@ -36,6 +36,22 @@ class CompanyAdminController extends Controller
 
     public function companyParticipants($companyId, $eventId)
     {
+        $addable = 1;
+        $companyAccrediationCategories = CompanyAccreditaionCategory::where(['company_id'=>$companyId,'event_id'=>$eventId])->get()->all();
+        if($companyAccrediationCategories == null){
+            $addable = 0;
+        }else{
+            $size = 0;
+            $inserted = 0;
+            foreach($companyAccrediationCategories as $companyAccrediationCategory){
+                $size = $size + $companyAccrediationCategory->size;
+                $inserted = $inserted + $companyAccrediationCategory->inserted;
+            }
+            if($size == $inserted){
+                $addable = 0;
+            }
+        }
+
         $dataTableColumuns = array();
 
         $where = array('id' => $companyId);
@@ -59,7 +75,8 @@ class CompanyAdminController extends Controller
             }
         });
         $where = array('event_id' => $eventId, 'company_id' => $companyId);
-        $companyStaffs = CompanyStaff::where($where)->get()->all();
+        //$companyStaffs = CompanyStaff::where($where)->get()->all();
+        $companyStaffs = DB::select('select * from company_staff_view where event_id = ? and company_id = ? or parent_id = ?',[$eventId,$companyId,$companyId]);
         $alldata = array();
         foreach ($companyStaffs as $companyStaff) {
             $where = array('staff_id' => $companyStaff->id);
@@ -157,7 +174,13 @@ class CompanyAdminController extends Controller
                     }
                     return $button;
                 })
-                ->rawColumns(['status', 'action'])
+                ->addColumn('image', function ($data) {
+                    $image = '';
+                    //$image .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
+                    $image .= '<img src="'. asset('storage/badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
+                    return $image;
+                })
+                ->rawColumns(['image','status', 'action'])
                 ->make(true);
         }
         $subCompany_nav = 1;
@@ -165,7 +188,7 @@ class CompanyAdminController extends Controller
             $subCompany_nav = 0;
         }
         return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)
-            ->with('eventId',$eventId)->with('event_name', $event->name)->with('company_name', $company->name);
+            ->with('eventId',$eventId)->with('event_name', $event->name)->with('company_name', $company->name)->with('addable',$addable);
     }
 
 
@@ -460,7 +483,7 @@ class CompanyAdminController extends Controller
         $companyId = $request->company_Id;
         if ($companyId == null) {
                 $company = Company::updateOrCreate(['id' => $companyId],
-                ['name' => $request->name,
+                ['name' => $request->company_name,
                     'address' => $request->address,
                     'telephone' => $request->telephone,
                     'website' => $request->website,
@@ -473,7 +496,7 @@ class CompanyAdminController extends Controller
                 ['event_id' => $request->event_id,
                 'company_id' => $company->id,
                 'parent_id' => $request->parent_id,
-                'status' => $request->status,
+                'status' => $request->company_status,
                 'focal_point_id' => $request->focal_point,
                 'size' => $request->size,
                 'need_management' => 0
@@ -483,15 +506,15 @@ class CompanyAdminController extends Controller
             $where = array('id' => $companyId);
             $company = Company::where($where)->first();
             $status = $company->status;
-            if ($request->status == 0) {
+            if ($request->company_status == 0) {
                 $status = 0;
             } else {
                 if ($company->status != 3) {
-                    $status = $request->status;
+                    $status = $request->company_status;
                 }
             }
             $company = Company::updateOrCreate(['id' => $companyId],
-                ['name' => $request->name,
+                ['name' => $request->company_name,
                     'address' => $request->address,
                     'telephone' => $request->telephone,
                     'website' => $request->website,
@@ -501,7 +524,7 @@ class CompanyAdminController extends Controller
                 ]);
                 $event_company = EventCompany::updateOrCreate(['event_id' => $request->event_id,'company_id' => $companyId],
                 [
-                'status' => $request->status,
+                'status' => $request->company_status,
                 'focal_point_id' => $request->focal_point,
                 'size' => $request->size,
                 'need_management' => 0
@@ -519,7 +542,8 @@ class CompanyAdminController extends Controller
         foreach($companies as $company){
             $post = $company;
         }
-        $where = array('status' => 1);
+        $eventcompanies = EventCompany::where(['company_id'=>$post->id,'event_id'=>$eventid])->first();
+        $where = array('id' => $eventcompanies->focal_point_id);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
         foreach ($contacts as $contact) {
@@ -601,10 +625,10 @@ class CompanyAdminController extends Controller
         $where = array('status' => 1);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
-        foreach ($contacts as $contact) {
-            $focalPointSelectOption = new SelectOption($contact->id, $contact->name . ' ' . $contact->middle_name . ' ' . $contact->last_name);
-            $focalPointsOption[] = $focalPointSelectOption;
-        }
+        // foreach ($contacts as $contact) {
+        //     $focalPointSelectOption = new SelectOption($contact->id, $contact->name . ' ' . $contact->middle_name . ' ' . $contact->last_name);
+        //     $focalPointsOption[] = $focalPointSelectOption;
+        // }
 
         $countrysSelectOptions = array();
         $countries = Country::get()->all();
@@ -720,7 +744,7 @@ class CompanyAdminController extends Controller
         if($company->parent_id != null){
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.subCompany-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('subCompany_nav',$subCompany_nav);
+        return view('pages.CompanyAdmin.subCompany-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('subCompany_nav',$subCompany_nav)->with('company_parent',$company->parent_id);
     }
 
     public function Invite($companyId,$eventId)

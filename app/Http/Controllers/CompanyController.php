@@ -79,7 +79,7 @@ class CompanyController extends Controller
         $focal_point = FocalPoint::where($where)->first();
         if ($companyId == null) {
             $company = Company::updateOrCreate(['id' => $companyId],
-                ['name' => $request->name,
+                ['name' => $request->company_name,
                     'address' => $request->address,
                     'telephone' => $request->telephone,
                     'website' => $request->website,
@@ -90,7 +90,7 @@ class CompanyController extends Controller
             $event_company = EventCompany::updateOrCreate(['id' => 0],
                 ['event_id' => $request->event_id,
                 'company_id' => $company->id,
-                'status' => $request->status,
+                'status' => $request->company_status,
                 'focal_point_id' => $request->focal_point,
                 'size' => $request->size,
                 'need_management' => $request->need_management
@@ -104,15 +104,15 @@ class CompanyController extends Controller
             $where = array('id' => $companyId);
             $company = Company::where($where)->first();
             $status = $company->status;
-            if ($request->status == 0) {
+            if ($request->company_status == 0) {
                 $status = 0;
             } else {
                 if ($company->status != 3) {
-                    $status = $request->status;
+                    $status = $request->company_status;
                 }
             }
             $company = Company::updateOrCreate(['id' => $companyId],
-                ['name' => $request->name,
+                ['name' => $request->company_name,
                     'address' => $request->address,
                     'telephone' => $request->telephone,
                     'website' => $request->website,
@@ -122,7 +122,7 @@ class CompanyController extends Controller
                 ]);
                 $event_company = EventCompany::updateOrCreate(['event_id' => $request->event_id,'company_id' => $companyId],
                 [
-                'status' => $request->status,
+                'status' => $request->company_status,
                 'focal_point_id' => $request->focal_point,
                 'size' => $request->size,
                 'need_management' => $request->need_management
@@ -140,11 +140,12 @@ class CompanyController extends Controller
         foreach($companies as $company){
             $post = $company;
         }
-        $where = array('status' => 1);
+        $eventcompanies = EventCompany::where(['company_id'=>$post->id,'event_id'=>$eventid])->first();
+        $where = array('id' => $eventcompanies->focal_point_id);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
         foreach ($contacts as $contact) {
-            $focalPointSelectOption = new SelectOption($contact->id, $contact->name . ' ' . $contact->middle_name . ' ' . $contact->last_name);
+            $focalPointSelectOption = new SelectOption($contact->id, $contact->name . ' ' . $contact->last_name);
             $focalPointsOption[] = $focalPointSelectOption;
         }
 
@@ -220,12 +221,14 @@ class CompanyController extends Controller
         $where = array('id' => $id);
         $event = Event::where($where)->first();
         $where = array('status' => 1);
-        $contacts = FocalPoint::where($where)->get()->all();
+        $query = 'select f.* from focal_points f where f.id in (select distinct(id) from event_focal_points_view where event_id = ?)';
+        $contacts =  DB::select($query,[$id]);
+        //$contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
-        foreach ($contacts as $contact) {
-            $focalPointSelectOption = new SelectOption($contact->id, $contact->name . ' ' . $contact->middle_name . ' ' . $contact->last_name);
-            $focalPointsOption[] = $focalPointSelectOption;
-        }
+        // foreach ($contacts as $contact) {
+        //     $focalPointSelectOption = new SelectOption($contact->id, $contact->name . ' ' . $contact->middle_name . ' ' . $contact->last_name);
+        //     $focalPointsOption[] = $focalPointSelectOption;
+        // }
 
         $countrysSelectOptions = array();
         $countries = Country::get()->all();

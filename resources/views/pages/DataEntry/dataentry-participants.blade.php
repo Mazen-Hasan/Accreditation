@@ -44,12 +44,14 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('data-entry')
+                                @if($addable == 1)
                                 <a href="{{route('participantAdd',[0,$companyId,$eventId])}}" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Add</span>
                                 </a>
+                                @endif
                                 @endrole
                             </div>
                         </div>
@@ -58,9 +60,11 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Identifier</th>
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                 @endforeach
+                                    <th>Image</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -171,10 +175,12 @@
             var myColumns = [];
             var i = 0;
             myColumns.push({data: "id", name: "id", 'visible': false});
+            myColumns.push({data: "identifier", name: "identifier", 'visible': true});
             while (i < jqueryarray.length) {
                 myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
                 i++;
             }
+            myColumns.push({data: "image", name: "image", orderable: "false"});
             myColumns.push({data: "status", name: "status"});
             myColumns.push({data: "action", name: "action", orderable: "false"});
             $('#laravel_datatable').DataTable({

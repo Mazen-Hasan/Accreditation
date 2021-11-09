@@ -37,13 +37,20 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <p class="card_event_label">Size:</p>
+                                                    <p class="card_event_label">Event size:</p>
                                                 </div>
                                                 <div class="col-6">
                                                     <p class="card_event_text">{{ $event->size}}</p>
                                                 </div>
                                             </div>
-
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <p class="card_event_label">Company size:</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="card_event_text">{{ $event->company_size}}</p>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-6">
                                                     <p class="card_event_label">Location:</p>
@@ -55,13 +62,29 @@
 
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <p class="card_event_label">Type:</p>
+                                                    <p class="card_event_label">Event type:</p>
                                                 </div>
                                                 <div class="col-6">
                                                     <p class="card_event_text">{{ $event->event_type}}</p>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <p class="card_event_label">From:</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="card_event_text">{{ $event->event_start_date}}</p>
+                                                </div>
+                                            </div>
 
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <p class="card_event_label">To:</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="card_event_text">{{ $event->event_end_date}}</p>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-6">
                                                     <p class="card_event_label">Period:</p>

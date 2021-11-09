@@ -189,7 +189,13 @@ class SecurityOfficerAdminController extends Controller
                     }
                     return $button;
                 })
-                ->rawColumns(['status', 'action'])
+                ->addColumn('image', function ($data) {
+                    $image = '';
+                    //$image .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
+                    $image .= '<img src="'. asset('storage/badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
+                    return $image;
+                })
+                ->rawColumns(['image','status', 'action'])
                 ->make(true);
         }
         return view('pages.SecurityOfficerAdmin.security-officer-company-participants')->with('dataTableColumns', $dataTableColumuns)->with('company_id', $companyId)->with('event_id', $eventId);

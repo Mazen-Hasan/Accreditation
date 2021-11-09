@@ -75,12 +75,14 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('company-admin')
-                                <a href="{{route('templateForm',[0,$companyId,$eventId])}}" id="add-new-post" class="add-hbtn">
-                                    <i>
-                                        <img src="{{ asset('images/add.png') }}" alt="Add">
-                                    </i>
-                                    <span class="dt-hbtn">Add</span>
-                                </a>
+                                @if($addable == 1)
+                                    <a href="{{route('templateForm',[0,$companyId,$eventId])}}" id="add-new-post" class="add-hbtn">
+                                        <i>
+                                            <img src="{{ asset('images/add.png') }}" alt="Add">
+                                        </i>
+                                        <span class="dt-hbtn">Add</span>
+                                    </a>
+                                @endif
                                 @endrole
                             </div>
                         </div>
@@ -92,6 +94,7 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                 @endforeach
+                                    <th>Image</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -208,6 +211,7 @@
                 myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
                 i++;
             }
+            myColumns.push({data: "image", name: "image"});
             myColumns.push({data: "status", name: "status"});
             myColumns.push({data: "action", name: "action", orderable: "false"});
             $('#laravel_datatable').DataTable({

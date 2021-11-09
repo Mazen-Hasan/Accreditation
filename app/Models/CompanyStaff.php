@@ -12,6 +12,7 @@ class CompanyStaff extends Model
     protected $fillable = [
         'event_id',
         'company_id',
-        'status'
+        'status',
+        'identifier'
     ];
 }

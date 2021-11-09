@@ -7,6 +7,7 @@ use App\Models\CompanyStaff;
 use App\Models\DataEntry;
 use App\Models\Event;
 use App\Models\EventCompany;
+use App\Models\CompanyAccreditaionCategory;
 use App\Models\EventCompanyDataEntry;
 use App\Models\SelectOption;
 use App\Models\StaffData;
@@ -209,6 +210,21 @@ class DataEntryController extends Controller
 
     public function dataEntryParticipants($companyId, $eventId)
     {
+        $addable = 1;
+        $companyAccrediationCategories = CompanyAccreditaionCategory::where(['company_id'=>$companyId,'event_id'=>$eventId])->get()->all();
+        if($companyAccrediationCategories == null){
+            $addable = 0;
+        }else{
+            $size = 0;
+            $inserted = 0;
+            foreach($companyAccrediationCategories as $companyAccrediationCategory){
+                $size = $size + $companyAccrediationCategory->size;
+                $inserted = $inserted + $companyAccrediationCategory->inserted;
+            }
+            if($size == $inserted){
+                $addable = 0;
+            }
+        }
         $dataTableColumuns = array();
 
         $where = array('id' => $companyId);
@@ -226,6 +242,7 @@ class DataEntryController extends Controller
         Schema::dropIfExists('temp_dataentry_' . Auth::user()->id);
         Schema::create('temp_dataentry_' . Auth::user()->id, function ($table) use ($templateFields) {
             $table->string('id');
+            //$table->string('identifier');
             foreach ($templateFields as $templateField) {
                 $dataTableColumuns[] = $templateField->label_en;
                 $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
@@ -240,6 +257,7 @@ class DataEntryController extends Controller
             $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
             $staffDataValues = array();
             $staffDataValues[] = $companyStaff->id;
+            //$staffDataValues[] = $companyStaff->identifier;
             foreach ($staffDatas as $staffData) {
                 if ($staffData->slug == 'select') {
                     $where = array('template_field_id' => $staffData->template_field_id, 'value_id' => $staffData->value);
@@ -253,7 +271,7 @@ class DataEntryController extends Controller
         }
         $query = '';
         foreach ($alldata as $data) {
-            $query = 'insert into temp_dataentry_' . Auth::user()->id . ' (id';
+            $query = 'insert into temp_dataentry_' . Auth::user()->id . ' (id ';
             foreach ($templateFields as $templateField) {
                 $query = $query . ',' . preg_replace('/\s+/', '_', $templateField->label_en);
             }
@@ -266,6 +284,7 @@ class DataEntryController extends Controller
             DB::insert($query);
         }
         if (request()->ajax()) {
+            //$participants = DB::select('select t.* , c.* from temp_dataentry_' . Auth::user()->id . ' t inner join company_staff c on t.id = c.id');
             $participants = DB::select('select t.* , c.* from temp_dataentry_' . Auth::user()->id . ' t inner join company_staff c on t.id = c.id');
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {
@@ -318,12 +337,21 @@ class DataEntryController extends Controller
                     }
                     return $button;
                 })
-                ->rawColumns(['status', 'action'])
+                ->addColumn('image', function ($data) {
+                    $image = '';
+                    //$image .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
+                    $image .= '<img src="'. asset('storage/badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
+                    return $image;
+                })
+                ->addColumn('identifier', function ($data) {
+                    return $data->identifier;
+                })
+                ->rawColumns(['identifier','image','status', 'action'])
                 ->make(true);
         }
         $subCompany_nav = 1;
         return view('pages.DataEntry.dataentry-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)
-            ->with('companyId',$companyId)->with('eventId',$eventId)->with('event_name',$event->name)->with('company_name',$company->name);
+            ->with('companyId',$companyId)->with('eventId',$eventId)->with('event_name',$event->name)->with('company_name',$company->name)->with('addable',$addable);
     }
 
     public function participantAdd($participant_id,$companyId,$eventId)
@@ -627,6 +655,9 @@ class DataEntryController extends Controller
                 'event_admin_decision_date' => null,
                 'event_admin_reject_reason' => '',
                 'status' => '0'
+            ]);
+            $staff = CompanyStaff::updateOrCreate(['id' => $companyStaff->id],
+            ['identifier'=> '#'.$request->event_id.'-'.$request->company_id.'-'.$companyStaff->id
             ]);
         $data = $request->all();
 

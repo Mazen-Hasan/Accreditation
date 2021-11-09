@@ -306,7 +306,10 @@ class TemplateFormController extends Controller
                 'event_admin_decision' => '0',
                 'event_admin_decision_date' => null,
                 'event_admin_reject_reason' => '',
-                'status' => '0'
+                'status' => '0',
+            ]);
+        $staff = CompanyStaff::updateOrCreate(['id' => $companyStaff->id],
+            ['identifier'=> '#'.$request->event_id.'-'.$request->company_id.'-'.$companyStaff->id
             ]);
 
         $where = array('id' => $request->event_id);

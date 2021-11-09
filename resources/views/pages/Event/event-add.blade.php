@@ -370,7 +370,7 @@
                     event_end_date: {greaterThan: "Must be greater than event start date."},
                     accreditation_end_date: {greaterThan: "Must be greater than accreditation start date."},
                     accreditation_start_date: {lessThan: "Must be less than event end date"},
-                    accreditation_start_date: {greaterThan: "Must be greater than event start date."},
+                    //accreditation_start_date: {greaterThan: "Must be greater than event start date."},
                     accreditation_end_date: {lessThan: "Must be less than event end date."}
                 },
 

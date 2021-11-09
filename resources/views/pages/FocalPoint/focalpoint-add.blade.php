@@ -24,6 +24,7 @@
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id">
+                            <input type="hidden" id="entry_type" name="entry_type"  value="not_instant" />
                             <br>
                             <div class="row">
                                 <div class="col-md-6">

@@ -18,7 +18,7 @@
                             <a class="url-nav" href="{{route('focalpoints')}}">
                                 <span>Focal Points:</span>
                             </a>
-                            {{$focalpoint->name.' '.$focalpoint->middle_name.' '.$focalpoint->last_name}}
+                            {{$focalpoint->name.' '.$focalpoint->last_name}}
                             / Edit</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
@@ -35,18 +35,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group col">
-                                        <label>Middle Name</label>
-                                        <div class="col-sm-12">
-                                            <input type="text" id="middle_name" name="middle_name"
-                                                   placeholder="enter middle name" required=""
-                                                   value="{{$focalpoint->middle_name}}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Last Name</label>
@@ -54,15 +42,6 @@
                                             <input type="text" id="last_name" name="last_name"
                                                    placeholder="enter last name" required=""
                                                    value="{{$focalpoint->last_name}}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Email</label>
-                                        <div class="col-sm-12">
-                                            <input type="email" id="email" name="email" placeholder="enter email"
-                                                   required="" value="{{$focalpoint->email}}"/>
                                         </div>
                                     </div>
                                 </div>

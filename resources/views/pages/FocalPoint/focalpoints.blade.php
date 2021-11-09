@@ -19,10 +19,10 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <p class="card-title">Focal Points</p>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
+                            <div class="col-md-3 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
@@ -30,12 +30,6 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                <a href="{{route('focalpointAdd')}}" id="add-new-post" class="add-hbtn">
-                                    <i>
-                                        <img src="{{ asset('images/add.png') }}" alt="Add">
-                                    </i>
-                                    <span class="dt-hbtn">Add</span>
-                                </a>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -44,7 +38,6 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-                                    <th>Email</th>
                                     <th>Telephone</th>
                                     <th>Mobile</th>
                                     <th>Account Name</th>
@@ -128,7 +121,7 @@
                     extend: 'excelHtml5',
                     title: 'Focal-points',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7]
+                        columns: [1, 2, 3, 4, 5, 6]
                     }
                 }],
 
@@ -141,7 +134,7 @@
                 columns: [
                     {data: 'id', name: 'id', 'visible': false},
                     {data: 'name', name: 'name'},
-                    {data: 'email', name: 'email'},
+                    //{data: 'email', name: 'email'},
                     {data: 'telephone', name: 'telephone'},
                     {data: 'mobile', name: 'mobile'},
                     {data: 'account_name', name: 'account_name'},

@@ -49,7 +49,7 @@
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
-                            <input type="hidden" name="event_id" id="event_id" value="{{$eventid}}">
+                            <input type="hidden" name="event_id" id="event_id" value="{{$eventId}}">
                             <input type="hidden" name="need_management" id="need_management"
                                    value="{{$company->need_management}}">
                             <input type="hidden" name="company_Id" id="company_Id" value="{{$company->id}}">
@@ -60,7 +60,7 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" value="{{$company->name}}"
+                                            <input type="text" id="company_name" name="company_name" value="{{$company->name}}"
                                                    required="" placeholder="enter name"/>
                                         </div>
                                     </div>
@@ -119,6 +119,7 @@
                                                         @endif
                                                     >{{ $focalPoint->value }}</option>
                                                 @endforeach
+                                                <option value="-2" id="instant_add">Add new focal point</option>
                                             </select>
                                         </div>
                                     </div>
@@ -182,7 +183,7 @@
                                     <div class="form-group col">
                                         <label>Status</label>
                                         <div class="col-sm-12">
-                                            <select id="status" name="status" value="" required="">
+                                            <select id="company_status" name="company_status" value="" required="">
                                                 @foreach ($statuss as $status)
                                                     <option value="{{ $status->key }}"
                                                             {{--                                                            @if ($key == old('myselect', $model->option))--}}
@@ -196,26 +197,172 @@
                                     </div>
                                 </div>
                             </div>
-                        <!-- <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group col">
-                                        <div class="col-sm-12">
-                                            <label for="needManagmentCheckbox"  style="word-wrap:break-word;font-size:20px">
-                                                <input type="checkbox"
-                                                @if ($company->need_management == 1)
-                            checked="checked"
-@endif
-                            id="needManagmentCheckbox" name="needManagmentCheckbox" value="0" style="width:20px;display: inline-block;vertical-align: middle" />    Need Company Admin Accreditation Category Zise Management
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div> -->
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" id="btn-save" value="create">Edit
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Add New Focal Point</h5>
+                </div>
+                <div class="modal-body">
+                    <form class="form-sample" id="focaPointForm" name="focaPointForm">
+                        <input type="hidden" id="entry_type" name="entry_type" value="instant" />
+                        <input type="hidden" id="focal_point_id" name="focal_point_id" value="" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="name" name="name" placeholder="enter name"
+                                                   minlength="1" maxlength="50" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group col">
+                                        <label>Middle Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="middle_name" name="middle_name"
+                                                   placeholder="enter middle name" minlength="1" maxlength="50" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Last Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="last_name" name="last_name"
+                                                   placeholder="enter last name" minlength="1" maxlength="50" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Email</label>
+                                        <div class="col-sm-12">
+                                            <input type="email" id="email" name="email" placeholder="enter email"
+                                                   required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Telephone</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="telephone" name="telephone"
+                                                   placeholder="enter telephone" minlength="1" maxlength="50" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Mobile</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="mobile" name="mobile" placeholder="enter mobile"
+                                                   minlength="1" maxlength="50" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Account Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="account_name" name="account_name"
+                                                   placeholder="enter account name" minlength="1" maxlength="50" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Account Email</label>
+                                        <div class="col-sm-12">
+                                            <input type="email" id="account_email" name="account_email"
+                                                   placeholder="enter account email" minlength="1" maxlength="50" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Account Password</label>
+                                        <div class="row">
+                                            <div class="col-sm-11">
+                                                <input style="margin-left: 16px; width: 103%" type="password"
+                                                       id="password" name="password" placeholder="enter password"
+                                                       required=""/>
+                                            </div>
+                                            <div class="col-sm-1" id="eye">
+                                                <i class="fa fa-eye-slash" id="togglePassword"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Status</label>
+                                        <div class="col-sm-12">
+                                            <select id="status" name="status" required="">
+                                                <option value="default">Please select status</option>
+                                                <option value="0">InActive</option>
+                                                <option value="1">Acticve</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="row">
+                            <!-- <div class="col-sm-8">
+                                <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">No, Manage
+                                    them myself
+                                </button>
+                            </div> -->
+                            <div class="col-sm-4">
+                                <button type="submit" id="btn-add-focal">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="event-organizer-copy-confirm-modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="focalentryconfirmTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="col-sm-12 confirm-text" id="focalentryconfirmText"></label>
+                        <input type="hidden" id="focal_point_name" value=""/>
+                        <input type="hidden" id="focal_point_id" value=""/>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-gone">Cancel
+                            </button>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" data-dismiss="modal" id="btn-confirm">Yes</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -238,23 +385,71 @@
                 $('#postCrudModal').html("Add New Contact");
                 $('#ajax-crud-modal').modal('show');
             });
+            $('#focal_point').on('change', function () {
+                //alert('i am here');
+                var selectedFocal = $('#focal_point option:selected').val();
+                if(selectedFocal == -2){
+                    //window.location.href = "{{ route('focalpointAdd')}}";
+                    $('#name').val('');
+                    $('#last_name').val('');
+                    $('#middle_name').val('');
+                    $('#telephone').val('');
+                    $('#mobile').val('');
+                    $('#account_name').val('');
+                    $('#account_email').val('');
+                    $('#password').val('');
+                    $('#status').val('default');
+                    $('#btn-add-focal').html('Save');
+                    $('#add-focal-point-modal').modal('show');
+                }
+            });
+            $('#togglePassword').click(function () {
+            var type = $('#password').attr('type') === 'password' ? 'text' : 'password';
+            $('#password').attr('type', type);
+            if (type === 'text') {
+                $('#togglePassword').removeClass('fa fa-eye-slash');
+                $('#togglePassword').addClass('fa fa-eye');
+            } else {
+                $('#togglePassword').removeClass('fa fa-eye');
+                $('#togglePassword').addClass('fa fa-eye-slash');
+            }
+            });
 
         });
-
+        $('#btn-confirm').click(function () {
+            var name = $('#focal_point_name').val();
+            var id = $('#focal_point_id').val();
+            var found = false;
+            if(id != ''){
+                $("#focal_point").find("option").each(function() {
+                    if($(this).val() == id){
+                        found = true;
+                    }
+                });
+                if(found){
+                    $("#focal_point").val(id);
+                }else{
+                    $("#focal_point").append(new Option(name, id));
+                    $("#focal_point").val(id);
+                }
+                $('#event-organizer-copy-confirm-modal').modal('hide');
+                $('#focal_point_id').val('');
+                $('#focal_point_name').val('');
+            }else{
+                //$('#focal_point').val('default');
+                $("#focal_point").val($("#focal_point option:first").val());
+            }
+        });
+        $('#btn-gone').click(function () {
+            $("#focal_point").val($("#focal_point option:first").val());
+        });
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 submitHandler: function (form) {
-                    //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
-                    var eventid = $('#event_id').val();
-                    var parentId = $('#parent_id').val();
-                    // if($('#needManagmentCheckbox').is(':checked')){
-                    //     $('#need_management').val('1');
-                    // }else{
-                    //     $('#need_management').val('0');
-                    // }
+                    //var eventid = $('#event_id').val();
+                    //var parentId = $('#parent_id').val();
                     $('#btn-save').html('Sending..');
-                    //alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('storeSubCompnay') }}",
@@ -264,9 +459,8 @@
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Edited successfully');
-                            window.location.href = "../../subCompanies/"+parentId + "/" + eventid;
-                            // var oTable = $('#laravel_datatable').dataTable();
-                            // oTable.fnDraw(false);
+                            //window.location.href = "../../subCompanies/"+parentId + "/" + eventid;
+                            window.location.href = "{{route('subCompanies',[$company->parent_id,$eventId])}}"
                         },
                         error: function (data) {
                             console.log('Error:', data);
@@ -276,5 +470,61 @@
                 }
             })
         }
+        if ($("#focaPointForm").length > 0) {
+            $("#focaPointForm").validate({
+                rules: {
+                    status: {valueNotEquals: "default"}
+                },
+                submitHandler: function (form) {
+                    $('#post_id').val('');
+                    var actionType = $('#btn-save').val();
+                    $('#btn-add-focal').html('Sending..');
+                    $.ajax({
+                        data: $('#focaPointForm').serialize(),
+                        url: "{{ route('focalpointController.store') }}",
+                        type: "POST",
+                        dataType: 'json',
+                        success: function (data) {
+                            if(data.code == 401){
+                                $('#add-focal-point-modal').modal('hide');
+                                $('#focalentryconfirmTitle').html('Add new focal point');
+                                $('#focal_point_id').val(data.id);
+                                $('#focal_point_name').val(data.name);
+                                var confirmText = data.message;
+                                $('#btn-gone').show();
+                                $('#btn-confirm').html('yes');
+                                $('#focalentryconfirmText').html(confirmText);
+                                $('#event-organizer-copy-confirm-modal').modal('show');
+                            }else{
+                                if(data.code == 402){
+                                    $('#add-focal-point-modal').modal('hide');
+                                    $('#focalentryconfirmTitle').html('Add new focal point');
+                                    var confirmText = data.message;
+                                    $('#focalentryconfirmText').html(confirmText);
+                                    $('#btn-gone').hide();
+                                    $('#btn-confirm').html('OK');
+                                    $('#event-organizer-copy-confirm-modal').modal('show');
+                                }else{
+                                    var name = data.name + ' ' + data.middle_name + ' ' + data.last_name;
+                                    $('#focaPointForm').trigger("reset");
+                                    $('#btn-add-focal').html('Add successfully');
+                                    $('#add-focal-point-modal').modal('hide');
+                                    $("#focal_point").append(new Option(name, data.id));
+                                    $("#focal_point").val(data.id);
+                                }
+                            }
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                            $('#btn-save').html('Save Changes');
+                        }
+                    });
+                }
+            })
+        }
+        jQuery.validator.addMethod("valueNotEquals",
+            function (value, element, params) {
+                return params !== value;
+            }, " Please select a value");
     </script>
 @endsection

@@ -94,6 +94,7 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                 @endforeach
+                                    <th>ID</th>
                                     <th>Image</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
@@ -211,6 +212,7 @@
                 myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
                 i++;
             }
+            myColumns.push({data: "identifier", name: "identifier"});
             myColumns.push({data: "image", name: "image"});
             myColumns.push({data: "status", name: "status"});
             myColumns.push({data: "action", name: "action", orderable: "false"});

@@ -181,7 +181,10 @@ class CompanyAdminController extends Controller
                     $image .= '<img src="'. asset('storage/badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
                     return $image;
                 })
-                ->rawColumns(['image','status', 'action'])
+                ->addColumn('identifier', function ($data) {
+                    return $data->identifier;
+                })
+                ->rawColumns(['identifier','image','status', 'action'])
                 ->make(true);
         }
         $subCompany_nav = 1;

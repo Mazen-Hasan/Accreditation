@@ -67,6 +67,8 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                     @endforeach
+                                    <th>ID</th>
+                                    <th>Image</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -105,7 +107,8 @@
                 myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
                 i++;
             }
-
+            myColumns.push({data: "identifier", name: "identifier"});
+            myColumns.push({data: "image", name: "image"});
             //alert("val---" + JSON.stringify(myColumns));
             var companyId = $('#company_id').val();
             var eventId = $('#event_id').val();

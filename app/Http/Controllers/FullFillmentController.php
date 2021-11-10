@@ -303,7 +303,16 @@ class FullFillmentController extends Controller
                     }
                     return $button;
                 })
-                ->rawColumns(['status', 'action'])
+                ->addColumn('image', function ($data) {
+                    $image = '';
+                    //$image .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
+                    $image .= '<img src="'. asset('storage/badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
+                    return $image;
+                })
+                ->addColumn('identifier', function ($data) {
+                    return $data->identifier;
+                })
+                ->rawColumns(['identifier','image','status', 'action'])
                 ->make(true);
         }
         return view('pages.FullFillment.all-participants')->with('dataTableColumns', $dataTableColumuns)->with('company_id', $companyId)->with('event_id', $eventId)->with('accredit', $accreditId)->with('checked', $checked);

@@ -225,7 +225,10 @@ class EventAdminController extends Controller
                     $image .= '<img src="'. asset('storage/badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
                     return $image;
                 })
-                ->rawColumns(['image','status', 'action'])
+                ->addColumn('identifier', function ($data) {
+                    return $data->identifier;
+                })
+                ->rawColumns(['identifier','image','status', 'action'])
                 ->make(true);
         }
         return view('pages.EventAdmin.event-company-participants')->with('dataTableColumns', $dataTableColumuns)->with('company_id', $companyId)->with('event_id', $eventId)->with('company_name',$company_name)->with('event_name',$event_name);

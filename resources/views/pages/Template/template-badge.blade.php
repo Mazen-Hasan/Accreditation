@@ -391,12 +391,12 @@
         });
 
         $("#file").change(function () {
-            let allowedTypes = ['image/png'];
+            let allowedTypes = ['image/png','image/jpeg'];
             let file = this.files[0];
             let fileType = file.type;
             if (!allowedTypes.includes(fileType)) {
                 $("#file-progress-bar").width('0%');
-                $("#file_type_error").html('Please choose a valid file (png)');
+                $("#file_type_error").html('Please choose a valid file (jpeg, png)');
                 $("#file").val('');
                 $("#btn-upload").attr('disabled', true);
                 return false;

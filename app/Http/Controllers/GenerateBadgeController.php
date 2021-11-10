@@ -58,7 +58,7 @@ class GenerateBadgeController extends Controller
         $fontPath = public_path('fonts/Courier_Prime/CourierPrime-Regular');
 
         foreach ($staffInfo as $staff) {
-            if (str_contains($staff->value, '.png')) {
+            if (str_contains($staff->value, '.png') || str_contains($staff->value, '.jpeg') || str_contains($staff->value, '.jpg')) {
                 $image_path = public_path('storage/badges/' . $staff->value);
                 $this->addImageTooImg($badgeImg, $staff->position_x, $staff->position_y, $staff->size, $staff->size, $image_path);
             } else {
@@ -119,7 +119,16 @@ class GenerateBadgeController extends Controller
 
     private function loadImage($img_path)
     {
-        $im = @imagecreatefrompng($img_path);
+        switch (strtolower(pathinfo($img_path, PATHINFO_EXTENSION))) {
+            case 'jpeg':
+            case 'jpg':
+                $im = @imagecreatefromjpeg($img_path);
+                break;
+
+            case 'png':
+                $im = @imagecreatefrompng($img_path);
+                break;
+        }
         return $im;
     }
 

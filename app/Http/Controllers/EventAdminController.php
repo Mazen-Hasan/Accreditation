@@ -90,63 +90,76 @@ class EventAdminController extends Controller
         foreach ($templateFields as $templateField) {
             $dataTableColumuns[] = $templateField->label_en;
         }
-        Schema::dropIfExists('temp' . $company_admin_id);
-        Schema::create('temp' . $company_admin_id, function ($table) use ($templateFields, $companyId) {
-            $table->string('id');
-            foreach ($templateFields as $templateField) {
-                $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
-            }
-        });
-        if ($companyId == 0) {
-            $where = array('event_id' => $eventId);
-        } else {
-            $where = array('event_id' => $eventId, 'company_id' => $company->id);
-        }
-
-        $companyStaffs = CompanyStaff::where($where)->get()->all();
-        $alldata = array();
-        foreach ($companyStaffs as $companyStaff) {
-            $where = array('staff_id' => $companyStaff->id);
-            if ($companyId != 0) {
-                $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
-            } else {
-                $staffDatas = DB::select('select * from event_staff_data_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
-            }
-            $staffDataValues = array();
-            $staffDataValues[] = $companyStaff->id;
-            $count = 0;
-            foreach ($staffDatas as $staffData) {
-                if ($staffData->slug == 'select') {
-                    $where = array('template_field_id' => $staffData->template_field_id, 'value_id' => $staffData->value);
-                    $value = TemplateFieldElement::where($where)->first();
-                    $staffDataValues[] = $value->value_en;
-                } else {
-                    $staffDataValues[] = $staffData->value;
+        // Schema::dropIfExists('temp' . $company_admin_id);
+        // Schema::create('temp' . $company_admin_id, function ($table) use ($templateFields, $companyId) {
+        //     $table->string('id');
+        //     foreach ($templateFields as $templateField) {
+        //         $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
+        //     }
+        // });
+        if(!Schema::hasTable('temp_' . $eventId)){
+            Schema::create('temp_' . $eventId, function ($table) use ($templateFields) {
+                $table->string('id');
+                foreach ($templateFields as $templateField) {
+                    $dataTableColumuns[] = $templateField->label_en;
+                    $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
                 }
-            }
-            $alldata[] = $staffDataValues;
+            });
         }
-        $query = '';
-        foreach ($alldata as $data) {
-            $query = '';
-            if ($companyId == 0) {
-                $query = $query . 'insert into temp' . $company_admin_id . ' (id';
-            } else {
-                $query = $query . 'insert into temp' . $company_admin_id . ' (id';
-            }
-            foreach ($templateFields as $templateField) {
-                $query = $query . ',' . preg_replace('/\s+/', '_', $templateField->label_en);
-            }
-            $query = $query . ') values (';
-            foreach ($data as $staffDataValue) {
-                $query = $query . '"' . $staffDataValue . '",';
-            }
-            $query = substr($query, 0, strlen($query) - 1);
-            $query = $query . ')';
-            DB::insert($query);
-        }
+        // if ($companyId == 0) {
+        //     $where = array('event_id' => $eventId);
+        // } else {
+        //     $where = array('event_id' => $eventId, 'company_id' => $company->id);
+        // }
+
+        // $companyStaffs = CompanyStaff::where($where)->get()->all();
+        // $alldata = array();
+        // foreach ($companyStaffs as $companyStaff) {
+        //     $where = array('staff_id' => $companyStaff->id);
+        //     if ($companyId != 0) {
+        //         $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
+        //     } else {
+        //         $staffDatas = DB::select('select * from event_staff_data_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
+        //     }
+        //     $staffDataValues = array();
+        //     $staffDataValues[] = $companyStaff->id;
+        //     $count = 0;
+        //     foreach ($staffDatas as $staffData) {
+        //         if ($staffData->slug == 'select') {
+        //             $where = array('template_field_id' => $staffData->template_field_id, 'value_id' => $staffData->value);
+        //             $value = TemplateFieldElement::where($where)->first();
+        //             $staffDataValues[] = $value->value_en;
+        //         } else {
+        //             $staffDataValues[] = $staffData->value;
+        //         }
+        //     }
+        //     $alldata[] = $staffDataValues;
+        // }
+        // $query = '';
+        // foreach ($alldata as $data) {
+        //     $query = '';
+        //     if ($companyId == 0) {
+        //         $query = $query . 'insert into temp' . $company_admin_id . ' (id';
+        //     } else {
+        //         $query = $query . 'insert into temp' . $company_admin_id . ' (id';
+        //     }
+        //     foreach ($templateFields as $templateField) {
+        //         $query = $query . ',' . preg_replace('/\s+/', '_', $templateField->label_en);
+        //     }
+        //     $query = $query . ') values (';
+        //     foreach ($data as $staffDataValue) {
+        //         $query = $query . '"' . $staffDataValue . '",';
+        //     }
+        //     $query = substr($query, 0, strlen($query) - 1);
+        //     $query = $query . ')';
+        //     DB::insert($query);
+        // }
         if (request()->ajax()) {
-            $participants = DB::select('select t.* , c.* from temp' . $company_admin_id . ' t inner join company_staff c on t.id = c.id');
+            if($companyId != 0){
+                $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
+            }else{
+                $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id');
+            }
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {
                     $status_value = "initaited";

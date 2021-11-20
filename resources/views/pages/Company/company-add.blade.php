@@ -73,7 +73,7 @@
                                     <div class="form-group col">
                                         <label>Website</label>
                                         <div class="col-sm-12">
-                                            <input type="url" id="website" name="website" value="" required=""
+                                            <input type="text" id="website" name="website" value="" required=""
                                                    placeholder="enter website"/>
                                         </div>
                                     </div>
@@ -462,7 +462,8 @@
                     category: {valueNotEquals: "default"},
                     city: {valueNotEquals: "default"},
                     country: {valueNotEquals: "default"},
-                    focal_point: {valueNotEquals: "default"}
+                    focal_point: {valueNotEquals: "default"},
+                    website: {urlValid: ""}
                 },
                 submitHandler: function (form) {
                     $('#post_id').val('');
@@ -553,5 +554,13 @@
             function (value, element, params) {
                 return params !== value;
             }, " Please select a value");
+
+        jQuery.validator.addMethod("urlValid",
+            function (value, element, params) {
+                console.log('urlValid');
+                var res = value.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+                return res != null;
+            }, " Please enter a valid URL");
+
     </script>
 @endsection

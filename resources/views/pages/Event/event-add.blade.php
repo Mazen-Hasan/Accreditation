@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Add Event')
+@section('subtitle',' Add New Event')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
@@ -17,7 +17,7 @@
                             <a class="url-nav" href="{{route('events')}}">
                                 <span>Events:</span>
                             </a>
-                            / New</h4>
+                            / Add New Event</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
@@ -26,19 +26,19 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Name</label>
+                                        <label>Event Name</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="name" minlength="1" maxlength="100" name="name" value="" required=""
-                                                   placeholder="enter name"/>
+                                                   placeholder="enter event name"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Size</label>
+                                        <label>Accreditation Size</label>
                                         <div class="col-sm-12">
                                             <input type="number" id="size" min="1" max="20000" name="size"
-                                                   placeholder="enter size" required=""/>
+                                                   placeholder="enter accreditation size" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -88,10 +88,10 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Owner</label>
+                                        <label>Event Owner</label>
                                         <div class="col-sm-12">
                                             <select id="owner" name="owner" required="">
-                                                <option value="default">Please select Owner</option>
+                                                <option value="default">Please select Event Owner</option>
                                                 @foreach ($owners as $owner)
                                                     <option value="{{ $owner->key }}"
                                                             @if ($owner->key == -1)
@@ -105,10 +105,10 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Organizer</label>
+                                        <label>Event Organizer</label>
                                         <div class="col-sm-12">
                                             <select id="organizer" name="organizer" required="">
-                                                <option value="default">Please select Organizer</option>
+                                                <option value="default">Please select Event Organizer</option>
                                                 @foreach ($organizers as $organizer)
                                                     <option value="{{ $organizer->key }}"
                                                             @if ($organizer->key == -1)

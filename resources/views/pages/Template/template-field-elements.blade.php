@@ -175,6 +175,9 @@
 
             var fieldId = $('#field_id').val();
 
+            var url = "{{ route('fieldElements', ":id") }}";
+            url = url.replace(':id', fieldId);
+
             $('#laravel_datatable').DataTable({
 
                 dom: 'lBfrtip',
@@ -189,7 +192,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../../field-elements/' + fieldId,
+                    url: url,
                     type: 'GET',
                 },
                 columns: [

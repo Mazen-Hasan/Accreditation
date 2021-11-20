@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
+use App\Http\Controllers\GenerateBadgeController;
 
 class SecurityOfficerAdminController extends Controller
 {
@@ -239,6 +240,9 @@ class SecurityOfficerAdminController extends Controller
             $focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
 //            NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
 
+            app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
+
+//            GenerateBadgeController::generateAfterApproval($staffId);
             $notification_type = Config::get('enums.notification_types.PAP');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, $staffId,
                 $event->name . ': ' . $company->name . ': ' . 'Participant approved',
@@ -250,6 +254,8 @@ class SecurityOfficerAdminController extends Controller
                 $focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
 //                NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
 
+                app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
+//                GenerateBadgeController::generateAfterApproval($staffId);
                 $notification_type = Config::get('enums.notification_types.PAP');
                 NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, $staffId,
                     $event->name . ': ' . $company->name . ': ' . 'Participant approved',

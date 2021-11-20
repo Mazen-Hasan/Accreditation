@@ -219,7 +219,8 @@ class EventAdminController extends Controller
                         case 8:
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->event_admin_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
                             break;
-                        case 6 || 3:
+                        case 6 :
+                            case  3:
                             if ($data->print_status == 0) {
                                 $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="' . $data->id . '" title="Generate"><i class="fas fa-cogs"></i></a>';
                                 $button .= '&nbsp;&nbsp;';
@@ -271,6 +272,8 @@ class EventAdminController extends Controller
             $focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
 //            NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
 
+            app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
+//            GenerateBadgeController::generateAfterApproval($staffId);
             $notification_type = Config::get('enums.notification_types.PAP');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, $staffId,
                 $event->name . ': ' . $company->name . ': ' . 'Participant approved',
@@ -278,6 +281,7 @@ class EventAdminController extends Controller
 
         } else {
             if ($approval == 3) {
+                DB::update('update company_staff set status = ? where id = ?', [1, $staffId]);
                 foreach ($event_security_officers as $event_security_officer){
 //                    NotificationController::sendAlertNotification($event_security_officer->security_officer_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', Route('securityParticipantDetails' , $staffId));
 
@@ -288,7 +292,6 @@ class EventAdminController extends Controller
                 }
 //                NotificationController::sendAlertNotification($event->security_officer, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/security-officer-participant-details/' . $staffId);
 //                DB::update('update company_staff set security_officer_id = ? where id = ?', [$event->security_officer, $staffId]);
-                DB::update('update company_staff set status = ? where id = ?', [1, $staffId]);
             }
         }
         return Response::json($event);

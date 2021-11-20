@@ -49,7 +49,7 @@
                                     <th>Width (Pixel)</th>
                                     <th>High (Pixel)</th>
                                     <th>Background Color</th>
-                                    <th>Background Image</th>
+                                    <th>Default Background</th>
                                     <th>Locked</th>
                                     <th>Action</th>
                                 </tr>
@@ -76,7 +76,7 @@
                           enctype="multipart/form-data" action="javascript:void(0)">
                         <div class="row">
                             <div class="col-md-5">
-                                <label>Background image</label>
+                                <label>Default Background</label>
                             </div>
 
                             <div class="col-md-4">
@@ -258,7 +258,15 @@
                         }
                     },
 
-                    {data: 'bg_image', name: 'bg_image'},
+                    // {data: 'bg_image', name: 'bg_image'},
+                    {
+                        "data": "bg_image",
+                        "render": function (val) {
+                            var image_path = "{{URL::asset('storage/badges/')}}/";
+                            {{--var image_path = "{{URL::asset('badges/')}}/";--}}
+                                return "<img src= " + image_path + val + "></img>";
+                        }
+                    },
                     {
                         "data": "is_locked",
                         "render": function (val) {

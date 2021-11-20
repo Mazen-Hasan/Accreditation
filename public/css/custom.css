@@ -1202,6 +1202,11 @@ a.disabled {
     font-size: 20px;
 }
 
+.fa-images{
+    color: #1a1a1a;
+    font-size: 20px;
+}
+
 .pic-img{
     border-radius: 50%;
     width:120px;

@@ -24,7 +24,7 @@ class TemplateFieldController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '';
                     if ($data->is_locked == 0) {
-                        if (strtolower($data->label_en) != 'company' and strtolower($data->label_en) != 'event') {
+                        if (strtolower($data->label_en) != 'company' and strtolower($data->label_en) != 'event' and strtolower($data->label_en) != 'accreditation category') {
                             $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="edit-field"  data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                             $button .= '&nbsp;&nbsp;';
                             $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-field"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';

@@ -5,12 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\CompanyStaff;
 use App\Models\Event;
 use App\Models\TemplateBadge;
+use App\Models\TemplateBadgeBackground;
 use App\Models\TemplateFieldElement;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class GenerateBadgeController extends Controller
 {
+
+    public function __construct(){
+
+    }
 
     public function getBadgePath($staff_id)
     {
@@ -49,8 +54,13 @@ class GenerateBadgeController extends Controller
         $where = array('event_form' => $staffInfo[0]->template_id);
         $event = Event::where($where)->first();
 
+        //get bg
+        $bg = DB::select('select * from staff_acc_bg_image_view where staff_id = ? and template_id = ?', [$staff_id, $template_id]);
 
-        $bg_image_path = public_path('storage/badges/' . $badge->bg_image);
+        $bg_image_path = public_path('storage/badges/' . $bg[0]->bg_image);
+
+        //
+//        $bg_image_path = public_path('storage/badges/' . $badge->bg_image);
 
         $badgeImg = $this->imgGenerate($badge->width, $badge->high, $badge->bg_color, $bg_image_path);
 
@@ -58,6 +68,7 @@ class GenerateBadgeController extends Controller
         $fontPath = public_path('fonts/Courier_Prime/CourierPrime-Regular');
 
         foreach ($staffInfo as $staff) {
+
             if (str_contains($staff->value, '.png') || str_contains($staff->value, '.jpeg') || str_contains($staff->value, '.jpg')) {
                 $image_path = public_path('storage/badges/' . $staff->value);
                 $this->addImageTooImg($badgeImg, $staff->position_x, $staff->position_y, $staff->size, $staff->size, $image_path);
@@ -84,7 +95,7 @@ class GenerateBadgeController extends Controller
 
         imagedestroy($badgeImg);
 
-        $query = 'update template_badges tb set tb.is_locked = 1, tb.can_unlock = 0 where t.id = ' . $event->event_form;
+        $query = 'update template_badges tb set tb.is_locked = 1, tb.can_unlock = 0 where tb.id = ' . $event->event_form;
         DB::update($query);
 
         return Response::json($path);
@@ -151,7 +162,7 @@ class GenerateBadgeController extends Controller
 
         $text_color = imagecolorallocate($img, $r, $g, $b);
 
-        imagefttext($img, $text_size, 0, $position_x, $position_y, $text_color, $fontPath, $text);
+//        imagefttext($img, $text_size, 0, $position_x, $position_y, $text_color, $fontPath, $text);
     }
 
     public function generatePreview($badge_id)

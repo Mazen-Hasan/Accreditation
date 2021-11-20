@@ -216,6 +216,9 @@
 
             var templateId = $('#template_id').val();
 
+            var url = "{{ route('templateFields', ":id") }}";
+            url = url.replace(':id', templateId);
+
             $('#laravel_datatable').DataTable({
 
                 dom: 'lBfrtip',
@@ -230,7 +233,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../template-fields/' + templateId,
+                    url: url,
                     type: 'GET',
                 },
                 columns: [
@@ -238,7 +241,6 @@
                     {data: 'label_ar', name: 'label_ar'},
                     {data: 'label_en', name: 'label_en'},
                     {data: 'field_order', name: 'field_order'},
-                    // { data: 'mandatory', name: 'mandatory' },
                     {
                         "data": "mandatory",
                         "render": function (val) {
@@ -250,7 +252,7 @@
                     {data: 'name', name: 'name'},
                     {data: 'action', name: 'action', orderable: false}
                 ],
-                order: [[0, 'desc']]
+                order: [[3, 'asc']]
             });
 
             $('.export-to-excel').click(function () {
@@ -264,6 +266,17 @@
                 $('#modalTitle').html("New Field");
                 $('#field-modal').modal('show');
                 // $('#field_type').removeAttr('disabled');
+                var selected = $('#field_type').find('option:selected');
+                var slug = selected.data('slug');
+                if (slug === 'text' || slug === 'number' || slug === 'textarea') {
+                    $('#option').show();
+                    $('#min_char').prop('disabled', false);
+                    $('#max_char').prop('disabled', false);
+                } else {
+                    $('#option').hide();
+                    $('#min_char').prop('disabled', true);
+                    $('#max_char').prop('disabled', true);
+                }
             });
 
             $('body').on('click', '#edit-field', function () {
@@ -279,7 +292,6 @@
                     $('#min_char').val(data.min_char);
                     $('#max_char').val(data.max_char);
                     $('#field_order').val(data.field_order);
-                    console.log(data.mandatory)
                     if (data.mandatory === 1) {
                         $('#mandatory').attr('checked', 'checked');
                     } else {
@@ -287,6 +299,18 @@
                     }
 
                     $('#field_type').val(data.field_type_id);
+
+                    var selected = $('#field_type').find('option:selected');
+                    var slug = selected.data('slug');
+                    if (slug === 'text' || slug === 'number' || slug === 'textarea') {
+                        $('#option').show();
+                        $('#min_char').prop('disabled', false);
+                        $('#max_char').prop('disabled', false);
+                    } else {
+                        $('#option').hide();
+                        $('#min_char').prop('disabled', true);
+                        $('#max_char').prop('disabled', true);
+                    }
                 });
             });
 
@@ -350,9 +374,9 @@
 
 
         $('select').on('change', function () {
+            console.log('changed');
             var selected = $(this).find('option:selected');
             var slug = selected.data('slug');
-            console.log(slug);
             if (slug === 'text' || slug === 'number' || slug === 'textarea') {
                 $('#option').show();
                 $('#min_char').prop('disabled', false);

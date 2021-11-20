@@ -70,9 +70,9 @@
                     <form id="templateForm" name="templateForm" class="form-horizontal">
                         <input type="hidden" name="template_id" id="template_id">
                         <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">Name</label>
+                            <label for="name" class="col-sm-12 control-label">Registration Form Name</label>
                             <div class="col-sm-12">
-                                <input type="text" id="name" name="name" placeholder="enter name" required="">
+                                <input type="text" id="name" name="name" minlength="5" maxlength="50" placeholder="enter Registration Form Name" required="">
                             </div>
                         </div>
 
@@ -204,40 +204,40 @@
 
             $('body').on('click', '#activate-template', function () {
                 var template_id = $(this).data("id");
-                $('#confirmTitle').html('Activate template');
+                $('#confirmTitle').html('Activate Registration Form');
                 $('#curr_template_id').val(template_id);
                 $('#mode_id').val('1');
-                var confirmText = 'Are you sure you want to activate this template?';
+                var confirmText = 'Are you sure you want to activate this registration form?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
 
             $('body').on('click', '#deActivate-template', function () {
                 var template_id = $(this).data("id");
-                $('#confirmTitle').html('Deactivate template');
+                $('#confirmTitle').html('Deactivate Registration Form');
                 $('#curr_template_id').val(template_id);
                 $('#mode_id').val('0');
-                var confirmText = 'Are you sure you want to deactivate this template?';
+                var confirmText = 'Are you sure you want to deactivate this registration form?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
 
             $('body').on('click', '#lock-template', function () {
                 var template_id = $(this).data("id");
-                $('#confirmTitle').html('Lock template');
+                $('#confirmTitle').html('Lock Registration Form');
                 $('#curr_template_id').val(template_id);
                 $('#mode_id').val('3');
-                var confirmText = 'Are you sure you want to lock this template?';
+                var confirmText = 'Are you sure you want to lock this registration form?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
 
             $('body').on('click', '#unLock-template', function () {
                 var template_id = $(this).data("id");
-                $('#confirmTitle').html('Un-Lock template');
+                $('#confirmTitle').html('Un-Lock Registration Form');
                 $('#curr_template_id').val(template_id);
                 $('#mode_id').val('2');
-                var confirmText = 'Are you sure you want to unLock this template?';
+                var confirmText = 'Are you sure you want to unLock this registration form?';
                 $('#confirmText').html(confirmText);
                 $('#confirmModal').modal('show');
             });
@@ -257,7 +257,6 @@
                         if (mode_id == 0 || mode_id == 1) {
                             $.ajax({
                                 type: "get",
-                                // url: "templateController/changeStatus/" + template_id + "/" + mode_id,
                                 url: url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
@@ -274,7 +273,6 @@
 
                             $.ajax({
                                 type: "get",
-                                // url: "templateController/changeLock/" + template_id + "/" + mode_id,
                                 url: url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();

@@ -103,7 +103,7 @@ class TemplateController extends Controller
 
         if ($template_id == null) {
 
-            $query = 'select p.id, p.label_ar, p.label_en, p.mandatory, p.min_char, p.max_char, p.field_type_id  from pre_defined_fields  p';
+            $query = 'select p.id, p.label_ar, p.label_en, p.mandatory, p.min_char, p.max_char, p.field_order, p.field_type_id  from pre_defined_fields  p';
             $pre_defined_fields_res = DB::select($query);
 
 
@@ -115,6 +115,7 @@ class TemplateController extends Controller
                         'mandatory' => $row->mandatory,
                         'min_char' => $row->min_char,
                         'max_char' => $row->max_char,
+                        'field_order' => $row->field_order,
                         'field_type_id' => $row->field_type_id,
                     ]);
 

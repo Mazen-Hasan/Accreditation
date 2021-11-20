@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccreditationCategory;
 use App\Models\TemplateBadge;
+use App\Models\TemplateBadgeBackground;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +27,8 @@ class TemplateBadgeController extends Controller
                             $button = '<a href="javascript:void(0)" id="edit-badge" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                             $button .= '&nbsp;&nbsp;';
                     }
+                    $button .= '<a href="' . route('templateBadgeBGs', $data->id) . '" id="template-badge-bgs" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Backgrounds"><i class="far fa-images"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('templateBadgeFields', $data->id) . '" id="template-badge-fields" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Fields"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     if ($data->is_locked == 1) {
@@ -68,6 +72,19 @@ class TemplateBadgeController extends Controller
                 'is_locked' => $request->has('locked'),
                 'creator' => Auth::user()->id
             ]);
+
+        if($badge_id ==  0) {
+            $accreditationCategories =  AccreditationCategory::all();
+            foreach ($accreditationCategories as $accreditationCategory){
+                $templateBadgeBackground = TemplateBadgeBackground::updateOrCreate(['id' => 0],
+                    ['badge_id' => $templateBadge->id,
+                        'accreditation_category_id'  => $accreditationCategory->id,
+                        'bg_image' => $templateBadge->bg_image,
+                        'creator' => Auth::user()->id,
+                    ]);
+            }
+        }
+
         return Response::json($templateBadge);
     }
 

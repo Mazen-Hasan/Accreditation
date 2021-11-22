@@ -44,11 +44,22 @@ class CompanyAdminController extends Controller
         }else{
             $size = 0;
             $inserted = 0;
+            $status = 0;
+            $count = 0;
             foreach($companyAccrediationCategories as $companyAccrediationCategory){
                 $size = $size + $companyAccrediationCategory->size;
                 $inserted = $inserted + $companyAccrediationCategory->inserted;
+                $status = $status + $companyAccrediationCategory->status;
+                $count = $count + 1;
             }
             if($size == $inserted){
+                $addable = 0;
+            }
+            if($status > 0){
+                if($status/2 != $count){
+                    $addable = 0;
+                }
+            }else{
                 $addable = 0;
             }
         }

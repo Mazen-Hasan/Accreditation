@@ -333,7 +333,7 @@ class CompanyController extends Controller
                     'company_id' => $company_id,
                     'parent_id' => $eventcompnay->parent_id,
                     'event_id' => $event_id,
-                    'status' => 0
+                    'status' => 2
                 ]);
 
         } catch (\Exception $e) {

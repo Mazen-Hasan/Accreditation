@@ -217,11 +217,22 @@ class DataEntryController extends Controller
         }else{
             $size = 0;
             $inserted = 0;
+            $status = 0;
+            $count = 0;
             foreach($companyAccrediationCategories as $companyAccrediationCategory){
                 $size = $size + $companyAccrediationCategory->size;
                 $inserted = $inserted + $companyAccrediationCategory->inserted;
+                $status = $status + $companyAccrediationCategory->status;
+                $count = $count + 1;
             }
             if($size == $inserted){
+                $addable = 0;
+            }
+            if($status > 0){
+                if($status/2 != $count){
+                    $addable = 0;
+                }
+            }else{
                 $addable = 0;
             }
         }
@@ -811,7 +822,7 @@ class DataEntryController extends Controller
 
     public function dataEntryEvents()
     {
-        $events = DB::select('select * from data_entries_view dd where dd.account_id = ? and dd.status <> ?', [Auth::user()->id, 0]);
+        $events = DB::select('select * from data_entries_view dd where dd.account_id = ? and dd.status <> ? and dd.company_status = ?', [Auth::user()->id, 0 , 3]);
         $subCompany_nav = 1;
         return view('pages.DataEntry.data-entry')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }

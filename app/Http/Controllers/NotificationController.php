@@ -57,9 +57,9 @@ class NotificationController extends Controller
 
         Notification::send($userSchema, new AlertNotification($participantData));
 
-        $emailData = EmailTrait::getEmailTemplate($type, $event_name, $company_name, $url);
+        //$emailData = EmailTrait::getEmailTemplate($type, $event_name, $company_name, $url);
 
-        Mail::to($userSchema->email)->send(new Email($emailData));
+        //Mail::to($userSchema->email)->send(new Email($emailData));
 
 //        Mail::send([], $info, function ($message)
 //        {

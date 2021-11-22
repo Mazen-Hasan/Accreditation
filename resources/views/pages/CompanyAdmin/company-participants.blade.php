@@ -367,7 +367,7 @@
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
-                                    $('#add-new-post').hide();
+                                    //$('#add-new-post').hide();
                                     oTable.fnDraw(false);
                                 },
                                 error: function (data) {

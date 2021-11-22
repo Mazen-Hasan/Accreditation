@@ -40,7 +40,7 @@
                     {{--                    <span class="count"></span>--}}
                 </a>
                 <div id="notify-container" class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
-                     style="margin-top:-35px" aria-labelledby="notificationDropdown">
+                     style="margin-top:-35p;overflow-y: scroll; height:200px;" aria-labelledby="notificationDropdown">
                     <!-- <input type="hidden" id="notifications" value=""> -->
                     <a class="dropdown-item py-3 border-bottom">
                         <p class="mb-0 font-weight-medium float-left">You have
@@ -204,4 +204,16 @@
     window.setInterval(function () {
         getNotifications()
     }, 10000);
+
+    $(document).mouseup(function(e) 
+{
+    var container = $("#notify-container");
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0) 
+    {
+        container.hide();
+        selected = 0;
+    }
+});
 </script>

@@ -303,19 +303,20 @@ class EventController extends Controller
                                 ]);
                         }
                     }
-
-                    foreach ($company_accreditation_categories as $row2) {
-                        if ($row2->company_id == $row->company_id) {
-                            $new_company_accreditation_category = CompanyAccreditaionCategory::updateOrCreate(['id' => 0],
-                                ['event_id' => $post->id,
-                                    'company_id' => $row2->company_id,
-                                    'accredit_cat_id' => $row2->accredit_cat_id,
-                                    'parent_id' => $row2->parent_id,
-                                    'size' => 0,
-                                    'status' => 0,
-                                    'event_company_id' => $new_event_company->id,
-                                    'inserted' => 0,
-                                ]);
+                    if($company_accreditation_categories != null){
+                        foreach ($company_accreditation_categories as $row2) {
+                            if ($row2->company_id == $row->company_id) {
+                                $new_company_accreditation_category = CompanyAccreditaionCategory::updateOrCreate(['id' => 0],
+                                    ['event_id' => $post->id,
+                                        'company_id' => $row2->company_id,
+                                        'accredit_cat_id' => $row2->accredit_cat_id,
+                                        'parent_id' => $row2->parent_id,
+                                        'size' => 0,
+                                        'status' => 0,
+                                        'event_company_id' => $new_event_company->id,
+                                        'inserted' => 0,
+                                    ]);
+                            }
                         }
                     }
                 }

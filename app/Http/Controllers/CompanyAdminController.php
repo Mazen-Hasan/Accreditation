@@ -419,9 +419,15 @@ class CompanyAdminController extends Controller
 
     public function sendApproval($companyId, $eventId)
     {
+        $event = Event::where(['id'=>$eventId])->first();
+        $company = Company::where(['id'=>$companyId])->first();
         $where = array('company_id' => $companyId, 'event_id' => $eventId);
         $companyAccreditCategories = CompanyAccreditaionCategory::where($where)
             ->update(['status' => 1]);
+        $event_admins = DB::select('select * from event_admins_view e where e.id=?',[$eventId]);
+        foreach ($event_admins as $event_admin){
+            NotificationController::sendAlertNotification($event_admin->event_admin, 'sendApproval', $event->name . ': ' . $company->name . ': ' . 'Accreditation Categories Size approval', Route('companyAccreditCat', [$companyId, $eventId]));
+        }
         return Response::json($companyAccreditCategories);
 
     }
@@ -589,8 +595,8 @@ class CompanyAdminController extends Controller
         }
 
         $citysSelectOptions = array();
-        $cities = City::get()->all();
-
+        // $cities = City::get()->all();
+        $cities = City::where(['country_id'=>$post->country_id])->get()->all();
         foreach ($cities as $city) {
             $citySelectOption = new SelectOption($city->id, $city->name);
             $citysSelectOptions[] = $citySelectOption;
@@ -670,10 +676,10 @@ class CompanyAdminController extends Controller
         $citysSelectOptions = array();
         $cities = City::get()->all();
 
-        foreach ($cities as $city) {
-            $citySelectOption = new SelectOption($city->id, $city->name);
-            $citysSelectOptions[] = $citySelectOption;
-        }
+        // foreach ($cities as $city) {
+        //     $citySelectOption = new SelectOption($city->id, $city->name);
+        //     $citysSelectOptions[] = $citySelectOption;
+        // }
 
         $where = array('status' => 1);
         $categorysSelectOptions = array();
@@ -792,5 +798,23 @@ class CompanyAdminController extends Controller
             Route('companyParticipants' , [$companyId, $eventId]));
 
         return Response::json($post);
+    }
+
+    public function getSubCompnayCities($countrytId)
+    {
+        $cities = DB::select('select * from cities c where c.country_id = ? ',[$countrytId]);
+
+        $subcount = 0;
+        $citySelectOptions = array();
+        foreach ($cities as $city) {
+            // if ($subcount == 0) {
+            //     $compnaySelectOption = new SelectOption(0, 'All');
+            //     $companySelectOptions[] = $compnaySelectOption;
+            //     $subcount = 1;
+            // }
+            $citySelectOption = new SelectOption($city->id, $city->name);
+            $citySelectOptions[] = $citySelectOption;
+        }
+        return Response::json($citySelectOptions);
     }
 }

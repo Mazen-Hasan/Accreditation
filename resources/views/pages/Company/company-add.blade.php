@@ -119,7 +119,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>City</label>
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-12" id="container">
                                             <select id="city" name="city" required="">
                                             <option value="default">Please select city</option>
                                                 @foreach ($citys as $city)
@@ -435,6 +435,40 @@
         });
         $('#btn-gone').click(function () {
             $('#focal_point').val('default');
+        });
+        $('#country').on('change', function () {
+            // $('#lbl_select').html('');
+            // $('#btn-filter').html('Filter');
+            //resetAll();
+
+            var url = "{{ route('getCities', ":id") }}";
+            url = url.replace(':id', this.value);
+
+            $.ajax({
+                type: "get",
+                // url: "fullFillmentController/getCompanies/" + this.value,
+                url: url,
+                success: function (data) {
+                    var citySelectOptions = data;
+                    $('#container').html('');
+                    var html = '<select id="city" name="city" required="">';
+                    html = html + "<option selected='selected' value='default'>Please select city</option>";
+                    var count = 0;
+                    while (count < citySelectOptions.length) {
+                        // if (count == 0) {
+                        //     html = html + "<option selected='selected' value='default'>Please select city</option>";
+                        // } else {
+                            html = html + "<option value=" + citySelectOptions[count].key + ">" + citySelectOptions[count].value + "</option>";
+                        //}
+                        count++;
+                    }
+                    html = html + '<select/>';
+                    $('#container').append(html);
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
+            });
         });
         $('#focal_point').on('change', function () {
                 //alert('i am here');

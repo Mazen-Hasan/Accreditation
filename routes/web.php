@@ -58,7 +58,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('/dataentry-add/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'dataEntryAdd'])->name('dataentryAdd');
     Route::get('/dataentry-edit/{id}/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'edit'])->name('dataentryEdit');
     Route::get('dataentryController/reset_password/{id}/{password}', 'App\Http\Controllers\DataEntryController@resetPassword');
-
+    Route::get('getSubCompnayCities/{country_id}', [App\Http\Controllers\CompanyAdminController::class, 'getSubCompnayCities'])->name('getSubCompnayCities');
 });
 
 Route::group(['middleware' => 'role:event-admin'], function () {
@@ -82,7 +82,7 @@ Route::group(['middleware' => 'role:event-admin'], function () {
     Route::get('companyController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}/{event_id}', 'App\Http\Controllers\CompanyController@storeCompanyAccrCatSize')->name('companyControllerStoreCompanyAccrCatSize');
     Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat')->name('companyControllerDestroyCompanyAccreditCat');
     Route::get('companyController/Approve/{companyId}/{eventId}', 'App\Http\Controllers\CompanyController@Approve')->name('companyControllerApprove');
-
+    Route::get('getCities/{country_id}', [App\Http\Controllers\CompanyController::class, 'getCities'])->name('getCities');
     Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate')->name('badgeGenerate');
     Route::get('badge-preview/{staffId}', 'App\Http\Controllers\GenerateBadgeController@getBadgePath')->name('badgePreview');
     Route::get('badge-print/{staffId}', 'App\Http\Controllers\GenerateBadgeController@printBadge')->name('badgePrint');

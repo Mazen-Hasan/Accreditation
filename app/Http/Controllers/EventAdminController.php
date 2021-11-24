@@ -21,7 +21,7 @@ class EventAdminController extends Controller
 
     public function index()
     {
-        $events = DB::select('select * from event_admins_view where event_admin = ?', [Auth::user()->id]);
+        $events = DB::select('select * from event_admins_view where event_admin = ? and status = ?', [Auth::user()->id,1]);
         return view('pages.EventAdmin.event-admin')->with('events', $events);
     }
 
@@ -35,8 +35,10 @@ class EventAdminController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('companyEdit', [$data->id, $data->event_id]) . '"  data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" title="Invite"><i class="far fa-share-square"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
+                    if($data->status > 0){
+                        $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" title="Invite"><i class="far fa-share-square"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     $button .= '<a href="' . route('companyAccreditCat', [$data->id, $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Accreditation Size"><i class="fas fa-sitemap"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventCompanyParticipants', [$data->id, $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Participants"><i class="fas fa-users"></i></a>';
@@ -211,7 +213,7 @@ class EventAdminController extends Controller
                             $button .= '&nbsp;&nbsp;';
                             $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" title="Reject"><i class="fas fa-ban"></i></a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" title="Reject with correction"><i class="far fa-window-close"></i></a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" title="Return for correction"><i class="far fa-window-close"></i></a>';
                             break;
                         case 7:
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
@@ -552,7 +554,7 @@ class EventAdminController extends Controller
                 $buttons .= '&nbsp;&nbsp;';
                 $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject</a>';
                 $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject with correction</a>';
+                $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Return for correction</a>';
                 break;
         }
         return view('pages.EventAdmin.event-participant-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('companyId', $participant->company_id)->with('eventId', $participant->event_id)->with('buttons', $buttons)->with('event_name',$event_name)->with('company_name', $company_name);

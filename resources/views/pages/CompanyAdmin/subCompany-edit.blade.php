@@ -144,9 +144,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group col">
+                                    <div class="form-group col" >
                                         <label>City</label>
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-12" id="container">
                                             <select id="city" name="city" value="" required="">
                                                 @foreach ($citys as $city)
                                                     <option value="{{ $city->key }}"
@@ -415,6 +415,39 @@
             }
             });
 
+        });
+        $('#country').on('change', function () {
+            // $('#lbl_select').html('');
+            // $('#btn-filter').html('Filter');
+            //resetAll();
+
+            var url = "{{ route('getSubCompnayCities', ":id") }}";
+            url = url.replace(':id', this.value);
+
+            $.ajax({
+                type: "get",
+                // url: "fullFillmentController/getCompanies/" + this.value,
+                url: url,
+                success: function (data) {
+                    var citySelectOptions = data;
+                    $('#container').html('');
+                    var html = '<select id="city" name="city" required="">';
+                    var count = 0;
+                    while (count < citySelectOptions.length) {
+                        if (count == 0) {
+                            html = html + "<option selected='selected' value=" + citySelectOptions[count].key + ">" + citySelectOptions[count].value + "</option>";
+                        } else {
+                            html = html + "<option value=" + citySelectOptions[count].key + ">" + citySelectOptions[count].value + "</option>";
+                        }
+                        count++;
+                    }
+                    html = html + '<select/>';
+                    $('#container').append(html);
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
+            });
         });
         $('#btn-confirm').click(function () {
             var name = $('#focal_point_name').val();

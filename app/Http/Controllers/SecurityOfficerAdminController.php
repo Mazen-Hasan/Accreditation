@@ -143,9 +143,9 @@ class SecurityOfficerAdminController extends Controller
         if (request()->ajax()) {
             //$participants = DB::select('select t.* , c.* from temp_' . $company_admin_id . ' t inner join company_staff c on t.id = c.id');
             if($companyId != 0){
-                $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
+                $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status in (1,3,9,10)',[$companyId]);
             }else{
-                $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id');
+                $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id and c.status in (1,3,9,10)');
             }
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {
@@ -197,7 +197,7 @@ class SecurityOfficerAdminController extends Controller
                             $button .= '&nbsp;&nbsp;';
                             $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" title="Reject"><i class="fas fa-ban"></i></a>';
                             $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" title="Reject with correction"><i class="far fa-window-close"></i></a>';
+                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" title="Return for correction"><i class="far fa-window-close"></i></a>';
                             break;
                         case 7:
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
@@ -521,7 +521,7 @@ class SecurityOfficerAdminController extends Controller
                 $buttons .= '&nbsp;&nbsp;';
                 $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject</a>';
                 $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject with correction</a>';
+                $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Return for correction</a>';
                 break;
         }
         return view('pages.SecurityOfficerAdmin.security-officer-participant-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('companyId', $participant->company_id)->with('eventId', $participant->event_id);

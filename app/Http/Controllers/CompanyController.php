@@ -158,7 +158,7 @@ class CompanyController extends Controller
         }
 
         $citysSelectOptions = array();
-        $cities = City::get()->all();
+        $cities = City::where(['country_id'=>$post->country_id])->get()->all();
 
         foreach ($cities as $city) {
             $citySelectOption = new SelectOption($city->id, $city->name);
@@ -241,10 +241,10 @@ class CompanyController extends Controller
         $citysSelectOptions = array();
         $cities = City::get()->all();
 
-        foreach ($cities as $city) {
-            $citySelectOption = new SelectOption($city->id, $city->name);
-            $citysSelectOptions[] = $citySelectOption;
-        }
+        // foreach ($cities as $city) {
+        //     $citySelectOption = new SelectOption($city->id, $city->name);
+        //     $citysSelectOptions[] = $citySelectOption;
+        // }
 
         $where = array('status' => 1);
         $categorysSelectOptions = array();
@@ -359,6 +359,25 @@ class CompanyController extends Controller
             ->update(['status' => 2]);
         return Response::json($companyAccreditCategories);
 
+    }
+
+
+    public function getCities($countrytId)
+    {
+        $cities = DB::select('select * from cities c where c.country_id = ? ',[$countrytId]);
+
+        $subcount = 0;
+        $citySelectOptions = array();
+        foreach ($cities as $city) {
+            // if ($subcount == 0) {
+            //     $compnaySelectOption = new SelectOption(0, 'All');
+            //     $companySelectOptions[] = $compnaySelectOption;
+            //     $subcount = 1;
+            // }
+            $citySelectOption = new SelectOption($city->id, $city->name);
+            $citySelectOptions[] = $citySelectOption;
+        }
+        return Response::json($citySelectOptions);
     }
 
 }

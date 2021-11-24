@@ -51,8 +51,18 @@
                         <div class="row align-content-md-center" style="height: 80px">
                             <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
                             <div class="col-md-8">
-                                <p class="card-title">{{$event_name}} / {{$company_name}} : Size ({{$company_size}}) /
-                                    Accreditation Size Management</p>
+                                <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('company-admin') }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    <a class="url-nav" href="{{route('companyParticipants',[$companyId ,$eventId])}}">
+                                        <span>{{$event_name}} / {{$company_name}}</span>
+                                    </a>
+                                     : Size ({{$company_size}}) /
+                                    Accreditation Size Management
+                                </h4>
+                                <!-- <p class="card-title">{{$event_name}} / {{$company_name}} : Size ({{$company_size}}) /
+                                    Accreditation Size Management</p> -->
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">

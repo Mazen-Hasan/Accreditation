@@ -167,24 +167,6 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Registration Form Template</label>
-                                        <div class="col-sm-12">
-                                            <select id="event_form" name="event_form" required="">
-                                                @foreach ($eventForms as $eventForm)
-                                                    <option value="{{ $eventForm->key }}"
-                                                            @if ($eventForm->key == $event->event_form)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $eventForm->value }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group col">
                                         <label>Status</label>
                                         <div class="col-sm-12">
                                             <select id="status" name="status" required="">
@@ -194,6 +176,24 @@
                                                             selected="selected"
                                                         @endif
                                                     >{{ $eventStatus->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6" style="display:none">
+                                    <div class="form-group col">
+                                        <label>Registration Form Template</label>
+                                        <div class="col-sm-12">
+                                            <select id="event_form" name="event_form" required="">
+                                                @foreach ($eventForms as $eventForm)
+                                                    <option value="{{ $eventForm->key }}"
+                                                            @if ($eventForm->key == $event->event_form)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $eventForm->value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

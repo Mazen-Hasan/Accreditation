@@ -201,6 +201,30 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="error-pop-up-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="col-sm-12 confirm-text" id="errorText"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-ok">OK
+                            </button>
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -248,7 +272,10 @@
                     $('#ajax-crud-modal').modal('show');
                     $('#accredit_cat_id').attr('disabled', false);
                 } else {
-                    alert('you reached the max size');
+                    $('#errorTitle').html('Error: Max Size');
+                    $('#errorText').html('you have reached accreditation categories max size');
+                    $('#error-pop-up-modal').modal('show');
+                    //alert('you reached the max size');
                 }
             });
             $('body').on('click', '#edit-company-accreditation', function () {
@@ -324,7 +351,10 @@
                         },
                         error: function (data) {
                             $('#ajax-crud-modal').modal('hide');
-                            alert('Cant insert duplicate accreditation category size');
+                            $('#errorTitle').html('Error: Duplicate accrediation category');
+                            $('#errorText').html('Cant insert duplicate accreditation category size');
+                            $('#error-pop-up-modal').modal('show');
+                            //alert('Cant insert duplicate accreditation category size');
                             console.log('Error:', data);
                         }
                     });
@@ -360,7 +390,7 @@
                                     oTable.fnDraw(false);
                                     var remaining_size = parseInt($('#remaining_size').val());
                                     var inserted_size = parseInt($('#curr_size').val());
-                                    alert(inserted_size);
+                                    //alert(inserted_size);
                                     var new_remaining_size = remaining_size + inserted_size;
                                     $('#remaining_size').val(new_remaining_size);
                                     $('#curr_size').val('0');

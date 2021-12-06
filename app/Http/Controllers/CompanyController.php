@@ -187,6 +187,12 @@ class CompanyController extends Controller
         $companyStatus2 = new SelectOption(0, 'InActive');
         $companyStatuss = [$companyStatus1, $companyStatus2];
 
+        $allwoedSize = $event->size;
+        $allwoedSize = $allwoedSize + $post->size;
+        $eventcompaniess = EventCompany::where(['event_id'=> $eventid,'parent_id'=> null])->get()->all();
+        foreach($eventcompaniess as $eventcompnays){
+            $allwoedSize = $allwoedSize - $eventcompnays->size; 
+        }
         if (request()->ajax()) {
             $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories_view where company_id = ?', [$id]);
             return datatables()->of($companyAccreditationCategories)
@@ -201,7 +207,7 @@ class CompanyController extends Controller
         }
 
         return view('pages.Company.company-edit')->with('company', $post)->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss)->with('allowedSize',$allwoedSize);
     }
 
 
@@ -268,8 +274,14 @@ class CompanyController extends Controller
         $companyStatus2 = new SelectOption(0, 'InActive');
         $companyStatuss = [$companyStatus1, $companyStatus2];
 
+        $allwoedSize = $event->size;
+        $eventcompanies = EventCompany::where(['event_id'=> $id,'parent_id'=> null])->get()->all();
+        foreach($eventcompanies as $eventcompnay){
+            $allwoedSize = $allwoedSize - $eventcompnay->size; 
+        }
+
         return view('pages.Company.company-add')->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $id)->with('event_name', $event->name)->with('statuss', $companyStatuss);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $id)->with('event_name', $event->name)->with('statuss', $companyStatuss)->with('allowedSize',$allwoedSize);
     }
 
     public function companyAccreditCat($Id, $eventId)

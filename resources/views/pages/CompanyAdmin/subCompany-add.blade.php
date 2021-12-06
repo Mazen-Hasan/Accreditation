@@ -109,7 +109,7 @@
                                     <div class="form-group col">
                                         <label>Size</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="size" name="size" min="1" max="20000" value="" required=""
+                                            <input type="number" id="size" name="size" min="1" max="{{$allowedSize}}" value="" required=""
                                                    placeholder="enter size"/>
                                         </div>
                                     </div>

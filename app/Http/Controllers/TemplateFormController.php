@@ -592,11 +592,12 @@ class TemplateFormController extends Controller
                         $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, 0);
                         $form .= $this->createHiddenFieldLabel($templateField->label_en, '');
                     } else {
-                        $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->value);
-                        $form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->value);
                         if($templateField->label_en == 'Personal Image'){
                             $image = $this->createPersonalImage($templateField->value);
                             $form = $image.$form;
+                        }else{
+                            $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->value);
+                            $form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->value);
                         }
                     }
 

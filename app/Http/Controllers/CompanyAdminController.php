@@ -40,7 +40,7 @@ class CompanyAdminController extends Controller
         $addable = 1;
         $companyAccrediationCategories = CompanyAccreditaionCategory::where(['company_id'=>$companyId,'event_id'=>$eventId])->get()->all();
         if($companyAccrediationCategories == null){
-            $addable = 0;
+            $addable = 2;
         }else{
             $size = 0;
             $inserted = 0;
@@ -53,14 +53,18 @@ class CompanyAdminController extends Controller
                 $count = $count + 1;
             }
             if($size == $inserted){
-                $addable = 0;
+                if($size == 0){
+                    $addable = 2;
+                }else{
+                    $addable = 0;
+                }
             }
             if($status > 0){
                 if($status/2 != $count){
-                    $addable = 0;
+                    $addable = 3;
                 }
             }else{
-                $addable = 0;
+                $addable = 3;
             }
         }
 
@@ -130,7 +134,14 @@ class CompanyAdminController extends Controller
         //     DB::insert($query);
         // }
         if (request()->ajax()) {
-            $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
+            $eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+            $companies = $companyId;
+            if($eventcompanies != null){
+                foreach($eventcompanies as $eventcompnay){
+                    $companies = $companies.','.$eventcompnay->company_id;
+                }
+            }
+            $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')');
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {
                     $status_value = "initaited";
@@ -624,6 +635,22 @@ class CompanyAdminController extends Controller
         $companyStatus2 = new SelectOption(0, 'InActive');
         $companyStatuss = [$companyStatus1, $companyStatus2];
 
+        $parentId = $post->parent_id;
+
+        $eventcompanysize = EventCompany::where(['event_id'=> $eventid,'company_id'=> $parentId])->first();
+        $allwoedSize = $eventcompanysize->size;
+
+        $eventsubcompanysize = EventCompany::where(['event_id'=> $eventid,'company_id'=> $post->id])->first();
+        $allwoedSize = $allwoedSize + $eventsubcompanysize->size;
+        $eventcompanies = EventCompany::where(['event_id'=> $eventid,'parent_id'=> $parentId])->get()->all();
+        foreach($eventcompanies as $eventcompnay){
+            $allwoedSize = $allwoedSize - $eventcompnay->size; 
+        }
+        $participants = CompanyStaff::where(['company_id'=>$parentId])->get()->all();
+        foreach($participants as $participant){
+            $allwoedSize = $allwoedSize - 1; 
+        }
+
         if (request()->ajax()) {
             $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories_view where company_id = ?', [$id]);
             return datatables()->of($companyAccreditationCategories)
@@ -641,7 +668,7 @@ class CompanyAdminController extends Controller
             $subCompany_nav = 0;
         }
         return view('pages.CompanyAdmin.subCompany-edit')->with('company', $post)->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventId', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss)->with('subCompany_nav',$subCompany_nav);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventId', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss)->with('subCompany_nav',$subCompany_nav)->with('allowedSize',$allwoedSize);
     }
 
     public function destroy($id)
@@ -707,9 +734,21 @@ class CompanyAdminController extends Controller
         if($company->parent_id != null){
             $subCompany_nav = 0;
         }
+        $eventcompanysize = EventCompany::where(['event_id'=> $id,'company_id'=> $companyId])->first();
+        $allwoedSize = $eventcompanysize->size;
+        $eventcompanies = EventCompany::where(['event_id'=> $id,'parent_id'=> $companyId])->get()->all();
+        foreach($eventcompanies as $eventcompnay){
+            $allwoedSize = $allwoedSize - $eventcompnay->size; 
+        }
+        $participants = CompanyStaff::where(['company_id'=>$companyId])->get()->all();
+        foreach($participants as $participant){
+            $allwoedSize = $allwoedSize - 1; 
+        }
+
+
         return view('pages.CompanyAdmin.subCompany-add')->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
             ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventId', $id)->with('event_name', $event->name)->with('statuss', $companyStatuss)->with('company_name', $company->name)
-            ->with('companyId',$companyId)->with('subCompany_nav',$subCompany_nav);
+            ->with('companyId',$companyId)->with('subCompany_nav',$subCompany_nav)->with('allowedSize',$allwoedSize);
     }
 
     public function subCompanyAccreditCategories($companyId, $eventId)

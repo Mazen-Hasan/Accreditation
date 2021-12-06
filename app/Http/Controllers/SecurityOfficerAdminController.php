@@ -31,7 +31,7 @@ class SecurityOfficerAdminController extends Controller
         $where = array('id' => $id);
         $event = Event::where($where)->first();
         if (request()->ajax()) {
-            $companies = DB::select('select * from companies_view where event_id = ?', [$id]);
+            $companies = DB::select('select * from companies_view where event_id = ? and parent_id is null', [$id]);
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('securityOfficerCompanyParticipants', [$data->id, $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Participants"><i class="fas fa-users"></i></a>';

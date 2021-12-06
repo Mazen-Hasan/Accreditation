@@ -57,7 +57,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('/dataentrys/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'index'])->name('dataentrys');
     Route::get('/dataentry-add/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'dataEntryAdd'])->name('dataentryAdd');
     Route::get('/dataentry-edit/{id}/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'edit'])->name('dataentryEdit');
-    Route::get('dataentryController/reset_password/{id}/{password}', 'App\Http\Controllers\DataEntryController@resetPassword');
+    Route::get('dataentryController/reset_password/{id}/{password}', 'App\Http\Controllers\DataEntryController@resetPassword')->name('resetDataEntryPassword');
     Route::get('getSubCompnayCities/{country_id}', [App\Http\Controllers\CompanyAdminController::class, 'getSubCompnayCities'])->name('getSubCompnayCities');
 });
 

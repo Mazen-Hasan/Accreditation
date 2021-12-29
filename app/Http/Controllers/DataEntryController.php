@@ -822,7 +822,7 @@ class DataEntryController extends Controller
 
     public function dataEntryEvents()
     {
-        $events = DB::select('select * from data_entries_view dd where dd.account_id = ? and dd.status <> ? and dd.company_status = ?', [Auth::user()->id, 0 , 3]);
+        $events = DB::select('select * from data_entries_view dd where dd.account_id = ? and dd.status <> ? and dd.company_status = ? and dd.event_end_date >= CURRENT_DATE()', [Auth::user()->id, 0 , 3]);
         $subCompany_nav = 1;
         return view('pages.DataEntry.data-entry')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }

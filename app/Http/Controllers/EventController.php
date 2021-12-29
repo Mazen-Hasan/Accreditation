@@ -30,7 +30,7 @@ class EventController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $events = DB::select('select * from events_view');
+            $events = DB::select('select * from events_view e where e.event_end_date >= CURRENT_DATE()');
             return datatables()->of($events)
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('EventController.show', $data->id) . '" data-toggle="tooltip"  id="event-details" data-id="' . $data->id . '" data-original-title="Details" title="Details"><i class="far fa-list-alt"></i></a>';
@@ -49,6 +49,29 @@ class EventController extends Controller
                 ->make(true);
         }
         return view('pages.Event.events');
+    }
+
+    public function showAll($status)
+    {
+        if (request()->ajax()) {
+            $events = DB::select('select * from events_view');
+            return datatables()->of($events)
+                ->addColumn('action', function ($data) {
+                    $button = '<a href="' . route('EventController.show', $data->id) . '" data-toggle="tooltip"  id="event-details" data-id="' . $data->id . '" data-original-title="Details" title="Details"><i class="far fa-list-alt"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('eventSecurityCategories', $data->id) . '" data-toggle="tooltip"  id="event-security-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event security categories"><i class="fas fa-users-cog"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('eventAdmins', $data->id) . '" data-toggle="tooltip"  id="event-admins" data-id="' . $data->id . '" data-original-title="Edit" title="Event admins"><i class="fas fa-user-cog"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
     public function eventAdmins($event_id)

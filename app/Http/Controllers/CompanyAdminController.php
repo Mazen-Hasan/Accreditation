@@ -30,7 +30,7 @@ class CompanyAdminController extends Controller
 {
     public function index()
     {
-        $events = DB::select('select * from company_admins_view cc where cc.account_id = ? and cc.status <> ?', [Auth::user()->id, 0]);
+        $events = DB::select('select * from company_admins_view cc where cc.account_id = ? and cc.status <> ? and cc.event_end_date >= CURRENT_DATE()', [Auth::user()->id, 0]);
         $subCompany_nav = 1;
         return view('pages.CompanyAdmin.company-admin')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }

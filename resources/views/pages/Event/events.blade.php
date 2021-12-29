@@ -61,6 +61,14 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div>
+                        <a href="javascript:void(0)" id="showAll" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="show all">
+                                    </i>
+                                    <span class="dt-hbtn" id="showAllSpan">Show all</span>
+                                </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,7 +83,8 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            var showStatus = 1;
+            var murl = "{{ route('EventController.index') }}";
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
@@ -89,7 +98,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('EventController.index') }}",
+                    url: murl,
                     type: 'GET',
                 },
                 columns: [
@@ -108,7 +117,11 @@
                             if (data == 1) {
                                 return "<span style='color: green'>Active</span>"
                             } else {
-                                return "<span style='color: red'>InActive</span>"
+                                if(data == 2){
+                                    return "<span style='color: red'>InActive</span>"
+                                }else{
+                                    return "<span style='color: orange'>Archived</span>"
+                                }
                             }
                         }
                     },
@@ -122,6 +135,22 @@
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Post");
+            });
+
+            $('body').on('click', '#showAll', function () {
+                if(showStatus == 1){
+                    murl = "{{ route('eventsShowall', [":id"]) }}";
+                    murl = murl.replace(':id', showStatus);
+                    $('#showAllSpan').html("Hide archived");
+                    showStatus = 0;     
+                }else{
+                    murl = "{{ route('EventController.index') }}";
+                    $('#showAllSpan').html("Show all");
+                    showStatus = 1;
+                }
+                //alert(showStatus + "," + murl);
+                var mtable = $('#laravel_datatable').DataTable();
+                mtable.ajax.url(murl).load(); 
             });
 
             $('.export-to-excel').click(function () {

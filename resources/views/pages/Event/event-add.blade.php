@@ -22,6 +22,7 @@
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id">
+                            <input type="hidden" name="current_date" id="current_date" value="">
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
@@ -308,6 +309,18 @@
                 }
             });
 
+            var d = new Date();
+            var month = d.getMonth()+1;
+            var day = d.getDate();
+            var output = d.getFullYear() + '/' +
+                (month<10 ? '0' : '') + month + '/' +
+                (day<10 ? '0' : '') + day;
+            // var output = d.getFullYear() + '/' +
+            //      + month + '/' +
+            //      + day;
+            // alert(output);
+            $('#current_date').val(output);
+
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
@@ -351,6 +364,8 @@
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 rules: {
+                    event_start_date: {greaterThanOrEqual: "#current_date"},
+                    accreditation_start_date: {greaterThanOrEqual: "#current_date"},
                     event_end_date: {greaterThan: "#event_start_date"},
                     accreditation_start_date: {lessThan: "#event_end_date"},
                     // accreditation_start_date: {greaterThan: "#event_start_date"},
@@ -396,6 +411,15 @@
                 }
             })
         }
+
+        jQuery.validator.addMethod("greaterThanOrEqual",
+            function (value, element, params) {
+                if (!/Invalid|NaN/.test(new Date(value))) {
+                    return new Date(value) >= new Date($(params).val());
+                }
+                return isNaN(value) && isNaN($(params).val())
+                    || (Number(value) >= Number($(params).val()));
+            }, 'Must be greater than or equal to {0}.');
 
         jQuery.validator.addMethod("greaterThan",
             function (value, element, params) {

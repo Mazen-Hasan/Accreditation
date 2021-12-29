@@ -22,7 +22,7 @@ class SecurityOfficerAdminController extends Controller
 
     public function index()
     {
-        $events = DB::select('select * from event_security_officers_view where security_officer_id = ? and approval_option in (1,3) ', [Auth::user()->id]);
+        $events = DB::select('select * from event_security_officers_view where security_officer_id = ? and approval_option in (1,3) and event_end_date >= CURRENT_DATE() ', [Auth::user()->id]);
         return view('pages.SecurityOfficerAdmin.security-officer-admin')->with('events', $events);
     }
 

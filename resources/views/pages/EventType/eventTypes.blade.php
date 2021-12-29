@@ -50,6 +50,12 @@
                                 </thead>
                                 <tbody>
                                 </tbody>
+                                <tfoot>
+                                    <th>ID</th>
+                                    <th>Event Type</th>
+                                    <th style="color: black;display:none">Status</th>
+                                    <th style="color: black;display:none">Action</th> 
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -137,6 +143,24 @@
             });
 
             $('#laravel_datatable').DataTable({
+                initComplete: function () {
+                        this.api().columns([1]).every( function () {
+                            var column = this;
+                            var select = $('<select><option value="">All</option></select>')
+                                .appendTo( $(column.footer()).empty() )
+                                .on( 'change', function () {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                        $(this).val()
+                                    );
+                                    column
+                                        .search( val ? '^'+val+'$' : '', true, false )
+                                        .draw();
+                                } );
+                            column.data().unique().sort().each( function ( d, j ) {
+                                select.append( '<option value="'+d+'">'+d+'</option>' )
+                            } );
+                        } );
+                    },
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',

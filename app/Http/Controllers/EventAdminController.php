@@ -21,7 +21,7 @@ class EventAdminController extends Controller
 
     public function index()
     {
-        $events = DB::select('select * from event_admins_view where event_admin = ? and status = ?', [Auth::user()->id,1]);
+        $events = DB::select('select * from event_admins_view where event_admin = ? and status = ? and event_end_date >= CURRENT_DATE()', [Auth::user()->id,1]);
         return view('pages.EventAdmin.event-admin')->with('events', $events);
     }
 

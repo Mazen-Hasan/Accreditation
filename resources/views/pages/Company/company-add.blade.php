@@ -73,7 +73,7 @@
                                     <div class="form-group col">
                                         <label>Website</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="website" name="website" value="" required=""
+                                            <input type="text" id="website" name="website" value=""
                                                    placeholder="enter website"/>
                                         </div>
                                     </div>
@@ -496,8 +496,8 @@
                     category: {valueNotEquals: "default"},
                     city: {valueNotEquals: "default"},
                     country: {valueNotEquals: "default"},
-                    focal_point: {valueNotEquals: "default"},
-                    website: {urlValid: ""}
+                    focal_point: {valueNotEquals: "default"}
+                    //website: {urlValid: ""}
                 },
                 submitHandler: function (form) {
                     $('#post_id').val('');

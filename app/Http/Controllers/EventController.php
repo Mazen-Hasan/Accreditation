@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CompanyAccreditaionCategory;
 use App\Models\Event;
+use App\Models\EventAccreditationCategory;
 use App\Models\EventAdmin;
 use App\Models\EventCompany;
 use App\Models\EventCompanyDataEntry;
@@ -43,6 +44,8 @@ class EventController extends Controller
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
                     $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('eventAccreditationCategories', $data->id) . '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-th-large"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -66,6 +69,8 @@ class EventController extends Controller
                     $button .= '<a href="' . route('eventAdmins', $data->id) . '" data-toggle="tooltip"  id="event-admins" data-id="' . $data->id . '" data-original-title="Edit" title="Event admins"><i class="fas fa-user-cog"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('eventAccreditationCategories', $data->id) . '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-th-large"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     return $button;
                 })
@@ -264,6 +269,7 @@ class EventController extends Controller
                 'accreditation_end_date' => $request->accreditation_end_date,
                 'creator' => Auth::user()->id
             ]);
+
 
 
         if ($postId == null) {
@@ -567,6 +573,54 @@ class EventController extends Controller
                 'security_category_id' => $security_category_id,
                 'order' => 100
             ]);
+        return Response::json($post);
+    }
+
+
+    public function eventAccreditationCategories($event_id)
+    {
+        if (request()->ajax()) {
+            $event = DB::select('select * from event_accreditation_categories_view where event_id=?', [$event_id]);
+            return datatables()->of($event)
+                ->addColumn('action', function ($data) {
+                    $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-accreditation-category"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        $where = array('id' => $event_id);
+        $event = Event::where($where)->first();
+
+        $accreditation_categories = DB::select('select * from accreditation_categories');
+        return view('pages.Event.eventAccreditationCategories')->with('event', $event)->with('accreditationCategories', $accreditation_categories);
+    }
+
+    public function eventAccreditationCategoriesAdd(Request $request)
+    {
+        try{   
+        $post = EventAccreditationCategory::updateOrCreate(['id' => 0],
+            ['event_id' => $request->event_id,
+                'accreditation_category_id' => $request->accreditation_category_id,
+                'size' => 0,
+                'status' => 1
+            ]);
+        }
+        catch (\Exception $e) {
+            return Response::json(array(
+                'code' => 400,
+                'message' => $e->getMessage()
+            ), 400);
+        }
+        return Response::json($post);
+    }
+
+    public function eventAccreditationCategoriesRemove($security_category_id)
+    {
+        $where = array('id' => $security_category_id);
+        $post = EventAccreditationCategory::where($where)->delete();
         return Response::json($post);
     }
 

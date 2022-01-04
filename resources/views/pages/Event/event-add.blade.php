@@ -323,6 +323,7 @@
 @section('script')
     <script>
         // var event_admins = [];
+        var t = 0;
         $(document).ready(function () {
 
             $.ajaxSetup({

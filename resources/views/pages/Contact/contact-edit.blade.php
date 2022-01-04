@@ -93,7 +93,6 @@
                                             <select id="status" name="status" value="" required="" style="">
                                                 @foreach ($contactStatuss as $contactStatus)
                                                     <option value="{{ $contactStatus->key }}"
-                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                                             @if ($contactStatus->key == $post->status)
                                                             selected="selected"
                                                         @endif
@@ -109,67 +108,56 @@
                                 </button>
                             </div>
                         </form>
-                        <br><br>
-                        <div class="row">
-                            <div class="col-lg-6 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="card-title">Titles</h4>
-                                        <div class="table-responsive">
-                                            <table class="table table-hover" id="laravel_datatable"
-                                                   style="text-align: center">
-                                                <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Title</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="delete-title-confirm-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="hidden" id="curr_title_id">
+                        <label class="col-sm-12 confirm-text" id="confirmText"></label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                            </button>
                         </div>
-                        <div class="col-sm-offset-2 col-sm-2">
-                        <a href="javascript:void(0)" class="ha_btn" id="add-new-post">Add Title</a>
+                        <div class="col-sm-4">
+                            <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="ajax-crud-modal" aria-hidden="true">
-        <div class="modal-dialog">
+
+    <div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="postCrudModal"></h4>
-                </div>
                 <div class="modal-body">
-                    <input type="hidden" name="contact_id" id="contact_id" value="{{$post->id}}">
-                    <div class="form-group">
-                        <label>Title</label>
-                        <div class="col-sm-12">
-                            <select id="contactTitle" name="contactTitle" value="" required="">
-                                @foreach ($titlesSelectOptions as $titlesSelectOptions)
-                                    <option value="{{ $titlesSelectOptions->key }}"
-                                            @if ($titlesSelectOptions->key == 1)
-                                            selected="selected"
-                                        @endif
-                                    >{{ $titlesSelectOptions->value }}</option>
-                                @endforeach
-                            </select>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <button id="btn-contact_title-save" value="create">Save
-                        </button>
-                    </div>
-                </div>
-                <div class="modal-footer">
-
                 </div>
             </div>
         </div>
@@ -183,66 +171,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
-            $('#laravel_datatable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "{{ route('contactController.edit',[$post->id]) }}",
-                    type: 'GET',
-                },
-                columns: [
-                    {data: 'id', name: 'id', 'visible': false},
-                    {data: 'title_label', name: 'title_label'},
-                    {data: 'action', name: 'action', orderable: false}
-                ],
-                order: [[0, 'desc']]
-            });
-
-            $('#add-new-post').click(function () {
-                $('#btn-save').val("create-post");
-                $('#post_id').val('');
-                $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add Title");
-                $('#ajax-crud-modal').modal('show');
-            });
-
-            $('body').on('click', '#remove-contact_title', function () {
-                var post_id = $(this).data("id");
-                confirm("Are You sure want to remove contact title ?!");
-                $.ajax({
-                    type: "get",
-                    url: "../contactController/removeContactTitle/" + post_id,
-                    success: function (data) {
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
-            $('body').on('click', '#btn-contact_title-save', function () {
-                var contact_id = $('#contact_id').val();
-                var title_id = $('#contactTitle').val();
-                $.ajax({
-                    type: "get",
-                    url: "../contactController/storeContactTitle/" + contact_id + "/" + title_id,
-                    success: function (data) {
-                        //alert(data);
-                        $('#ajax-crud-modal').modal('hide');
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
         });
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 submitHandler: function (form) {
+                    $('#loader-modal').modal('show');
                     $('#btn-save').html('Sending..');
                     $.ajax({
                         data: $('#postForm').serialize(),
@@ -250,12 +183,14 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
-                            $('#btn-save').html('Edited successfully');
+                            $('#btn-save').html('Saved');
                             window.location.href = "{{ route('contacts')}}";
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }

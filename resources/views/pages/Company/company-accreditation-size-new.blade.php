@@ -5,6 +5,9 @@
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
 
     <script src="{{ URL::asset('js/dataTable.js') }}"></script>
+<script src="{{ URL::asset('js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ URL::asset('js/buttons.html5.min.js') }}"></script>
+    <script src="{{ URL::asset('js/jszip.min.js') }}"></script>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -14,7 +17,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <h4 class="card-title">
                                     <a class="url-nav" href="{{ route('event-admin') }} ">
                                         <span>My Events:</span>
@@ -28,6 +31,14 @@
                                       / : Size ({{$company_size}}) /
                                     Accreditation Size Management
                                 </h4>
+                            </div>
+                        	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -65,7 +76,7 @@
                             </table>
                         </div>
                         @if($status == 1)
-                            <a href="javascript:void(0)" class="ha_btn" id="approve">
+                            <a href="javascript:void(0)" class="ha_btn" id="approve" style="width:200px">
                                 Approve
                             </a>
                         @endif
@@ -112,7 +123,6 @@
                         <button id="edit-size" value="create">Save
                         </button>
                     </div>
-                    {{--                    </form>--}}
                 </div>
                 <div class="modal-footer">
 
@@ -149,6 +159,30 @@
             </div>
         </div>
     </div>
+	<div class="modal fade" id="error-pop-up-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="col-sm-12 confirm-text" id="errorText"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-ok">OK
+                            </button>
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -162,12 +196,21 @@
             var eventId = $('#event_id').val();
             var status = $('#status').val();
             $('#laravel_datatable').DataTable({
+            	dom: 'lBrtip',
+                buttons: [{
+                    extend: 'excelHtml5',
+                    title: 'Accreditation-Categories',
+                    exportOptions: {
+                        columns: [1, 2]
+                    }
+                }],
+            
                 processing: true,
                 serverSide: true,
                 ajax: {
                     //url: '../company-accreditation-size/' + eventId,
                     //url: '../../company-accreditation-size-new/' + companyId + '/' + eventId,
-                    url: "{{route('companyAccreditCat',[$companyId,$eventId])}}",
+                	url: "{{route('companyAccreditCat',[$companyId,$eventId])}}",
                     type: 'GET',
                 },
                 columns: [
@@ -177,6 +220,16 @@
                     {data: 'action', name: 'action', orderable: false}
                 ],
                 order: [[0, 'desc']]
+            });
+        
+        	$('.export-to-excel').click(function () {
+                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            });
+
+            var oTable = $('#laravel_datatable').DataTable();
+
+            $('#search').on('keyup', function () {
+                oTable.search(this.value).draw();
             });
 
             $('#add-new-post').click(function () {
@@ -193,7 +246,10 @@
                     $('#ajax-crud-modal').modal('show');
                     $('#accredit_cat_id').attr('disabled', false);
                 } else {
-                    alert('you reached the max size');
+                    $('#errorTitle').html('Error: Max Size');
+                    $('#errorText').html('you have reached accreditation categories max size');
+                    $('#error-pop-up-modal').modal('show');
+                    //alert('you reached the max size');
                 }
             });
             $('body').on('click', '#edit-company-accreditation', function () {
@@ -252,7 +308,7 @@
                     $.ajax({
                         type: "get",
                         // url: "../../companyController/storeCompanyAccrCatSize/" + post_id + "/" + accredit_cat_id + "/" + size + "/" + company_id + "/" + eventId,
-                        url:url,
+                    	url:url,
                         success: function (data) {
                             $('#ajax-crud-modal').modal('hide');
                             //alert('i am here');
@@ -269,8 +325,10 @@
                         },
                         error: function (data) {
                             $('#ajax-crud-modal').modal('hide');
-                            alert('Cant insert duplicate accreditation category size');
-                            console.log('Error:', data);
+                            $('#errorTitle').html('Error: Duplicate accrediation category');
+                            $('#errorText').html('Cant insert duplicate accreditation category size');
+                            $('#error-pop-up-modal').modal('show');
+                            //console.log('Error:', data);
                         }
                     });
                 }
@@ -299,7 +357,7 @@
                             $.ajax({
                                 type: "get",
                                 // url: "../../companyController/destroyCompanyAccreditCat/" + post_id,
-                                url:url,
+                            	url:url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -323,8 +381,8 @@
                             url = url.replace(':eventId', eventId);
                             $.ajax({
                                 type: "get",
-                                // url: "../../companyController/Approve/" + company_id + "/" + eventId,
-                                url:url,
+                                //url: "../../companyController/Approve/" + company_id + "/" + eventId,
+                            	url:url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();

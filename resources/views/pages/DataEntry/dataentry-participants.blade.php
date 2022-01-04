@@ -22,6 +22,7 @@
                 <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
                 <input type="hidden" id="event_id" value={{$eventId}} />
                 <input type="hidden" id="company_id" value={{$companyId}} />
+            	<input type="hidden" id="addable_status" value={{$addable}} />
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
@@ -44,14 +45,12 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('data-entry')
-                                @if($addable == 1)
-                                <a href="{{route('participantAdd',[0,$companyId,$eventId])}}" id="add-new-post" class="add-hbtn">
+                                <a href="#" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Add</span>
                                 </a>
-                                @endif
                                 @endrole
                             </div>
                         </div>
@@ -60,11 +59,11 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Identifier</th>
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                 @endforeach
-                                    <th>Image</th>
+                                	<th>ID</th>
+                               		 <th>Image</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -157,7 +156,30 @@
             </div>
         </div>
     </div>
-
+	<div class="modal fade" id="error-pop-up-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="col-sm-12 confirm-text" id="errorText"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-ok">OK
+                            </button>
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -175,21 +197,25 @@
             var myColumns = [];
             var i = 0;
             myColumns.push({data: "id", name: "id", 'visible': false});
-            myColumns.push({data: "identifier", name: "identifier", 'visible': true});
+        	var expotColumns = [];
             while (i < jqueryarray.length) {
                 myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
-                i++;
+                expotColumns.push(i+1);             
+            	i++;
             }
+        	myColumns.push({data: "identifier", name: "identifier"});
             myColumns.push({data: "image", name: "image", orderable: "false"});
             myColumns.push({data: "status", name: "status"});
             myColumns.push({data: "action", name: "action", orderable: "false"});
+            expotColumns.push(i+1);
+        	expotColumns.push(i+3);
             $('#laravel_datatable').DataTable({
                 dom: 'lBfrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'DataEntry-Participants',
                     exportOptions: {
-                        columns: [1]
+                        columns: expotColumns
                     }
                 }],
 
@@ -209,10 +235,30 @@
             });
 
             $('#add-new-post').click(function () {
-                $('#btn-save').val("create-post");
-                $('#post_id').val('');
-                $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Post");
+            	var addableStatus = $('#addable_status').val();
+                if(addableStatus == 1){
+                    var url = "{{route('participantAdd',[0,$companyId,$eventId])}}";
+                    window.location.href = url;
+                }
+                if(addableStatus == 2){
+                    $('#errorTitle').html('Error: Adding');
+                    $('#errorText').html('No accreditation categories size defined yet');
+                    $('#error-pop-up-modal').modal('show');
+                }
+                if(addableStatus == 3){
+                    $('#errorTitle').html('Error: Adding');
+                    $('#errorText').html('Accreditation size is not approved yet from event admin');
+                    $('#error-pop-up-modal').modal('show');
+                }
+                if(addableStatus == 0){
+                    $('#errorTitle').html('Error: Adding');
+                    $('#errorText').html('you have reached the max size of participants');
+                    $('#error-pop-up-modal').modal('show');
+                }
+                // $('#btn-save').val("create-post");
+                // $('#post_id').val('');
+                // $('#postForm').trigger("reset");
+                // $('#postCrudModal').html("Add New Post");
                 //$('#ajax-crud-modal').modal('show');
             });
         });

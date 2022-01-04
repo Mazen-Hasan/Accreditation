@@ -44,6 +44,8 @@
                     <div class="card-body">
                         <h4 class="card-title">Participant - New</h4>
                         <form class="form-sample" id="templateForm" name="templateForm">
+                        <!-- <input type="hidden" id="company_id" value={{$companyId}} />
+                        <input type="hidden" id="event_id" value={{$eventId}} /> -->
                             <?php echo $form ?>
                         </form>
                         <br>
@@ -51,6 +53,25 @@
                         <div class="col-sm-offset-2 col-sm-2">
                             <button type="submit" id="btn-save" value="create">Save
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -75,6 +96,8 @@
         if ($("#templateForm").length > 0) {
             $("#templateForm").validate({
                 submitHandler: function (form) {
+                    $('#loader-modal').modal('show');
+                	$('#btn-save').prop('disabled', true);
                     var compnayId = $('#company_id').val();
                     $('#btn-save').html('Sending..');
                     $.ajax({
@@ -85,13 +108,15 @@
                         success: function (data) {
                             // $('#templateForm').trigger("reset");
                             // $('#template-modal').modal('hide');
-                            // $('#btn-save').html('Save Changes');
+                            $('#btn-save').html('Done');
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
+                        	$('#loader-modal').modal('hide');
                             window.location.href = "{{ route('companyParticipants',[$companyId,$eventId])}}";
                         },
                         error: function (data) {
                             console.log('Error:', data);
+                        	$('#loader-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
                         }
                     });

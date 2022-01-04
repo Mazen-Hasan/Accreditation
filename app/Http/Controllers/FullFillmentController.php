@@ -114,15 +114,15 @@ class FullFillmentController extends Controller
             });
         }
 //         if ($companyId == 0) {
-//             $where = array('event_id' => $eventId,'status' ,'>', 8);
-//             $companyStaffs = DB::select('select * from company_staff c where c.event_id = ? and c.status>8',[$eventId]);
+//             // $where = array('event_id' => $eventId,'status' => 9);
+//         	$companyStaffs = DB::select('select * from company_staff c where c.event_id = ? and c.status>8',[$eventId]);
 
 //         } else {
-// //            $where = array('event_id' => $eventId, 'company_id' => $company->id,'status' , '>', 8);
-//             $companyStaffs = DB::select('select * from company_staff c where c.event_id = ? and c.company_id=? and c.status>8',[$eventId, $companyId]);
-
+//             // $where = array('event_id' => $eventId, 'company_id' => $company->id,'status' => 9);
+//         	$companyStaffs = DB::select('select * from company_staff c where c.event_id = ? and c.company_id=? and c.status>8',[$eventId, $companyId]);
 //         }
 
+//         // $companyStaffs = CompanyStaff::where($where)->get()->all();
 //         $alldata = array();
 //         foreach ($companyStaffs as $companyStaff) {
 //             $where = array('staff_id' => $companyStaff->id);
@@ -169,17 +169,17 @@ class FullFillmentController extends Controller
         // } else {
         //     $participants = DB::select("select t.* , c.* from temp" . $company_admin_id . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'");
         // }
-        if ($accreditId == 'All') {
+    	if ($accreditId == 'All') {
             if($companyId != 0){
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ?",[$companyId]);
+                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status > 8",[$companyId]);
             }else{
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id");
+                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id  and c.status > 8");
             }
         } else {
             if($companyId != 0){
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ?",[$companyId]);
+                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ?  and c.status > 8",[$companyId]);
             }else{
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'");
+                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'  and c.status > 8");
             }
         }
         foreach ($participants as $participant) {
@@ -223,7 +223,6 @@ class FullFillmentController extends Controller
         //         $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
         //     }
         // });
-
         if(!Schema::hasTable('temp_' . $eventId)){
             Schema::create('temp_' . $eventId, function ($table) use ($templateFields) {
                 $table->string('id');
@@ -281,17 +280,22 @@ class FullFillmentController extends Controller
         //     DB::insert($query);
         // }
         if (request()->ajax()) {
-            if ($accreditId == 'All') {
-                if($companyId != 0){
-                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ?",[$companyId]);
+            // if ($accreditId == 'All') {
+            //     $participants = DB::select("select t.* , c.* from temp" . $company_admin_id . " t inner join company_staff c on t.id = c.id");
+            // } else {
+            //     $participants = DB::select("select t.* , c.* from temp" . $company_admin_id . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'");
+            // }
+        if ($accreditId == 'All') {
+            if($companyId != 0){
+                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status > 8",[$companyId]);
                 }else{
-                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id");
+                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id and c.status > 8");
                 }
             } else {
                 if($companyId != 0){
-                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ?",[$companyId]);
+                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ? and c.status > 8",[$companyId]);
                 }else{
-                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'");
+                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.status > 8");
                 }
             }
             return datatables()->of($participants)
@@ -346,7 +350,7 @@ class FullFillmentController extends Controller
                 ->addColumn('image', function ($data) {
                     $image = '';
                     //$image .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
-                    $image .= '<img src="'. asset('storage/badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
+                    $image .= '<img src="'. asset('badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
                     return $image;
                 })
                 ->addColumn('identifier', function ($data) {

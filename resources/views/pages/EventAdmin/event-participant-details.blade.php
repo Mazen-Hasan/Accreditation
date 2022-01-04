@@ -31,7 +31,7 @@
                         </form>
                         <br>
                         <?php echo $attachmentForm ?>
-                        <div class="col-sm-offset-2 col-sm-12" style="margin: 20px;>
+                        <div class="col-sm-offset-2 col-sm-12" style="margin: 20px;">
                             <a class="btn btn-reddit" href="{{ URL::previous() }}">Go Back</a>
                             <?php echo $buttons ?>
                         </div>
@@ -105,7 +105,7 @@
                             </button>
                         </div>
                         <div class="col-sm-4">
-                            <button type="button" data-dismiss="modal" id="btn-yes-new">Reject</button>
+                            <button type="button" data-dismiss="modal" id="btn-yes-new">Return</button>
                         </div>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
             var post_id = $(this).data("id");
             var company_id = $('#company_id').val();
             var eventId = $('#event_id').val();
-            $('#confirmTitle-new').html('Return Participation Request To Correct');
+            $('#confirmTitle-new').html('Participation Request needs review and correction');
             $('#curr_element_id-new').val(post_id);
             $('#reason').val('');
             var confirmText = "Insert reason:";

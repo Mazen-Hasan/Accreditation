@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Mail;
 
 class TemplateController extends Controller
 {
+
+	public function getData(){
+        $templates =  Template::latest()->get();
+        return Response::json($templates);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -37,11 +42,11 @@ class TemplateController extends Controller
                     $button .= '<a href="' . route('templateFields', $data->id) . '" id="template-fields" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Fields"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     if ($data->is_locked == 1) {
-                        if($data->can_unlock == 1){
+                    	if($data->can_unlock == 1){
                             $button .= '<a href="javascript:void(0);" id="unLock-template" data-toggle="tooltip" data-original-title="Unlock" data-id="' . $data->id . '" title="Un-Lock"><i class="fas fa-unlock"></i></a>';
                         }
-                    }
-                    else {
+                    } 
+                	else {
                         $button .= '<a href="javascript:void(0);" id="lock-template" data-toggle="tooltip" data-original-title="Lock" data-id="' . $data->id . '" title="Lock"><i class="fas fa-lock"></i></a>';
                     }
                     $button .= '&nbsp;&nbsp;';
@@ -86,6 +91,19 @@ class TemplateController extends Controller
     public function store(Request $request)
     {
 
+//        $info = array(
+//            'name' => "Alex"
+//        );
+//
+//        Mail::send([], $info, function ($message)
+//        {
+//            $message->to('e.mazen.hasan@gmail.com', 'Mazen')
+//                ->subject('Basic test eMail from Laravel.');
+//            $message->from('admin@accrediation.com', 'Admin');
+//        });
+
+//        echo "Successfully sent the email";
+
         $template_id = $request->template_id;
         $post = Template::updateOrCreate(['id' => $template_id],
             ['name' => $request->name,
@@ -93,13 +111,7 @@ class TemplateController extends Controller
                 'is_locked' => $request->has('locked'),
                 'creator' => Auth::user()->id
             ]);
-
-        $emailData = array(
-            'greeting' => 'Dear Event Admin',
-            'body' => 'You have been assigned as event admin for the event' .  $post->name,
-            'linkText' => 'Kindly follow the link: ',
-            'url' => Route('events'),
-            'linkName' => 'Events');
+    
 
         if ($template_id == null) {
 
@@ -115,7 +127,7 @@ class TemplateController extends Controller
                         'mandatory' => $row->mandatory,
                         'min_char' => $row->min_char,
                         'max_char' => $row->max_char,
-                        'field_order' => $row->field_order,
+                     	'field_order' => $row->field_order,
                         'field_type_id' => $row->field_type_id,
                     ]);
 

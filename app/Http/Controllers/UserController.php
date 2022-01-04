@@ -23,8 +23,11 @@ class UserController extends Controller
             $users = DB::select('select * from users_view');
             return datatables()->of($users)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('userEdit', $data->user_id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->user_id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
+                	$button = '&nbsp;&nbsp;';
+                	if($data->role_name != 'Company Admin' && $data->role_name != 'Data Entry'){
+                    	$button .= '<a href="' . route('userEdit', $data->user_id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->user_id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                    	$button .= '&nbsp;&nbsp;';
+                    }
                     $button .= '<a href="javascript:void(0);" id="reset_password" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->user_id . '"  title="Reset password"><i class="fas fa-retweet"></i></a>';
                     return $button;
                 })
@@ -78,8 +81,10 @@ class UserController extends Controller
         $roles = DB::select('select * from roles');
         $roleSelectOptions = array();
         foreach ($roles as $role) {
-            $roleSelectOption = new SelectOption($role->id, $role->name);
-            $roleSelectOptions[] = $roleSelectOption;
+        	if($role->slug != 'data-entry' && $role->slug != 'company-admin'){
+            	$roleSelectOption = new SelectOption($role->id, $role->name);
+            	$roleSelectOptions[] = $roleSelectOption;
+            }
         }
         return view('pages.Users.user-add')->with('roles', $roleSelectOptions);
 
@@ -94,8 +99,10 @@ class UserController extends Controller
         $roles = DB::select('select * from roles');
         $roleSelectOptions = array();
         foreach ($roles as $role) {
-            $roleSelectOption = new SelectOption($role->id, $role->name);
-            $roleSelectOptions[] = $roleSelectOption;
+        	if($role->slug != 'data-entry' && $role->slug != 'company-admin'){
+            	$roleSelectOption = new SelectOption($role->id, $role->name);
+            	$roleSelectOptions[] = $roleSelectOption;
+            }
         }
         return view('pages.Users.user-edit')->with('user', $user)->with('roles', $roleSelectOptions);
     }

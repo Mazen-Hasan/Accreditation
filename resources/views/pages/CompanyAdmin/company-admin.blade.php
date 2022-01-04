@@ -89,7 +89,7 @@
                                                     <p class="card_event_label">Period:</p>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p class="card_event_text">{{ $event->period}}</p>
+                                                    <p class="card_event_text">{{ $event->period}} days</p>
                                                 </div>
                                             </div>
 
@@ -98,7 +98,7 @@
                                                     <p class="card_event_label">Accreditation period:</p>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p class="card_event_text">{{ $event->accreditation_period}}</p>
+                                                    <p class="card_event_text">{{ $event->accreditation_period}} days</p>
                                                 </div>
                                             </div>
 

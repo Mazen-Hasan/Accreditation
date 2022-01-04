@@ -19,8 +19,16 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <h4 class="card-title">Security Categories</h4>
+                            </div>
+                        	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -57,6 +65,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="ajax-crud-modal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -85,18 +94,18 @@
                         <div>
                             <p id="error" style="margin-left: 30px;margin-bottom: 10px;color: red;"></p>
                         </div>
-                        <div class="col-sm-12">
-                            <button type="submit" id="btn-save" value="create">Save
-                            </button>
+                        <div class="modal-footer">
+                            <div class="col-sm-12">
+                                <button type="submit" id="btn-save" value="create">Save
+                                </button>
+                            </div>
                         </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-
                 </div>
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -136,7 +145,7 @@
             });
 
             $('#laravel_datatable').DataTable({
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'Security-Categories',
@@ -170,6 +179,13 @@
 
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            });
+        
+        	var oTable = $('#laravel_datatable').DataTable();
+
+            $('#search').on('keyup', function () {
+                console.log('jj');
+                oTable.search(this.value).draw();
             });
 
             $('#add-new-post').click(function () {

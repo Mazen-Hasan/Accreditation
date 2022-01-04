@@ -21,9 +21,9 @@ class pdfController extends Controller
 
         //get badge width and high
         $badge_size = DB::select('SELECT tb.width, tb.high FROM company_staff cs join events e on cs.event_id = e.id
-                                        join template_badges tb on e.event_form = tb.template_id where cs.id = ?', [$one_staff_id]);
+                                        join template_badges tb on e.event_form = tb.template_id where cs.id = ?',[$one_staff_id]);
 
-        if (!empty($staffIDs)) {
+        if(!empty($staffIDs)){
 
             //create pdf
             //calculate badge width &high
@@ -32,37 +32,34 @@ class pdfController extends Controller
             $badge_width = $badge_size[0]->width;
             $badge_high = $badge_size[0]->high;
 
-            $page_width = $badge_width * $pixel_to_mm;
-            $badge_high = $badge_high * $pixel_to_mm;
+            $page_width =  $badge_width * $pixel_to_mm;
+            $badge_high =  $badge_high * $pixel_to_mm;
 
-            $pdf = new FPDF('P', 'mm', array($page_width, $badge_high));
+            $pdf = new FPDF('P','mm',array($page_width, $badge_high));
             $pdf->AliasNbPages();
 
             //loop on Staffs
             $staffs = DB::table('company_staff')->whereIn('id', $staffIDs)->get();
 
-            foreach ($staffs as $staff) {
-//                $path = 'badges/' . $staff->badge_path;
-                $path = public_path('badges/') . $staff->badge_path;
+            foreach ($staffs as $staff){
+                $path = 'badges/' . $staff->badge_path;
                 $pdf->AddPage();
-                $pdf->Image($path, 0, 0);
+                $pdf->Image($path,0,0);
             }
 
             //save pdf
+            $pdf->Output('download/badges.pdf','F');
 
-            $path = public_path('download/');
-            $path .= 'badges.pdf';
-            $pdf->Output($path, 'F');
-
-            $updateProduct = CompanyStaff::whereIn('id', $staffIDs)
-                ->update(['print_status' => '2', 'status' => '10']);
+            $updateProduct = CompanyStaff::whereIn('id',$staffIDs)
+                ->update(['print_status' => '2','status' => '10']);
 
             return Response()->json([
                 "errMsg" => 'Success',
                 "errCode" => '1',
                 "file" => asset('download/badges.pdf')
             ]);
-        } else {
+        }
+        else{
             return Response()->json([
                 "errMsg" => 'No staff selected',
                 "errCode" => '-100'

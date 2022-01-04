@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-9">
+                            <div class="col-md-8">
                                 <p class="card-title">
                                     <a class="url-nav" href="{{route('templateBadge')}}">
                                         <span>Badges:</span>
@@ -28,19 +28,15 @@
                                     / Backgrounds
                                 </p>
                             </div>
-                            <div class="col-md-3 align-content-md-center">
-                                <nav class="navbar default-layout  fixed-top d-flex align-items-top flex-row" style="background: transparent">
-                                <div class="navbar-menu-wrapper d-flex align-items-top" style="background: transparent">
-                                <ul class="navbar-nav ms-auto">
-                                    <li class="nav-item">
-                                        <form class="search-form" action="#">
-                                            <i class="icon-search"></i>
-                                            <input type="search" id="search" class="form-control" placeholder="Search Here" title="Search here">
-                                        </form>
-                                    </li>
-                                </ul>
+                            <div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
                                 </div>
-                                </nav>
+                            </div>
+                            <div class="col-md-3 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
@@ -87,7 +83,7 @@
 
                             <div class="col-md-4">
                                 <div class="col-sm-12">
-                                    <input type="file" id="file" name="file">
+                                    <input type="file" id="file" name="file" required="">
                                 </div>
                             </div>
 
@@ -166,8 +162,8 @@
                     {
                         "data": "bg_image",
                         "render": function (val) {
-                            var image_path = "{{URL::asset('storage/badges/')}}/";
-                            {{--var image_path = "{{URL::asset('badges/')}}/";--}}
+                            // var image_path = "{{URL::asset('storage/badges/')}}/";
+                         	var image_path = "{{URL::asset('badges/')}}/";
                             return "<img src= " + image_path + val + "></img>";
                         }
                     },
@@ -194,19 +190,20 @@
                     $("#file_type_error").html('');
 
                     var imag = data.bg_image;
-                    var image_path = "{{URL::asset('storage/badges/')}}/";
-                    {{--var image_path = "{{URL::asset('badges/')}}/";--}}
+                    // var image_path = "{{URL::asset('storage/badges/')}}/";
+                 	var image_path = "{{URL::asset('badges/')}}/";
 
                     $('#bg_image_view').attr('src', image_path + imag);
                     $('#bg_image_view').show();
                 })
             });
+        
+        	var oTable = $('#laravel_datatable').DataTable();
 
-            var oTable = $('#laravel_datatable').DataTable();
+            $('#search').on('keyup', function () {
+                oTable.search(this.value).draw();
+            });
 
-            $('#search').on( 'keyup', function () {
-                oTable.search( this.value ).draw();
-            } );
         });
 
         $("#file").change(function () {

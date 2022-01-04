@@ -7,13 +7,13 @@ use App\Models\CompanyStaff;
 use App\Models\DataEntry;
 use App\Models\Event;
 use App\Models\EventCompany;
-use App\Models\CompanyAccreditaionCategory;
 use App\Models\EventCompanyDataEntry;
 use App\Models\SelectOption;
 use App\Models\StaffData;
 use App\Models\TemplateField;
 use App\Models\TemplateFieldElement;
 use App\Models\User;
+use App\Models\CompanyAccreditaionCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -30,11 +30,15 @@ class DataEntryController extends Controller
      */
     public function index($companyId,$eventId)
     {
+       	$where = array('id' => $companyId);
+        $company = Company::where($where)->first();
+        $where = array('id' => $eventId);
+        $event = Event::where($where)->first();
         if (request()->ajax()) {
             $focalpoint = DB::select('select * from event_company_data_entries_view where company_id = ? and event_id = ?', [$companyId,$eventId]);
             return datatables()->of($focalpoint)
                 ->addColumn('name', function ($row) {
-                    return $row->name . ' ' . $row->middle_name . ' ' . $row->last_name;
+                    return $row->name . ' ' . $row->last_name;
                 })
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('dataentryEdit', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
@@ -45,7 +49,7 @@ class DataEntryController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.DataEntry.dataentrys')->with('companyId',$companyId)->with('eventId',$eventId);
+        return view('pages.DataEntry.dataentrys')->with('companyId',$companyId)->with('eventId',$eventId)->with('company_name',$company->name)->with('event_name',$event->name);
     }
 
 
@@ -56,7 +60,7 @@ class DataEntryController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
+	public function store(Request $request)
     {
         $where = array('id' => $request->company_id);
         $company = Company::where($where)->first();
@@ -85,6 +89,7 @@ class DataEntryController extends Controller
                         ['name' => $request->account_name,
                             'password' => Hash::make($request->password),
                             'email' => $request->account_email,
+                         	'is_active' => $request->status
                         ]);
                     DB::table('users_roles')->insert(
                         array(
@@ -145,7 +150,13 @@ class DataEntryController extends Controller
                         'email' => $request->email,
                         'telephone' => $request->telephone,
                         'mobile' => $request->mobile,
+                    	'status' => $request->status
                     ]);
+                $user = User::updateOrCreate(['id' => $post->account_id],
+                        [
+                         	'is_active' => $request->status
+                        ]);
+            
             }
         }
         return Response::json($post);
@@ -210,10 +221,36 @@ class DataEntryController extends Controller
 
     public function dataEntryParticipants($companyId, $eventId)
     {
-        $addable = 1;
+    	// $addable = 1;
+    	// $companyAccrediationCategories = CompanyAccreditaionCategory::where(['company_id'=>$companyId,'event_id'=>$eventId])->get()->all();
+    	// if($companyAccrediationCategories == null){
+    	// $addable = 0;
+    	// }else{
+    	// $size = 0;
+    	// $inserted = 0;
+    	// $status = 0;
+    	// $count = 0;
+    	// foreach($companyAccrediationCategories as $companyAccrediationCategory){
+    	// $size = $size + $companyAccrediationCategory->size;
+    	// $inserted = $inserted + $companyAccrediationCategory->inserted;
+    	// $status = $status + $companyAccrediationCategory->status;
+    	// $count = $count + 1;
+    	// }
+    	// if($size == $inserted){
+    	// $addable = 0;
+    	// }
+    	// if($status > 0){
+    	// if($status/2 != $count){
+    	// $addable = 0;
+    	// }
+    	// }else{
+    	// $addable = 0;
+    	// }
+    	// }
+    	$addable = 1;
         $companyAccrediationCategories = CompanyAccreditaionCategory::where(['company_id'=>$companyId,'event_id'=>$eventId])->get()->all();
         if($companyAccrediationCategories == null){
-            $addable = 0;
+            $addable = 2;
         }else{
             $size = 0;
             $inserted = 0;
@@ -226,16 +263,21 @@ class DataEntryController extends Controller
                 $count = $count + 1;
             }
             if($size == $inserted){
-                $addable = 0;
+                if($size == 0){
+                    $addable = 2;
+                }else{
+                    $addable = 0;
+                }
             }
             if($status > 0){
                 if($status/2 != $count){
-                    $addable = 0;
+                    $addable = 3;
                 }
             }else{
-                $addable = 0;
+                $addable = 3;
             }
         }
+    
         $dataTableColumuns = array();
 
         $where = array('id' => $companyId);
@@ -253,13 +295,11 @@ class DataEntryController extends Controller
         // Schema::dropIfExists('temp_dataentry_' . Auth::user()->id);
         // Schema::create('temp_dataentry_' . Auth::user()->id, function ($table) use ($templateFields) {
         //     $table->string('id');
-        //     //$table->string('identifier');
         //     foreach ($templateFields as $templateField) {
         //         $dataTableColumuns[] = $templateField->label_en;
         //         $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
         //     }
         // });
-
         if(!Schema::hasTable('temp_' . $eventId)){
             Schema::create('temp_' . $eventId, function ($table) use ($templateFields) {
                 $table->string('id');
@@ -269,7 +309,6 @@ class DataEntryController extends Controller
                 }
             });
         }
-
         // $where = array('event_id' => $eventId, 'company_id' => $companyId);
         // $companyStaffs = CompanyStaff::where($where)->get()->all();
         // $alldata = array();
@@ -278,7 +317,6 @@ class DataEntryController extends Controller
         //     $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
         //     $staffDataValues = array();
         //     $staffDataValues[] = $companyStaff->id;
-        //     //$staffDataValues[] = $companyStaff->identifier;
         //     foreach ($staffDatas as $staffData) {
         //         if ($staffData->slug == 'select') {
         //             $where = array('template_field_id' => $staffData->template_field_id, 'value_id' => $staffData->value);
@@ -292,7 +330,7 @@ class DataEntryController extends Controller
         // }
         // $query = '';
         // foreach ($alldata as $data) {
-        //     $query = 'insert into temp_dataentry_' . Auth::user()->id . ' (id ';
+        //     $query = 'insert into temp_dataentry_' . Auth::user()->id . ' (id';
         //     foreach ($templateFields as $templateField) {
         //         $query = $query . ',' . preg_replace('/\s+/', '_', $templateField->label_en);
         //     }
@@ -306,7 +344,7 @@ class DataEntryController extends Controller
         // }
         if (request()->ajax()) {
             //$participants = DB::select('select t.* , c.* from temp_dataentry_' . Auth::user()->id . ' t inner join company_staff c on t.id = c.id');
-            $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
+        	$participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {
                     $status_value = "Initiated";
@@ -333,10 +371,10 @@ class DataEntryController extends Controller
                             $status_value = "Approved by event admin";
                             break;
                         case 7:
-                            $status_value = "Rejected with correction by security officer";
+                            $status_value = "Needs review and correction by security officer";
                             break;
                         case 8:
-                            $status_value = "Rejected with correction by event admin";
+                            $status_value = "Needs review and correction by event admin";
                             break;
                         case 9:
                             $status_value = "Badge generated";
@@ -361,7 +399,7 @@ class DataEntryController extends Controller
                 ->addColumn('image', function ($data) {
                     $image = '';
                     //$image .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
-                    $image .= '<img src="'. asset('storage/badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
+                    $image .= '<img src="'. asset('badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
                     return $image;
                 })
                 ->addColumn('identifier', function ($data) {
@@ -491,21 +529,6 @@ class DataEntryController extends Controller
                             $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, $templateField->value);
                         } 
                     }
-                    // if ($participant_id == 0) {
-                    //     $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?', [$templateField->id]);
-                    //     foreach ($fieldElements as $fieldElement) {
-                    //         $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
-                    //         $options [] = $option;
-                    //     }
-                    //     $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, '');
-                    // } else {
-                    //     $fieldElements = DB::select('select * from template_field_elements f where f.template_field_id = ?', [$templateField->template_field_id]);
-                    //     foreach ($fieldElements as $fieldElement) {
-                    //         $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
-                    //         $options [] = $option;
-                    //     }
-                    //     $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, $templateField->value);
-                    // }
                     break;
 
                 case 'file':
@@ -639,7 +662,7 @@ class DataEntryController extends Controller
 
         $attachmentField = '<form id=form_' . $id . '" name="badgeForm" class="form-horizontal  img-upload" enctype="multipart/form-data" action="javascript:void(0)">';
         $attachmentField .= '<div class="row"><div class="col-md-5"><label>' . $label . '</label></div>';
-        $attachmentField .= '<div class="col-md-4"><div class="col-sm-12"><input type="file" id="file_' . $id . '" name=file_"' . $id . '"></div></div>';
+        $attachmentField .= '<div class="col-md-4"><div class="col-sm-12"><input type="file" id="file_' . $id . '" name=file_"' . $id . '" required=""></div></div>';
         $attachmentField .= '<div class="col-md-3"><button type="submit" id="btn-upload_' . $id . '" value="Upload">Upload</button></div></div>';
         $attachmentField .= '<div class="row"><div class="col-md-12"><div class="form-group col">';
         $attachmentField .= '<label id="file_type_error_' . $id . '"></label><div style="background-color: #ffffff00!important;" class="progress">';
@@ -663,7 +686,7 @@ class DataEntryController extends Controller
 
     public function storeParticipant(Request $request)
     {
-        $dataTableColumuns = array();
+    	$dataTableColumuns = array();
 
         $where = array('id' => $request->event_id);
         $event = Event::where($where)->get()->first();
@@ -676,8 +699,10 @@ class DataEntryController extends Controller
         //     $company_admin_id = $event->id;
         // }
         $company_admin_id = $event->id;
-        $where = array('template_id' => $event->event_form);
-        $templateFields = TemplateField::where($where)->get()->all();
+        // $where = array('template_id' => $event->event_form);
+        // $templateFields = TemplateField::where($where)->get()->all();
+    	$where = array('template_id' => $event->event_form);
+        $templateFields = TemplateField::where($where)->orderBy('field_order', 'ASC')->get()->all();
 
         foreach ($templateFields as $templateField) {
             $dataTableColumuns[] = $templateField->label_en;
@@ -692,7 +717,6 @@ class DataEntryController extends Controller
                 }
             });
         }
-
         $participant_id = $request->participant_id;
         $companyStaff = CompanyStaff::updateOrCreate(['id' => $participant_id],
             ['event_id' => $request->event_id,
@@ -707,12 +731,18 @@ class DataEntryController extends Controller
                 'event_admin_reject_reason' => '',
                 'status' => '0'
             ]);
-            $staff = CompanyStaff::updateOrCreate(['id' => $companyStaff->id],
+        $staff = CompanyStaff::updateOrCreate(['id' => $companyStaff->id],
             ['identifier'=> '#'.$request->event_id.'-'.$request->company_id.'-'.$companyStaff->id
             ]);
+    
+        $where = array('id' => $request->event_id);
+        $event = Event::where($where)->get()->first();
+        $query = 'update templates t set t.is_locked = 1 where t.id = ' . $event->event_form;
+        DB::update($query);
         $data = $request->all();
 
-        foreach ($data as $key => $value) {
+
+		foreach ($data as $key => $value) {
             if ($key != 'participant_id') {
                 if ($participant_id != null) {
                     if($key == 'Accreditation_category'){
@@ -740,8 +770,7 @@ class DataEntryController extends Controller
                 }
             }
         }
-
-        if ($request->company_id == 0) {
+    	if ($request->company_id == 0) {
             $where = array('event_id' => $request->event_id,'id'=> $companyStaff->id);
         } else {
             $where = array('event_id' => $request->event_id, 'company_id' => $company->id, 'id' => $companyStaff->id);
@@ -800,29 +829,12 @@ class DataEntryController extends Controller
             }
         }
 
-
-        // foreach ($data as $key => $value) {
-
-        //     if ($key != 'participant_id') {
-        //         if ($participant_id != null) {
-        //             $query = 'update staff_data s set s.value = "' . $value . '" where s.staff_id = ' . $companyStaff->id . ' and s.key ="' . $key . '" ';
-        //             DB::update($query);
-        //         } else {
-        //             $staffData = StaffData::updateOrCreate(['staff_id' => $companyStaff->id, 'key' => $key],
-        //                 ['staff_id' => $companyStaff->id,
-        //                     'key' => $key,
-        //                     'value' => $value
-        //                 ]);
-        //         }
-        //     }
-        // }
-
         return Response::json($companyStaff);
     }
 
     public function dataEntryEvents()
     {
-        $events = DB::select('select * from data_entries_view dd where dd.account_id = ? and dd.status <> ? and dd.company_status = ? and dd.event_end_date >= CURRENT_DATE()', [Auth::user()->id, 0 , 3]);
+        $events = DB::select('select * from data_entries_view dd where dd.account_id = ? and dd.status <> ? and dd.company_status = ? and dd.event_end_date >= CURRENT_DATE()', [Auth::user()->id, 0,3]);
         $subCompany_nav = 1;
         return view('pages.DataEntry.data-entry')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }

@@ -18,7 +18,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <h4 class="card-title">
                                     <a class="url-nav" href="{{route('events')}}">
                                         <span>Events:</span>
@@ -28,6 +28,14 @@
                                     </a> /
                                     security Officers
                                 </h4>
+                            </div>
+                        	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -133,6 +141,30 @@
             </div>
         </div>
     </div>
+	<div class="modal fade" id="error-pop-up-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="col-sm-12 confirm-text" id="errorText"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-ok">OK
+                            </button>
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -145,7 +177,7 @@
 
 
             $('#laravel_datatable').DataTable({
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'Event-Security-Officers',
@@ -170,6 +202,12 @@
 
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            });
+        
+        	var oTable = $('#laravel_datatable').DataTable();
+
+            $('#search').on('keyup', function () {
+                oTable.search(this.value).draw();
             });
 
             $('#add-event-security-officer').click(function () {
@@ -228,13 +266,17 @@
                         success: function (data) {
                             $('#eventSecurityOfficerForm').trigger("reset");
                             $('#event-security-officer-modal').modal('hide');
-                            $('#btn-save').html('Save Changes');
+                            $('#btn-save').html('Save');
                             var oTable = $('#laravel_datatable').dataTable();
                             oTable.fnDraw(false);
                         },
                         error: function (data) {
                             console.log('Error:', data);
-                            $('#btn-save').html('Save Changes');
+                        	$('#event-security-officer-modal').modal('hide');
+                            $('#btn-save').html('Save');
+                            $('#errorTitle').html('Error: Duplicate security officers');
+                            $('#errorText').html('Cant insert duplicate security officer');
+                            $('#error-pop-up-modal').modal('show');
                         }
                     });
                 }

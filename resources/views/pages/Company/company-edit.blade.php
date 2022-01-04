@@ -28,7 +28,7 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="company_name" name="company_name" value="{{$company->name}}"
+                                            <input type="text" id="company_name" name="company_name" minlength="1" maxlength="100" value="{{$company->name}}"
                                                    required="" placeholder="enter name"/>
                                         </div>
                                     </div>
@@ -37,7 +37,7 @@
                                     <div class="form-group col">
                                         <label>Address</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="address" name="address" value="{{$company->address}}"
+                                            <input type="text" id="address" name="address" minlength="1" maxlength="150" value="{{$company->address}}"
                                                    required="" placeholder="enter address"/>
                                         </div>
                                     </div>
@@ -48,7 +48,7 @@
                                     <div class="form-group col">
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="telephone" name="telephone"
+                                            <input type="number" id="telephone" name="telephone"
                                                    value="{{$company->telephone}}" required=""
                                                    placeholder="enter telephone"/>
                                         </div>
@@ -59,7 +59,7 @@
                                         <label>Website</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="website" name="website" value="{{$company->website}}"
-                                                   required="" placeholder="enter website"/>
+                                                   placeholder="enter website"/>
                                         </div>
                                     </div>
                                 </div>
@@ -69,7 +69,7 @@
                                     <div class="form-group col">
                                         <label>Size</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="size" name="size" value="{{$company->size}}" min="1" max="{{$allowedSize}}"
+                                            <input type="number" id="size" name="size" min="1" max="{{$allowedSize}}" value="{{$company->size}}"
                                                    required="" placeholder="enter size"/>
                                         </div>
                                     </div>
@@ -87,7 +87,7 @@
                                                         @endif
                                                     >{{ $focalPoint->value }}</option>
                                                 @endforeach
-                                                <option value="-2" id="instant_add">Add new focal point</option>
+                                            	<option value="-2" id="instant_add">Add new focal point</option>
                                             </select>
                                         </div>
                                     </div>
@@ -175,7 +175,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-bs-backdrop="static"
+<div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -196,7 +196,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Last Name</label>
                                         <div class="col-sm-12">
@@ -206,7 +206,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="row">
+<!--                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Last Name</label>
@@ -336,6 +336,25 @@
             </div>
         </div>
     </div>
+	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -354,7 +373,7 @@
                 $('#ajax-crud-modal').modal('show');
             });
 
-            $('#focal_point').on('change', function () {
+			$('#focal_point').on('change', function () {
                 //alert('i am here');
                 var selectedFocal = $('#focal_point option:selected').val();
                 if(selectedFocal == -2){
@@ -364,6 +383,7 @@
                     $('#middle_name').val('');
                     $('#telephone').val('');
                     $('#mobile').val('');
+                	$('#email').val('');
                     $('#account_name').val('');
                     $('#account_email').val('');
                     $('#password').val('');
@@ -385,7 +405,7 @@
             });
 
         });
-        $('#country').on('change', function () {
+    	$('#country').on('change', function () {
             // $('#lbl_select').html('');
             // $('#btn-filter').html('Filter');
             //resetAll();
@@ -446,26 +466,40 @@
             //alert('hi');
             $("#focal_point").val($("#focal_point option:first").val());
         });
+    
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 submitHandler: function (form) {
+                    //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
-                    //var $eventid = $('#event_id').val();
+                    var $eventid = $('#event_id').val();
+                    // if($('#needManagmentCheckbox').is(':checked')){
+                    //     $('#need_management').val('1');
+                    // }else{
+                    //     $('#need_management').val('0');
+                    // }
                     $('#btn-save').html('Sending..');
+                	$('#loader-modal').modal('show');
+                    //alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('companyController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                        	$('#loader-modal').modal('hide');
+                        	$('#btn-save').prop('disabled', true);
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
-                            $('#btn-save').html('Edited successfully');
+                            $('#btn-save').html('Done');
+                        	window.location.href = "{{route('eventCompanies',$eventid)}}"
                             //window.location.href = "../../event-companies/" + $eventid;
-                            window.location.href = "{{route('eventCompanies',$eventid)}}"
+                            // var oTable = $('#laravel_datatable').dataTable();
+                            // oTable.fnDraw(false);
                         },
                         error: function (data) {
+                        	$('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }
@@ -473,7 +507,7 @@
                 }
             })
         }
-        if ($("#focaPointForm").length > 0) {
+    	if ($("#focaPointForm").length > 0) {
             $("#focaPointForm").validate({
                 rules: {
                     status: {valueNotEquals: "default"}
@@ -482,7 +516,7 @@
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-add-focal').html('Sending..');
-                    alert($('#focaPointForm').serialize());
+                    //alert($('#focaPointForm').serialize());
                     $.ajax({
                         data: $('#focaPointForm').serialize(),
                         url: "{{ route('focalpointController.store') }}",

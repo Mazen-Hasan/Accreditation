@@ -11,7 +11,7 @@ trait EmailTrait {
         $emailData = array(
             'subject' => $emailTemplate[0]->email_template_subject,
             'content' => str_ireplace(['@event_name','@company_name','@url'],[$event_name, $company_name, $url], $emailTemplate[0]->content));
-
+        
         return $emailData;
     }
 }

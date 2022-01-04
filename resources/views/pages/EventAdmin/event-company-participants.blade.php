@@ -40,7 +40,15 @@
                                     / Participants
                                 </h4>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
+                        	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
@@ -66,8 +74,8 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                 @endforeach
-                                    <th>ID</th>
-                                    <th>Image</th>
+                                	<th>ID</th>
+                                	<th>Image</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -95,7 +103,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <!--                        --><?php //var_dump(gd_info());  ?>
+        
                     </div>
                     <div class="row">
                         <img id="badge" src="" alt="Badge">
@@ -150,11 +158,11 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel-new">Ok
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel-new">Cancel
                             </button>
                         </div>
                         <div class="col-sm-4">
-                            <button type="button" data-dismiss="modal" id="btn-yes-new">Reject</button>
+                            <button type="button" data-dismiss="modal" id="btn-yes-new">Return</button>
                         </div>
                     </div>
                 </div>
@@ -176,14 +184,18 @@
             var myColumns = [];
             var i = 0;
             myColumns.push({data: "id", name: "id", 'visible': false});
+        	var expotColumns = [];
             while (i < jqueryarray.length) {
                 myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
+            	expotColumns.push(i+1);
                 i++;
             }
-            myColumns.push({data: "identifier", name: "identifier"});
+        	myColumns.push({data: "identifier", name: "identifier", orderable: "true"});
             myColumns.push({data: "image", name: "image", orderable: "false"});
             myColumns.push({data: "status", name: "status"});
             myColumns.push({data: "action", name: "action", orderable: "false"});
+           	expotColumns.push(i+1);
+        	expotColumns.push(i+3);
             var companyId = $('#company_id').val();
             var eventId = $('#event_id').val();
 
@@ -192,12 +204,12 @@
             url = url.replace(':eventId', eventId);
 
             $('#laravel_datatable').DataTable({
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'Company-Participants',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
+                        columns: expotColumns
                     }
                 }],
 
@@ -250,7 +262,7 @@
                 var post_id = $(this).data("id");
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
-                $('#confirmTitle-new').html('Reject Participation Request To Correct');
+                $('#confirmTitle-new').html('Participation Request needs review and correction');
                 $('#curr_element_id-new').val(post_id);
                 $('#reason').val('');
                 var confirmText = "Insert Reason:";
@@ -422,6 +434,12 @@
                         });
                     }
                 });
+            });
+        
+        	var oTable = $('#laravel_datatable').DataTable();
+        
+        	$('#search').on('keyup', function () {
+                oTable.search(this.value).draw();
             });
         });
     </script>

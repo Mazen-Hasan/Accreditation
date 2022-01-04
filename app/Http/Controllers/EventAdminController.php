@@ -35,10 +35,10 @@ class EventAdminController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('companyEdit', [$data->id, $data->event_id]) . '"  data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    if($data->status > 0){
-                        $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" title="Invite"><i class="far fa-share-square"></i></a>';
-                        $button .= '&nbsp;&nbsp;';
-                    }
+                	if($data->status > 0){
+                    	$button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" title="Invite"><i class="far fa-share-square"></i></a>';
+                    	$button .= '&nbsp;&nbsp;';
+                	}
                     $button .= '<a href="' . route('companyAccreditCat', [$data->id, $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Accreditation Size"><i class="fas fa-sitemap"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventCompanyParticipants', [$data->id, $data->event_id]) . '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Participants"><i class="fas fa-users"></i></a>';
@@ -56,16 +56,16 @@ class EventAdminController extends Controller
             [
                 'status' => 3
             ]);
-
-        $focal_point = DB::select('select * from focal_points f where f.id = ?', [$post->focal_point_id]);
+    
+    	$focal_point = DB::select('select * from focal_points f where f.id = ?', [$post->focal_point_id]);
         $event = Event::where(['id'=>$eventId])->first();
         $company = Company::where(['id'=>$companyId])->first();
-//        NotificationController::sendAlertNotification($focal_point[0]->account_id, 0, $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('companyParticipants' , [$companyId, $eventId]));
+        // NotificationController::sendAlertNotification($focal_point[0]->account_id, 0, $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('companyParticipants' , [$companyId, $eventId]));
 
-        $notification_type = Config::get('enums.notification_types.EIN');
+    	$notification_type = Config::get('enums.notification_types.EIN');
         NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, 0,
             $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('companyParticipants' , [$companyId, $eventId]));
-
+        
         return Response::json($post);
     }
 
@@ -99,7 +99,7 @@ class EventAdminController extends Controller
         //         $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
         //     }
         // });
-        if(!Schema::hasTable('temp_' . $eventId)){
+    	if(!Schema::hasTable('temp_' . $eventId)){
             Schema::create('temp_' . $eventId, function ($table) use ($templateFields) {
                 $table->string('id');
                 foreach ($templateFields as $templateField) {
@@ -108,57 +108,66 @@ class EventAdminController extends Controller
                 }
             });
         }
-        // if ($companyId == 0) {
-        //     $where = array('event_id' => $eventId);
-        // } else {
-        //     $where = array('event_id' => $eventId, 'company_id' => $company->id);
-        // }
+//         if ($companyId == 0) {
+//             $where = array('event_id' => $eventId);
+//         } else {
+//             $where = array('event_id' => $eventId, 'company_id' => $company->id);
+//         }
 
-        // $companyStaffs = CompanyStaff::where($where)->get()->all();
-        // $alldata = array();
-        // foreach ($companyStaffs as $companyStaff) {
-        //     $where = array('staff_id' => $companyStaff->id);
-        //     if ($companyId != 0) {
-        //         $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
-        //     } else {
-        //         $staffDatas = DB::select('select * from event_staff_data_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
-        //     }
-        //     $staffDataValues = array();
-        //     $staffDataValues[] = $companyStaff->id;
-        //     $count = 0;
-        //     foreach ($staffDatas as $staffData) {
-        //         if ($staffData->slug == 'select') {
-        //             $where = array('template_field_id' => $staffData->template_field_id, 'value_id' => $staffData->value);
-        //             $value = TemplateFieldElement::where($where)->first();
-        //             $staffDataValues[] = $value->value_en;
-        //         } else {
-        //             $staffDataValues[] = $staffData->value;
-        //         }
-        //     }
-        //     $alldata[] = $staffDataValues;
-        // }
-        // $query = '';
-        // foreach ($alldata as $data) {
-        //     $query = '';
-        //     if ($companyId == 0) {
-        //         $query = $query . 'insert into temp' . $company_admin_id . ' (id';
-        //     } else {
-        //         $query = $query . 'insert into temp' . $company_admin_id . ' (id';
-        //     }
-        //     foreach ($templateFields as $templateField) {
-        //         $query = $query . ',' . preg_replace('/\s+/', '_', $templateField->label_en);
-        //     }
-        //     $query = $query . ') values (';
-        //     foreach ($data as $staffDataValue) {
-        //         $query = $query . '"' . $staffDataValue . '",';
-        //     }
-        //     $query = substr($query, 0, strlen($query) - 1);
-        //     $query = $query . ')';
-        //     DB::insert($query);
-        // }
+//         $companyStaffs = CompanyStaff::where($where)->get()->all();
+//         $alldata = array();
+//         foreach ($companyStaffs as $companyStaff) {
+//             $where = array('staff_id' => $companyStaff->id);
+//             if ($companyId != 0) {
+//                 $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
+//             } else {
+//                 $staffDatas = DB::select('select * from event_staff_data_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
+//             }
+//             $staffDataValues = array();
+//             $staffDataValues[] = $companyStaff->id;
+//             $count = 0;
+//             foreach ($staffDatas as $staffData) {
+//                 if ($staffData->slug == 'select') {
+//                     $where = array('template_field_id' => $staffData->template_field_id, 'value_id' => $staffData->value);
+//                     $value = TemplateFieldElement::where($where)->first();
+//                     $staffDataValues[] = $value->value_en;
+//                 } else {
+//                     $staffDataValues[] = $staffData->value;
+//                 }
+//             }
+//             $alldata[] = $staffDataValues;
+//         }
+//         $query = '';
+//         foreach ($alldata as $data) {
+//             $query = '';
+//             if ($companyId == 0) {
+//                 $query = $query . 'insert into temp' . $company_admin_id . ' (id';
+//             } else {
+//                 $query = $query . 'insert into temp' . $company_admin_id . ' (id';
+//             }
+//             foreach ($templateFields as $templateField) {
+//                 $query = $query . ',' . preg_replace('/\s+/', '_', $templateField->label_en);
+//             }
+//             $query = $query . ') values (';
+//             foreach ($data as $staffDataValue) {
+//                 $query = $query . '"' . $staffDataValue . '",';
+//             }
+//             $query = substr($query, 0, strlen($query) - 1);
+//             $query = $query . ')';
+//             DB::insert($query);
+//         }
         if (request()->ajax()) {
+            //$participants = DB::select('select t.* , c.* from temp' . $company_admin_id . ' t inner join company_staff c on t.id = c.id');
             if($companyId != 0){
-                $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
+               	$eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+            	$companies = $companyId;
+            	if($eventcompanies != null){
+                	foreach($eventcompanies as $eventcompnay){
+                    	$companies = $companies.','.$eventcompnay->company_id;
+                	}
+            	}
+            	$participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')');
+                //$participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
             }else{
                 $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id');
             }
@@ -188,10 +197,10 @@ class EventAdminController extends Controller
                             $status_value = "Approved by event admin";
                             break;
                         case 7:
-                            $status_value = "Rejected with correction by security officer";
+                            $status_value = "Needs review and correction by security officer";
                             break;
                         case 8:
-                            $status_value = "Rejected with correction by event admin";
+                            $status_value = "Needs review and correction by event admin";
                             break;
                         case 9:
                             $status_value = "Badge generated";
@@ -221,8 +230,8 @@ class EventAdminController extends Controller
                         case 8:
                             $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->event_admin_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
                             break;
-                        case 6 :
-                            case  3:
+                    case 6:
+                    case 3:
                             if ($data->print_status == 0) {
                                 $button .= '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="' . $data->id . '" title="Generate"><i class="fas fa-cogs"></i></a>';
                                 $button .= '&nbsp;&nbsp;';
@@ -238,7 +247,7 @@ class EventAdminController extends Controller
                 ->addColumn('image', function ($data) {
                     $image = '';
                     //$image .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
-                    $image .= '<img src="'. asset('storage/badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
+                    $image .= '<img src="'. asset('badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
                     return $image;
                 })
                 ->addColumn('identifier', function ($data) {
@@ -269,25 +278,24 @@ class EventAdminController extends Controller
 
         if ($approval == 2) {
             DB::update('update company_staff set status = ? where id = ?', [6, $staffId]);
-
             $event_companies = EventCompany::where(['event_id'=>$eventId, 'company_id'=> $companyId])->first();
             $focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
-//            NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
+            // NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
 
-            app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
-//            GenerateBadgeController::generateAfterApproval($staffId);
-            $notification_type = Config::get('enums.notification_types.PAP');
+        	app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
+        
+        	$notification_type = Config::get('enums.notification_types.PAP');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, $staffId,
                 $event->name . ': ' . $company->name . ': ' . 'Participant approved',
                 Route('templateFormDetails' , [$staffId]));
-
+        
         } else {
             if ($approval == 3) {
-                DB::update('update company_staff set status = ? where id = ?', [1, $staffId]);
+            	DB::update('update company_staff set status = ? where id = ?', [1, $staffId]);
                 foreach ($event_security_officers as $event_security_officer){
-//                    NotificationController::sendAlertNotification($event_security_officer->security_officer_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', Route('securityParticipantDetails' , $staffId));
-
-                    $notification_type = Config::get('enums.notification_types.PAP');
+                    // NotificationController::sendAlertNotification($event_security_officer->security_officer_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', Route('securityParticipantDetails' , $staffId));
+                	
+                	$notification_type = Config::get('enums.notification_types.PAP');
                     NotificationController::sendNotification($notification_type, $event->name, $company->name, $event_security_officer->security_officer_id, $staffId,
                         $event->name . ': ' . $company->name . ': ' . 'Participant approval',
                         Route('securityParticipantDetails' , $staffId));
@@ -317,21 +325,19 @@ class EventAdminController extends Controller
         $focalPoint = FocalPoint::where(['id'=>$eventCompanies->focal_point_id])->first();
         if ($approval == 2) {
             DB::update('update company_staff set status = ? where id = ?', [5, $staffId]);
-//            NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
+        	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
 
-            $notification_type = Config::get('enums.notification_types.PRE');
+        	$notification_type = Config::get('enums.notification_types.PRE');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
-                $event->name . ': ' . $company->name . ': ' . 'Participant rejected',
+                $event->name . ': ' . $company->name . ': ' . 'Participant rejected', 
                 Route('templateFormDetails' , $staffId));
-
         } else {
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [5, $staffId]);
-//                NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
-
-                $notification_type = Config::get('enums.notification_types.PRE');
+            	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
+            	$notification_type = Config::get('enums.notification_types.PRE');
                 NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
-                    $event->name . ': ' . $company->name . ': ' . 'Participant rejected',
+                    $event->name . ': ' . $company->name . ': ' . 'Participant rejected', 
                     Route('templateFormDetails' , $staffId));
             }
         }
@@ -347,31 +353,33 @@ class EventAdminController extends Controller
 
         $eventWhere = array('id' => $eventId);
         $event = Event::where($eventWhere)->first();
-
+    
         $companyWhere = array('id' => $companyId);
         $company = Company::where($companyWhere)->first();
 
         $approval = $event->approval_option;
         $eventCompanies = EventCompany::where(['company_id'=> $companyId ,'event_id'=> $eventId])->first();
         $focalPoint = FocalPoint::where(['id'=>$eventCompanies->focal_point_id])->first();
+
+        $approval = $event->approval_option;
         if ($approval == 2) {
             DB::update('update company_staff set status = ? where id = ?', [8, $staffId]);
             DB::update('update company_staff set event_admin_reject_reason = ? where id = ?', [$reason, $staffId]);
-//            NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction', Route('templateFormDetails' , $staffId));
-
-            $notification_type = Config::get('enums.notification_types.PRC');
+        	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
+			
+        	$notification_type = Config::get('enums.notification_types.PRC');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
-                $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction',
+                $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction', 
                 Route('templateFormDetails' , $staffId));
         } else {
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [8, $staffId]);
                 DB::update('update company_staff set event_admin_reject_reason = ? where id = ?', [$reason, $staffId]);
-//                NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction', Route('templateFormDetails' , $staffId));
-
-                $notification_type = Config::get('enums.notification_types.PRC');
+            	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
+            	
+            	$notification_type = Config::get('enums.notification_types.PRC');
                 NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
-                    $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction',
+                    $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction', 
                     Route('templateFormDetails' , $staffId));
             }
         }
@@ -392,7 +400,7 @@ class EventAdminController extends Controller
         $company = Company::where($where)->first();
         $company_name = $company->name;
 
-        $company_admin_id = '_Event' . $event->id;
+        //$company_admin_id = '_Event' . $event->event_admin;
 
         $template_id = $event->event_form;
         if ($participant_id != 0) {
@@ -402,7 +410,7 @@ class EventAdminController extends Controller
         }
         //$participants = DB::select('select t.* , c.* from temp' . $company_admin_id . ' t inner join company_staff c on t.id = c.id where c.id = ?', [$participant_id]);
         $participants = DB::select('select * from company_staff c where c.id = ?', [$participant_id]);
-        $status_value = "initaited";
+    	$status_value = "Initaited";
         $status = 0;
         $event_reject_reason = '';
         $security_officer_reject_reason = '';
@@ -433,10 +441,10 @@ class EventAdminController extends Controller
                     $status_value = "Approved by event admin";
                     break;
                 case 7:
-                    $status_value = "Rejected with correction by security officer";
+                    $status_value = "Needs review and correction by security officer";
                     break;
                 case 8:
-                    $status_value = "Rejected with correction by event admin";
+                    $status_value = "Needs review and correction by event admin";
                     break;
                 case 9:
                     $status_value = "Badge generated";
@@ -447,24 +455,23 @@ class EventAdminController extends Controller
             }
         }
 
-        $fieldsCount = 0;
-//        $form = '';
-        $form = '<div class="row">';
+        $fieldsCount = 1;
+        $form = '';
         $options = array();
-//        $form .= '<div class="row">';
+        $form .= '<div class="row">';
         $form .= $this->createStatusFieldLabel("Status",  $status_value);
-//        $form .= '</div>';
+        // $form .= '</div>';
         if ($status == 8) {
-            $form .= '<div class="row">';
+            // $form .= '<div class="row">';
             $form .= $this->createStatusFieldLabel("Reject Reason", $event_reject_reason);
-            $form .= '</div>';
+            // $form .= '</div>';
         }
         if ($status == 7) {
-            $form .= '<div class="row">';
+            // $form .= '<div class="row">';
             $form .= $this->createStatusFieldLabel("Reject Reason", $security_officer_reject_reason);
-            $form .= '</div>';
+            // $form .= '</div>';
         }
-//        $form .= '<div class="row">';
+        // $form .= '<div class="row">';
         $attachmentForm = '';
         if ($participant_id == 0) {
             $form .= $this->createHiddenFieldLabel('participant_id', '');
@@ -499,7 +506,8 @@ class EventAdminController extends Controller
                     break;
 
                 case 'textarea':
-                    $form .= $this->createTextAreaLabel($templateField->label_en, $templateField->value);
+                    $form .= $this->createTextAreaLabel($templateField->label_en, $templateField->label_en,
+                        $templateField->mandatory);
                     break;
 
                 case 'date':
@@ -534,11 +542,13 @@ class EventAdminController extends Controller
                         $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, '');
                         $form .= $this->createHiddenFieldLabel($templateField->label_en, '');
                     } else {
-                        $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->value);
-                        $form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->value);
+
                         if($templateField->label_en == 'Personal Image'){
                             $image = $this->createPersonalImage($templateField->value);
                             $form = $image.$form;
+                        }else{
+                            $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->value);
+                        	$form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->value);
                         }
                     }
                     break;
@@ -560,14 +570,8 @@ class EventAdminController extends Controller
         return view('pages.EventAdmin.event-participant-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('companyId', $participant->company_id)->with('eventId', $participant->event_id)->with('buttons', $buttons)->with('event_name',$event_name)->with('company_name', $company_name);
     }
 
-
-    public function createStatusFieldLabel($label, $value)
+public function createStatusFieldLabel($label, $value)
     {
-//        $textfield = '<div class="col-md-6"><div class="row"><div class="col-md-6">';
-//        $textfield .= '<label>' . $label . "</label></div>";
-//        $textfield .= '<div class="col-md-6"><input type="text" value="'. $value .'" disabled/></div>';
-//        $textfield .= '</div></div>';
-
         $textfield = '<div class="col-md-6"><div class="form-group col">';
         $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
         $textfield .= '<input type="text" value="'. $value .'" disabled/>';
@@ -585,12 +589,7 @@ class EventAdminController extends Controller
 
     public function createTextFieldLabel($label, $value)
     {
-//        $textfield = '<div class="col-md-6"><div class="row"><div class="col-md-6">';
-//        $textfield .= '<label>' . $label . "</label></div>";
-//        $textfield .= '<div class="col-md-6"><input type="text" value="'. $value .'" disabled/></div>';
-//        $textfield .= '</div></div>';
-
-        $textfield = '<div class="col-md-6"><div class="form-group col">';
+	     $textfield = '<div class="col-md-6"><div class="form-group col">';
         $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
         $textfield .= '<input type="text" value="'. $value .'" disabled/>';
         $textfield .= '</div></div></div>';
@@ -600,11 +599,6 @@ class EventAdminController extends Controller
 
     public function createNumberFieldLabel($label, $value)
     {
-//        $textfield = '<div class="col-md-6"><div class="row"><div class="col-md-6">';
-//        $textfield .= '<label>' . $label . "</label></div>";
-//        $textfield .= '<div class="col-md-6"><input type="text" value="'. $value .'" disabled/></div>';
-//        $textfield .= '</div></div>';
-
         $numberfield = '<div class="col-md-6"><div class="form-group col">';
         $numberfield .= '<label>' . $label . '</label><div class="col-sm-12">';
         $numberfield .= '<input type="text" value="'. $value .'" disabled/>';
@@ -625,11 +619,6 @@ class EventAdminController extends Controller
 
     public function createDateLabel($label, $value)
     {
-//        $textfield = '<div class="col-md-6"><div class="row"><div class="col-md-6">';
-//        $textfield .= '<label>' . $label . "</label></div>";
-//        $textfield .= '<div class="col-md-6"><input type="text" value="'. $value .'" disabled/></div>';
-//        $textfield .= '</div></div>';
-
         $datefield = '<div class="col-md-6"><div class="form-group col">';
         $datefield .= '<label>' . $label . '</label><div class="col-sm-12">';
         $datefield .= '<input type="text" value="'. $value .'" disabled/>';
@@ -647,21 +636,23 @@ class EventAdminController extends Controller
             }
         }
 
-        $textfield = '<div class="col-md-6"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "</label></div>";
-        $textfield .= '<div class="col-md-6"><input type="text" value="'. $selectValue .'" disabled/></div>';
-        $textfield .= '</div></div>';
+    
+    	$selectfield = '<div class="col-md-6"><div class="form-group col">';
+        $selectfield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $selectfield .= '<input type="text" value="'. $selectValue .'" disabled/>';
+        $selectfield .= '</div></div></div>';
 
-        return $textfield;
+        return $selectfield;
+
     }
 
     public function createAttachmentLabel($label, $value)
     {
-        $textfield = '<div class="col-md-6"><div class="row"><div class="col-md-6">';
+    	$textfield = '<div class="col-md-6"><div class="row"><div class="form-group col">';
         $textfield .= '<label>' . $label . "</label></div>";
         $button = '<a href="javascript:void(0)" data-toggle="tooltip" data-label="' . $label . '"  data-src="' . $value . '" data-original-title="Preview" class="edit btn btn-danger preview-badge">Preview</a>';
         $textfield .= '<div class="col-md-6">' . $button . '</div>';
-        $textfield .= '</div></div>';
+        $textfield .= '</div></div><div class="col-md-6"></div></div></div>';
 
         return $textfield;
     }
@@ -670,9 +661,112 @@ class EventAdminController extends Controller
         $personalImage = '';
         $personalImage = $personalImage .'<div class="row>';
         $personalImage = $personalImage .'<div class="form-group col">';
-        $personalImage = $personalImage .'<img id="paticipant_iamge" src="'. asset('storage/badges/'.$value).'" alt="Personal" class="pic-img">';
+        $personalImage = $personalImage .'<img id="paticipant_iamge" src="'. asset('badges/'.$value).'" alt="Personal" class="pic-img">';
         $personalImage = $personalImage .'</div></div>';
         return $personalImage;
     }
+
+//     public function createStatusFieldLabel($label, $value)
+//     {
+//         $textfield = '<div class="col-md-8" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "</label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger; color:red;
+//         text-align: center; padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createHiddenFieldLabel($id, $value)
+//     {
+//         $textfield = '<input type="hidden" id="' . $id . '" name="' . $id . '" value="' . $value . '" />';
+
+//         return $textfield;
+//     }
+
+//     public function createTextFieldLabel($label, $value)
+//     {
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "</label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center; background-color: darkgray; padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createNumberFieldLabel($label, $value)
+//     {
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "</label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center; background-color: darkgray; padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createTextAreaLabel($id, $label, $mandatory)
+//     {
+//         $required = '';
+//         if ($mandatory == '1') {
+//             $required = 'required=""';
+//         }
+
+//         $datefield = '<div class="col-md-6"><div class="form-group col">';
+//         $datefield .= '<label>' . $label . '</label><div class="col-sm-12">';
+//         $datefield .= '<textarea id="' . $id . '" name="' . $id . '" placeholder="enter ' . $label . '"' . $required . '></textarea>';
+//         $datefield .= '</div></div></div>';
+
+//         return $datefield;
+//     }
+
+//     public function createDateLabel($label, $value)
+//     {
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "</label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center; background-color: darkgray;padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createSelectLabel($label, $elements, $value)
+//     {
+//         $selectValue = '';
+//         foreach ($elements as $element) {
+//             if ($element->key == $value) {
+//                 $selectValue = $element->value;
+//             }
+//         }
+
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "</label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center; background-color: darkgray; padding:10px">' . $selectValue . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createAttachmentLabel($label, $value)
+//     {
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "</label></div>";
+//         $button = '<a href="javascript:void(0)" data-toggle="tooltip" data-label="' . $label . '"  data-src="' . $value . '" data-original-title="Preview" class="edit btn btn-danger preview-badge">Preview</a>';
+//         $textfield .= '<div class="col-md-6" style="height:70px">' . $button . '</div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+//     public function createPersonalImage($value){
+//         $personalImage = '';
+//         $personalImage = $personalImage .'<div class="row>';
+//         $personalImage = $personalImage .'<div class="form-group col">';
+//         $personalImage = $personalImage .'<img id="paticipant_iamge" src="'. asset('badges/'.$value).'" alt="Personal" class="pic-img">';
+//         $personalImage = $personalImage .'</div></div>';
+//         return $personalImage;
+//     }
 
 }

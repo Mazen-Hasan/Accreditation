@@ -20,7 +20,20 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-9">
-                                <p class="card-title">Focal Points</p>
+                                <h4 class="card-title">
+<!--                                 	@if($title_name == "Subsidiaries Accounts")
+                                    <a class="url-nav" href="{{ route('company-admin') }} ">
+                                        <span>My Events: </span>
+                                    </a>
+                                	@endif
+                                    @if($title_name == "Focal Points")
+                                    <a class="url-nav" href="{{ route('event-admin') }} ">
+                                        <span>My Events: </span>
+                                    </a>
+                                	@endif -->
+                                     {{$title_name}}
+                                </h4>
+<!--                                 <p class="card-title">{{$title_name}}</p> -->
                             </div>
                             <div class="col-md-3 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -134,7 +147,6 @@
                 columns: [
                     {data: 'id', name: 'id', 'visible': false},
                     {data: 'name', name: 'name'},
-                    //{data: 'email', name: 'email'},
                     {data: 'telephone', name: 'telephone'},
                     {data: 'mobile', name: 'mobile'},
                     {data: 'account_name', name: 'account_name'},

@@ -20,7 +20,13 @@ class FocalPointController extends Controller
      */
     public function index()
     {
+    	$role = Auth::user()->roles->first()->slug;
+        $title_name = 'Focal Points';
+        if($role == 'company-admin'){
+           	$title_name = 'Subsidiaries Accounts';
+        }
         if (request()->ajax()) {
+            //$focalpoint = DB::select('select * from focal_points_view');
             $role = Auth::user()->roles->first()->slug;
             if($role == 'event-admin'){
                 $focalpoint = DB::select('SELECT f.* from focal_points_view f where f.id in (select distinct(id) from event_companies_focal_points_view where user_id = ?)',[Auth::user()->id]);
@@ -28,11 +34,9 @@ class FocalPointController extends Controller
             if($role == 'company-admin'){
                 $focalpoint = DB::select('SELECT fff.* FROM focal_points_view fff WHERE fff.id IN( SELECT DISTINCT (ff.id) FROM event_companies ee INNER JOIN focal_points_view ff ON ff.id = ee.focal_point_id WHERE ee.parent_id IN( SELECT e.company_id FROM event_companies e INNER JOIN focal_points_view f ON e.focal_point_id = f.id where f.account_id = ? ) )',[Auth::user()->id]);
             }
-            //$focalpoint = DB::select('select * from focal_points_view');
             return datatables()->of($focalpoint)
                 ->addColumn('name', function ($row) {
-                    //return $row->name . ' ' . $row->middle_name . ' ' . $row->last_name;
-                    return $row->name .' ' . $row->last_name;
+                    return $row->name . ' ' . $row->last_name;
                 })
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('focalpointEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
@@ -43,7 +47,7 @@ class FocalPointController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.FocalPoint.focalpoints');
+        return view('pages.FocalPoint.focalpoints')->with('title_name',$title_name);
     }
 
 
@@ -54,7 +58,57 @@ class FocalPointController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
+	// public function store(Request $request)
+	// {
+	// $postId = $request->post_id;
+	// if ($postId == null) {
+	// $users = User::where(['email' => $request->account_email])->first();
+	// if($users == null){
+	// $user = User::updateOrCreate(['id' => $postId],
+	// ['name' => $request->account_name,
+	// 'password' => Hash::make($request->password),
+	// 'email' => $request->account_email,
+	// ]);
+	// DB::table('users_roles')->insert(
+	// array(
+	// 'user_id' => $user->id,
+	// 'role_id' => 3
+	// )
+	// );
+	// $post = FocalPoint::updateOrCreate(['id' => $postId],
+	// ['name' => $request->name,
+	// 'middle_name' => $request->middle_name,
+	// 'last_name' => $request->last_name,
+	// 'email' => $request->email,
+	// 'telephone' => $request->telephone,
+	// 'mobile' => $request->mobile,
+	// 'password' => $request->password,
+	// 'account_id' => $user->id,
+	// 'status' => $request->status,
+	// ]);
+	// }else{
+	// return Response()->json([
+	// "success" => true,
+	// "id" => 0,
+	// "code" => 401,
+	// "message" => 'Entered focal point account email already existed in the system'
+	// ]);
+	// }
+	// } else {
+	// $post = FocalPoint::updateOrCreate(['id' => $postId],
+	// ['name' => $request->name,
+	// 'middle_name' => $request->middle_name,
+	// 'last_name' => $request->last_name,
+	// 'email' => $request->email,
+	// 'telephone' => $request->telephone,
+	// 'mobile' => $request->mobile,
+	// 'status' => $request->status,
+	// ]);
+	// }
+	// return Response::json($post);
+	// }
+
+	public function store(Request $request)
     {
         if($request->entry_type == 'instant'){
                 $postId = $request->focal_point_id;
@@ -65,6 +119,7 @@ class FocalPointController extends Controller
                             ['name' => $request->account_name,
                                 'password' => Hash::make($request->password),
                                 'email' => $request->account_email,
+                             	'is_active' => $request->status
                             ]);
                         DB::table('users_roles')->insert(
                             array(
@@ -74,9 +129,9 @@ class FocalPointController extends Controller
                         );
                         $post = FocalPoint::updateOrCreate(['id' => $postId],
                             ['name' => $request->name,
-                                //'middle_name' => $request->middle_name,
+                               // 'middle_name' => $request->middle_name,
                                 'last_name' => $request->last_name,
-                               // 'email' => $request->email,
+                                //'email' => $request->email,
                                 'telephone' => $request->telephone,
                                 'mobile' => $request->mobile,
                                 'password' => $request->password,
@@ -105,13 +160,17 @@ class FocalPointController extends Controller
                 } else {
                     $post = FocalPoint::updateOrCreate(['id' => $postId],
                         ['name' => $request->name,
-                            //'middle_name' => $request->middle_name,
+                           // 'middle_name' => $request->middle_name,
                             'last_name' => $request->last_name,
-                            //'email' => $request->email,
+                          //  'email' => $request->email,
                             'telephone' => $request->telephone,
                             'mobile' => $request->mobile,
                             'status' => $request->status,
                         ]);
+                   $user = User::updateOrCreate(['id' => $post->account_id],
+                            [
+                             	'is_active' => $request->status
+                            ]);
                 }
             return Response::json($post);
         }else{
@@ -123,6 +182,7 @@ class FocalPointController extends Controller
                         ['name' => $request->account_name,
                             'password' => Hash::make($request->password),
                             'email' => $request->account_email,
+                         	'is_active' => $request->status,
                         ]);
                     DB::table('users_roles')->insert(
                         array(
@@ -132,9 +192,9 @@ class FocalPointController extends Controller
                     );
                     $post = FocalPoint::updateOrCreate(['id' => $postId],
                         ['name' => $request->name,
-                           // 'middle_name' => $request->middle_name,
+                          //  'middle_name' => $request->middle_name,
                             'last_name' => $request->last_name,
-                            //'email' => $request->email,
+                          //  'email' => $request->email,
                             'telephone' => $request->telephone,
                             'mobile' => $request->mobile,
                             'password' => $request->password,
@@ -152,17 +212,22 @@ class FocalPointController extends Controller
             } else {
                 $post = FocalPoint::updateOrCreate(['id' => $postId],
                     ['name' => $request->name,
-                        //'middle_name' => $request->middle_name,
+                      //  'middle_name' => $request->middle_name,
                         'last_name' => $request->last_name,
-                        //'email' => $request->email,
+                     //   'email' => $request->email,
                         'telephone' => $request->telephone,
                         'mobile' => $request->mobile,
                         'status' => $request->status,
                     ]);
+               $user = User::updateOrCreate(['id' => $post->account_id],
+                            [
+                             	'is_active' => $request->status
+                            ]);
             }
         return Response::json($post);
         }
     }
+
 
     /**
      * Show the form for editing the specified resource.

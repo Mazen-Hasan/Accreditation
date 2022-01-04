@@ -7,6 +7,7 @@
     <script src="{{ URL::asset('js/dataTable.js') }}"></script>
 @endsection
 @section('custom_navbar')
+
                 <li id="subsidiaries_nav" class="nav-item">
                      <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}"
                         href="{{ route('subCompanies',[$company_parent,$eventId]) }} ">
@@ -29,9 +30,9 @@
                     <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
                     href="{{ route('focalpoints') }}">
                         <i class="logout">
-                            <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
+                            <img src="{{ asset('images/user_mng.png') }}" alt="Subsidiaries Accounts">
                         </i>
-                        <span class="menu-title">Focal Points</span>
+                        <span class="menu-title">Subsidiaries Accounts</span>
                     </a>
                 </li>
 @endsection
@@ -48,8 +49,18 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <p class="card-title">{{$event_name}} / {{$company_name}} : Size ({{$company_size}}) /
-                                    Accreditation Size Management</p>
+<!--                                 <p class="card-title">{{$event_name}} / {{$company_name}} : Size ({{$company_size}}) /
+                                    Accreditation Size Management</p> -->
+                                <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('company-admin') }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    <a class="url-nav" href="{{route('companyParticipants',[$companyId ,$eventId])}}">
+                                        <span>{{$event_name}} / {{$company_name}}</span>
+                                    </a>
+                                     : Size ({{$company_size}}) /
+                                    Accreditation Size Management
+                                </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -172,6 +183,30 @@
             </div>
         </div>
     </div>
+	<div class="modal fade" id="error-pop-up-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="col-sm-12 confirm-text" id="errorText"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-ok">OK
+                            </button>
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -214,7 +249,10 @@
                     $('#ajax-crud-modal').modal('show');
                     $('#accredit_cat_id').attr('disabled', false);
                 } else {
-                    alert('you reached the max size');
+                    $('#errorTitle').html('Error: Max Size');
+                    $('#errorText').html('you have reached accreditation categories max size');
+                    $('#error-pop-up-modal').modal('show');
+                    //alert('you reached the max size');
                 }
             });
             $('body').on('click', '#edit-company-accreditation', function () {
@@ -281,8 +319,10 @@
                         },
                         error: function (data) {
                             $('#ajax-crud-modal').modal('hide');
-                            alert('Cant insert duplicate accreditation category size');
-                            console.log('Error:', data);
+                            $('#errorTitle').html('Error: Duplicate accrediation category');
+                            $('#errorText').html('Cant insert duplicate accreditation category size');
+                            $('#error-pop-up-modal').modal('show');
+                            //console.log('Error:', data);
                         }
                     });
                 }

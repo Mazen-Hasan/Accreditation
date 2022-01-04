@@ -20,13 +20,21 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <p class="card-title">
                                     <a class="url-nav" href="{{route('templates')}}">
                                         <span>Template:</span>
                                     </a>
                                     {{$template->name}} / Fields
                                 </p>
+                            </div>
+                        	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -221,10 +229,10 @@
 
             $('#laravel_datatable').DataTable({
 
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
-                    title: 'Templates',
+                    title: 'Template-field',
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6, 7]
                     }
@@ -257,6 +265,12 @@
 
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            });
+        
+        	var oTable = $('#laravel_datatable').DataTable();
+
+            $('#search').on('keyup', function () {
+                oTable.search(this.value).draw();
             });
 
             $('#add-new-field').click(function () {

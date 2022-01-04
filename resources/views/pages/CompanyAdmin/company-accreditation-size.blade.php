@@ -61,7 +61,7 @@
                                      : Size ({{$company_size}}) /
                                     Accreditation Size Management
                                 </h4>
-                                <!-- <p class="card-title">{{$event_name}} / {{$company_name}} : Size ({{$company_size}}) /
+<!--                                 <p class="card-title">{{$event_name}} / {{$company_name}} : Size ({{$company_size}}) /
                                     Accreditation Size Management</p> -->
                             </div>
                             <div class="col-md-4 align-content-md-center">
@@ -201,7 +201,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="error-pop-up-modal" tabindex="-1" data-bs-backdrop="static"
+	<div class="modal fade" id="error-pop-up-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -246,7 +246,7 @@
                 serverSide: true,
                 ajax: {
                     //url: '../../company-accreditation-size/' + eventId + '/' + companyId,
-                    url: "{{route('companyAccreditCategories',[$eventId,$companyId])}}",
+                	url: "{{route('companyAccreditCategories',[$eventId,$companyId])}}",
                     type: 'GET',
                 },
                 columns: [
@@ -280,9 +280,9 @@
             });
             $('body').on('click', '#edit-company-accreditation', function () {
                 var post_id = $(this).data('id');
-                var url = "{{ route('companyAdminControllerEditCompanyAccreditSize', ':id') }}";
-                url = url.replace(':id', post_id);
                 //alert(post_id);
+                var url = "{{ route('companyAdminControllerEditCompanyAccreditSize', ":id") }}";
+                url = url.replace(':id', post_id);
                 $.get(url, function (data) {
                     $('#name-error').hide();
                     $('#email-error').hide();
@@ -334,9 +334,9 @@
                     url = url.replace(':eventId', eventId);
                     $.ajax({
                         type: "get",
-                        // url: "../companyAdminController/storeCompanyAccrCatSize/" + post_id + "/" + accredit_cat_id + "/" + size + "/" + company_id + "/" + eventId,
-                        url: url,
-                        success: function (data) {
+                        //url: "../companyAdminController/storeCompanyAccrCatSize/" + post_id + "/" + accredit_cat_id + "/" + size + "/" + company_id + "/" + eventId,
+                        url:url,
+                    	success: function (data) {
                             $('#ajax-crud-modal').modal('hide');
                             var oTable = $('#laravel_datatable').dataTable();
                             oTable.fnDraw(false);
@@ -354,8 +354,7 @@
                             $('#errorTitle').html('Error: Duplicate accrediation category');
                             $('#errorText').html('Cant insert duplicate accreditation category size');
                             $('#error-pop-up-modal').modal('show');
-                            //alert('Cant insert duplicate accreditation category size');
-                            console.log('Error:', data);
+                            //console.log('Error:', data);
                         }
                     });
                 }
@@ -368,7 +367,7 @@
                 $('#confirmTitle').html('Approve Accreditation Category Sizes');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('approve');
-                var confirmText = "Are You sure you want to confirm Accreditation Category sizes?";
+                var confirmText = "Are you sure you want to confirm accreditation category sizes?";
                 $('#confirmText').html(confirmText);
                 $('#delete-element-confirm-modal').modal('show');
             });
@@ -379,12 +378,12 @@
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
                         if (action_button == 'delete') {
-                            var url = "{{ route('companyAdminControllerDestroyCompanyAccreditCat', ':id') }}";
+                             var url = "{{ route('companyAdminControllerDestroyCompanyAccreditCat', ':id') }}";
                             url = url.replace(':id', post_id);
                             $.ajax({
                                 type: "get",
-                                url:url,
                                 //url: "../companyAdminController/destroyCompanyAccreditCat/" + post_id,
+                            	url:url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
@@ -409,7 +408,7 @@
                             $.ajax({
                                 type: "get",
                                 //url: "../companyAdminController/sendApproval/" + company_id + "/" + eventId,
-                                url:url,
+                            	url:url,
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();

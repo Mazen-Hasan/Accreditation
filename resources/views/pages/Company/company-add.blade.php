@@ -210,7 +210,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-bs-backdrop="static"
+<div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -230,7 +230,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Last Name</label>
                                         <div class="col-sm-12">
@@ -240,33 +240,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="row" style="visibility:hidden">
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Last Name</label>
-                                        <div class="col-sm-12">
-                                            <input type="text" id="last_name" name="last_name"
-                                                   placeholder="enter last name" minlength="1" maxlength="50"  value=" "/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Email</label>
-                                        <div class="col-sm-12">
-                                            <input type="text" id="email" name="email" placeholder="enter email"
-                                                   value=" "/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="telephone" name="telephone"
-                                                   placeholder="enter telephone" minlength="1" maxlength="50" required=""/>
+                                            <input type="number" id="telephone" name="telephone"
+                                                   placeholder="enter telephone" required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -274,8 +254,8 @@
                                     <div class="form-group col">
                                         <label>Mobile</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="mobile" name="mobile" placeholder="enter mobile"
-                                                   minlength="1" maxlength="50" required=""/>
+                                            <input type="number" id="mobile" name="mobile" placeholder="enter mobile"
+                                                    required=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -323,7 +303,7 @@
                                             <select id="status" name="status" required="">
                                                 <option value="default">Please select status</option>
                                                 <option value="0">InActive</option>
-                                                <option value="1">Acticve</option>
+                                                <option value="1">Active</option>
                                             </select>
                                         </div>
                                     </div>
@@ -370,6 +350,25 @@
             </div>
         </div>
     </div>
+	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -399,7 +398,7 @@
                 $("#postForm").submit();
             });
         });
-        $('#togglePassword').click(function () {
+    $('#togglePassword').click(function () {
             var type = $('#password').attr('type') === 'password' ? 'text' : 'password';
             $('#password').attr('type', type);
             if (type === 'text') {
@@ -434,9 +433,9 @@
             }
         });
         $('#btn-gone').click(function () {
-            $('#focal_point').val('default');
+        	$('#focal_point').val('default');
         });
-        $('#country').on('change', function () {
+    	$('#country').on('change', function () {
             // $('#lbl_select').html('');
             // $('#btn-filter').html('Filter');
             //resetAll();
@@ -480,6 +479,7 @@
                     $('#middle_name').val('');
                     $('#telephone').val('');
                     $('#mobile').val('');
+                	$('#email').val('');
                     $('#account_name').val('');
                     $('#account_email').val('');
                     $('#password').val('');
@@ -497,9 +497,11 @@
                     city: {valueNotEquals: "default"},
                     country: {valueNotEquals: "default"},
                     focal_point: {valueNotEquals: "default"}
-                    //website: {urlValid: ""}
+                	//website: {urlValid: ""}
                 },
                 submitHandler: function (form) {
+                	$('#loader-modal').modal('show');
+                	$('#btn-save').prop('disabled', true);
                     $('#post_id').val('');
                     //var $eventid = $('#event_id').val();
                     var actionType = $('#btn-save').val();
@@ -512,8 +514,8 @@
                         success: function (data) {
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
-                            $('#btn-save').html('Add successfully');
-
+                            $('#btn-save').html('Done');
+							$('#loader-modal').modal('hide');
                             if (data.need_management == '1') {
                                 window.location.href = "{{ route('eventCompanies',$eventid)}}";
                             }
@@ -524,14 +526,15 @@
                             }
                         },
                         error: function (data) {
-                            console.log('Error:', data);
+                        	$('#loader-modal').modal('hide');
+                            //console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }
                     });
                 }
             })
         }
-        if ($("#focaPointForm").length > 0) {
+    	if ($("#focaPointForm").length > 0) {
             $("#focaPointForm").validate({
                 rules: {
                     status: {valueNotEquals: "default"}
@@ -540,7 +543,7 @@
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-add-focal').html('Sending..');
-                    alert($('#focaPointForm').serialize());
+                    //alert($('#focaPointForm').serialize());
                     $.ajax({
                         data: $('#focaPointForm').serialize(),
                         url: "{{ route('focalpointController.store') }}",
@@ -588,13 +591,11 @@
             function (value, element, params) {
                 return params !== value;
             }, " Please select a value");
-
-        jQuery.validator.addMethod("urlValid",
+    
+    	jQuery.validator.addMethod("urlValid",
             function (value, element, params) {
-                console.log('urlValid');
-                var res = value.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+                var res = value.match(/^((http|https):\/\/)?www\.([A-z]+)\.([A-z]{2,})/);
                 return res != null;
             }, " Please enter a valid URL");
-
     </script>
 @endsection

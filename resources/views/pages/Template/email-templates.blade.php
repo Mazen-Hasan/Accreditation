@@ -20,8 +20,16 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-9">
+                            <div class="col-md-8">
                                 <p class="card-title">Email Templates</p>
+                            </div>
+                        	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-3 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -122,7 +130,7 @@
 
             $('#laravel_datatable').DataTable({
 
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'Email-Templates',
@@ -155,6 +163,12 @@
 
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            });
+        
+        	var oTable = $('#laravel_datatable').DataTable();
+
+            $('#search').on('keyup', function () {
+                oTable.search(this.value).draw();
             });
 
             $('body').on('click', '#edit-email-template', function () {

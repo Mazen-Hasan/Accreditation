@@ -1,0 +1,36 @@
+.custom-tooltip {
+    position: absolute;
+    width: 150px;
+    height: 100px;
+    border: 1px solid cornflowerblue;
+    overflow: hidden;
+    pointer-events: none;
+    transition: opacity 1s;
+}
+
+.custom-tooltip.ag-tooltip-hiding {
+    opacity: 0;
+}
+
+.custom-tooltip p {
+    margin: 5px;
+    white-space: nowrap;
+}
+
+.custom-tooltip p:first-of-type {
+    font-weight: bold;
+}
+
+.button-group {
+    padding-bottom: 4px;
+    display: block;
+}
+
+.ag-header-cell-filtered {
+    background-color: #1b6d85 !important;
+    color: #fff !important;
+}
+
+.ag-header-cell-filtered span {
+    color: #fff !important;
+}

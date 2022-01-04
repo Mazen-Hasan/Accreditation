@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CompanyAccreditaionCategory;
 use App\Models\Event;
-use App\Models\EventAccreditationCategory;
 use App\Models\EventAdmin;
 use App\Models\EventCompany;
 use App\Models\EventCompanyDataEntry;
@@ -14,12 +12,14 @@ use App\Models\EventType;
 use App\Models\SecurityCategory;
 use App\Models\SelectOption;
 use App\Models\Template;
+use App\Models\EventAccreditationCategory;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+
 
 class EventController extends Controller
 {
@@ -33,6 +33,7 @@ class EventController extends Controller
         if (request()->ajax()) {
             $events = DB::select('select * from events_view e where e.event_end_date >= CURRENT_DATE()');
             return datatables()->of($events)
+
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('EventController.show', $data->id) . '" data-toggle="tooltip"  id="event-details" data-id="' . $data->id . '" data-original-title="Details" title="Details"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
@@ -54,7 +55,7 @@ class EventController extends Controller
         return view('pages.Event.events');
     }
 
-    public function showAll($status)
+	public function showAll($status)
     {
         if (request()->ajax()) {
             $events = DB::select('select * from events_view');
@@ -82,8 +83,9 @@ class EventController extends Controller
     public function eventAdmins($event_id)
     {
         if (request()->ajax()) {
-            $event = DB::select('select * from event_admins_info_view where event_id=?', [$event_id]);
+            $event = DB::select('select * from event_admins_info_view where event_id=?',[$event_id]);
             return datatables()->of($event)
+
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-admin"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
@@ -96,19 +98,26 @@ class EventController extends Controller
         $where = array('id' => $event_id);
         $event = Event::where($where)->first();
 
-        $event_admins = DB::select('select * from event_admin_users_view e where e.user_id NOT in (select ea.user_id from event_admins ea where ea.event_id = ? )', [$event_id]);
-        return view('pages.Event.eventAdmins')->with('event', $event)->with('eventAdmins', $event_admins);
+        //$event_admins = DB::select('select * from event_admin_users_view e where e.user_id NOT in (select ea.user_id from event_admins ea where ea.event_id = ? )',[$event_id]);
+    	$event_admins = DB::select('select * from event_admin_users_view');
+        return view('pages.Event.eventAdmins')->with('event', $event)->with('eventAdmins',$event_admins);
     }
 
     public function eventAdminsAdd(Request $request)
     {
+    	try{
         $post = EventAdmin::updateOrCreate(['id' => 0],
             ['event_id' => $request->event_id,
                 'user_id' => $request->admin_id,
             ]);
-        $event = Event::where(['id' => $request->event_id,])->first();
-
-        $notification_type = Config::get('enums.notification_types.EAA');
+        }catch (\Exception $e) {
+            return Response::json(array(
+                'code' => 400,
+                'message' => $e->getMessage()
+            ), 400);
+        }
+		$event = Event::where(['id' => $request->event_id,])->first();
+        $notification_type = Config::get('enums.notification_types.AEA');
         NotificationController::sendNotification($notification_type, $event->name, '', $request->admin_id, 0, $event->name . ':' . 'Event assignment',
             Route('eventCompanies', [$request->event_id]));
 
@@ -125,8 +134,9 @@ class EventController extends Controller
     public function eventSecurityOfficers($event_id)
     {
         if (request()->ajax()) {
-            $event = DB::select('select * from event_security_officers_info_view where event_id=?', [$event_id]);
+            $event = DB::select('select * from event_security_officers_info_view where event_id=?',[$event_id]);
             return datatables()->of($event)
+
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-security-officer"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
@@ -139,16 +149,24 @@ class EventController extends Controller
         $where = array('id' => $event_id);
         $event = Event::where($where)->first();
 
-        $security_officer = DB::select('select * from security_officer_users_view s where s.user_id NOT in (select eso.user_id from event_security_officers eso where eso.event_id = ? )', [$event_id]);
-        return view('pages.Event.eventSecurityOfficers')->with('event', $event)->with('securityOfficers', $security_officer);
+        //$security_officer = DB::select('select * from security_officer_users_view s where s.user_id NOT in (select eso.user_id from event_security_officers eso where eso.event_id = ? )',[$event_id]);
+    	$security_officer = DB::select('select * from security_officer_users_view');
+        return view('pages.Event.eventSecurityOfficers')->with('event', $event)->with('securityOfficers',$security_officer);
     }
 
     public function eventSecurityOfficersAdd(Request $request)
     {
+    	try{
         $post = EventSecurityOfficer::updateOrCreate(['id' => 0],
             ['event_id' => $request->event_id,
                 'user_id' => $request->security_officer_id,
             ]);
+    	}catch (\Exception $e) {
+            return Response::json(array(
+                'code' => 400,
+                'message' => $e->getMessage()
+            ), 400);
+        }
         $event = Event::where(['id' => $request->event_id,])->first();
 
 //        NotificationController::sendAlertNotification($request->security_officer_id, 0, $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies', [$request->event_id]));
@@ -160,6 +178,7 @@ class EventController extends Controller
         return Response::json($post);
     }
 
+
     public function eventSecurityOfficersRemove($security_officer_id)
     {
         $where = array('id' => $security_officer_id);
@@ -170,8 +189,9 @@ class EventController extends Controller
     public function eventSecurityCategories($event_id)
     {
         if (request()->ajax()) {
-            $event = DB::select('select * from event_security_categories_info_view where event_id=?', [$event_id]);
+            $event = DB::select('select * from event_security_categories_info_view where event_id=?',[$event_id]);
             return datatables()->of($event)
+
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-security-category"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
@@ -184,8 +204,8 @@ class EventController extends Controller
         $where = array('id' => $event_id);
         $event = Event::where($where)->first();
 
-        $security_Categories = DB::select('select * from security_categories sc where sc.id NOT in (select esc.security_category_id from event_security_categories esc where esc.event_id = ? )', [$event_id]);
-        return view('pages.Event.eventSecurityCategories')->with('event', $event)->with('securityCategories', $security_Categories);
+        $security_Categories = DB::select('select * from security_categories sc where sc.id NOT in (select esc.security_category_id from event_security_categories esc where esc.event_id = ? )',[$event_id]);
+        return view('pages.Event.eventSecurityCategories')->with('event', $event)->with('securityCategories',$security_Categories);
     }
 
     public function eventSecurityCategoriesAdd(Request $request)
@@ -206,15 +226,17 @@ class EventController extends Controller
 
     public function eventCheckSameEventOrganizer($organizerId)
     {
-        $where = array('organizer' => $organizerId);
+        $where = array('organizer' =>  $organizerId);
         $event = Event::where($where)->get()->first();
 
-        if ($event) {
+        if ($event){
             return Response()->json([
                 "success" => true,
                 "exist" => 1
             ]);
-        } else {
+        }
+        else
+        {
             return Response()->json([
                 "success" => true,
                 "exist" => 0
@@ -238,16 +260,15 @@ class EventController extends Controller
         $interval = $datetime1->diff($datetime2);
         $accredition_period_days = $interval->format('%a');
 
-        $event_companies = null;
-        if ($postId == null) {
-            $where = array('organizer' => $request->organizer);
+        $event_companies  =  null;
+    	$company_accreditation_categories = null;
+        if($postId == null){
+            $where = array('organizer' =>  $request->organizer);
             $event = Event::where($where)->get()->last();
-            if ($event != null) {
-                $where = array('event_id' => $event->id);
-                $event_companies = EventCompany::where($where)->get()->all();
-                $event_company_data_entries = EventCompanyDataEntry::where($where)->get()->all();
-
-                $company_accreditation_categories = CompanyAccreditaionCategory::where($where)->get()->all();
+			if($event != null){
+            	$where = array('event_id' =>  $event->id);
+            	$event_companies = EventCompany::where($where)->get()->all();
+            	$event_company_data_entries = EventCompanyDataEntry::where($where)->get()->all();
             }
         }
 
@@ -271,7 +292,6 @@ class EventController extends Controller
             ]);
 
 
-
         if ($postId == null) {
             $counter = 1;
             foreach ($request->security_categories as $security_category) {
@@ -289,11 +309,11 @@ class EventController extends Controller
                     ['event_id' => $post->id,
                         'user_id' => $event_admin
                     ]);
-                $event = Event::where(['id' => $post->id])->first();
-//                NotificationController::sendAlertNotification($event_admin, 0, $event->name . ':' . 'Event assignment', Route('eventCompanies', [$post->id]));
-
-                $notification_type = Config::get('enums.notification_types.EIN');
-                NotificationController::sendNotification($notification_type, $event->name, '', $event_admin, 0,
+                    $event = Event::where(['id'=>$post->id])->first();
+                    // NotificationController::sendAlertNotification($event_admin, 0, $event->name . ':' . 'Event assignment', Route('eventCompanies' , [$post->id]));
+            		
+            		$notification_type = Config::get('enums.notification_types.EIN');
+                	NotificationController::sendNotification($notification_type, $event->name, '', $event_admin, 0,
                     $event->name . ':' . 'Event assignment', Route('eventCompanies', [$post->id]));
             }
 
@@ -302,53 +322,53 @@ class EventController extends Controller
                     ['event_id' => $post->id,
                         'user_id' => $security_officer
                     ]);
-                $event = Event::where(['id' => $post->id])->first();
-//                NotificationController::sendAlertNotification($security_officer, 0, $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies', [$post->id]));
-
-                $notification_type = Config::get('enums.notification_types.EIN');
-                NotificationController::sendNotification($notification_type, $event->name, '', $security_officer, 0,
+                    $event = Event::where(['id'=>$post->id])->first();
+                    // NotificationController::sendAlertNotification($security_officer, 0, $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies' , [$post->id]));
+            		
+            		$notification_type = Config::get('enums.notification_types.EIN');
+                	NotificationController::sendNotification($notification_type, $event->name, '', $security_officer, 0,
                     $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies', [$post->id]));
             }
-            if ($event_companies != null) {
-                foreach ($event_companies as $row) {
-                    $new_event_company = EventCompany::updateOrCreate(['id' => 0],
-                        ['event_id' => $post->id,
-                            'company_id' => $row->company_id,
-                            'focal_point_id' => $row->focal_point_id,
-                            'parent_id' => $row->parent_id,
-                            'status' => 1,
-                            'size' => $row->size,
-                            'need_management' => 0,
-                        ]);
+			if($event_companies != null){
+            	foreach ($event_companies as $row){
+                	$new_event_company = EventCompany::updateOrCreate(['id' => 0],
+                    	['event_id' => $post->id,
+                        'company_id' => $row->company_id,
+                        'focal_point_id' => $row->focal_point_id,
+                        'parent_id' => $row->parent_id,
+                        'status' => 1,
+                        'size' => 0,
+                        'need_management' => 0,
+                    	]);
 
-                    foreach ($event_company_data_entries as $row1) {
-                        if ($row1->company_id == $row->company_id) {
-                            $new_event_company_data_entry = EventCompanyDataEntry::updateOrCreate(['id' => 0],
-                                ['event_id' => $post->id,
-                                    'company_id' => $row1->company_id,
-                                    'event_companies_id' => $new_event_company->id,
-                                    'data_entry_id' => $row1->data_entry_id,
-                                    'status' => 1,
-                                ]);
-                        }
+                	foreach ($event_company_data_entries as $row1){
+                    	if($row1->company_id == $row->company_id){
+                        	$new_event_company_data_entry = EventCompanyDataEntry::updateOrCreate(['id' => 0],
+                            	['event_id' => $post->id,
+                                'company_id' => $row1->company_id,
+                                'event_companies_id' => $new_event_company->id,
+                                'data_entry_id' => $row1->data_entry_id,
+                                'status' => 1,
+                            ]);
+                    	}
+                	}
+                	if($company_accreditation_categories != null){
+                    	foreach ($company_accreditation_categories as $row2) {
+                        	if ($row2->company_id == $row->company_id) {
+                            	$new_company_accreditation_category = CompanyAccreditaionCategory::updateOrCreate(['id' => 0],
+                                	['event_id' => $post->id,
+                                  	  'company_id' => $row2->company_id,
+                                  	  'accredit_cat_id' => $row2->accredit_cat_id,
+                                  	  'parent_id' => $row2->parent_id,
+                                  	  'size' => 0,
+                                  	  'status' => 0,
+                                  	  'event_company_id' => $new_event_company->id,
+                                  	  'inserted' => 0,
+                                	]);
+                        	}
+                    	}
                     }
-                    if($company_accreditation_categories != null){
-                        foreach ($company_accreditation_categories as $row2) {
-                            if ($row2->company_id == $row->company_id) {
-                                $new_company_accreditation_category = CompanyAccreditaionCategory::updateOrCreate(['id' => 0],
-                                    ['event_id' => $post->id,
-                                        'company_id' => $row2->company_id,
-                                        'accredit_cat_id' => $row2->accredit_cat_id,
-                                        'parent_id' => $row2->parent_id,
-                                        'size' => 0,
-                                        'status' => 0,
-                                        'event_company_id' => $new_event_company->id,
-                                        'inserted' => 0,
-                                    ]);
-                            }
-                        }
-                    }
-                }
+            	}
             }
 
         }
@@ -415,7 +435,7 @@ class EventController extends Controller
         $eventStatus2 = new SelectOption(2, 'InActive');
         $eventStatuss = [$eventStatus1, $eventStatus2];
 
-        $templates = Template::get()->where('status', '=', '1');
+         $templates = DB::select('select * from available_templates_view');
         $templatesSelectOption = array();
         foreach ($templates as $template) {
             $templateSelectOption = new SelectOption($template->id, $template->name);
@@ -518,29 +538,29 @@ class EventController extends Controller
 
         return view('pages.Event.event-edit')->with('owners', $ownersSelectOption)->with('organizers', $organizersSelectOption)->with('eventAdmins', $eventAdmins)
             ->with('securityOfficers', $securityOfficers)->with('approvalOptions', $approvalOptions)->with('eventTypes', $eventTypesSelectOption)
-            ->with('eventStatuss', $eventStatuss)->with('eventForms', $templatesSelectOption)->with('event', $event)->with('securityCategories', $securityCategoriesSelectOption);
+            ->with('eventStatuss', $eventStatuss)->with('eventForms', $templatesSelectOption)->with('event', $event)->with('securityCategories', $securityCategoriesSelectOption);;
     }
 
     public function show($id)
     {
-        $event = DB::select('select * from event_datals_view where id=?', [$id]);
+        $event = DB::select('select * from event_datals_view where id=?',[$id]);
 
 
-        $securityCategories = DB::select('select * from  event_security_categories_info_view where event_id=?', [$id]);
+        $securityCategories = DB::select('select * from  event_security_categories_info_view where event_id=?',[$id]);
         $securityCategoriesSelectOption = array();
         foreach ($securityCategories as $securityCategory) {
             $securityCategorieSelectOption = new SelectOption($securityCategory->id, $securityCategory->name);
             $securityCategoriesSelectOption[] = $securityCategorieSelectOption;
         }
 
-        $eventAdminUsers = DB::select('select * from event_admins_info_view  where event_id=?', [$id]);
+        $eventAdminUsers = DB::select('select * from event_admins_info_view  where event_id=?',[$id]);
         $eventAdmins = array();
         foreach ($eventAdminUsers as $eventAdminUser) {
             $eventAdminSelectOption = new SelectOption($eventAdminUser->id, $eventAdminUser->name);
             $eventAdmins[] = $eventAdminSelectOption;
         }
 
-        $securityOfficerUsers = DB::select('select * from event_security_officers_info_view where event_id=?', [$id]);
+        $securityOfficerUsers = DB::select('select * from event_security_officers_info_view where event_id=?',[$id]);
         $securityOfficers = array();
         foreach ($securityOfficerUsers as $securityOfficerUser) {
             $securityOfficerSelectOption = new SelectOption($securityOfficerUser->id, $securityOfficerUser->name);
@@ -549,7 +569,7 @@ class EventController extends Controller
 
         return view('pages.Event.event-details')->with('eventAdmins', $eventAdmins)
             ->with('securityOfficers', $securityOfficers)->with('event', $event[0])
-            ->with('securityCategories', $securityCategoriesSelectOption);
+            ->with('securityCategories', $securityCategoriesSelectOption);;
     }
 
     public function remove($event_security_category_id)
@@ -576,8 +596,7 @@ class EventController extends Controller
         return Response::json($post);
     }
 
-
-    public function eventAccreditationCategories($event_id)
+	public function eventAccreditationCategories($event_id)
     {
         if (request()->ajax()) {
             $event = DB::select('select * from event_accreditation_categories_view where event_id=?', [$event_id]);
@@ -623,5 +642,6 @@ class EventController extends Controller
         $post = EventAccreditationCategory::where($where)->delete();
         return Response::json($post);
     }
+
 
 }

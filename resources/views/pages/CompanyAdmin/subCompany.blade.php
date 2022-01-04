@@ -34,9 +34,9 @@
                     <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
                     href="{{ route('focalpoints') }}">
                         <i class="logout">
-                            <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
+                            <img src="{{ asset('images/user_mng.png') }}" alt="Subsidiaries Accounts">
                         </i>
-                        <span class="menu-title">Focal Points</span>
+                        <span class="menu-title">Subsidiaries Accounts</span>
                     </a>
                 </li>
                 @endif
@@ -53,7 +53,16 @@
                             <input type="hidden" id="company_id" value={{$companyId}}>
                             <input type="hidden" id="event_id" value={{$eventId}}>
                             <div class="col-md-8">
-                                <p class="card-title">{{$event_name}} / {{$company_name}} / Subsidiaries</p>
+                                <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('company-admin') }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    <a class="url-nav" href="{{route('companyParticipants',[$companyId ,$eventId])}}">
+                                        <span>{{$event_name}} / {{$company_name}} </span>
+                                    </a>
+                                     / Subsidiaries
+                                </h4>
+<!--                                 <p class="card-title">{{$event_name}} / {{$company_name}} / Subsidiaries</p> -->
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">

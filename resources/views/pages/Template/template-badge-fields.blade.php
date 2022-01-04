@@ -20,13 +20,21 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-7">
+                            <div class="col-md-6">
                                 <p class="card-title">
                                     <a class="url-nav" href="{{route('templateBadge')}}">
                                         <span>Badges:</span>
                                     </a>
                                     / Fields
                                 </p>
+                            </div>
+                        	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-5 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -149,14 +157,14 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+<!--                             <div class="col-md-6">
                                 <div class="form-group col">
                                     <label>Background Color</label>
                                     <div class="col-sm-12">
                                         <input type="color" id="bg_color" name="bg_color" value="#ffffff">
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="modal-footer">
@@ -199,7 +207,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="badge-modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+     <div class="modal fade" id="badge-modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
          role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -228,7 +236,7 @@
 
             $('#laravel_datatable').DataTable({
 
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'Badge-fields',
@@ -264,6 +272,10 @@
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
+        
+        	$('#search').on('keyup', function () {
+                oTable.search(this.value).draw();
+            });
 
             $('#add-new-field').click(function () {
                 $('#btn-save').val("create-field");
@@ -285,7 +297,7 @@
                     $('#position_y').val(data.position_y);
                     $('#size').val(data.size);
                     $('#text_color').val(data.text_color);
-                    $('#bg_color').val(data.bg_color);
+                    // $('#bg_color').val(data.bg_color);
                     $('#template_field_id').val(data.template_field_id);
                 });
             });
@@ -333,8 +345,8 @@
 
                     var imag = data;
                     var image_path = "{{URL::asset('preview/')}}/";
-
-                    $('#badge').attr('src', image_path + imag);
+					
+                    $('#badge').attr('src', image_path + imag + '?verion=' + (new Date().getTime()));
                 },
                 error: function (data) {
                     console.log('Error:', data);

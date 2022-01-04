@@ -36,9 +36,9 @@
                     <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
                     href="{{ route('focalpoints') }}">
                         <i class="logout">
-                            <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
+                            <img src="{{ asset('images/user_mng.png') }}" alt="Subsidiaries Accounts">
                         </i>
-                        <span class="menu-title">Focal Points</span>
+                        <span class="menu-title">Subsidiaries Accounts</span>
                     </a>
                 </li>
                 @endif
@@ -53,11 +53,11 @@
                 <input type="hidden" id="company_id" name="company_id" value="{{$companyId}}"/>
                 <input type="hidden" id="event_id" name="event_id" value="{{$eventId}}"/>
                 <input type="hidden" id="subCompnay_status" value={{$subCompany_nav}} />
-                <input type="hidden" id="addable_status" value={{$addable}} />
+            	<input type="hidden" id="addable_status" value={{$addable}} />
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <h4 class="card-title">
                                     <a class="url-nav" href="{{ route('company-admin') }} ">
                                         <span>My Events:</span>
@@ -66,6 +66,14 @@
                                     / {{$company_name}}
                                     / Participants
                                 </h4>
+                            </div>
+                        	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -76,12 +84,13 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('company-admin')
-                                    <a href="#" id="add-new-post" class="add-hbtn">
-                                        <i>
-                                            <img src="{{ asset('images/add.png') }}" alt="Add">
-                                        </i>
-                                        <span class="dt-hbtn">Add</span>
-                                    </a>
+<!--                                 <a href="{{route('templateForm',[0,$companyId,$eventId])}}" id="add-new-post" class="add-hbtn"> -->
+                                <a href="#" id="add-new-post" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">Add</span>
+                                </a>
                                 @endrole
                             </div>
                         </div>
@@ -93,8 +102,8 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                 @endforeach
-                                    <th>ID</th>
-                                    <th>Image</th>
+                                	<th>ID</th>
+                               	 	<th>Image</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -187,7 +196,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="error-pop-up-modal" tabindex="-1" data-bs-backdrop="static"
+	<div class="modal fade" id="error-pop-up-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -211,6 +220,7 @@
             </div>
         </div>
     </div>
+
 @endsection
 @section('script')
     <script>
@@ -230,21 +240,25 @@
             var myColumns = [];
             var i = 0;
             myColumns.push({data: "id", name: "id", 'visible': false});
+        	var expotColumns = [];
             while (i < jqueryarray.length) {
                 myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
-                i++;
+                expotColumns.push(i+1);
+            	i++;
             }
-            myColumns.push({data: "identifier", name: "identifier"});
-            myColumns.push({data: "image", name: "image"});
+       	 	myColumns.push({data: "identifier", name: "identifier"});
+        	myColumns.push({data: "image", name: "image", orderable: "false"});
             myColumns.push({data: "status", name: "status"});
             myColumns.push({data: "action", name: "action", orderable: "false"});
+        	expotColumns.push(i+1);
+        	expotColumns.push(i+3);
             $('#laravel_datatable').DataTable({
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'Company-Participants',
                     exportOptions: {
-                        columns: [1]
+                        columns: expotColumns
                     }
                 }],
 
@@ -288,8 +302,6 @@
                 // $('#post_id').val('');
                 // $('#postForm').trigger("reset");
                 // $('#postCrudModal').html("Add New Post");
-                //$('#ajax-crud-modal').modal('show');
-
             });
 
 
@@ -299,7 +311,7 @@
 
                 var url = "{{ route('badgeGenerate', ":staff_id") }}";
                 url = url.replace(':staff_id', staff_id);
-
+                
                 $.ajax({
                     type: "get",
                     // url: "badge-generate/" + staff_id,
@@ -325,7 +337,7 @@
 
                 var url = "{{ route('badgePreview', ":staff_id") }}";
                 url = url.replace(':staff_id', staff_id);
-
+                
                 $.ajax({
                     type: "get",
                     // url: "badge-preview/" + staff_id,
@@ -349,7 +361,7 @@
 
                 var url = "{{ route('badgePrint', ":staff_id") }}";
                 url = url.replace(':staff_id', staff_id);
-
+                
                 $.ajax({
                     type: "get",
                     // url: "badge-print/" + staff_id,
@@ -421,7 +433,7 @@
                     }
                 });
             });
-
+            
             $('#delete-element-confirm-modal-new button').on('click', function (event) {
                 var $button = $(event.target);
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
@@ -432,7 +444,7 @@
                         var url = "{{ route('eventAdminControllerRejectToCorrect', [":staffId",":reason"]) }}";
                         url = url.replace(':staffId', staffId);
                         url = url.replace(':reason', reason);
-
+                        
                         $.ajax({
                             type: "get",
                             // url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,

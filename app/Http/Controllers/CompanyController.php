@@ -32,11 +32,11 @@ class CompanyController extends Controller
             $companies = DB::select('select * from companies_view');
             return datatables()->of($companies)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('companyEdit', $data->id) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button = '<a href="' . route('companyEdit', $data->id) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Delete Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="javascript:void(0);" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
+                    $button .= '<a href="' . route('companyAccreditCat', $data->id) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-dark" title="Company Accreditation Size"><i class="mdi mdi-grid-large menu-items"></i></a>';
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -126,7 +126,7 @@ class CompanyController extends Controller
                 'focal_point_id' => $request->focal_point,
                 'size' => $request->size,
                 'need_management' => $request->need_management
-            ]);
+            ]); 
         }
 
         return Response::json($company);
@@ -142,6 +142,7 @@ class CompanyController extends Controller
         }
         $eventcompanies = EventCompany::where(['company_id'=>$post->id,'event_id'=>$eventid])->first();
         $where = array('id' => $eventcompanies->focal_point_id);
+        //$where = array('status' => 1);
         $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
         foreach ($contacts as $contact) {
@@ -150,16 +151,21 @@ class CompanyController extends Controller
         }
 
         $countrysSelectOptions = array();
-        $countries = Country::get()->all();
+//         $countries = Country::get()->all();
 
+//         foreach ($countries as $country) {
+//             $countrySelectOption = new SelectOption($country->id, $country->name);
+//             $countrysSelectOptions[] = $countrySelectOption;
+//         }
+    	$countries = DB::select('select DISTINCT(ccc.country_id), c.country_name from country_cities_view ccc inner join country_cities_view c on ccc.country_id = c.country_id');
         foreach ($countries as $country) {
-            $countrySelectOption = new SelectOption($country->id, $country->name);
+            $countrySelectOption = new SelectOption($country->country_id, $country->country_name);
             $countrysSelectOptions[] = $countrySelectOption;
         }
 
         $citysSelectOptions = array();
-        $cities = City::where(['country_id'=>$post->country_id])->get()->all();
-
+        //$cities = City::get()->all();
+		$cities = City::where(['country_id'=>$post->country_id])->get()->all();
         foreach ($cities as $city) {
             $citySelectOption = new SelectOption($city->id, $city->name);
             $citysSelectOptions[] = $citySelectOption;
@@ -186,20 +192,21 @@ class CompanyController extends Controller
         $companyStatus1 = new SelectOption(1, 'Active');
         $companyStatus2 = new SelectOption(0, 'InActive');
         $companyStatuss = [$companyStatus1, $companyStatus2];
-
+    
         $allwoedSize = $event->size;
         $allwoedSize = $allwoedSize + $post->size;
         $eventcompaniess = EventCompany::where(['event_id'=> $eventid,'parent_id'=> null])->get()->all();
         foreach($eventcompaniess as $eventcompnays){
             $allwoedSize = $allwoedSize - $eventcompnays->size; 
         }
+
         if (request()->ajax()) {
             $companyAccreditationCategories = DB::select('select * from company_accreditaion_categories_view where company_id = ?', [$id]);
             return datatables()->of($companyAccreditationCategories)
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-company" title="Edit Company">Edit size</a>';
+                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" title="Edit Size"><i class="fas fa-chart-pie"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" class="delete btn btn-danger" title="Delete Company">Remove Accreditiation Category</a>';
+                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Delete"><i class="far fa-trash-alt"></i></a>';
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -227,9 +234,7 @@ class CompanyController extends Controller
         $where = array('id' => $id);
         $event = Event::where($where)->first();
         $where = array('status' => 1);
-        $query = 'select f.* from focal_points f where f.id in (select distinct(id) from event_focal_points_view where event_id = ?)';
-        $contacts =  DB::select($query,[$id]);
-        //$contacts = FocalPoint::where($where)->get()->all();
+        $contacts = FocalPoint::where($where)->get()->all();
         $focalPointsOption = array();
         // foreach ($contacts as $contact) {
         //     $focalPointSelectOption = new SelectOption($contact->id, $contact->name . ' ' . $contact->middle_name . ' ' . $contact->last_name);
@@ -237,10 +242,11 @@ class CompanyController extends Controller
         // }
 
         $countrysSelectOptions = array();
-        $countries = Country::get()->all();
-
+        //$countries = Country::get()->all();
+		$countries = DB::select('select DISTINCT(ccc.country_id), c.country_name from country_cities_view ccc inner join country_cities_view c on ccc.country_id = c.country_id');
         foreach ($countries as $country) {
-            $countrySelectOption = new SelectOption($country->id, $country->name);
+            $countrySelectOption = new SelectOption($country->country_id, $country->country_name);
+        	//$countrySelectOption = new SelectOption($country->id, $country->name);
             $countrysSelectOptions[] = $countrySelectOption;
         }
 
@@ -273,7 +279,7 @@ class CompanyController extends Controller
         $companyStatus1 = new SelectOption(1, 'Active');
         $companyStatus2 = new SelectOption(0, 'InActive');
         $companyStatuss = [$companyStatus1, $companyStatus2];
-
+    
         $allwoedSize = $event->size;
         $eventcompanies = EventCompany::where(['event_id'=> $id,'parent_id'=> null])->get()->all();
         foreach($eventcompanies as $eventcompnay){
@@ -296,13 +302,13 @@ class CompanyController extends Controller
 
         $where = array('status' => 1);
         $accreditationCategorysSelectOptions = array();
-        // $accreditationCategories = AccreditationCategory::where($where)->get()->all();
+//         $accreditationCategories = AccreditationCategory::where($where)->get()->all();
 
-        // foreach ($accreditationCategories as $accreditationCategory) {
-        //     $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
-        //     $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
-        // }
-
+//         foreach ($accreditationCategories as $accreditationCategory) {
+//             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
+//             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
+//         }
+    
         $accreditationCategories = DB::select('select * from event_accreditation_categories_view where event_id = ?',[$eventId]);
         foreach ($accreditationCategories as $accreditationCategory) {
             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->accreditation_category_id, $accreditationCategory->name);
@@ -378,7 +384,6 @@ class CompanyController extends Controller
         return Response::json($companyAccreditCategories);
 
     }
-
 
     public function getCities($countrytId)
     {

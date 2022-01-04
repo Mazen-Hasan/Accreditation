@@ -42,8 +42,6 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('/template-form/{template_id}/{company_id}/{event_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
     Route::get('/template-form-details/{participant_id}', [App\Http\Controllers\TemplateFormController::class, 'details'])->name('templateFormDetails');
 
-
-
     Route::get('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
 
     Route::get('/subCompanies/{companyId}/{eventId}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanies'])->name('subCompanies');
@@ -58,7 +56,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('/dataentry-add/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'dataEntryAdd'])->name('dataentryAdd');
     Route::get('/dataentry-edit/{id}/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'edit'])->name('dataentryEdit');
     Route::get('dataentryController/reset_password/{id}/{password}', 'App\Http\Controllers\DataEntryController@resetPassword')->name('resetDataEntryPassword');
-    Route::get('getSubCompnayCities/{country_id}', [App\Http\Controllers\CompanyAdminController::class, 'getSubCompnayCities'])->name('getSubCompnayCities');
+	Route::get('getSubCompnayCities/{country_id}', [App\Http\Controllers\CompanyAdminController::class, 'getSubCompnayCities'])->name('getSubCompnayCities');
 });
 
 Route::group(['middleware' => 'role:event-admin'], function () {
@@ -82,7 +80,7 @@ Route::group(['middleware' => 'role:event-admin'], function () {
     Route::get('companyController/storeCompanyAccrCatSize/{id}/{accredit_cat_id}/{size}/{company_id}/{event_id}', 'App\Http\Controllers\CompanyController@storeCompanyAccrCatSize')->name('companyControllerStoreCompanyAccrCatSize');
     Route::get('companyController/destroyCompanyAccreditCat/{id}', 'App\Http\Controllers\CompanyController@destroyCompanyAccreditCat')->name('companyControllerDestroyCompanyAccreditCat');
     Route::get('companyController/Approve/{companyId}/{eventId}', 'App\Http\Controllers\CompanyController@Approve')->name('companyControllerApprove');
-    Route::get('getCities/{country_id}', [App\Http\Controllers\CompanyController::class, 'getCities'])->name('getCities');
+	Route::get('getCities/{country_id}', [App\Http\Controllers\CompanyController::class, 'getCities'])->name('getCities');
     Route::get('badge-generate/{staffId}', 'App\Http\Controllers\GenerateBadgeController@generate')->name('badgeGenerate');
     Route::get('badge-preview/{staffId}', 'App\Http\Controllers\GenerateBadgeController@getBadgePath')->name('badgePreview');
     Route::get('badge-print/{staffId}', 'App\Http\Controllers\GenerateBadgeController@printBadge')->name('badgePrint');
@@ -100,7 +98,7 @@ Route::group(['middleware' => 'role:event-admin'], function () {
 Route::group(['middleware' => 'role:super-admin'], function () {
     Route::resource('EventController', 'App\Http\Controllers\EventController');
     Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events');
-    Route::get('/eventsShowAll/{status}', [App\Http\Controllers\EventController::class, 'showAll'])->name('eventsShowall');
+	Route::get('/eventsShowAll/{status}', [App\Http\Controllers\EventController::class, 'showAll'])->name('eventsShowall');
     Route::get('/event-admins/{event_id}', [App\Http\Controllers\EventController::class, 'eventAdmins'])->name('eventAdmins');
     Route::get('/event-admins-remove/{id}', [App\Http\Controllers\EventController::class, 'eventAdminsRemove'])->name('eventAdminsRemove');
     Route::post('/event-admins-add', [App\Http\Controllers\EventController::class, 'eventAdminsAdd'])->name('eventAdminsAdd');
@@ -132,9 +130,7 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::get('/contacts', [App\Http\Controllers\ContactController::class, 'index'])->name('contacts');
     Route::get('/contact-add', [App\Http\Controllers\ContactController::class, 'contactAdd'])->name('contactAdd');
     Route::get('/contact-edit/{id}', [App\Http\Controllers\ContactController::class, 'edit'])->name('contactEdit');
-    Route::get('contactController/removeContactTitle/{contact_title_id}', 'App\Http\Controllers\ContactController@removeContactTitle');
-    Route::get('contactController/storeContactTitle/{contact_id}/{title_id}', 'App\Http\Controllers\ContactController@storeContactTitle');
-
+    
     Route::get('/securityCategories', [App\Http\Controllers\SecurityCategoryController::class, 'index'])->name('securityCategories');
     Route::resource('securityCategoryController', 'App\Http\Controllers\SecurityCategoryController');
     Route::get('securityCategoryController/destroy/{id}', 'App\Http\Controllers\SecurityCategoryController@destroy');
@@ -162,7 +158,7 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::get('templateController/changeStatus/{id}/{status}', 'App\Http\Controllers\TemplateController@changeStatus')->name('templateControllerChangeStatus');
     Route::get('templateController/changeLock/{id}/{status}', 'App\Http\Controllers\TemplateController@changeLock')->name('templateControllerChangeLock');
 
-    Route::resource('emailTemplateController', 'App\Http\Controllers\EmailTemplateController');
+	Route::resource('emailTemplateController', 'App\Http\Controllers\EmailTemplateController');
     Route::get('email-templates', [App\Http\Controllers\EmailTemplateController::class, 'index'])->name('emailTemplates');
 
 
@@ -190,9 +186,15 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::resource('templateBadgeFieldController', 'App\Http\Controllers\TemplateBadgeFieldController');
     Route::get('templateBadgeFieldController/destroy/{field_id}', 'App\Http\Controllers\TemplateBadgeFieldController@destroy');
     Route::get('badge-design-generate/{badgeId}', 'App\Http\Controllers\GenerateBadgeController@generatePreview');
-
-    Route::get('/template-badge-bg/{badge_id}', [App\Http\Controllers\TemplateBadgeBGController::class, 'index'])->name('templateBadgeBGs');
+    
+	Route::get('/template-badge-bg/{badge_id}', [App\Http\Controllers\TemplateBadgeBGController::class, 'index'])->name('templateBadgeBGs');
     Route::resource('templateBadgeBGController', 'App\Http\Controllers\TemplateBadgeBGController');
+
+	Route::get('/contact-titles/{contact_id}', [App\Http\Controllers\ContactTitleController::class, 'index'])->name('contactTitles');
+    Route::resource('contactTitlesController', 'App\Http\Controllers\ContactTitleController');
+    Route::get('contactTitlesController/destroy/{field_id}', 'App\Http\Controllers\ContactTitleController@destroy')->name('removeContactTitle');
+    Route::get('contactTitlesController/store/{contact_id}/{title_id}', 'App\Http\Controllers\ContactTitleController@store')->name('storeContactTitle');
+
 
 });
 
@@ -215,7 +217,6 @@ Route::group(['middleware' => 'role:data-entry'], function () {
     //Route::resource('dataentryController', 'App\Http\Controllers\DataEntryController');
     Route::get('/dataentry-participnat-add/{template_id}/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'participantAdd'])->name('participantAdd');
     Route::post('dataentryContoller/storeParticipant', [App\Http\Controllers\DataEntryController::class, 'storeParticipant'])->name('storeParticipant');
-//    Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
 });
 
 Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');

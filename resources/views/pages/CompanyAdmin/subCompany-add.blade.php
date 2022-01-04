@@ -30,9 +30,9 @@
                     <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
                     href="{{ route('focalpoints') }}">
                         <i class="logout">
-                            <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
+                            <img src="{{ asset('images/user_mng.png') }}" alt="Subsidiaries Accounts">
                         </i>
-                        <span class="menu-title">Focal Points</span>
+                        <span class="menu-title">Subsidiaries Accounts</span>
                     </a>
                 </li>
                 @endif
@@ -59,7 +59,7 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                        <input type="text" id="company_name" name="company_name" minlength="1" maxlength="100" value="" required=""
+                                            <input type="text" id="company_name" name="company_name" minlength="1" maxlength="100" value="" required=""
                                                    placeholder="enter name"/>
                                         </div>
                                     </div>
@@ -98,7 +98,7 @@
                                     <div class="form-group col">
                                         <label>Website</label>
                                         <div class="col-sm-12">
-                                            <input type="url" id="website" name="website" value="" required=""
+                                            <input type="text" id="website" name="website" value=""
                                                    placeholder="enter website"/>
                                         </div>
                                     </div>
@@ -237,7 +237,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-bs-backdrop="static"
+<div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -257,17 +257,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Middle Name</label>
+                                        <label>Last Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="middle_name" name="middle_name"
-                                                   placeholder="enter middle name" minlength="1" maxlength="50" required=""/>
+                                            <input type="text" id="last_name" name="last_name"
+                                                   placeholder="enter last name" minlength="1" maxlength="50" required=""/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+<!--                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Last Name</label>
@@ -286,7 +286,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
@@ -350,7 +350,7 @@
                                             <select id="status" name="status" required="">
                                                 <option value="default">Please select status</option>
                                                 <option value="0">InActive</option>
-                                                <option value="1">Acticve</option>
+                                                <option value="1">Active</option>
                                             </select>
                                         </div>
                                     </div>
@@ -416,6 +416,7 @@
                     $('#middle_name').val('');
                     $('#telephone').val('');
                     $('#mobile').val('');
+                	$('#email').val('');
                     $('#account_name').val('');
                     $('#account_email').val('');
                     $('#password').val('');
@@ -424,7 +425,7 @@
                     $('#add-focal-point-modal').modal('show');
                 }
             });
-            $('#togglePassword').click(function () {
+        $('#togglePassword').click(function () {
             var type = $('#password').attr('type') === 'password' ? 'text' : 'password';
             $('#password').attr('type', type);
             if (type === 'text') {
@@ -567,7 +568,7 @@
                                     $('#btn-confirm').html('OK');
                                     $('#event-organizer-copy-confirm-modal').modal('show');
                                 }else{
-                                    var name = data.name + ' ' + data.middle_name + ' ' + data.last_name;
+                                    var name = data.name + ' ' + data.last_name;
                                     $('#focaPointForm').trigger("reset");
                                     $('#btn-add-focal').html('Add successfully');
                                     $('#add-focal-point-modal').modal('hide');

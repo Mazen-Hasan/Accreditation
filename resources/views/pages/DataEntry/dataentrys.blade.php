@@ -33,9 +33,9 @@
                     <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
                     href="{{ route('focalpoints') }}">
                         <i class="logout">
-                            <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
+                            <img src="{{ asset('images/user_mng.png') }}" alt="Subsidiaries Accounts">
                         </i>
-                        <span class="menu-title">Focal Points</span>
+                        <span class="menu-title">Subsidiaries Accounts</span>
                     </a>
                 </li>
 @endsection
@@ -51,9 +51,16 @@
                     <input type="hidden" id="event_id" value={{$eventId}}>
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-8">
-                                <h4 class="card-title">
-                                    Data Entries
+                               <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('company-admin') }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    <a class="url-nav" href="{{route('companyParticipants',[$companyId ,$eventId])}}">
+                                        <span>{{$event_name}} / {{$company_name}} </span>
+                                    </a>
+                                     / Data Entries
                                 </h4>
+<!--                                 <p class="card-title">Data Entries</p> -->
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -77,7 +84,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-                                    <th>Email</th>
+<!--                                     <th>Email</th> -->
                                     <th>Telephone</th>
                                     <th>Mobile</th>
                                     <th>Account Name</th>
@@ -146,7 +153,7 @@
                     extend: 'excelHtml5',
                     title: 'Contacts',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
+                        columns: [1, 2, 3, 4, 5]
                     }
                 }],
 
@@ -160,7 +167,7 @@
                 columns: [
                     {data: 'id', name: 'id', 'visible': false},
                     {data: 'name', name: 'name'},
-                    {data: 'email', name: 'email'},
+                    // {data: 'email', name: 'email'},
                     {data: 'telephone', name: 'telephone'},
                     {data: 'mobile', name: 'mobile'},
                     {data: 'account_name', name: 'account_name'},
@@ -206,9 +213,13 @@
                 //$('#btn-save').val("create-company");
                 var userId = $('#user_id').val();
                 var password = $('#password').val();
+                var url = "{{ route('resetDataEntryPassword', [':userId',':password']) }}";
+                url = url.replace(':password', password);
+                url = url.replace(':userId', userId);
                 $.ajax({
                     type: "get",
-                    url: "dataentryController/reset_password/" + userId + "/" + password,
+                	url:url,
+                    //url: "dataentryController/reset_password/" + userId + "/" + password,
                     success: function (data) {
                         $('#ajax-crud-modal').modal('hide');
                     },

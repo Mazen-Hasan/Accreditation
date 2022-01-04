@@ -29,9 +29,9 @@
                     <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
                     href="{{ route('focalpoints') }}">
                         <i class="logout">
-                            <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
+                            <img src="{{ asset('images/user_mng.png') }}" alt="Subsidiaries Accounts">
                         </i>
-                        <span class="menu-title">Focal Points</span>
+                        <span class="menu-title">Subsidiaries Accounts</span>
                     </a>
                 </li>
 @endsection
@@ -44,7 +44,7 @@
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
                         <h4 class="card-title">{{$focalpoint->name.' '.$focalpoint->middle_name.' '.$focalpoint->last_name}}
-                            (Focal Point) - Edit</h4>
+                            (Data Entry) - Edit</h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
@@ -57,30 +57,30 @@
                                     <div class="form-group col">
                                         <label>Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" placeholder="enter name"
+                                            <input type="text" id="name" name="name" placeholder="enter name" minlength="1" maxlength="50"
                                                    required="" value="{{$focalpoint->name}}"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group col">
-                                        <label>Middle Name</label>
-                                        <div class="col-sm-12">
-                                            <input type="text" id="middle_name" name="middle_name"
-                                                   placeholder="enter middle name" required=""
-                                                   value="{{$focalpoint->middle_name}}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Last Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="last_name" name="last_name"
+                                            <input type="text" id="last_name" name="last_name" minlength="1" maxlength="50"
                                                    placeholder="enter last name" required=""
                                                    value="{{$focalpoint->last_name}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="display:none">
+                                <div class="col-sm-6">
+                                    <div class="form-group col">
+                                        <label>Middle Name</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="middle_name" name="middle_name" minlength="1" maxlength="50"
+                                                   placeholder="enter middle name" required=""
+                                                   value="{{$focalpoint->middle_name}}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +88,7 @@
                                     <div class="form-group col">
                                         <label>Email</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="email" name="email" placeholder="enter email"
+                                            <input type="email" id="email" name="email" placeholder="enter email" minlength="1" maxlength="50"
                                                    required="" value="{{$focalpoint->email}}"/>
                                         </div>
                                     </div>
@@ -99,7 +99,7 @@
                                     <div class="form-group col">
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="telephone" name="telephone"
+                                            <input type="number" id="telephone" name="telephone"
                                                    placeholder="enter telephone" required=""
                                                    value="{{$focalpoint->telephone}}"/>
                                         </div>
@@ -109,7 +109,7 @@
                                     <div class="form-group col">
                                         <label>Mobile</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="mobile" name="mobile" placeholder="enter mobile"
+                                            <input type="number" id="mobile" name="mobile" placeholder="enter mobile"
                                                    required="" value="{{$focalpoint->mobile}}"/>
                                         </div>
                                     </div>
@@ -135,8 +135,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" style="display:none;">
-                                <div class="col-md-6" >
+                            <div class="row">
+                                <div class="col-md-6" style="display:none;">
                                     <div class="form-group col">
                                         <label>Account Pasword</label>
                                         <div class="col-sm-12">
@@ -172,6 +172,26 @@
             </div>
         </div>
     </div>
+
+	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -194,10 +214,10 @@
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 submitHandler: function (form) {
-                    //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
+                   	$('#loader-modal').modal('show');
+                	$('#btn-save').prop('disabled', true);
                     $('#btn-save').html('Sending..');
-                    // alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('dataentryController.store') }}",
@@ -206,12 +226,14 @@
                         success: function (data) {
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
-                            $('#btn-save').html('Add successfully');
+                            $('#loader-modal').modal('hide');
+                            $('#btn-save').html('Done');
                             window.location.href = "{{ route('dataentrys',[$companyId,$eventId])}}";
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }

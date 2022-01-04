@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-
 class TemplateBadgeController extends Controller
 {
     public function index()
@@ -24,15 +23,15 @@ class TemplateBadgeController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '';
                     if ($data->is_locked == 0) {
-                            $button = '<a href="javascript:void(0)" id="edit-badge" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                            $button .= '&nbsp;&nbsp;';
+                        $button = '<a href="javascript:void(0)" id="edit-badge" data-toggle="tooltip"  data-id="' . $data->id . '" data-templateId="' . $data->template_id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
                     }
-                    $button .= '<a href="' . route('templateBadgeBGs', $data->id) . '" id="template-badge-bgs" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Backgrounds"><i class="far fa-images"></i></a>';
+                	$button .= '<a href="' . route('templateBadgeBGs', $data->id) . '" id="template-badge-bgs" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Backgrounds"><i class="far fa-images"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('templateBadgeFields', $data->id) . '" id="template-badge-fields" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Fields"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     if ($data->is_locked == 1) {
-                        if($data->can_unlock == 1) {
+                    	if($data->can_unlock == 1) {
                             $button .= '<a href="javascript:void(0);" id="unLock-badge" data-toggle="tooltip" data-original-title="Unlock" data-id="' . $data->id . '" title="Un-Lock"><i class="fas fa-unlock"></i></a>';
                         }
                     } else {
@@ -52,7 +51,7 @@ class TemplateBadgeController extends Controller
         return view('pages.Template.template-badge')->with('templates', $templates);
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $badge_id = $request->badge_id;
 
@@ -65,8 +64,10 @@ class TemplateBadgeController extends Controller
 
         $templateBadge = TemplateBadge::updateOrCreate(['id' => $badge_id],
             ['template_id' => $request->template_id,
-                'width' => $request->width,
-                'high' => $request->high,
+                // 'width' => $request->width,
+                // 'high' => $request->high,
+             	'width' => round($request->width * 3.7795275591),
+                'high' => round($request->high * 3.7795275591),
                 'bg_color' => $request->bg_color,
                 'bg_image' => $request->bg_image,
                 'is_locked' => $request->has('locked'),

@@ -11,11 +11,10 @@ use App\Models\SelectOption;
 use App\Models\TemplateField;
 use App\Models\TemplateFieldElement;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
-use App\Http\Controllers\GenerateBadgeController;
 
 class SecurityOfficerAdminController extends Controller
 {
@@ -74,9 +73,11 @@ class SecurityOfficerAdminController extends Controller
         }else{
             $company_admin_id = $event->id;
         }
-
-        $where = array('template_id' => $event->event_form);
-        $templateFields = TemplateField::where($where)->get()->all();
+    
+        // $where = array('template_id' => $event->event_form);
+        // $templateFields = TemplateField::where($where)->get()->all();
+    	$where = array('template_id' => $event->event_form);
+        $templateFields = TemplateField::where($where)->orderBy('field_order', 'ASC')->get()->all();
 
         foreach ($templateFields as $templateField) {
             $dataTableColumuns[] = $templateField->label_en;
@@ -89,7 +90,7 @@ class SecurityOfficerAdminController extends Controller
         //         $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
         //     }
         // });
-        if(!Schema::hasTable('temp_' . $eventId)){
+    	if(!Schema::hasTable('temp_' . $eventId)){
             Schema::create('temp_' . $eventId, function ($table) use ($templateFields) {
                 $table->string('id');
                 foreach ($templateFields as $templateField) {
@@ -143,7 +144,15 @@ class SecurityOfficerAdminController extends Controller
         if (request()->ajax()) {
             //$participants = DB::select('select t.* , c.* from temp_' . $company_admin_id . ' t inner join company_staff c on t.id = c.id');
             if($companyId != 0){
-                $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status in (1,3,9,10)',[$companyId]);
+                $eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+            	$companies = $companyId;
+            	if($eventcompanies != null){
+                	foreach($eventcompanies as $eventcompnay){
+                    	$companies = $companies.','.$eventcompnay->company_id;
+                	}
+            	}
+            	$participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.') and c.status in (1,3,9,10)');
+                //$participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status in (1,3,9,10)',[$companyId]);
             }else{
                 $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id and c.status in (1,3,9,10)');
             }
@@ -173,10 +182,10 @@ class SecurityOfficerAdminController extends Controller
                             $status_value = "Approved by event admin";
                             break;
                         case 7:
-                            $status_value = "Rejected with correction by security officer";
+                            $status_value = "Needs review and correction by security officer";
                             break;
                         case 8:
-                            $status_value = "Rejected with correction by event admin";
+                            $status_value = "Needs review and correction by event admin";
                             break;
                         case 9:
                             $status_value = "Badge generated";
@@ -208,7 +217,7 @@ class SecurityOfficerAdminController extends Controller
                 ->addColumn('image', function ($data) {
                     $image = '';
                     //$image .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
-                    $image .= '<img src="'. asset('storage/badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
+                    $image .= '<img src="'. asset('badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
                     return $image;
                 })
                 ->addColumn('identifier', function ($data) {
@@ -229,7 +238,7 @@ class SecurityOfficerAdminController extends Controller
 
         $eventWhere = array('id' => $eventId);
         $event = Event::where($eventWhere)->first();
-
+    
         $companyWhere = array('id' => $companyId);
         $company = Company::where($companyWhere)->first();
 
@@ -238,12 +247,11 @@ class SecurityOfficerAdminController extends Controller
             DB::update('update company_staff set status = ? where id = ?', [3, $staffId]);
             $event_companies = EventCompany::where(['event_id'=>$eventId, 'company_id'=> $companyId])->first();
             $focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
-//            NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
+            // NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
 
-            app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
-
-//            GenerateBadgeController::generateAfterApproval($staffId);
-            $notification_type = Config::get('enums.notification_types.PAP');
+        	app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
+        
+        	$notification_type = Config::get('enums.notification_types.PAP');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, $staffId,
                 $event->name . ': ' . $company->name . ': ' . 'Participant approved',
                 Route('templateFormDetails' , [$staffId]));
@@ -251,15 +259,15 @@ class SecurityOfficerAdminController extends Controller
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [3, $staffId]);
                 $event_companies = EventCompany::where(['event_id'=>$eventId, 'company_id'=> $companyId])->first();
-                $focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
-//                NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
-
-                app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
-//                GenerateBadgeController::generateAfterApproval($staffId);
-                $notification_type = Config::get('enums.notification_types.PAP');
-                NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, $staffId,
-                    $event->name . ': ' . $company->name . ': ' . 'Participant approved',
-                    Route('templateFormDetails' , [$staffId]));
+            	$focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
+            	// NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
+            	
+            	app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
+            
+            	$notification_type = Config::get('enums.notification_types.PAP');
+            	NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, $staffId,
+                $event->name . ': ' . $company->name . ': ' . 'Participant approved',
+                Route('templateFormDetails' , [$staffId]));
             }
         }
         return Response::json($event);
@@ -283,19 +291,19 @@ class SecurityOfficerAdminController extends Controller
         $focalPoint = FocalPoint::where(['id'=>$eventCompanies->focal_point_id])->first();
         if ($approval == 1) {
             DB::update('update company_staff set status = ? where id = ?', [4, $staffId]);
-//            NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
-
-            $notification_type = Config::get('enums.notification_types.PRE');
+        	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
+        
+        	$notification_type = Config::get('enums.notification_types.PRE');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
                 $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
         } else {
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [4, $staffId]);
-//                NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
-
-                $notification_type = Config::get('enums.notification_types.PRE');
-                NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
-                    $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
+            	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
+            	
+            	$notification_type = Config::get('enums.notification_types.PRE');
+            	NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
+                $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
             }
         }
         return Response::json($event);
@@ -320,22 +328,22 @@ class SecurityOfficerAdminController extends Controller
         if ($approval == 1) {
             DB::update('update company_staff set status = ? where id = ?', [7, $staffId]);
             DB::update('update company_staff set security_officer_reject_reason = ? where id = ?', [$reason, $staffId]);
-//            NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
-
-            $notification_type = Config::get('enums.notification_types.PRC');
+        	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
+			
+        	$notification_type = Config::get('enums.notification_types.PRC');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
-                $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction',
+                $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction', 
                 Route('templateFormDetails' , $staffId));
         } else {
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [7, $staffId]);
                 DB::update('update company_staff set security_officer_reject_reason = ? where id = ?', [$reason, $staffId]);
-//                NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
-
-                $notification_type = Config::get('enums.notification_types.PRC');
-                NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
-                    $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction',
-                    Route('templateFormDetails' , $staffId));
+            	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
+            
+            	$notification_type = Config::get('enums.notification_types.PRC');
+            	NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
+                $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction', 
+                Route('templateFormDetails' , $staffId));
             }
         }
         return Response::json($event);
@@ -364,7 +372,7 @@ class SecurityOfficerAdminController extends Controller
         }
         //$participants = DB::select('select t.* , c.* from temp' . $company_admin_id . ' t inner join company_staff c on t.id = c.id where c.id = ?', [$participant_id]);
         $participants = DB::select('select * from company_staff c where c.id = ?', [$participant_id]);
-        $status_value = "initaited";
+    	$status_value = "Initaited";
         $status = 0;
         $event_reject_reason = '';
         $security_officer_reject_reason = '';
@@ -395,10 +403,10 @@ class SecurityOfficerAdminController extends Controller
                     $status_value = "approved by event admin";
                     break;
                 case 7:
-                    $status_value = "rejected with correction by security officer";
+                    $status_value = "Needs review and correction by security officer";
                     break;
                 case 8:
-                    $status_value = "rejected with correction by event admin";
+                    $status_value = "Needs review and correction by event admin";
                     break;
                 case 9:
                     $status_value = "Badge generated";
@@ -408,28 +416,28 @@ class SecurityOfficerAdminController extends Controller
                     break;
             }
         }
-        $fieldsCount = 0;
+        $fieldsCount = 1;
         $form = '';
         $options = array();
         $form .= '<div class="row">';
-        $form .= $this->createStatusFieldLabel("status", "Status", 0, 1, 1, $status_value);
-        $form .= '</div>';
+        $form .= $this->createStatusFieldLabel("Status", $status_value);
+        // $form .= '</div>';
         if ($status == 8) {
-            $form .= '<div class="row">';
-            $form .= $this->createStatusFieldLabel("reject_reason", "Reject Reason", 0, 1, 1, $event_reject_reason);
-            $form .= '</div>';
+            // $form .= '<div class="row">';
+            $form .= $this->createStatusFieldLabel("Reject Reason",  $event_reject_reason);
+            // $form .= '</div>';
         }
         if ($status == 7) {
-            $form .= '<div class="row">';
-            $form .= $this->createStatusFieldLabel("reject_reason", "Reject Reason", 0, 1, 1, $security_officer_reject_reason);
-            $form .= '</div>';
+            // $form .= '<div class="row">';
+            $form .= $this->createStatusFieldLabel("Reject Reason", $security_officer_reject_reason);
+            // $form .= '</div>';
         }
-        $form .= '<div class="row">';
+        // $form .= '<div class="row">';
         $attachmentForm = '';
         if ($participant_id == 0) {
-            $form .= $this->createHiddenFieldLabel('participant_id', 'participant_id', '');
+            $form .= $this->createHiddenFieldLabel('participant_id', '');
         } else {
-            $form .= $this->createHiddenFieldLabel('participant_id', 'participant_id', $participant_id);
+            $form .= $this->createHiddenFieldLabel('participant_id', $participant_id);
         }
         foreach ($templateFields as $templateField) {
             $options = [];
@@ -444,34 +452,29 @@ class SecurityOfficerAdminController extends Controller
             switch ($templateField->slug) {
                 case 'text':
                     if ($participant_id == 0) {
-                        $form .= $this->createTextFieldLabel($templateField->label_en, $templateField->label_en,
-                            $templateField->mandatory, $templateField->min_char, $templateField->max_char, '');
+                        $form .= $this->createTextFieldLabel($templateField->label_en, '');
                     } else {
-                        $form .= $this->createTextFieldLabel($templateField->label_en, $templateField->label_en,
-                            $templateField->mandatory, $templateField->min_char, $templateField->max_char, $templateField->value);
+                        $form .= $this->createTextFieldLabel($templateField->label_en, $templateField->value);
                     }
                     break;
 
                 case 'number':
                     if ($participant_id == 0) {
-                        $form .= $this->createNumberFieldLabel($templateField->label_en, $templateField->label_en,
-                            $templateField->mandatory, $templateField->min_char, $templateField->max_char, '');
+                        $form .= $this->createNumberFieldLabel($templateField->label_en, '');
                     } else {
-                        $form .= $this->createNumberFieldLabel($templateField->label_en, $templateField->label_en,
-                            $templateField->mandatory, $templateField->min_char, $templateField->max_char, $templateField->value);
+                        $form .= $this->createNumberFieldLabel($templateField->label_en, $templateField->value);
                     }
                     break;
 
                 case 'textarea':
-                    $form .= $this->createTextAreaLabel($templateField->label_en, $templateField->label_en,
-                        $templateField->mandatory);
+                    $form .= $this->createTextAreaLabel($templateField->label_en, $templateField->label_en);
                     break;
 
                 case 'date':
                     if ($participant_id == 0) {
-                        $form .= $this->createDateLabel($templateField->label_en, $templateField->label_en, $templateField->mandatory, '');
+                        $form .= $this->createDateLabel($templateField->label_en, '');
                     } else {
-                        $form .= $this->createDateLabel($templateField->label_en, $templateField->label_en, $templateField->mandatory, $templateField->value);
+                        $form .= $this->createDateLabel($templateField->label_en, $templateField->value);
                     }
                     break;
 
@@ -489,25 +492,22 @@ class SecurityOfficerAdminController extends Controller
                             $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
                             $options [] = $option;
                         }
-                        $form .= $this->createSelectLabel($templateField->label_en, $templateField->label_en, $options, $templateField->value);
+                        $form .= $this->createSelectLabel($templateField->label_en, $options, $templateField->value);
                     }
                     break;
 
                 case 'file':
                     $fieldsCount--;
                     if ($participant_id == 0) {
-                        $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->label_en, 0, '');
-                        $form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->label_en, '');
+                        $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, '');
                     } else {
-                        $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->label_en, 0, $templateField->value);
-                        $form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->label_en, $templateField->value);
                         if($templateField->label_en == 'Personal Image'){
                             $image = $this->createPersonalImage($templateField->value);
                             $form = $image.$form;
+                        }else{
+                        	$attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->value);
                         }
                     }
-
-
                     break;
             }
         }
@@ -528,158 +528,258 @@ class SecurityOfficerAdminController extends Controller
     }
 
 
-    public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_char, $value)
+	
+	public function createStatusFieldLabel($label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
-
-        $textfield = '<div class="col-md-8" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger; color:red;
-        text-align: center;
-        padding:10px">' . $value . '</label></div>';
-        $textfield .= '</div></div>';
+        $textfield = '<div class="col-md-6"><div class="form-group col">';
+        $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $textfield .= '<input type="text" value="'. $value .'" disabled/>';
+        $textfield .= '</div></div></div>';
 
         return $textfield;
     }
 
-    public function createHiddenFieldLabel($id, $label, $value)
+    public function createHiddenFieldLabel($id, $value)
     {
         $textfield = '<input type="hidden" id="' . $id . '" name="' . $id . '" value="' . $value . '" />';
 
         return $textfield;
     }
 
-    public function createTextFieldLabel($id, $label, $mandatory, $min_char, $max_char, $value)
+    public function createTextFieldLabel($label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
-
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center;
-        background-color: darkgray;
-        padding:10px">' . $value . '</label></div>';
-        $textfield .= '</div></div>';
+	     $textfield = '<div class="col-md-6"><div class="form-group col">';
+        $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $textfield .= '<input type="text" value="'. $value .'" disabled/>';
+        $textfield .= '</div></div></div>';
 
         return $textfield;
     }
 
-    public function createNumberFieldLabel($id, $label, $mandatory, $min_value, $max_value, $value)
+    public function createNumberFieldLabel($label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
+        $numberfield = '<div class="col-md-6"><div class="form-group col">';
+        $numberfield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $numberfield .= '<input type="text" value="'. $value .'" disabled/>';
+        $numberfield .= '</div></div></div>';
 
-
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center;
-        background-color: darkgray;
-        padding:10px">' . $value . '</label></div>';
-        $textfield .= '</div></div>';
-
-        return $textfield;
+        return $numberfield;
     }
 
-    public function createTextAreaLabel($id, $label, $mandatory)
+    public function createTextAreaLabel( $label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
-
         $datefield = '<div class="col-md-6"><div class="form-group col">';
         $datefield .= '<label>' . $label . '</label><div class="col-sm-12">';
-        $datefield .= '<textarea id="' . $id . '" name="' . $id . '" placeholder="enter ' . $label . '"' . $required . '></textarea>';
+        $datefield .= '<textarea disabled>' . $value . '</textarea>';
         $datefield .= '</div></div></div>';
 
         return $datefield;
     }
 
-    public function createDateLabel($id, $label, $mandatory, $value)
+    public function createDateLabel($label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
+        $datefield = '<div class="col-md-6"><div class="form-group col">';
+        $datefield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $datefield .= '<input type="text" value="'. $value .'" disabled/>';
+        $datefield .= '</div></div></div>';
 
-
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center;
-        background-color: darkgray;
-        padding:10px">' . $value . '</label></div>';
-        $textfield .= '</div></div>';
-
-        return $textfield;
+        return $datefield;
     }
 
-    public function createSelectLabel($id, $label, $elements, $value)
+    public function createSelectLabel($label, $elements, $value)
     {
-
         $selectValue = '';
         foreach ($elements as $element) {
             if ($element->key == $value) {
                 $selectValue = $element->value;
             }
         }
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center;
-        background-color: darkgray;
-        padding:10px">' . $selectValue . '</label></div>';
-        $textfield .= '</div></div>';
 
+    
+    	$selectfield = '<div class="col-md-6"><div class="form-group col">';
+        $selectfield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $selectfield .= '<input type="text" value="'. $selectValue .'" disabled/>';
+        $selectfield .= '</div></div></div>';
 
-        return $textfield;
+        return $selectfield;
+
     }
 
-    public function createAttachmentLabel($id, $label, $mandatory, $value)
+    public function createAttachmentLabel($label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
-
-
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
+    	$textfield = '<div class="col-md-6"><div class="row"><div class="form-group col">';
+        $textfield .= '<label>' . $label . "</label></div>";
         $button = '<a href="javascript:void(0)" data-toggle="tooltip" data-label="' . $label . '"  data-src="' . $value . '" data-original-title="Preview" class="edit btn btn-danger preview-badge">Preview</a>';
-        $textfield .= '<div class="col-md-6" style="height:70px">' . $button . '</div>';
-        $textfield .= '</div></div>';
+        $textfield .= '<div class="col-md-6">' . $button . '</div>';
+        $textfield .= '</div></div><div class="col-md-6"></div></div></div>';
+
         return $textfield;
-    }
-
-    public function createMultiSelectLabel($id, $label, $elements)
-    {
-        $selectField = '<div class="col-md-6"><div class="form-group col">';
-        $selectField .= '<label>' . $label . '</label><div class="col-sm-12">';
-        $selectField .= '<select  multiple id="' . $id . '" name="' . $label . '[]">';
-        foreach ($elements as $element) {
-            $selectField .= '<option value="' . $element->key . '">' . $element->value . '</option>';
-        }
-
-        $selectField .= '</select></div></div></div>';
-        return $selectField;
     }
 
     public function createPersonalImage($value){
         $personalImage = '';
         $personalImage = $personalImage .'<div class="row>';
         $personalImage = $personalImage .'<div class="form-group col">';
-        $personalImage = $personalImage .'<img id="paticipant_iamge" src="'. asset('storage/badges/'.$value).'" alt="Personal" class="pic-img">';
+        $personalImage = $personalImage .'<img id="paticipant_iamge" src="'. asset('badges/'.$value).'" alt="Personal" class="pic-img">';
         $personalImage = $personalImage .'</div></div>';
         return $personalImage;
     }
+
+	
+
+
+//     public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_char, $value)
+//     {
+//         $required = '';
+//         if ($mandatory == '1') {
+//             $required = 'required=""';
+//         }
+
+//         $textfield = '<div class="col-md-8" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger; color:red;
+//         text-align: center;
+//         padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createHiddenFieldLabel($id, $label, $value)
+//     {
+//         $textfield = '<input type="hidden" id="' . $id . '" name="' . $id . '" value="' . $value . '" />';
+
+//         return $textfield;
+//     }
+
+//     public function createTextFieldLabel($id, $label, $mandatory, $min_char, $max_char, $value)
+//     {
+//         $required = '';
+//         if ($mandatory == '1') {
+//             $required = 'required=""';
+//         }
+
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center;
+//         background-color: darkgray;
+//         padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createNumberFieldLabel($id, $label, $mandatory, $min_value, $max_value, $value)
+//     {
+//         $required = '';
+//         if ($mandatory == '1') {
+//             $required = 'required=""';
+//         }
+
+
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center;
+//         background-color: darkgray;
+//         padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createTextAreaLabel($id, $label, $mandatory)
+//     {
+//         $required = '';
+//         if ($mandatory == '1') {
+//             $required = 'required=""';
+//         }
+
+//         $datefield = '<div class="col-md-6"><div class="form-group col">';
+//         $datefield .= '<label>' . $label . '</label><div class="col-sm-12">';
+//         $datefield .= '<textarea id="' . $id . '" name="' . $id . '" placeholder="enter ' . $label . '"' . $required . '></textarea>';
+//         $datefield .= '</div></div></div>';
+
+//         return $datefield;
+//     }
+
+//     public function createDateLabel($id, $label, $mandatory, $value)
+//     {
+//         $required = '';
+//         if ($mandatory == '1') {
+//             $required = 'required=""';
+//         }
+
+
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center;
+//         background-color: darkgray;
+//         padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createSelectLabel($id, $label, $elements, $value)
+//     {
+
+//         $selectValue = '';
+//         foreach ($elements as $element) {
+//             if ($element->key == $value) {
+//                 $selectValue = $element->value;
+//             }
+//         }
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center;
+//         background-color: darkgray;
+//         padding:10px">' . $selectValue . '</label></div>';
+//         $textfield .= '</div></div>';
+
+
+//         return $textfield;
+//     }
+
+//     public function createAttachmentLabel($id, $label, $mandatory, $value)
+//     {
+//         $required = '';
+//         if ($mandatory == '1') {
+//             $required = 'required=""';
+//         }
+
+
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $button = '<a href="javascript:void(0)" data-toggle="tooltip" data-label="' . $label . '"  data-src="' . $value . '" data-original-title="Preview" class="edit btn btn-danger preview-badge">Preview</a>';
+//         $textfield .= '<div class="col-md-6" style="height:70px">' . $button . '</div>';
+//         $textfield .= '</div></div>';
+//         return $textfield;
+//     }
+
+//     public function createMultiSelectLabel($id, $label, $elements)
+//     {
+//         $selectField = '<div class="col-md-6"><div class="form-group col">';
+//         $selectField .= '<label>' . $label . '</label><div class="col-sm-12">';
+//         $selectField .= '<select  multiple id="' . $id . '" name="' . $label . '[]">';
+//         foreach ($elements as $element) {
+//             $selectField .= '<option value="' . $element->key . '">' . $element->value . '</option>';
+//         }
+
+//         $selectField .= '</select></div></div></div>';
+//         return $selectField;
+//     }
+
+//     public function createPersonalImage($value){
+//         $personalImage = '';
+//         $personalImage = $personalImage .'<div class="row>';
+//         $personalImage = $personalImage .'<div class="form-group col">';
+//         $personalImage = $personalImage .'<img id="paticipant_iamge" src="'. asset('badges/'.$value).'" alt="Personal" class="pic-img">';
+//         $personalImage = $personalImage .'</div></div>';
+//         return $personalImage;
+//     }
 
 }

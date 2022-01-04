@@ -131,7 +131,7 @@
             var label = $(this).data("label")
             $('#badge-modal').modal('show');
             $('#badgeTitle').html(label);
-            var image_path = "{{URL::asset('storage/badges/')}}/";
+            var image_path = "{{URL::asset('badges/')}}/";
             $('#badge').attr('src', image_path + src);
         });
         $('body').on('click', '#send_request', function () {
@@ -153,7 +153,7 @@
                     var action_button = $('#action_button').val();
                     if (action_button == 'sendRequest') {
                         var staffId = $('#curr_element_id').val();
-                        var url = "{{ route('companyAdminControllerSendRequest', ':id') }}";
+                        var url = "{{ route('companyAdminControllerSendRequest', ":id") }}";
                         url = url.replace(':id', staffId);
 
                         $.ajax({

@@ -165,7 +165,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            	<div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Status</label>
                                         <div class="col-sm-12">
@@ -210,35 +210,21 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="ajax-crud-modal" aria-hidden="true">
-        <div class="modal-dialog">
+	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="postCrudModal"></h4>
-                </div>
                 <div class="modal-body">
-                    <input type="hidden" name="event_id" id="event_id" value="{{$event->id}}">
-                    <div class="form-group">
-                        <label>Security Category</label>
-                        <div class="col-sm-12">
-                            <select id="eventSecurityCategory" name="eventSecurityCategory" value="" required="">
-                                @foreach ($securityCategories as $securityCategory)
-                                    <option value="{{ $securityCategory->key }}"
-                                            @if ($securityCategory->key == 1)
-                                            selected="selected"
-                                        @endif
-                                    >{{ $securityCategory->value }}</option>
-                                @endforeach
-                            </select>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
                         </div>
                     </div>
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button id="btn-event-security-category-save" value="create">Save
-                        </button>
-                    </div>
-                </div>
-                <div class="modal-footer">
-
                 </div>
             </div>
         </div>
@@ -267,59 +253,13 @@
                 ],
                 order: [[0, 'desc']]
             });
-
-            $('#add-new-post').click(function () {
-                $('#btn-save').val("create-post");
-                $('#post_id').val('');
-                $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Event Security Category");
-                $('#ajax-crud-modal').modal('show');
-            });
-
-            $('body').on('click', '#remove-event-security-category', function () {
-                var post_id = $(this).data("id");
-                confirm("Are You sure want to remove event security category ?!");
-                $.ajax({
-                    type: "get",
-                    url: "../EventController/remove/" + post_id,
-                    success: function (data) {
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
-            $('body').on('click', '#btn-event-security-category-save', function () {
-                var event_id = $('#event_id').val();
-                var eventSecurityCategory = $('#eventSecurityCategory').val();
-                $.ajax({
-                    type: "get",
-                    url: "../EventController/storeEventSecurityCategory/" + event_id + "/" + eventSecurityCategory,
-                    success: function (data) {
-                        $('#ajax-crud-modal').modal('hide');
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
-            $(document).on('change', '#approval_option', function () {
-                var choosed = $('#approval_option').find(":selected").val();
-                if (choosed == 1) {
-                    $("#security_officer").prop('disabled', true);
-                } else {
-                    $('#security_officer').prop('disabled', false);
-                }
-            });
         });
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 submitHandler: function (form) {
+                	$("#btn-save").prop("disabled",true);
+                	$('#loader-modal').modal('show');
                     $('#btn-save').html('Sending..');
                     $.ajax({
                         data: $('#postForm').serialize(),
@@ -327,14 +267,16 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                        	$('#loader-modal').modal('hide');
                             $('#postForm').trigger("reset");
-                            $('#ajax-crud-modal').modal('hide');
-                            $('#btn-save').html('Edited successfully');
+                            $('#btn-save').html('Done');
                             window.location.href = "{{ route('events')}}";
                         },
                         error: function (data) {
                             console.log('Error:', data);
+                        	$('#loader-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
+                        	window.location.href = "{{ route('events')}}";
                         }
                     });
                 }

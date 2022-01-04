@@ -22,7 +22,7 @@
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Events">
                 </i>
-                <span class="menu-title">Events Management</span>
+                <span class="menu-title">Event Management</span>
             </a>
         </li>
         <li class="nav-item">
@@ -70,7 +70,7 @@
                 <span class="menu-title">Badges</span>
             </a>
         </li>
-        <li class="nav-item">
+    	<li class="nav-item">
             <a class="nav-link {{ str_contains( Request::route()->getName(),'email') =="1" ? "active" : "" }}"
                href="{{ route('emailTemplates') }}">
                 <i class="logout">
@@ -94,7 +94,7 @@
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Accreditation Categories">
                 </i>
-                <span class="menu-title">Accreditation Categories</span>
+                <span class="menu-title">Accreditation Category</span>
             </a>
         </li>
         <li class="nav-item">

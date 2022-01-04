@@ -19,8 +19,16 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <h4 class="card-title">Event Types</h4>
+                            </div>
+                        	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -50,12 +58,6 @@
                                 </thead>
                                 <tbody>
                                 </tbody>
-                                <tfoot>
-                                    <th>ID</th>
-                                    <th>Event Type</th>
-                                    <th style="color: black;display:none">Status</th>
-                                    <th style="color: black;display:none">Action</th> 
-                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -143,25 +145,7 @@
             });
 
             $('#laravel_datatable').DataTable({
-                initComplete: function () {
-                        this.api().columns([1]).every( function () {
-                            var column = this;
-                            var select = $('<select><option value="">All</option></select>')
-                                .appendTo( $(column.footer()).empty() )
-                                .on( 'change', function () {
-                                    var val = $.fn.dataTable.util.escapeRegex(
-                                        $(this).val()
-                                    );
-                                    column
-                                        .search( val ? '^'+val+'$' : '', true, false )
-                                        .draw();
-                                } );
-                            column.data().unique().sort().each( function ( d, j ) {
-                                select.append( '<option value="'+d+'">'+d+'</option>' )
-                            } );
-                        } );
-                    },
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'Event-Types',
@@ -195,6 +179,13 @@
 
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            });
+        
+        	var oTable = $('#laravel_datatable').DataTable();
+
+            $('#search').on('keyup', function () {
+                console.log('jj');
+                oTable.search(this.value).draw();
             });
 
             $('#add-new-post').click(function () {

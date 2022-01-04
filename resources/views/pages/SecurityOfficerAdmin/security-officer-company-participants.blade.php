@@ -51,8 +51,8 @@
                                     @foreach ($dataTableColumns as $dataTableColumn)
                                         <th><?php echo $dataTableColumn ?></th>
                                 @endforeach
-                                    <th>ID</th>
-                                    <th>Image</th>
+                               	 	<th>ID</th>
+                                	<th>Image</th>
                                     <th style="color: black">Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -116,7 +116,7 @@
                             </button>
                         </div>
                         <div class="col-sm-4">
-                            <button type="button" data-dismiss="modal" id="btn-yes-new">Reject</button>
+                            <button type="button" data-dismiss="modal" id="btn-yes-new">Return</button>
                         </div>
                     </div>
                 </div>
@@ -137,15 +137,18 @@
             var myColumns = [];
             var i = 0;
             myColumns.push({data: "id", name: "id", 'visible': false});
-            while (i < jqueryarray.length) {
+            var expotColumns = [];
+        	while (i < jqueryarray.length) {
                 myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
-                i++;
+                expotColumns.push(i+1);
+            	i++;
             }
-            myColumns.push({data: "identifier", name: "identifier"});
+        	myColumns.push({data: "identifier", name: "identifier"});
             myColumns.push({data: "image", name: "image", orderable: "false"});
             myColumns.push({data: "status", name: "status"});
             myColumns.push({data: "action", name: "action", orderable: "false"});
-
+			expotColumns.push(i+1);
+        	expotColumns.push(i+3);
             var companyId = $('#company_id').val();
             var eventId = $('#event_id').val();
 
@@ -159,7 +162,7 @@
                     extend: 'excelHtml5',
                     title: 'Company-Participants',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
+                        columns: expotColumns
                     }
                 }],
 
@@ -213,7 +216,7 @@
                 var post_id = $(this).data("id");
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
-                $('#confirmTitle-new').html('Reject Participation Request To Correct');
+                $('#confirmTitle-new').html('Participation Request needs review and correction');
                 $('#curr_element_id-new').val(post_id);
                 $('#reason').val('');
                 var confirmText = "Insert Reason:";

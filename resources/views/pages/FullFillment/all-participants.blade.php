@@ -96,19 +96,23 @@
             var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
             var myColumns = [];
             var i = 0;
+        	var exportColumns = [];
             myColumns.push({data: "id", name: "id", 'visible': false});
             myColumns.push({data: "action", name: "action", orderable: false});
             myColumns.push({data: "status", name: "status"});
+        	exportColumns.push(2);
             // if(company_id == 0){
             //     myColumns.push({data: "company",name: "company"});
             // }
             //myColumns.push({data: "company",name: "company"});
             while (i < jqueryarray.length) {
                 myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
+            	exportColumns.push(i+3);
                 i++;
             }
             myColumns.push({data: "identifier", name: "identifier"});
             myColumns.push({data: "image", name: "image"});
+        	exportColumns.push(i);
             //alert("val---" + JSON.stringify(myColumns));
             var companyId = $('#company_id').val();
             var eventId = $('#event_id').val();
@@ -120,7 +124,7 @@
                     extend: 'excelHtml5',
                     title: 'Company-Participants',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
+                        columns: exportColumns
                     }
                 }],
                 //pageLength: 2,

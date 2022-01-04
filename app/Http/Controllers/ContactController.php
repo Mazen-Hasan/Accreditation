@@ -39,6 +39,8 @@ class ContactController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('contactEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                     $button .= '&nbsp;&nbsp;';
+                    $button .= '<a href="' . route('contactTitles', $data->id) . '" data-toggle="tooltip"  id="contact-title" data-id="' . $data->id . '" data-original-title="Titles" title="Titles"><i class="fas fa-user-tie"></i></a>';
+                    $button .= '&nbsp;&nbsp;';
                     return $button;
                 })
                 ->rawColumns(['titleNames', 'action'])
@@ -135,15 +137,6 @@ class ContactController extends Controller
         $contactStatuss = [$contactStatus1, $contactStatus2];
 
 
-        $where = array('status' => 1);
-        $titlesSelectOptions = array();
-        $titles = Title::where($where)->get()->where('status', '=', '1');
-
-        foreach ($titles as $title) {
-            $titlesSelectOption = new SelectOption($title->id, $title->title_label);
-            $titlesSelectOptions[] = $titlesSelectOption;
-        }
-
         if (request()->ajax()) {
             $where = array('contact_id' => $id);
             return datatables()->of(ContactTitle::where($where)->get()->all())
@@ -155,7 +148,7 @@ class ContactController extends Controller
                     return $result;
                 })
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" class="edit btn btn-success edit-post" id="remove-contact_title">Remove</a>';
+                    $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-title"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     return $button;
                 })
@@ -163,10 +156,8 @@ class ContactController extends Controller
                 ->make(true);
         }
 
-
-        return view('pages.Contact.contact-edit')->with('post', $post)->with('contactStatuss', $contactStatuss)->with('titlesSelectOptions', $titlesSelectOptions);
+        return view('pages.Contact.contact-edit')->with('post', $post)->with('contactStatuss', $contactStatuss);
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -176,24 +167,6 @@ class ContactController extends Controller
     {
         $post = Contact::where('id', $id)->delete();
 
-        return Response::json($post);
-    }
-
-    public function removeContactTitle($contact_title_id)
-    {
-
-        $where = array('id' => $contact_title_id);
-        $post = ContactTitle::where($where)->delete();
-        return Response::json($post);
-    }
-
-    public function storeContactTitle($contactId, $titleId)
-    {
-        $post = ContactTitle::updateOrCreate(['id' => 0],
-            ['contact_id' => $contactId,
-                'title_id' => $titleId,
-                'status' => 1
-            ]);
         return Response::json($post);
     }
 }

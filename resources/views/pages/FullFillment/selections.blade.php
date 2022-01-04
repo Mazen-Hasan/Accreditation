@@ -11,7 +11,11 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Fulfillment Selections</h4>
+                        <h4 class="card-title">
+<!--                             <a class="url-nav" href="{{ route('event-admin') }} ">
+                               	<span>My Events:</span>
+                            </a> -->
+                        	Fulfillment Selections</h4>
                         <br>
                         <div class="row">
                             <div class="col-md-6">

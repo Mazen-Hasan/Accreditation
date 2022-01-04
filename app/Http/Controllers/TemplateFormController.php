@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\CompanyStaff;
 use App\Models\Event;
-use App\Models\TemplateField;
-use App\Models\TemplateFieldElement;
-use App\Models\CompanyAccreditaionCategory;
 use App\Models\SelectOption;
 use App\Models\StaffData;
+use App\Models\TemplateField;
+use App\Models\TemplateFieldElement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use App\Models\CompanyAccreditaionCategory;
 use Illuminate\Support\Facades\Schema;
 
 class TemplateFormController extends Controller
@@ -104,7 +104,7 @@ class TemplateFormController extends Controller
                     break;
 
                 case 'select':
-                    if (strtolower($templateField->label_en) == 'accreditation category') {
+					if (strtolower($templateField->label_en) == 'accreditation category') {
                         if ($participant_id == 0) {
                             $fieldElements = DB::select('select * from template_field_elements f inner join event_company_accrediation_categories_view e on e.accredit_cat_id = f.value_id where f.template_field_id = ? and e.size <> e.inserted and company_id =? and event_id = ?', [$templateField->id,$companyId,$eventId]);
                             foreach ($fieldElements as $fieldElement) {
@@ -135,7 +135,7 @@ class TemplateFormController extends Controller
                                 $options [] = $option;
                             }
                             $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, $templateField->value);
-                        }
+                        } 
                     }
                     break;
 
@@ -273,7 +273,7 @@ class TemplateFormController extends Controller
 
         $attachmentField = '<form id=form_' . $id . '" name="badgeForm" class="form-horizontal  img-upload" enctype="multipart/form-data" action="javascript:void(0)">';
         $attachmentField .= '<div class="row"><div class="col-md-5"><label>' . $label . '</label></div>';
-        $attachmentField .= '<div class="col-md-4"><div class="col-sm-12"><input type="file" id="file_' . $id . '" name=file_"' . $id . '"></div></div>';
+        $attachmentField .= '<div class="col-md-4"><div class="col-sm-12"><input type="file" id="file_' . $id . '" name=file_"' . $id . '" required=""></div></div>';
         $attachmentField .= '<div class="col-md-3"><button type="submit" id="btn-upload_' . $id . '" value="Upload">Upload</button></div></div>';
         $attachmentField .= '<div class="row"><div class="col-md-12"><div class="form-group col">';
         $attachmentField .= '<label id="file_type_error_' . $id . '"></label><div style="background-color: #ffffff00!important;" class="progress">';
@@ -297,8 +297,7 @@ class TemplateFormController extends Controller
 
     public function store(Request $request)
     {
-        $dataTableColumuns = array();
-
+    	$dataTableColumuns = array();
         $where = array('id' => $request->event_id);
         $event = Event::where($where)->get()->first();
         if($request->company_id != 0){
@@ -310,8 +309,10 @@ class TemplateFormController extends Controller
         //     $company_admin_id = $event->id;
         // }
         $company_admin_id = $event->id;
-        $where = array('template_id' => $event->event_form);
-        $templateFields = TemplateField::where($where)->get()->all();
+        // $where = array('template_id' => $event->event_form);
+        // $templateFields = TemplateField::where($where)->get()->all();
+    	$where = array('template_id' => $event->event_form);
+        $templateFields = TemplateField::where($where)->orderBy('field_order', 'ASC')->get()->all();
 
         foreach ($templateFields as $templateField) {
             $dataTableColumuns[] = $templateField->label_en;
@@ -338,16 +339,17 @@ class TemplateFormController extends Controller
                 'event_admin_decision' => '0',
                 'event_admin_decision_date' => null,
                 'event_admin_reject_reason' => '',
-                'status' => '0',
+                'status' => '0'
             ]);
-        $staff = CompanyStaff::updateOrCreate(['id' => $companyStaff->id],
+		$staff = CompanyStaff::updateOrCreate(['id' => $companyStaff->id],
             ['identifier'=> '#'.$request->event_id.'-'.$request->company_id.'-'.$companyStaff->id
             ]);
-
         $where = array('id' => $request->event_id);
         $event = Event::where($where)->get()->first();
-        $query = 'update templates t set t.is_locked = 1, t.can_unlock = 0 where t.id = ' . $event->event_form;
-        DB::update($query);
+        // $query = 'update templates t set t.is_locked = 1, t.can_unlock = 0 where t.id = ' . $event->event_form;
+        
+    	$query = 'update templates t set t.is_locked = 1, t.can_unlock = 0 where t.id = "' . $event->event_form .'"';
+    	DB::update($query);
 
         $data = $request->all();
 
@@ -361,7 +363,7 @@ class TemplateFormController extends Controller
                             DB::update($query,[$staffdata->value,$request->company_id,$request->event_id]);
                             $query = 'update company_accreditaion_categories set inserted = inserted + 1 where accredit_cat_id = ? and company_id = ? and event_id = ?';
                             DB::update($query,[$value,$request->company_id,$request->event_id]);
-                        }
+                        }  
                     }
                     $query = 'update staff_data s set s.value = "' . $value . '" where s.staff_id = ' . $companyStaff->id . ' and s.key ="' . $key . '" ';
                     DB::update($query);
@@ -379,7 +381,7 @@ class TemplateFormController extends Controller
                 }
             }
         }
-        if ($request->company_id == 0) {
+		if ($request->company_id == 0) {
             $where = array('event_id' => $request->event_id,'id'=> $companyStaff->id);
         } else {
             $where = array('event_id' => $request->event_id, 'company_id' => $company->id, 'id' => $companyStaff->id);
@@ -437,7 +439,6 @@ class TemplateFormController extends Controller
                 DB::insert($query);
             }
         }
-
         return Response::json($companyStaff);
     }
 
@@ -460,7 +461,7 @@ class TemplateFormController extends Controller
         }
         //$participants = DB::select('select t.* , c.* from temp_' . $company->id . ' t inner join company_staff c on t.id = c.id where c.id = ?', [$participant_id]);
         $participants = DB::select('select * from company_staff c where c.id = ?', [$participant_id]);
-        $status_value = "initaited";
+    	$status_value = "Initaited";
         $status = 0;
         $event_reject_reason = '';
         $security_officer_reject_reason = '';
@@ -468,7 +469,7 @@ class TemplateFormController extends Controller
             $status = $participant->status;
             $event_reject_reason = $participant->event_admin_reject_reason;
             $security_officer_reject_reason = $participant->security_officer_reject_reason;
-            switch ($status) {
+            switch ($participant->status) {
                 case 0:
                     $status_value = "Initiated";
                     break;
@@ -491,10 +492,10 @@ class TemplateFormController extends Controller
                     $status_value = "Approved by event admin";
                     break;
                 case 7:
-                    $status_value = "Rejected with correction by security officer";
+                    $status_value = "Needs review and correction by security officer";
                     break;
                 case 8:
-                    $status_value = "Rejected with correction by event admin";
+                    $status_value = "Needs review and correction by event admin";
                     break;
                 case 9:
                     $status_value = "Badge generated";
@@ -505,23 +506,23 @@ class TemplateFormController extends Controller
             }
         }
 
-        $fieldsCount = 0;
+        $fieldsCount = 1;
 
         $options = array();
         $form = '<div class="row">';
         $form .= $this->createStatusFieldLabel("Status",  $status_value);
-        $form .= '</div>';
+        // $form .= '</div>';
         if ($status == 8) {
-            $form .= '<div class="row">';
+            // $form .= '<div class="row">';
             $form .= $this->createStatusFieldLabel("Reject reason", $event_reject_reason);
-            $form .= '</div>';
+            // $form .= '</div>';
         }
         if ($status == 7) {
-            $form .= '<div class="row">';
+            // $form = '<div class="row">';
             $form .= $this->createStatusFieldLabel("Reject reason", $security_officer_reject_reason);
-            $form .= '</div>';
+            // $form .= '</div>';
         }
-        $form .= '<div class="row">';
+        // $form .= '<div class="row">';
         $attachmentForm = '';
         if ($participant_id == 0) {
             $form .= $this->createHiddenFieldLabel('participant_id',  '');
@@ -596,8 +597,8 @@ class TemplateFormController extends Controller
                             $image = $this->createPersonalImage($templateField->value);
                             $form = $image.$form;
                         }else{
-                            $attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->value);
-                            $form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->value);
+                        	$attachmentForm .= $this->createAttachmentLabel($templateField->label_en, $templateField->value);
+                         	$form .= $this->createHiddenFieldLabel($templateField->label_en, $templateField->value);
                         }
                     }
 
@@ -635,13 +636,16 @@ class TemplateFormController extends Controller
             ->with('eventId',$event->id)->with('event_name', $event->name)->with('company_name', $company->name);
     }
 
-    public function createStatusFieldLabel($label, $value)
+
+
+
+
+	public function createStatusFieldLabel($label, $value)
     {
-        $textfield = '<div class="col-md-8" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger; color:red;
-        text-align: center;padding:10px">' . $value . '</label></div>';
-        $textfield .= '</div></div>';
+        $textfield = '<div class="col-md-6"><div class="form-group col">';
+        $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $textfield .= '<input type="text" value="'. $value .'" disabled/>';
+        $textfield .= '</div></div></div>';
 
         return $textfield;
     }
@@ -655,38 +659,29 @@ class TemplateFormController extends Controller
 
     public function createTextFieldLabel($label, $value)
     {
-
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center; background-color: darkgray; padding:10px">' . $value . '</label></div>';
-        $textfield .= '</div></div>';
+	     $textfield = '<div class="col-md-6"><div class="form-group col">';
+        $textfield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $textfield .= '<input type="text" value="'. $value .'" disabled/>';
+        $textfield .= '</div></div></div>';
 
         return $textfield;
     }
 
     public function createNumberFieldLabel($label, $value)
     {
+        $numberfield = '<div class="col-md-6"><div class="form-group col">';
+        $numberfield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $numberfield .= '<input type="text" value="'. $value .'" disabled/>';
+        $numberfield .= '</div></div></div>';
 
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center; background-color: darkgray;padding:10px">' . $value . '</label></div>';
-        $textfield .= '</div></div>';
-
-        return $textfield;
+        return $numberfield;
     }
 
-    public function createTextAreaLabel($id, $label, $mandatory)
+    public function createTextAreaLabel( $label, $value)
     {
-        $required = '';
-        if ($mandatory == '1') {
-            $required = 'required=""';
-        }
-
         $datefield = '<div class="col-md-6"><div class="form-group col">';
         $datefield .= '<label>' . $label . '</label><div class="col-sm-12">';
-        $datefield .= '<textarea id="' . $id . '" name="' . $id . '" placeholder="enter ' . $label . '"' . $required . '></textarea>';
+        $datefield .= '<textarea disabled>' . $value . '</textarea>';
         $datefield .= '</div></div></div>';
 
         return $datefield;
@@ -694,65 +689,178 @@ class TemplateFormController extends Controller
 
     public function createDateLabel($label, $value)
     {
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center;background-color: darkgray;padding:10px">' . $value . '</label></div>';
-        $textfield .= '</div></div>';
+        $datefield = '<div class="col-md-6"><div class="form-group col">';
+        $datefield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $datefield .= '<input type="text" value="'. $value .'" disabled/>';
+        $datefield .= '</div></div></div>';
 
-        return $textfield;
+        return $datefield;
     }
 
     public function createSelectLabel($label, $elements, $value)
     {
-
         $selectValue = '';
         foreach ($elements as $element) {
             if ($element->key == $value) {
                 $selectValue = $element->value;
             }
         }
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
-        $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
-        text-align: center;background-color: darkgray;padding:10px">' . $selectValue . '</label></div>';
-        $textfield .= '</div></div>';
 
-        return $textfield;
+    
+    	$selectfield = '<div class="col-md-6"><div class="form-group col">';
+        $selectfield .= '<label>' . $label . '</label><div class="col-sm-12">';
+        $selectfield .= '<input type="text" value="'. $selectValue .'" disabled/>';
+        $selectfield .= '</div></div></div>';
+
+        return $selectfield;
+
     }
 
     public function createAttachmentLabel($label, $value)
     {
-
-        $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
-        $textfield .= '<label>' . $label . "  : </label></div>";
+    	$textfield = '<div class="col-md-6"><div class="row"><div class="form-group col">';
+        $textfield .= '<label>' . $label . "</label></div>";
         $button = '<a href="javascript:void(0)" data-toggle="tooltip" data-label="' . $label . '"  data-src="' . $value . '" data-original-title="Preview" class="edit btn btn-danger preview-badge">Preview</a>';
-        $textfield .= '<div class="col-md-6" style="height:70px">' . $button . '</div>';
-        $textfield .= '</div></div>';
+        $textfield .= '<div class="col-md-6">' . $button . '</div>';
+        $textfield .= '</div></div><div class="col-md-6"></div></div></div>';
 
         return $textfield;
-    }
-
-    public function createMultiSelectLabel($id, $label, $elements)
-    {
-        $selectField = '<div class="col-md-6"><div class="form-group col">';
-        $selectField .= '<label>' . $label . '</label><div class="col-sm-12">';
-        $selectField .= '<select  multiple id="' . $id . '" name="' . $label . '[]">';
-        foreach ($elements as $element) {
-            $selectField .= '<option value="' . $element->key . '">' . $element->value . '</option>';
-        }
-
-        $selectField .= '</select></div></div></div>';
-        return $selectField;
     }
 
     public function createPersonalImage($value){
         $personalImage = '';
         $personalImage = $personalImage .'<div class="row>';
         $personalImage = $personalImage .'<div class="form-group col">';
-        $personalImage = $personalImage .'<img id="paticipant_iamge" src="'. asset('storage/badges/'.$value).'" alt="Personal" class="pic-img">';
+        $personalImage = $personalImage .'<img id="paticipant_iamge" src="'. asset('badges/'.$value).'" alt="Personal" class="pic-img">';
         $personalImage = $personalImage .'</div></div>';
         return $personalImage;
     }
+
+
+
+
+
+
+
+
+//     public function createStatusFieldLabel($label, $value)
+//     {
+//         $textfield = '<div class="col-md-8" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger; color:red;
+//         text-align: center;padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createHiddenFieldLabel($id, $value)
+//     {
+//         $textfield = '<input type="hidden" id="' . $id . '" name="' . $id . '" value="' . $value . '" />';
+
+//         return $textfield;
+//     }
+
+//     public function createTextFieldLabel($label, $value)
+//     {
+
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center; background-color: darkgray; padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createNumberFieldLabel($label, $value)
+//     {
+
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center; background-color: darkgray;padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createTextAreaLabel($id, $label, $mandatory)
+//     {
+//         $required = '';
+//         if ($mandatory == '1') {
+//             $required = 'required=""';
+//         }
+
+//         $datefield = '<div class="col-md-6"><div class="form-group col">';
+//         $datefield .= '<label>' . $label . '</label><div class="col-sm-12">';
+//         $datefield .= '<textarea id="' . $id . '" name="' . $id . '" placeholder="enter ' . $label . '"' . $required . '></textarea>';
+//         $datefield .= '</div></div></div>';
+
+//         return $datefield;
+//     }
+
+//     public function createDateLabel($label, $value)
+//     {
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center;background-color: darkgray;padding:10px">' . $value . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createSelectLabel($label, $elements, $value)
+//     {
+
+//         $selectValue = '';
+//         foreach ($elements as $element) {
+//             if ($element->key == $value) {
+//                 $selectValue = $element->value;
+//             }
+//         }
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $textfield .= '<div class="col-md-6" style="height:70px"><label style="font-size: larger;
+//         text-align: center;background-color: darkgray;padding:10px">' . $selectValue . '</label></div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createAttachmentLabel($label, $value)
+//     {
+
+//         $textfield = '<div class="col-md-6" style="height:100px"><div class="row"><div class="col-md-6">';
+//         $textfield .= '<label>' . $label . "  : </label></div>";
+//         $button = '<a href="javascript:void(0)" data-toggle="tooltip" data-label="' . $label . '"  data-src="' . $value . '" data-original-title="Preview" class="edit btn btn-danger preview-badge">Preview</a>';
+//         $textfield .= '<div class="col-md-6" style="height:70px">' . $button . '</div>';
+//         $textfield .= '</div></div>';
+
+//         return $textfield;
+//     }
+
+//     public function createMultiSelectLabel($id, $label, $elements)
+//     {
+//         $selectField = '<div class="col-md-6"><div class="form-group col">';
+//         $selectField .= '<label>' . $label . '</label><div class="col-sm-12">';
+//         $selectField .= '<select  multiple id="' . $id . '" name="' . $label . '[]">';
+//         foreach ($elements as $element) {
+//             $selectField .= '<option value="' . $element->key . '">' . $element->value . '</option>';
+//         }
+
+//         $selectField .= '</select></div></div></div>';
+//         return $selectField;
+//     }
+
+//     public function createPersonalImage($value){
+//         $personalImage = '';
+//         $personalImage = $personalImage .'<div class="row>';
+//         $personalImage = $personalImage .'<div class="form-group col">';
+//         $personalImage = $personalImage .'<img id="paticipant_iamge" src="'. asset('badges/'.$value).'" alt="Personal" class="pic-img">';
+//         $personalImage = $personalImage .'</div></div>';
+//         return $personalImage;
+//     }
 }
 

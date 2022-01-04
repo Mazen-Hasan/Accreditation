@@ -166,6 +166,7 @@
 
                 submitHandler: function (form) {
                     $('#post_id').val('');
+                    var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
                     $.ajax({
                         data: $('#postForm').serialize(),

@@ -26,6 +26,25 @@
             </div>
         </div>
     </div>
+	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -45,7 +64,8 @@
             $("#templateForm").validate({
                 submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
-
+					$('#loader-modal').modal('show');
+                	$('#btn-save').prop('disabled', true);
                     $.ajax({
                         data: $('#templateForm').serialize(),
                         url: "{{ route('storeParticipant') }}",
@@ -55,14 +75,16 @@
                         success: function (data) {
                             // $('#templateForm').trigger("reset");
                             // $('#template-modal').modal('hide');
-                            // $('#btn-save').html('Save Changes');
+                            $('#btn-save').html('Done');
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
+                        	$('#loader-modal').modal('hide');
                             window.location.href = "{{ route('dataEntryParticipants',[$companyId,$eventId])}}";
                         },
                         error: function (data) {
                             console.log('Error:', data);
-                            $('#btn-save').html('Save Changes');
+                        	$('#loader-modal').modal('hide');
+                            $('#btn-save').html('Done');
                         }
                     });
                 }

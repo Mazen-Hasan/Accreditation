@@ -9,20 +9,25 @@ class FileUploadController extends Controller
     public function store(Request $request)
     {
         if ($files = $request->allFiles()) {
-            foreach ($files as $file) {
+            foreach ($files as $file){
 
                 $extension = $file->extension();
 
+//            $fileName = 'badge-'.$request->template_id;
                 $fileName = now();
-                $fileName = str_replace(':', '_', $fileName);
+                $fileName = str_replace(':','_',$fileName);
                 $fileName = str_replace(' ', '_', $fileName) . '.' . $extension;
 
-                $stored_file = $file->storeAs(
-                    'public/badges', $fileName);
+                 //$path = public_path() . '/images';
+            $path = 'badges/';
+                
+                $stored_file = $file->move(
+                    $path, $fileName);
 
+            chmod($stored_file, 0777);
                 return Response()->json([
                     "success" => true,
-                    "fileName" => $fileName,
+                    "fileName" =>$fileName,
                     "filePath" => $stored_file
                 ]);
             }
@@ -30,7 +35,7 @@ class FileUploadController extends Controller
 
         return Response()->json([
             "success" => false,
-            "fileName" => '',
+            "fileName" =>'',
             "file" => ''
         ]);
     }

@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Add New Event')
+@section('subtitle',' Add Event')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
@@ -7,7 +7,7 @@
     <script src="{{ URL::asset('js/dataTable.js') }}"></script>
 @endsection
 @section('content')
-    <div class="content-wrapper">
+     <div class="content-wrapper">
         <br><br>
         <div class="row">
             <div class="col-12 grid-margin">
@@ -22,7 +22,7 @@
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id">
-                            <input type="hidden" name="current_date" id="current_date" value="">
+                         	<input type="hidden" name="current_date" id="current_date" value="">
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
@@ -275,7 +275,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="event-organizer-copy-confirm-modal" aria-hidden="true">
+    <div class="modal fade" id="event-organizer-copy-confirm-modal" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -297,6 +298,27 @@
             </div>
         </div>
     </div>
+
+	
+	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -308,19 +330,15 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+        
             var d = new Date();
             var month = d.getMonth()+1;
             var day = d.getDate();
             var output = d.getFullYear() + '/' +
                 (month<10 ? '0' : '') + month + '/' +
                 (day<10 ? '0' : '') + day;
-            // var output = d.getFullYear() + '/' +
-            //      + month + '/' +
-            //      + day;
-            // alert(output);
-            $('#current_date').val(output);
-
+			//alert(output);
+        	$('#current_date').val(output);
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
@@ -385,12 +403,14 @@
                     event_end_date: {greaterThan: "Must be greater than event start date."},
                     accreditation_end_date: {greaterThan: "Must be greater than accreditation start date."},
                     accreditation_start_date: {lessThan: "Must be less than event end date"},
-                    //accreditation_start_date: {greaterThan: "Must be greater than event start date."},
+                    accreditation_start_date: {greaterThan: "Must be greater than event start date."},
                     accreditation_end_date: {lessThan: "Must be less than event end date."}
                 },
 
                 submitHandler: function (form) {
                     $('#post_id').val('');
+                	$('#loader-modal').modal('show');
+                	$('#btn-save').prop('disabled', true);
                     $('#btn-save').html('Sending..');
                     $.ajax({
                         data: $('#postForm').serialize(),
@@ -399,11 +419,12 @@
                         dataType: 'json',
                         success: function (data) {
                             $('#postForm').trigger("reset");
-                            $('#ajax-crud-modal').modal('hide');
-                            $('#btn-save').html('Add successfully');
+                        	$('#loader-modal').modal('hide');
+                            $('#btn-save').html('Done');
                             window.location.href = "{{ route('events')}}";
                         },
                         error: function (data) {
+                        	$('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }
@@ -411,7 +432,7 @@
                 }
             })
         }
-
+    
         jQuery.validator.addMethod("greaterThanOrEqual",
             function (value, element, params) {
                 if (!/Invalid|NaN/.test(new Date(value))) {
@@ -419,7 +440,7 @@
                 }
                 return isNaN(value) && isNaN($(params).val())
                     || (Number(value) >= Number($(params).val()));
-            }, 'Must be greater than or equal to {0}.');
+            }, 'Must be greater than or equal to today.');
 
         jQuery.validator.addMethod("greaterThan",
             function (value, element, params) {

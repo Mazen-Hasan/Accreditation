@@ -19,8 +19,16 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <p class="card-title">Users</p>
+                            </div>
+                        	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -46,7 +54,7 @@
                                     <th>Role_ID</th>
                                     <th>Account</th>
                                     <th>Email</th>
-                                    <th>Roles</th>
+                                    <th>Role</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -116,7 +124,7 @@
 
             $('#laravel_datatable').DataTable({
 
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'Users',
@@ -188,11 +196,11 @@
                 if (password !== confirm_password) {
                     $('#lbl_error').html('Please enter the same password');
                 } else {
-
-                    var url = "{{ route('userControllerResetPassword', [':userId',':password']) }}";
+                	
+                	var url = "{{ route('userControllerResetPassword', [':userId',':password']) }}";
                     url = url.replace(':userId', userId);
                     url = url.replace(':password', password);
-
+                
                     $.ajax({
                         type: "get",
                         // url: "userController/reset_password/" + userId + "/" + password,
@@ -209,6 +217,12 @@
 
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            });
+        
+        	 var oTable = $('#laravel_datatable').DataTable();
+
+            $('#search').on('keyup', function () {
+                oTable.search(this.value).draw();
             });
         })
 

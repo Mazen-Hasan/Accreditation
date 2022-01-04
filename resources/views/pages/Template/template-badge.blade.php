@@ -20,8 +20,16 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <p class="card-title">Badges</p>
+                            </div>
+                         	<div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -46,9 +54,9 @@
                                     <th>ID</th>
                                     <th>Template ID</th>
                                     <th>Registration Form</th>
-                                    <th>Width (Pixel)</th>
-                                    <th>High (Pixel)</th>
-                                    <th>Background Color</th>
+                                    <th>Width (mm)</th>
+                                    <th>Height (mm)</th>
+<!--                                     <th>Background Color</th> -->
                                     <th>Default Background</th>
                                     <th>Locked</th>
                                     <th>Action</th>
@@ -114,17 +122,17 @@
                                     <label>Width</label>
                                     <div class="col-sm-12">
                                         <input type="number" id="width" min="100" name="width"
-                                               placeholder="enter width (Pixel)"
+                                               placeholder="enter width (mm)"
                                                required="">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group col">
-                                    <label>High</label>
+                                    <label>Height</label>
                                     <div class="col-sm-12">
                                         <input type="number" id="high" name="high" min="100"
-                                               placeholder="enter high (Pixel)"
+                                               placeholder="enter high (mm)"
                                                required="">
                                     </div>
                                 </div>
@@ -132,14 +140,14 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+<!--                             <div class="col-md-6">
                                 <div class="form-group col">
                                     <label>Background Color</label>
                                     <div class="col-sm-12">
                                         <input type="color" id="bg_color" name="bg_color" value="#ffffff">
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-md-6">
                                 <div class="form-group col">
                                     <label>Registration form</label>
@@ -230,12 +238,12 @@
 
             $('#laravel_datatable').DataTable({
 
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'Badge',
                     exportOptions: {
-                        columns: [2, 3, 4, 6, 7]
+                        columns: [2, 3, 4, 6]
                     }
                 }],
 
@@ -249,24 +257,28 @@
                     {data: 'id', name: 'id', 'visible': false},
                     {data: 'template_id', name: 'template_id', 'visible': false},
                     {data: 'name', name: 'name'},
-                    {data: 'width', name: 'width'},
-                    {data: 'high', name: 'high'},
                     {
-                        "data": "bg_color",
+                        "data": "width",
                         "render": function (val) {
-                            return "<div class='div-color' style='background-color: " + val + "'></div>";
+                            return Math.trunc(val * 0.2645833333);
                         }
                     },
+                    // {data: 'width', name: 'width'},
+                    {
+                        "data": "high",
+                        "render": function (val) {
+                            return Math.trunc(val * 0.2645833333);
+                        }
+                    },
+                    // {data: 'high', name: 'high'},
+                    // {
+                    //     "data": "bg_color",
+                    //     "render": function (val) {
+                    //         return "<div class='div-color' style='background-color: " + val + "'></div>";
+                    //     }
+                    // },
 
-                    // {data: 'bg_image', name: 'bg_image'},
-                    {
-                        "data": "bg_image",
-                        "render": function (val) {
-                            var image_path = "{{URL::asset('storage/badges/')}}/";
-                            {{--var image_path = "{{URL::asset('badges/')}}/";--}}
-                                return "<img src= " + image_path + val + "></img>";
-                        }
-                    },
+                    {data: 'bg_image', name: 'bg_image'},
                     {
                         "data": "is_locked",
                         "render": function (val) {
@@ -280,6 +292,12 @@
 
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            });
+        
+        	var oTable = $('#laravel_datatable').DataTable();
+
+            $('#search').on('keyup', function () {
+                oTable.search(this.value).draw();
             });
 
             $('#add-new-badge').click(function () {
@@ -304,8 +322,10 @@
                     $('#modalTitle').html("Edit Badge");
                     $('#btn-save').val("edit-badge");
                     $('#badge_id').val(data.id);
-                    $('#width').val(data.width);
-                    $('#high').val(data.high);
+                    // $('#width').val(data.width);
+                    // $('#high').val(data.high);
+                	$('#width').val(Math.round(data.width * 0.2645833333));
+                    $('#high').val(Math.round(data.high * 0.2645833333));
                     $('#bg_color').val(data.bg_color);
                     $('#field-modal').modal('show');
 
@@ -447,6 +467,15 @@
 
 
         $('.img-upload').submit(function (e) {
+        	
+        	var file = $('#file').val();
+            if(file=='')
+            {
+                $('#file_type_error').removeClass('info').addClass('error');
+                $("#file_type_error").html('Please choose file');
+                return false;
+            }
+        
             $('#btn-upload').html('Sending..');
             e.preventDefault();
             var formData = new FormData(this);
@@ -477,6 +506,7 @@
 
                 success: (data) => {
                     // this.reset();
+                	$('#file_type_error').removeClass('error').addClass('info');
                     $("#file_type_error").html('File uploaded successfully');
                     $('#btn-upload').html('Upload');
                     $("#bg_image").val(data.fileName);

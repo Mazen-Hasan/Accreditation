@@ -30,9 +30,9 @@
                     <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
                     href="{{ route('focalpoints') }}">
                         <i class="logout">
-                            <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
+                            <img src="{{ asset('images/user_mng.png') }}" alt="Subsidiaries Accounts">
                         </i>
-                        <span class="menu-title">Focal Points</span>
+                        <span class="menu-title">Subsidiaries Accounts</span>
                     </a>
                 </li>
                 @endif
@@ -91,7 +91,7 @@
                                         <label>Website</label>
                                         <div class="col-sm-12">
                                             <input type="text" id="website" name="website" value="{{$company->website}}"
-                                                   required="" placeholder="enter website"/>
+                                                   placeholder="enter website"/>
                                         </div>
                                     </div>
                                 </div>
@@ -119,7 +119,7 @@
                                                         @endif
                                                     >{{ $focalPoint->value }}</option>
                                                 @endforeach
-                                                <option value="-2" id="instant_add">Add new focal point</option>
+                                            	<option value="-2" id="instant_add">Add new focal point</option>
                                             </select>
                                         </div>
                                     </div>
@@ -144,7 +144,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group col" >
+                                    <div class="form-group col">
                                         <label>City</label>
                                         <div class="col-sm-12" id="container">
                                             <select id="city" name="city" value="" required="">
@@ -207,7 +207,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-bs-backdrop="static"
+	<div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -228,17 +228,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group col">
-                                        <label>Middle Name</label>
+                                        <label>Last Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="middle_name" name="middle_name"
-                                                   placeholder="enter middle name" minlength="1" maxlength="50" required=""/>
+                                            <input type="text" id="last_name" name="last_name"
+                                                   placeholder="enter last name" minlength="1" maxlength="50" required=""/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+<!--                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Last Name</label>
@@ -257,7 +257,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
@@ -385,7 +385,8 @@
                 $('#postCrudModal').html("Add New Contact");
                 $('#ajax-crud-modal').modal('show');
             });
-            $('#focal_point').on('change', function () {
+
+        	$('#focal_point').on('change', function () {
                 //alert('i am here');
                 var selectedFocal = $('#focal_point option:selected').val();
                 if(selectedFocal == -2){
@@ -395,6 +396,7 @@
                     $('#middle_name').val('');
                     $('#telephone').val('');
                     $('#mobile').val('');
+                	$('#email').val('');
                     $('#account_name').val('');
                     $('#account_email').val('');
                     $('#password').val('');
@@ -416,7 +418,7 @@
             });
 
         });
-        $('#country').on('change', function () {
+    	$('#country').on('change', function () {
             // $('#lbl_select').html('');
             // $('#btn-filter').html('Filter');
             //resetAll();
@@ -476,13 +478,21 @@
         $('#btn-gone').click(function () {
             $("#focal_point").val($("#focal_point option:first").val());
         });
+
         if ($("#postForm").length > 0) {
             $("#postForm").validate({
                 submitHandler: function (form) {
+                    //$('#post_id').val('');
                     var actionType = $('#btn-save').val();
-                    //var eventid = $('#event_id').val();
-                    //var parentId = $('#parent_id').val();
+                    var eventid = $('#event_id').val();
+                    var parentId = $('#parent_id').val();
+                    // if($('#needManagmentCheckbox').is(':checked')){
+                    //     $('#need_management').val('1');
+                    // }else{
+                    //     $('#need_management').val('0');
+                    // }
                     $('#btn-save').html('Sending..');
+                    //alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('storeSubCompnay') }}",
@@ -494,6 +504,8 @@
                             $('#btn-save').html('Edited successfully');
                             //window.location.href = "../../subCompanies/"+parentId + "/" + eventid;
                             window.location.href = "{{route('subCompanies',[$company->parent_id,$eventId])}}"
+                            // var oTable = $('#laravel_datatable').dataTable();
+                            // oTable.fnDraw(false);
                         },
                         error: function (data) {
                             console.log('Error:', data);
@@ -503,7 +515,7 @@
                 }
             })
         }
-        if ($("#focaPointForm").length > 0) {
+    if ($("#focaPointForm").length > 0) {
             $("#focaPointForm").validate({
                 rules: {
                     status: {valueNotEquals: "default"}
@@ -538,7 +550,7 @@
                                     $('#btn-confirm').html('OK');
                                     $('#event-organizer-copy-confirm-modal').modal('show');
                                 }else{
-                                    var name = data.name + ' ' + data.middle_name + ' ' + data.last_name;
+                                    var name = data.name + ' ' + data.last_name;
                                     $('#focaPointForm').trigger("reset");
                                     $('#btn-add-focal').html('Add successfully');
                                     $('#add-focal-point-modal').modal('hide');

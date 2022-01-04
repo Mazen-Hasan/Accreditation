@@ -296,10 +296,16 @@ class CompanyController extends Controller
 
         $where = array('status' => 1);
         $accreditationCategorysSelectOptions = array();
-        $accreditationCategories = AccreditationCategory::where($where)->get()->all();
+        // $accreditationCategories = AccreditationCategory::where($where)->get()->all();
 
+        // foreach ($accreditationCategories as $accreditationCategory) {
+        //     $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
+        //     $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
+        // }
+
+        $accreditationCategories = DB::select('select * from event_accreditation_categories_view where event_id = ?',[$eventId]);
         foreach ($accreditationCategories as $accreditationCategory) {
-            $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
+            $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->accreditation_category_id, $accreditationCategory->name);
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
         $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);

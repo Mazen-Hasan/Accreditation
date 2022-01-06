@@ -12,10 +12,10 @@
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
                         <h4 class="card-title">
-<!--                             <a class="url-nav" href="{{ route('event-admin') }} ">
+                        <!--                             <a class="url-nav" href="{{ route('event-admin') }} ">
                                	<span>My Events:</span>
                             </a> -->
-                        	Fulfillment Selections</h4>
+                            Fulfillment Selections</h4>
                         <br>
                         <div class="row">
                             <div class="col-md-6">
@@ -124,27 +124,50 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="col-md-12">
-                                            <a id="btn-generate" title="Generate" href='javascript:void(0)' class="ha_icon_btn  disabled">
+                                            <a id="btn-generate" title="Generate" href='javascript:void(0)'
+                                               class="ha_icon_btn  disabled">
                                                 <i class="fas fa-cogs" style="font-size: 25px; color: white"></i>Generate
                                             </a>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="col-md-12">
-                                            <a id="btn-Details" title="Details" href='javascript:void(0)' class="ha_icon_btn disabled">
+                                            <a id="btn-Details" title="Details" href='javascript:void(0)'
+                                               class="ha_icon_btn disabled">
                                                 <i class="fa fa-list" style="font-size: 25px"></i>Details
                                             </a>
                                         </div>
                                     </div>
                                     <div class="col-md-5">
                                         <div class="col-md-12">
-                                            <a id="btn-mark-printed" title="Mark as printed" href='javascript:void(0)' class="ha_icon_btn disabled">
+                                            <a id="btn-mark-printed" title="Mark as printed" href='javascript:void(0)'
+                                               class="ha_icon_btn disabled">
                                                 <i class="fas fa-tasks" style="font-size: 25px"></i>Mark as printed
                                             </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -164,20 +187,15 @@
         });
 
         $('#company').on('change', function () {
-            // $('#lbl_select').html('0');
-            // $('#btn-filter').html('Filter');
             resetAll();
         });
 
         $('#category').on('change', function () {
-            // $('#lbl_select').html('0');
-            // $('#btn-filter').html('Filter');
             resetAll();
         });
 
         $('#event').on('change', function () {
-            // $('#lbl_select').html('');
-            // $('#btn-filter').html('Filter');
+            $('#loader-modal').modal('show');
             resetAll();
 
             var url = "{{ route('getCompanies', ":id") }}";
@@ -185,9 +203,10 @@
 
             $.ajax({
                 type: "get",
-                // url: "fullFillmentController/getCompanies/" + this.value,
                 url: url,
                 success: function (data) {
+                    $('#loader-modal').modal('hide');
+                    console.log('success: hide');
                     var companySelectOptions = data;
                     $('#container').html('');
                     var html = '<select id="company" name="company" required="">';
@@ -204,14 +223,17 @@
                     $('#container').append(html);
                 },
                 error: function (data) {
+                    $('#loader-modal').modal('hide');
                     console.log('Error:', data);
                 }
             });
         });
 
         $('#btn-filter').click(function () {
-            // var labelValue = $('#btn-filter').html();
-            // if (labelValue.toLowerCase().indexOf('filter') >= 0) {
+            if ($('#btn-filter').html() == 'Reset') {
+                resetAll();
+            } else {
+                $('#loader-modal').modal('show');
                 var selectedEvent = $('#event option:selected').val();
                 var selectedCompany = $('#company option:selected').val();
                 var selectedAccredit = $('#category option:selected').text();
@@ -223,69 +245,28 @@
 
                 $.ajax({
                     type: "get",
-                    // url: "fullFillmentController/getParticipants/" + selectedEvent + "/" + selectedCompany + "/" + selectedAccredit,
                     url: url,
                     success: function (data) {
-                        companySelectOptions = data;
+                        $('#loader-modal').modal('hide');
+                        console.log(data);
+                        companySelectOptions = data['selected'];
                         $('#lbl_select').html(companySelectOptions.length);
-                        if(companySelectOptions.length>0){
+                        $('#lbl_print').html(data['printed']);
+                        if (companySelectOptions.length > 0) {
                             $('#lbl_select').css("color", "#54af36");
-                            $('#btn-generate').removeClass('disabled');
                             $('#btn-generate').removeClass('disabled');
                             $('#btn-Details').removeClass('disabled');
                         }
-                        // $('#btn-filter').html('Generate');
+                        if (data['printed'] > 0) {
+                            $('#lbl_print').css("color", "#54af36");
+                        }
                     },
                     error: function (data) {
+                        $('#loader-modal').modal('hide');
                         console.log('Error:', data);
                     }
                 });
-            // }
-
-            {{--if (labelValue.toLowerCase().indexOf('generate') >= 0) {--}}
-            {{--    var staff = companySelectOptions;--}}
-            {{--    if (staff.length > 0) {--}}
-            {{--        $.ajax({--}}
-            {{--            type: "post",--}}
-            {{--            data: {staff: staff},--}}
-            {{--            dataType: "json",--}}
-            {{--            url: "{{ url('pdf-generate')}}",--}}
-            {{--            success: function (data) {--}}
-            {{--                console.log(data);--}}
-            {{--                window.open(data.file, '_blank');--}}
-            {{--                $('#btn-filter').html('Fullfillment');--}}
-            {{--                $('#lbl_select').html('Total generated count: ' + companySelectOptions.length);--}}
-            {{--            },--}}
-            {{--            error: function (data) {--}}
-            {{--                console.log('Error:', data);--}}
-            {{--            }--}}
-            {{--        });--}}
-            {{--    }--}}
-            {{--}--}}
-
-            {{--if (labelValue.toLowerCase().indexOf('fullfillment') >= 0) {--}}
-            {{--    var staff = companySelectOptions;--}}
-            {{--    if (staff.length > 0) {--}}
-            {{--        $.ajax({--}}
-            {{--            type: "post",--}}
-            {{--            data: {staff: staff},--}}
-            {{--            dataType: "json",--}}
-            {{--            url: "{{ url('fullFillment')}}",--}}
-            {{--            success: function (data) {--}}
-            {{--                $('#btn-filter').html('Reset');--}}
-            {{--                $('#lbl_select').html('Total fullfillment count: ' + companySelectOptions.length);--}}
-            {{--            },--}}
-            {{--            error: function (data) {--}}
-            {{--                console.log('Error:', data);--}}
-            {{--            }--}}
-            {{--        });--}}
-            {{--    }--}}
-            {{--}--}}
-
-            {{--if (labelValue.toLowerCase().indexOf('reset') >= 0) {--}}
-            {{--    $('#lbl_select').html('');--}}
-            {{--    $('#btn-filter').html('Filter');--}}
-            {{--}--}}
+            }
         });
 
         $('#btn-generate').click(function () {
@@ -296,10 +277,10 @@
                     data: {staff: staff},
                     dataType: "json",
                     url: "{{ route('pdf-generate') }}",
-                    {{--url: "{{ url('pdf-generate')}}",--}}
                     success: function (data) {
                         window.open(data.file, '_blank');
                         $('#lbl_generate').html(companySelectOptions.length);
+                        $('#lbl_generate').css("color", "#54af36");
                         $('#btn-mark-printed').removeClass('disabled')
                     },
                     error: function (data) {
@@ -310,24 +291,23 @@
         });
 
         $('#btn-mark-printed').click(function () {
-                var staff = companySelectOptions;
-                if (staff.length > 0) {
-                    $.ajax({
-                        type: "post",
-                        data: {staff: staff},
-                        dataType: "json",
-                        {{--url: "{{ url('fullFillment')}}",--}}
-                        url: "{{ route('fullFillment')}}",
-                        success: function (data) {
-                            $('#btn-filter').html('Reset');
-                            $('#lbl_print').html(companySelectOptions.length);
-                        },
-                        error: function (data) {
-                            console.log('Error:', data);
-                        }
-                    });
-                }
-            });
+            var staff = companySelectOptions;
+            if (staff.length > 0) {
+                $.ajax({
+                    type: "post",
+                    data: {staff: staff},
+                    dataType: "json",
+                    url: "{{ route('fullFillment')}}",
+                    success: function (data) {
+                        $('#btn-filter').html('Reset');
+                        $('#lbl_print').html(companySelectOptions.length + Number($('#lbl_print').html()));
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            }
+        });
 
         $('#btn-Details').click(function () {
             console.log('kkk');
@@ -340,11 +320,11 @@
             url = url.replace(':selectedCompany', selectedCompany);
             url = url.replace(':selectedAccredit', selectedAccredit);
 
-            // window.location.href = "all-participants/" + selectedEvent + "/" + selectedCompany + "/" + selectedAccredit + "/0";
             window.location.href = url;
         });
 
-        function  resetAll(){
+        function resetAll() {
+            $('#btn-filter').html('Filter');
             $('#lbl_select').html('0');
             $('#lbl_generate').html('0');
             $('#lbl_print').html('0');
@@ -356,6 +336,8 @@
             $('#btn-mark-printed').addClass('disabled');
 
             $('#lbl_select').css("color", "#b8b5b5");
+            $('#lbl_generate').css("color", "#b8b5b5");
+            $('#lbl_print').css("color", "#b8b5b5");
         }
     </script>
 @endsection

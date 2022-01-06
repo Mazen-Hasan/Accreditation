@@ -8,7 +8,6 @@ use App\Models\Event;
 use App\Models\PreDefinedFieldElement;
 use App\Models\SelectOption;
 use App\Models\TemplateField;
-use App\Models\TemplateFieldElement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,12 +21,12 @@ class FullFillmentController extends Controller
         $eventsSelectOptions = array();
         $companySelectOptions = array();
         $accrediationCategorySelectOptions = array();
-        $events = DB::select('select * from event_admins_view e where e.event_admin=?',[Auth::user()->id]);
+        $events = DB::select('select * from event_admins_view e where e.event_admin=?', [Auth::user()->id]);
 
         $count = 0;
         foreach ($events as $event) {
             if ($count == 0) {
-                $companies = DB::select('select * from companies_view e where e.event_id=? and e.status=?',[$event->id, 3]);
+                $companies = DB::select('select * from companies_view e where e.event_id=? and e.status=?', [$event->id, 3]);
                 $subcount = 0;
                 foreach ($companies as $company) {
                     if ($subcount == 0) {
@@ -61,7 +60,7 @@ class FullFillmentController extends Controller
 
     public function getCompanies($eventId)
     {
-        $companies = DB::select('select * from companies_view e where e.event_id=? and e.status=?',[$eventId, 3]);
+        $companies = DB::select('select * from companies_view e where e.event_id=? and e.status=?', [$eventId, 3]);
 
         $subcount = 0;
         $companySelectOptions = array();
@@ -79,7 +78,9 @@ class FullFillmentController extends Controller
 
     public function getParticipants($eventId, $companyId, $accreditId)
     {
+        $result = array();
         $returnedParticipnats = array();
+        $printedParticipants = 0;
         $dataTableColumuns = array();
         $where = array('id' => $eventId);
         $event = Event::where($where)->get()->first();
@@ -97,14 +98,8 @@ class FullFillmentController extends Controller
         foreach ($templateFields as $templateField) {
             $dataTableColumuns[] = $templateField->label_en;
         }
-        // Schema::dropIfExists('temp' . $company_admin_id);
-        // Schema::create('temp' . $company_admin_id, function ($table) use ($templateFields, $companyId) {
-        //     $table->string('id');
-        //     foreach ($templateFields as $templateField) {
-        //         $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
-        //     }
-        // });
-        if(!Schema::hasTable('temp_' . $eventId)){
+
+        if (!Schema::hasTable('temp_' . $eventId)) {
             Schema::create('temp_' . $eventId, function ($table) use ($templateFields) {
                 $table->string('id');
                 foreach ($templateFields as $templateField) {
@@ -113,79 +108,31 @@ class FullFillmentController extends Controller
                 }
             });
         }
-//         if ($companyId == 0) {
-//             // $where = array('event_id' => $eventId,'status' => 9);
-//         	$companyStaffs = DB::select('select * from company_staff c where c.event_id = ? and c.status>8',[$eventId]);
 
-//         } else {
-//             // $where = array('event_id' => $eventId, 'company_id' => $company->id,'status' => 9);
-//         	$companyStaffs = DB::select('select * from company_staff c where c.event_id = ? and c.company_id=? and c.status>8',[$eventId, $companyId]);
-//         }
-
-//         // $companyStaffs = CompanyStaff::where($where)->get()->all();
-//         $alldata = array();
-//         foreach ($companyStaffs as $companyStaff) {
-//             $where = array('staff_id' => $companyStaff->id);
-//             if ($companyId != 0) {
-//                 $staffDatas = DB::select('select * from staff_data_template_fields_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
-//             } else {
-//                 $staffDatas = DB::select('select * from event_staff_data_view where staff_id = ? and template_id = ?', [$companyStaff->id, $event->event_form]);
-//             }
-//             $staffDataValues = array();
-//             $staffDataValues[] = $companyStaff->id;
-//             $count = 0;
-//             foreach ($staffDatas as $staffData) {
-//                 if ($staffData->slug == 'select') {
-//                     $where = array('template_field_id' => $staffData->template_field_id, 'value_id' => $staffData->value);
-//                     $value = TemplateFieldElement::where($where)->first();
-//                     $staffDataValues[] = $value->value_en;
-//                 } else {
-//                     $staffDataValues[] = $staffData->value;
-//                 }
-//             }
-//             $alldata[] = $staffDataValues;
-//         }
-//         $query = '';
-//         foreach ($alldata as $data) {
-//             $query = '';
-//             if ($companyId == 0) {
-//                 $query = $query . 'insert into temp' . $company_admin_id . ' (id';
-//             } else {
-//                 $query = $query . 'insert into temp' . $company_admin_id . ' (id';
-//             }
-//             foreach ($templateFields as $templateField) {
-//                 $query = $query . ',' . preg_replace('/\s+/', '_', $templateField->label_en);
-//             }
-//             $query = $query . ') values (';
-//             foreach ($data as $staffDataValue) {
-//                 $query = $query . '"' . $staffDataValue . '",';
-//             }
-//             $query = substr($query, 0, strlen($query) - 1);
-//             $query = $query . ')';
-//             DB::insert($query);
-//         }
-        // if ($accreditId == 'All') {
-        //     $participants = DB::select("select t.* , c.* from temp" . $company_admin_id . " t inner join company_staff c on t.id = c.id");
-        // } else {
-        //     $participants = DB::select("select t.* , c.* from temp" . $company_admin_id . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'");
-        // }
-    	if ($accreditId == 'All') {
-            if($companyId != 0){
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status > 8",[$companyId]);
-            }else{
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id  and c.status > 8");
+        if ($accreditId == 'All') {
+            if ($companyId != 0) {
+                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status = 9", [$companyId]);
+                $printedParticipants = DB::select("select count(*) as p from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status = 10", [$companyId]);
+            } else {
+                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id  and c.status = 9");
+                $printedParticipants = DB::select("select count(*) as p from temp_" . $eventId . " t inner join company_staff c on t.id = c.id  and c.status = 10");
             }
         } else {
-            if($companyId != 0){
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ?  and c.status > 8",[$companyId]);
-            }else{
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'  and c.status > 8");
+            if ($companyId != 0) {
+                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ?  and c.status = 9", [$companyId]);
+                $printedParticipants = DB::select("select count(*) as p from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ?  and c.status = 10", [$companyId]);
+            } else {
+                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'  and c.status = 9");
+                $printedParticipants = DB::select("select count(*) as p from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'  and c.status = 10");
             }
         }
         foreach ($participants as $participant) {
             $returnedParticipnats[] = $participant->id;
         }
-        return Response::json($returnedParticipnats);
+        $result['selected'] = $returnedParticipnats;
+        $result['printed'] = $printedParticipants[0]->p;
+
+        return Response::json($result);
     }
 
     public function fullFillment(Request $request)
@@ -223,7 +170,7 @@ class FullFillmentController extends Controller
         //         $table->string(preg_replace('/\s+/', '_', $templateField->label_en));
         //     }
         // });
-        if(!Schema::hasTable('temp_' . $eventId)){
+        if (!Schema::hasTable('temp_' . $eventId)) {
             Schema::create('temp_' . $eventId, function ($table) use ($templateFields) {
                 $table->string('id');
                 foreach ($templateFields as $templateField) {
@@ -285,16 +232,16 @@ class FullFillmentController extends Controller
             // } else {
             //     $participants = DB::select("select t.* , c.* from temp" . $company_admin_id . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'");
             // }
-        if ($accreditId == 'All') {
-            if($companyId != 0){
-                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status > 8",[$companyId]);
-                }else{
+            if ($accreditId == 'All') {
+                if ($companyId != 0) {
+                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status > 8", [$companyId]);
+                } else {
                     $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id and c.status > 8");
                 }
             } else {
-                if($companyId != 0){
-                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ? and c.status > 8",[$companyId]);
-                }else{
+                if ($companyId != 0) {
+                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ? and c.status > 8", [$companyId]);
+                } else {
                     $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.status > 8");
                 }
             }
@@ -350,16 +297,15 @@ class FullFillmentController extends Controller
                 ->addColumn('image', function ($data) {
                     $image = '';
                     //$image .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
-                    $image .= '<img src="'. asset('badges/'.$data->Personal_Image).'" alt="Personal" class="pic-img" style="margin-left:40px">';
+                    $image .= '<img src="' . asset('badges/' . $data->Personal_Image) . '" alt="Personal" class="pic-img" style="margin-left:40px">';
                     return $image;
                 })
                 ->addColumn('identifier', function ($data) {
                     return $data->identifier;
                 })
-                ->rawColumns(['identifier','image','status', 'action'])
+                ->rawColumns(['identifier', 'image', 'status', 'action'])
                 ->make(true);
         }
         return view('pages.FullFillment.all-participants')->with('dataTableColumns', $dataTableColumuns)->with('company_id', $companyId)->with('event_id', $eventId)->with('accredit', $accreditId)->with('checked', $checked);
     }
-
 }

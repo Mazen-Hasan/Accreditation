@@ -88,17 +88,17 @@ class ContactController extends Controller
                 'telephone' => $request->telephone,
                 'mobile' => $request->mobile,
                 'status' => $request->status,
-                'creation_date' => $request->creation_date,
-                'creator' => $request->creator
+                //'creation_date' => $request->creation_date,
+                //'creator' => $request->creator
             ]);
         if ($postId == null) {
             foreach ($request->titles as $title) {
                 $help = ContactTitle::updateOrCreate(['id' => $postId],
                     ['contact_id' => $post->id,
                         'title_id' => $title,
-                        'status' => 1,
-                        'creation_date' => $request->creation_date,
-                        'creator' => $request->creator
+                        'status' => 1
+                        //'creation_date' => $request->creation_date,
+                        //'creator' => $request->creator
                     ]);
             }
         }

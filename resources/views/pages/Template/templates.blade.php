@@ -49,7 +49,14 @@
                         </div>
 
                         <div id="myGrid" class="ag-theme-alpine" style="height: 600px; width:100%;"></div>
-
+                        <div>
+                                <a href="javascript:void(0)" id="filtersButton" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">See more</span>
+                                </a>
+                        </div>
                         <script type="text/javascript" charset="utf-8">
 
                         </script>
@@ -145,7 +152,7 @@
 @section('script')
     <script>
         // specify the columns
-
+        var filters;
         const columnDefs = [
             {field: "id", headerName: "Template ID",hide: true },
             {field: "name", sortable: true, filter: 'agTextColumnFilter', filterParams: {
@@ -207,6 +214,7 @@
             defaultColDef: {
                 resizable: true,
                 tooltipComponent: 'customTooltip',
+                filterParams: { newRowsAction: 'keep'}
             },
             columnDefs: columnDefs,
 
@@ -214,7 +222,7 @@
             pagination: true,
 
             // sets 10 rows per page (default is 100)
-            paginationPageSize: 10,
+            paginationPageSize: 2,
             onFirstDataRendered: onFirstDataRendered,
 
             rowSelection: 'single',
@@ -223,7 +231,7 @@
 
             // set rowData to null or undefined to show loading panel by default
             rowData: null,
-
+            onGridReady: onGridReady,
             animateRows: true,
 
             components: {
@@ -234,6 +242,17 @@
 
         function onFirstDataRendered(params) {
             params.api.sizeColumnsToFit();
+            params.api.setDomLayout('autoHeight');
+            if(filters != null){
+                params.api.setFilterModel(filters);
+            }
+        }
+
+        function onGridReady(params){
+            if(filters != null){
+                params.api.setFilterModel(filters);
+            }
+            //params.api.filter.onFilterChanged();
         }
 
         var statusValueGetter = function (params) {
@@ -254,7 +273,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             const gridDiv = document.querySelector('#myGrid');
             new agGrid.Grid(gridDiv, gridOptions);
-            fetch('{{ route('templatesData') }}')
+            data = gridOptions.api.getFilterModel();
+            fetch('{{ route('templatesData1',"0") }}')
                 .then(response => response.json())
                 .then(data => {
                     gridOptions.api.setRowData(data);
@@ -426,6 +446,36 @@
             $('#confirmModal').modal('show');
         });
 
+        $('body').on('click', '#filtersButton', function () {
+            var hi = "";
+            //var soso = gridOptions.api.getFilterModel();
+            //var soso1 = soso[0];
+            //alert(soso);
+            filters = gridOptions.api.getFilterModel();
+            //alert(data);
+            if(filters.name != null){
+                if(filters.name.operator != null){
+                    alert(filters.name.operator);
+                }else{
+                    alert(filters.name.filterType); 
+                }
+            }
+            data = 8;
+            var url = "{{ route('templatesData1', ":id") }}";
+                url = url.replace(':id', data);
+            //fetch('{{ route('templatesData1',"") }}')
+            //alert(url);
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                      gridOptions.api.setRowData(data);
+                });
+            gridOptions.api.refreshCells({force : true});
+            if(filters != null){
+                gridOptions.api.setFilterModel(filters);
+            }
+        });
+
         $('#confirmModal button').on('click', function (event) {
             var $button = $(event.target);
 
@@ -443,7 +493,8 @@
                             type: "get",
                             url: url,
                             success: function (data) {
-                                fetch('{{ route('templatesData') }}')
+                                data = gridOptions.api.getFilterModel();
+                                fetch('{{ route('templatesData1',"0") }}')
                                     .then(response => response.json())
                                     .then(data => {
                                         gridOptions.api.setRowData(data);
@@ -463,7 +514,8 @@
                             type: "get",
                             url: url,
                             success: function (data) {
-                                fetch('{{ route('templatesData') }}')
+                                data = gridOptions.api.getFilterModel();
+                                fetch('{{ route('templatesData1',"0") }}')
                                     .then(response => response.json())
                                     .then(data => {
                                         gridOptions.api.setRowData(data);
@@ -496,7 +548,7 @@
                             $('#template-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
 
-                            fetch('{{ route('templatesData') }}')
+                            fetch('{{ route('templatesData1',"0") }}')
                                 .then(response => response.json())
                                 .then(data => {
                                     gridOptions.api.setRowData(data);

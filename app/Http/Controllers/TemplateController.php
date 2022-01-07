@@ -19,8 +19,21 @@ use Illuminate\Support\Facades\Mail;
 class TemplateController extends Controller
 {
 
-	public function getData(){
-        $templates =  Template::latest()->get();
+	public function getData($values){
+        //var_dump($values);
+        $templates =  Template::latest()->take(6)->get();
+        return Response::json($templates);
+    }
+
+    public function getData1($values){
+        //var_dump($values);
+        $size = 6;
+        if($values != null){
+            if($values != 0){
+                $size = 10;
+            }
+        }
+        $templates =  Template::latest()->take($size)->get();
         return Response::json($templates);
     }
     /**

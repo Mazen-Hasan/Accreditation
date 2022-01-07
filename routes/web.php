@@ -195,7 +195,7 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::get('contactTitlesController/destroy/{field_id}', 'App\Http\Controllers\ContactTitleController@destroy')->name('removeContactTitle');
     Route::get('contactTitlesController/store/{contact_id}/{title_id}', 'App\Http\Controllers\ContactTitleController@store')->name('storeContactTitle');
 
-
+    Route::get('templatesData/{values}', 'App\Http\Controllers\TemplateController@getData1')->name('templatesData1');
 });
 
 Route::group(['middleware' => 'role:security-officer'], function () {

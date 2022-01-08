@@ -453,14 +453,30 @@
             //alert(soso);
             filters = gridOptions.api.getFilterModel();
             //alert(data);
+            var nameFilter = 0;
             if(filters.name != null){
                 if(filters.name.operator != null){
-                    alert(filters.name.operator);
+                    //alert(filters.name.operator);
+                    
+                    nameFilter = getCondition(filters.name.condition1.type);
+                    nameFilter = nameFilter + ",";
+                    nameFilter = nameFilter + filters.name.condition1.filter;
+                    nameFilter = nameFilter + ",";
+                    nameFilter = nameFilter + filters.name.operator;
+                    nameFilter = nameFilter + ",";
+                    nameFilter = nameFilter + getCondition(filters.name.condition2.type);
+                    nameFilter = nameFilter + ",";
+                    nameFilter = nameFilter + filters.name.condition2.filter;
                 }else{
-                    alert(filters.name.filterType); 
+                    //alert(filters.name.filterType);
+                    nameFilter = getCondition(filters.name.type);
+                    nameFilter = nameFilter + ",";
+                    nameFilter = nameFilter + filters.name.filter;
                 }
             }
+            alert(nameFilter);
             data = 8;
+            data = nameFilter;
             var url = "{{ route('templatesData1', ":id") }}";
                 url = url.replace(':id', data);
             //fetch('{{ route('templatesData1',"") }}')
@@ -475,6 +491,37 @@
                 gridOptions.api.setFilterModel(filters);
             }
         });
+
+        function getCondition($condition){
+            var result = "0";
+            switch ($condition) {
+                case "contains":
+                    result = "1";
+                    return result;
+                    break;
+                case "notContains":
+                    result = "2";
+                    return result;
+                    break;
+                case "equals":
+                    result = "3";
+                    return result;
+                    break;
+                case "notEqual":
+                    result = "4";
+                    return result;
+                    break;
+                case "startsWith":
+                    return result;
+                    result = "5";
+                    break;
+                case "endsWith":
+                    return result;
+                    result = "6";
+                    break;
+                }
+            return result;
+        }
 
         $('#confirmModal button').on('click', function (event) {
             var $button = $(event.target);

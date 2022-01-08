@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 use Illuminate\Support\Facades\Mail;
+use Intervention\Image\Size;
 
 class TemplateController extends Controller
 {
@@ -27,13 +28,28 @@ class TemplateController extends Controller
 
     public function getData1($values){
         //var_dump($values);
-        $size = 6;
+        $size = 10;
         if($values != null){
-            if($values != 0){
-                $size = 10;
+            if($values != "0"){
+                $comands = explode(",",$values);
+                $size = sizeof($comands);
+                if($size > 2){
+                    $condition1 = $comands[0];
+                    $condition1token = $comands[1];
+                    $operator = $comands[2];
+                    $condition2 = $comands[3];
+                    $condition2token = $comands[4];
+                    $templates = DB::select('select * from templates where '. TemplateController::getConditionPart("name",$condition1,$condition1token) . " ".$operator ." ". TemplateController::getConditionPart("name",$condition2,$condition2token));
+                }else{
+                    $condition1 = $comands[0];
+                    $condition1token = $comands[1];
+                    $templates = DB::select('select * from templates where '. TemplateController::getConditionPart("name",$condition1,$condition1token));
+                }
+            }else{
+                $templates =  Template::latest()->take($size)->get();
             }
         }
-        $templates =  Template::latest()->take($size)->get();
+        //$templates = DB::select('select * from templates where ');
         return Response::json($templates);
     }
     /**
@@ -204,6 +220,31 @@ class TemplateController extends Controller
                 'is_locked' => $is_locked - 2
             ]);
         return Response::json($post);
+    }
+
+    public static function getConditionPart($columnName,$condition,$token){
+        $conditionPart = "";
+        switch ($condition) {
+            case "1":
+                $conditionPart = $columnName ." Like " . "'%" . $token . "%'";
+                break;
+            case "5":
+                $conditionPart = $columnName . " Like " . "'" . $token . "%'";
+                break;
+            case "6":
+                $conditionPart = $columnName . " Like " . "'%" . $token . "'";
+                break;
+            case "3":
+                $conditionPart = $columnName . " = " . "'" . $token . "'";
+                break;
+            case "4":
+                $conditionPart = $columnName . " <> " . "'" . $token . "'";
+                break;
+            case "2":
+                $conditionPart = $columnName . " Not Like " . "'%" . $token . "%'";
+                break;
+        }
+        return $conditionPart;
     }
 }
 

@@ -45,7 +45,7 @@ class EventController extends Controller
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('eventAccreditationCategories', $data->id) . '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-th-large"></i></a>';
+                    $button .= '<a href="' . route('eventAccreditationCategories', $data->id) . '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-users"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     return $button;
                 })
@@ -71,7 +71,7 @@ class EventController extends Controller
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('eventAccreditationCategories', $data->id) . '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-th-large"></i></a>';
+                    $button .= '<a href="' . route('eventAccreditationCategories', $data->id) . '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-users"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     return $button;
                 })
@@ -311,7 +311,7 @@ class EventController extends Controller
                     ]);
                     $event = Event::where(['id'=>$post->id])->first();
                     // NotificationController::sendAlertNotification($event_admin, 0, $event->name . ':' . 'Event assignment', Route('eventCompanies' , [$post->id]));
-            		
+
             		$notification_type = Config::get('enums.notification_types.EIN');
                 	NotificationController::sendNotification($notification_type, $event->name, '', $event_admin, 0,
                     $event->name . ':' . 'Event assignment', Route('eventCompanies', [$post->id]));
@@ -324,7 +324,7 @@ class EventController extends Controller
                     ]);
                     $event = Event::where(['id'=>$post->id])->first();
                     // NotificationController::sendAlertNotification($security_officer, 0, $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies' , [$post->id]));
-            		
+
             		$notification_type = Config::get('enums.notification_types.EIN');
                 	NotificationController::sendNotification($notification_type, $event->name, '', $security_officer, 0,
                     $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies', [$post->id]));
@@ -619,7 +619,7 @@ class EventController extends Controller
 
     public function eventAccreditationCategoriesAdd(Request $request)
     {
-        try{   
+        try{
         $post = EventAccreditationCategory::updateOrCreate(['id' => 0],
             ['event_id' => $request->event_id,
                 'accreditation_category_id' => $request->accreditation_category_id,

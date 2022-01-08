@@ -119,13 +119,12 @@
                             <p style="color:red" id=error_message></p>
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer">
                     <div class="col-sm-12">
                         <button id="edit-size" value="create">Save
                         </button>
                     </div>
-                </div>
-                <div class="modal-footer">
-
                 </div>
             </div>
         </div>
@@ -170,13 +169,10 @@
                     <div>
                         <label class="col-sm-12 confirm-text" id="errorText"></label>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4"></div>
-                        <div class="col-sm-4">
-                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-ok">OK
+                    <div class="modal-footer">
+                        <div class="col-sm-12">
+                            <button type="submit" id="btn-save" value="create">Save
                             </button>
-                        </div>
-                        <div class="col-sm-4">
                         </div>
                     </div>
                 </div>
@@ -204,7 +200,7 @@
                         columns: [1, 2]
                     }
                 }],
-            
+
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -221,7 +217,7 @@
                 ],
                 order: [[0, 'desc']]
             });
-        
+
         	$('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });

@@ -190,7 +190,6 @@
                     }
                 }
                 if (html != '') {
-                    console.log(html);
                     notifyContainer.html(html);
                 }
 
@@ -205,11 +204,11 @@
         getNotifications()
     }, 10000);
 
-	$(document).mouseup(function(e) 
+	$(document).mouseup(function(e)
 	{
     	var container = $("#notify-container");
     // if the target of the click isn't the container nor a descendant of the container
-    	if (!container.is(e.target) && container.has(e.target).length === 0) 
+    	if (!container.is(e.target) && container.has(e.target).length === 0)
     	{
     	    container.hide();
     	    selected = 0;

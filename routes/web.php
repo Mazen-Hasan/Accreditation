@@ -42,6 +42,10 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('/template-form/{template_id}/{company_id}/{event_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
     Route::get('/template-form-details/{participant_id}', [App\Http\Controllers\TemplateFormController::class, 'details'])->name('templateFormDetails');
 
+    Route::get('/search-participant/{fullName}', [App\Http\Controllers\TemplateFormController::class, 'searchParticipants'])->name('searchParticipants');
+
+
+
     Route::get('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
 
     Route::get('/subCompanies/{companyId}/{eventId}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanies'])->name('subCompanies');
@@ -130,7 +134,7 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::get('/contacts', [App\Http\Controllers\ContactController::class, 'index'])->name('contacts');
     Route::get('/contact-add', [App\Http\Controllers\ContactController::class, 'contactAdd'])->name('contactAdd');
     Route::get('/contact-edit/{id}', [App\Http\Controllers\ContactController::class, 'edit'])->name('contactEdit');
-    
+
     Route::get('/securityCategories', [App\Http\Controllers\SecurityCategoryController::class, 'index'])->name('securityCategories');
     Route::resource('securityCategoryController', 'App\Http\Controllers\SecurityCategoryController');
     Route::get('securityCategoryController/destroy/{id}', 'App\Http\Controllers\SecurityCategoryController@destroy');
@@ -186,7 +190,7 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::resource('templateBadgeFieldController', 'App\Http\Controllers\TemplateBadgeFieldController');
     Route::get('templateBadgeFieldController/destroy/{field_id}', 'App\Http\Controllers\TemplateBadgeFieldController@destroy');
     Route::get('badge-design-generate/{badgeId}', 'App\Http\Controllers\GenerateBadgeController@generatePreview');
-    
+
 	Route::get('/template-badge-bg/{badge_id}', [App\Http\Controllers\TemplateBadgeBGController::class, 'index'])->name('templateBadgeBGs');
     Route::resource('templateBadgeBGController', 'App\Http\Controllers\TemplateBadgeBGController');
 

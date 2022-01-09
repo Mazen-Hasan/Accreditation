@@ -20,10 +20,11 @@ use Intervention\Image\Size;
 class TemplateController extends Controller
 {
 
-	public function getData($values){
-        //var_dump($values);
+	public function getData(Request $request){
+//        var_dump($request);
+
         $templates =  Template::latest()->take(6)->get();
-        return Response::json($templates);
+        return Response::json($request);
     }
 
     public function getData1($values){
@@ -74,7 +75,7 @@ class TemplateController extends Controller
                     	if($data->can_unlock == 1){
                             $button .= '<a href="javascript:void(0);" id="unLock-template" data-toggle="tooltip" data-original-title="Unlock" data-id="' . $data->id . '" title="Un-Lock"><i class="fas fa-unlock"></i></a>';
                         }
-                    } 
+                    }
                 	else {
                         $button .= '<a href="javascript:void(0);" id="lock-template" data-toggle="tooltip" data-original-title="Lock" data-id="' . $data->id . '" title="Lock"><i class="fas fa-lock"></i></a>';
                     }
@@ -140,7 +141,7 @@ class TemplateController extends Controller
                 'is_locked' => $request->has('locked'),
                 'creator' => Auth::user()->id
             ]);
-    
+
 
         if ($template_id == null) {
 

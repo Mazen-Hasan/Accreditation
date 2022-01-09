@@ -42,10 +42,21 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Participant - New</h4>
+                        <div class="row align-content-md-center" style="height: 80px">
+                            <div class="col-md-10">
+                                <p class="card-title">Participant - New</p>
+                            </div>
+                            <div class="col-md-2 align-content-md-center">
+                                <a href="javascript:void(0)" id="import" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">Import</span>
+                                </a>
+                            </div>
+                        </div>
+
                         <form class="form-sample" id="templateForm" name="templateForm">
-                        <!-- <input type="hidden" id="company_id" value={{$companyId}} />
-                        <input type="hidden" id="event_id" value={{$eventId}} /> -->
                             <?php echo $form ?>
                         </form>
                         <br>
@@ -59,6 +70,7 @@
             </div>
         </div>
     </div>
+
 	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
          role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="width: 250px">
@@ -78,9 +90,50 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="import-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="importForm" name="importForm" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-12 control-label">Full Name</label>
+                            <div class="col-sm-12">
+                                <input type="text" id="participantFullName" name="participantFullName" minlength="5" maxlength="50"
+                                       placeholder="enter Full Name" required="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Participants</label>
+                            <div class="col-sm-12">
+                                <select id="participants" name="participants">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                                </button>
+                            </div>
+                            <div class="col-sm-4">
+                                <button type="button" data-dismiss="modal" id="btn-import">Import</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 @section('script')
     <script>
+        var participantsData;
         $(document).ready(function () {
             var subCompany_status = $('#subCompnay_status').val();
             if (subCompany_status == 0) {
@@ -92,6 +145,76 @@
                 }
             });
         });
+
+        $('#import').click(function () {
+            $('#fullName').val('');
+            $('#importForm').trigger("reset");
+            $('#participants').find('option[value]').remove();
+            $('#modalTitle').html("Import Participant");
+            $('#import-modal').modal('show');
+        });
+
+        $('#participantFullName').keyup(function(){
+            $('#participants').find('option[value]').remove();
+            var fullName = $("#participantFullName").val();
+            if(fullName.length > 4){
+                var url = "{{ route('searchParticipants', ":fullName") }}";
+                url = url.replace(':fullName', fullName);
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    success: function (data) {
+                        participantsData = data.list;
+                        buildParticipantsList(data.searchRes);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            }
+        });
+
+        function buildParticipantsList(data){
+            $.each(data, function(key,value) {
+                    $('#participants').append($('<option>', {
+                        value: value['staff_id'],
+                        text : value['value']
+                    }));
+            });
+        }
+
+        function fillForm(participant_id){
+            var formFields = '';
+
+            $.each($(':input:not([type=hidden],[type=submit],[type=file])', '#templateForm'),function(k){
+                formFields += 'Id: ' + $(this).attr('id') + ', Name: ' + $(this).attr('name') + ', Value: ' + $(this).val() + ', Type: ' + $(this).attr('type') + '\n';
+                // if($(this).attr('type')=='text'){
+                    fillFormField($(this).attr('id'), participant_id);
+                // }
+            });
+            console.log(formFields);
+        }
+
+        function fillFormField(field_id, participant_id){
+            console.log('fillFormData');
+            console.log('participant_id:' + participant_id);
+            console.log(participantsData[participant_id][field_id]);
+            $('#' + field_id).val(participantsData[participant_id][field_id]);
+
+        }
+
+        $('#import-modal button').on('click', function (event) {
+            var $button = $(event.target);
+
+            $(this).closest('.modal').one('hidden.bs.modal', function () {
+                if ($button[0].id === 'btn-import') {
+                    var participant_id = $('#participants').find('option:selected').val();
+                    console.log(participant_id);
+                    fillForm(participant_id);
+                }
+            });
+        });
+
 
         if ($("#templateForm").length > 0) {
             $("#templateForm").validate({

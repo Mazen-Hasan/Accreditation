@@ -135,7 +135,7 @@ class TemplateFormController extends Controller
                                 $options [] = $option;
                             }
                             $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, $templateField->value);
-                        } 
+                        }
                     }
                     break;
 
@@ -162,6 +162,48 @@ class TemplateFormController extends Controller
             $subCompany_nav = 0;
         }
         return view('pages.TemplateForm.template-form-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
+    }
+
+    public function searchParticipants($fullName){
+        $returnedParticipants = array();
+        $data = array();
+
+        //search return id & full name
+        $participants = DB::select('select s.staff_id, s.value from staff_data s where s.key = ? and lower(s.value) like ?', ['Full_Name', strtolower($fullName) . '%']);
+
+        //get staff ids
+        $staff_ids = array();
+        foreach ($participants as $participant){
+            $staff_ids  [] = $participant->staff_id;
+        }
+
+        //get staff data based on ids
+        $participantsData = DB::table('staff_data')->select(['staff_id','key','value'])->whereIn('staff_id', $staff_ids)->get();
+
+        //loop through particpants (staff id & full name)
+//        foreach ($participants as $participant){
+//            $data = array();
+//            foreach ($participantsData as $participantData){
+//                if($participantData->staff_id == $participant->staff_id){
+//                    $data [] = $participantData;
+//                }
+//            }
+//            $returnedParticipants  [] = [$participant->staff_id, $participant->value, $data];
+//        }
+
+            $data = array();
+            foreach ($participantsData as $participantData){
+                    $data [$participantData->staff_id][$participantData->key] = $participantData->value;
+            }
+//            $returnedParticipants  [] = [$participant->staff_id, $participant->value, $data];
+
+        return Response()->json([
+            "searchRes" => $participants,
+            "list" => $data
+        ]);
+
+//        return Response::json($returnedParticipants);
+
     }
 
     public function createHiddenField($id, $label, $value)
@@ -347,7 +389,7 @@ class TemplateFormController extends Controller
         $where = array('id' => $request->event_id);
         $event = Event::where($where)->get()->first();
         // $query = 'update templates t set t.is_locked = 1, t.can_unlock = 0 where t.id = ' . $event->event_form;
-        
+
     	$query = 'update templates t set t.is_locked = 1, t.can_unlock = 0 where t.id = "' . $event->event_form .'"';
     	DB::update($query);
 
@@ -363,7 +405,7 @@ class TemplateFormController extends Controller
                             DB::update($query,[$staffdata->value,$request->company_id,$request->event_id]);
                             $query = 'update company_accreditaion_categories set inserted = inserted + 1 where accredit_cat_id = ? and company_id = ? and event_id = ?';
                             DB::update($query,[$value,$request->company_id,$request->event_id]);
-                        }  
+                        }
                     }
                     $query = 'update staff_data s set s.value = "' . $value . '" where s.staff_id = ' . $companyStaff->id . ' and s.key ="' . $key . '" ';
                     DB::update($query);
@@ -636,10 +678,6 @@ class TemplateFormController extends Controller
             ->with('eventId',$event->id)->with('event_name', $event->name)->with('company_name', $company->name);
     }
 
-
-
-
-
 	public function createStatusFieldLabel($label, $value)
     {
         $textfield = '<div class="col-md-6"><div class="form-group col">';
@@ -706,7 +744,7 @@ class TemplateFormController extends Controller
             }
         }
 
-    
+
     	$selectfield = '<div class="col-md-6"><div class="form-group col">';
         $selectfield .= '<label>' . $label . '</label><div class="col-sm-12">';
         $selectfield .= '<input type="text" value="'. $selectValue .'" disabled/>';

@@ -178,7 +178,6 @@ class EventController extends Controller
         return Response::json($post);
     }
 
-
     public function eventSecurityOfficersRemove($security_officer_id)
     {
         $where = array('id' => $security_officer_id);

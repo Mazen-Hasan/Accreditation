@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{{ URL::asset('css/ag-grid/style.css') }}">
 
     <script src="{{ URL::asset('js/ag-grid/ag-grid-enterprise.min.js') }}"></script>
-    <script src="{{ URL::asset('js/ag-grid/CustomTooltip.js') }}"></script>
+    <script src="{{ URL::asset('js/templates/CustomTooltip.js') }}"></script>
+    <script src="{{ URL::asset('js/templates/ShowMoreComponent.js') }}"></script>
 
 @endsection
 @section('content')
@@ -50,31 +51,13 @@
 
                         <div id="myGrid" class="ag-theme-alpine" style="height: 600px; width:100%;"></div>
                         <div>
-                                <a href="javascript:void(0)" id="filtersButton" class="add-hbtn">
-                                    <i>
-                                        <img src="{{ asset('images/add.png') }}" alt="Add">
-                                    </i>
-                                    <span class="dt-hbtn">See more</span>
-                                </a>
+                            <a href="javascript:void(0)" id="filtersButton" class="add-hbtn">
+                                <i>
+                                    <img src="{{ asset('images/add.png') }}" alt="Add">
+                                </i>
+                                <span class="dt-hbtn">See more</span>
+                            </a>
                         </div>
-                        <script type="text/javascript" charset="utf-8">
-
-                        </script>
-                        {{--                        <div class="table-responsive">--}}
-                        {{--                            <table class="table table-hover" id="laravel_datatable" style="text-align: center">--}}
-                        {{--                                <thead>--}}
-                        {{--                                <tr>--}}
-                        {{--                                    <th>ID</th>--}}
-                        {{--                                    <th>Registration Form Name</th>--}}
-                        {{--                                    <th>Locked</th>--}}
-                        {{--                                    <th style="color: black">Status</th>--}}
-                        {{--                                    <th>Action</th>--}}
-                        {{--                                </tr>--}}
-                        {{--                                </thead>--}}
-                        {{--                                <tbody>--}}
-                        {{--                                </tbody>--}}
-                        {{--                            </table>--}}
-                        {{--                        </div>--}}
                     </div>
                 </div>
             </div>
@@ -154,16 +137,19 @@
         // specify the columns
         var filters;
         const columnDefs = [
-            {field: "id", headerName: "Template ID",hide: true },
-            {field: "name", sortable: true, filter: 'agTextColumnFilter', filterParams: {
-                    buttons: ['apply', 'cancel','reset'],
-                    closeOnApply: true},
+            {field: "id", headerName: "Template ID", hide: true},
+            {
+                field: "name", sortable: true, filter: 'agTextColumnFilter', filterParams: {
+                    buttons: ['apply', 'cancel', 'reset'],
+                    closeOnApply: true
+                },
                 tooltipField: 'name',
-                tooltipComponentParams: { color: '#ececec' },
+                tooltipComponentParams: {color: '#ececec'},
             },
-            {field: "status", sortable: true, filter: 'agTextColumnFilter',
+            {
+                field: "status", sortable: true, filter: 'agTextColumnFilter',
                 filterParams: {
-                    buttons: ['apply', 'cancel','reset'],
+                    buttons: ['apply', 'cancel', 'reset'],
                     closeOnApply: true
                 },
                 // cellRenderer: params => {
@@ -172,7 +158,7 @@
                 cellStyle: params => {
                     return params.value == 'Active' ? {color: 'green'} : {color: 'red'};
                 },
-                valueGetter:  params => {
+                valueGetter: params => {
                     return params.data.status == 1 ? "Active" : "InActive";
                 },
             },
@@ -190,11 +176,10 @@
                     button += '&nbsp;&nbsp;';
 
                     if (params.data.is_locked == 1) {
-                        if(params.data.can_unlock == 1){
+                        if (params.data.can_unlock == 1) {
                             button += '<a href="javascript:void(0);" id="unLock-template" data-toggle="tooltip" data-original-title="Unlock" data-id="' + template_id + '" title="Un-Lock"><i class="fas fa-unlock"></i></a>';
                         }
-                    }
-                    else {
+                    } else {
                         button += '<a href="javascript:void(0);" id="lock-template" data-toggle="tooltip" data-original-title="Lock" data-id="' + template_id + '" title="Lock"><i class="fas fa-lock"></i></a>';
                     }
                     button += '&nbsp;&nbsp;';
@@ -203,20 +188,21 @@
                     } else {
                         button += '<a href="javascript:void(0);" id="activate-template" data-toggle="tooltip" data-original-title="Delete" data-id="' + template_id + '" title="Activate"><i class="fas fa-check-circle"></i></a>';
                     }
-                    return  button ;
+                    return button;
                 }
             },
         ];
-
 
         // let the grid know which columns and what data to use
         const gridOptions = {
             defaultColDef: {
                 resizable: true,
                 tooltipComponent: 'customTooltip',
-                filterParams: { newRowsAction: 'keep'}
+                filterParams: {newRowsAction: 'keep'}
             },
             columnDefs: columnDefs,
+
+            debug: true,
 
             // enables pagination in the grid
             pagination: true,
@@ -236,6 +222,42 @@
 
             components: {
                 customTooltip: CustomTooltip,
+                ShowMoreComponent: ShowMoreComponent,
+            },
+
+            // sideBar: {
+            //     toolPanels: [
+            //         {
+            //             id: 'columns',
+            //             labelDefault: 'Columns',
+            //             labelKey: 'columns',
+            //             iconKey: 'columns',
+            //             toolPanel: 'agColumnsToolPanel',
+            //         },
+            //         {
+            //             id: 'filters',
+            //             labelDefault: 'Filters',
+            //             labelKey: 'filters',
+            //             iconKey: 'filter',
+            //             toolPanel: 'agFiltersToolPanel',
+            //         },
+            //         // {
+            //         //     id: 'customStats',
+            //         //     labelDefault: 'Custom Stats',
+            //         //     labelKey: 'customStats',
+            //         //     iconKey: 'custom-stats',
+            //         //     toolPanel: 'CustomTooltip',
+            //         // },
+            //     ],
+            //     defaultToolPanel: 'customStats',
+            // },
+
+            statusBar: {
+                statusPanels: [
+                    {
+                        statusPanel: 'ShowMoreComponent',
+                    },
+                ],
             },
 
         };
@@ -243,13 +265,13 @@
         function onFirstDataRendered(params) {
             params.api.sizeColumnsToFit();
             params.api.setDomLayout('autoHeight');
-            if(filters != null){
+            if (filters != null) {
                 params.api.setFilterModel(filters);
             }
         }
 
-        function onGridReady(params){
-            if(filters != null){
+        function onGridReady(params) {
+            if (filters != null) {
                 params.api.setFilterModel(filters);
             }
             //params.api.filter.onFilterChanged();
@@ -263,20 +285,28 @@
         $('.export-to-excel').click(function () {
             gridOptions.api.exportDataAsExcel({
                 sheetName: 'templates',
-                columnKeys: ['name','status'],
+                columnKeys: ['name', 'status'],
                 fileName: 'templates.xlsx',
             });
         });
-
 
         // setup the grid after the page has finished loading
         document.addEventListener('DOMContentLoaded', () => {
             const gridDiv = document.querySelector('#myGrid');
             new agGrid.Grid(gridDiv, gridOptions);
             data = gridOptions.api.getFilterModel();
-            fetch('{{ route('templatesData1',"0") }}')
-                .then(response => response.json())
+            {{--fetch('{{ route('templatesData1',"0") }}')--}}
+            {{--    .then(response => response.json())--}}
+            {{--    .then(data => {--}}
+            {{--        gridOptions.api.setRowData(data);--}}
+            {{--    });--}}
+
+            fetch('{{ route('templatesData') }}', {
+                method: 'post',
+                body: JSON.stringify(data)
+            }).then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     gridOptions.api.setRowData(data);
                 });
         });
@@ -287,102 +317,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
-            // $('#laravel_datatable thead tr')
-            //     .clone(true)
-            //     .addClass('filters')
-            //     .appendTo('#laravel_datatable thead');
-
-            {{--$('#laravel_datatable').DataTable({--}}
-
-            {{--    fixedHeader: true,--}}
-            {{--    initComplete: function () {--}}
-            {{--        var api = this.api();--}}
-            {{--        // For each column--}}
-            {{--        api--}}
-            {{--            .columns([1, 2, 3])--}}
-            {{--            .eq(0)--}}
-            {{--            .each(function (colIdx) {--}}
-            {{--                // Set the header cell to contain the input element--}}
-            {{--                var cell = $('.filters th').eq(--}}
-            {{--                    $(api.column(colIdx).header()).index()--}}
-            {{--                );--}}
-            {{--                var title = $(cell).text();--}}
-            {{--                $(cell).html('<input type="text" placeholder="' + title + '" />');--}}
-
-            {{--                // On every keypress in this input--}}
-            {{--                $(--}}
-            {{--                    'input',--}}
-            {{--                    $('.filters th').eq($(api.column(colIdx).header()).index())--}}
-            {{--                )--}}
-            {{--                    .off('keyup change')--}}
-            {{--                    .on('keyup change', function (e) {--}}
-            {{--                        e.stopPropagation();--}}
-
-            {{--                        // Get the search value--}}
-            {{--                        $(this).attr('title', $(this).val());--}}
-            {{--                        var regexr = '({search})'; //$(this).parents('th').find('select').val();--}}
-
-            {{--                        var cursorPosition = this.selectionStart;--}}
-            {{--                        // Search the column for that value--}}
-            {{--                        api--}}
-            {{--                            .column(colIdx)--}}
-            {{--                            .search(--}}
-            {{--                                this.value != ''--}}
-            {{--                                    ? regexr.replace('{search}', '(((' + this.value + ')))')--}}
-            {{--                                    : '',--}}
-            {{--                                this.value != '',--}}
-            {{--                                this.value == ''--}}
-            {{--                            )--}}
-            {{--                            .draw();--}}
-
-            {{--                        $(this)--}}
-            {{--                            .focus()[0]--}}
-            {{--                            .setSelectionRange(cursorPosition, cursorPosition);--}}
-            {{--                    });--}}
-            {{--            });--}}
-            {{--    },--}}
-            {{--    dom: 'lBrtip',--}}
-            {{--    buttons: [{--}}
-            {{--        extend: 'excelHtml5',--}}
-            {{--        title: 'Registration-Forms',--}}
-            {{--        exportOptions: {--}}
-            {{--            columns: [1, 2, 3]--}}
-            {{--        }--}}
-            {{--    }],--}}
-
-            {{--    processing: true,--}}
-            {{--    serverSide: true,--}}
-            {{--    ajax: {--}}
-            {{--        url: "{{ route('templateController.index') }}",--}}
-            {{--        type: 'GET',--}}
-            {{--    },--}}
-            {{--    columns: [--}}
-            {{--        {data: 'id', name: 'id', 'visible': false},--}}
-            {{--        {data: 'name', name: 'name'},--}}
-            {{--        {--}}
-            {{--            "data": "is_locked",--}}
-            {{--            "render": function (val) {--}}
-            {{--                return val == 1 ? "Yes" : "No";--}}
-            {{--            }--}}
-            {{--        },--}}
-            {{--        {--}}
-            {{--            data: 'status', render: function (data) {--}}
-            {{--                if (data == 1) {--}}
-            {{--                    return "<p style='color: green'>Active</p>"--}}
-            {{--                } else {--}}
-            {{--                    return "<p style='color: red'>InActive</p>"--}}
-            {{--                }--}}
-            {{--            }--}}
-            {{--        },--}}
-            {{--        {data: 'action', name: 'action', orderable: false}--}}
-            {{--    ],--}}
-            {{--    order: [[0, 'desc']]--}}
         });
-
-        // $('.export-to-excel').click(function () {
-        //     $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
-        // });
 
         $('#add-new-template').click(function () {
             $('#btn-save').val("create-template");
@@ -454,10 +389,10 @@
             filters = gridOptions.api.getFilterModel();
             //alert(data);
             var nameFilter = 0;
-            if(filters.name != null){
-                if(filters.name.operator != null){
+            if (filters.name != null) {
+                if (filters.name.operator != null) {
                     //alert(filters.name.operator);
-                    
+
                     nameFilter = getCondition(filters.name.condition1.type);
                     nameFilter = nameFilter + ",";
                     nameFilter = nameFilter + filters.name.condition1.filter;
@@ -467,32 +402,32 @@
                     nameFilter = nameFilter + getCondition(filters.name.condition2.type);
                     nameFilter = nameFilter + ",";
                     nameFilter = nameFilter + filters.name.condition2.filter;
-                }else{
+                } else {
                     //alert(filters.name.filterType);
                     nameFilter = getCondition(filters.name.type);
                     nameFilter = nameFilter + ",";
                     nameFilter = nameFilter + filters.name.filter;
                 }
             }
-            alert(nameFilter);
+            // alert(nameFilter);
             data = 8;
             data = nameFilter;
             var url = "{{ route('templatesData1', ":id") }}";
-                url = url.replace(':id', data);
+            url = url.replace(':id', data);
             //fetch('{{ route('templatesData1',"") }}')
             //alert(url);
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                      gridOptions.api.setRowData(data);
+                    gridOptions.api.setRowData(data);
                 });
-            gridOptions.api.refreshCells({force : true});
-            if(filters != null){
+            gridOptions.api.refreshCells({force: true});
+            if (filters != null) {
                 gridOptions.api.setFilterModel(filters);
             }
         });
 
-        function getCondition($condition){
+        function getCondition($condition) {
             var result = "0";
             switch ($condition) {
                 case "contains":
@@ -519,7 +454,7 @@
                     return result;
                     result = "6";
                     break;
-                }
+            }
             return result;
         }
 
@@ -546,7 +481,7 @@
                                     .then(data => {
                                         gridOptions.api.setRowData(data);
                                     });
-                                gridOptions.api.refreshCells({force : true});
+                                gridOptions.api.refreshCells({force: true});
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -567,7 +502,7 @@
                                     .then(data => {
                                         gridOptions.api.setRowData(data);
                                     });
-                                gridOptions.api.refreshCells({force : true});
+                                gridOptions.api.refreshCells({force: true});
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -600,7 +535,7 @@
                                 .then(data => {
                                     gridOptions.api.setRowData(data);
                                 });
-                            gridOptions.api.refreshCells({force : true});
+                            gridOptions.api.refreshCells({force: true});
                         },
                         error: function (data) {
                             console.log('Error:', data);

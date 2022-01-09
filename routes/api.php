@@ -18,4 +18,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('templatesData/{values}', 'App\Http\Controllers\TemplateController@getData')->name('templatesData');
+Route::post('templatesData', 'App\Http\Controllers\TemplateController@getData')->name('templatesData');

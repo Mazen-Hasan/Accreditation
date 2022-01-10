@@ -200,7 +200,6 @@
             console.log('participant_id:' + participant_id);
             console.log(participantsData[participant_id][field_id]);
             $('#' + field_id).val(participantsData[participant_id][field_id]);
-
         }
 
         $('#import-modal button').on('click', function (event) {
@@ -214,7 +213,6 @@
                 }
             });
         });
-
 
         if ($("#templateForm").length > 0) {
             $("#templateForm").validate({

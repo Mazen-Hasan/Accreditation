@@ -454,7 +454,7 @@ class TemplateFormController extends Controller
         $query = '';
         foreach ($alldata as $data) {
             if ($participant_id != null) {
-                $query = 'update temp_' . $company_admin_id.' set ';
+                $query = 'update `temp_' . $company_admin_id.'` set ';
                 foreach ($templateFields as $templateField) {
                     $query = $query. preg_replace('/\s+/', '_', $templateField->label_en). ' = ? ,' ;
                 }
@@ -462,7 +462,7 @@ class TemplateFormController extends Controller
                 $query = $query. ' where id = ?';
                 DB::update($query,$data);
             }else{
-                $query = 'insert into temp_' . $company_admin_id . ' (';
+                $query = 'insert into `temp_' . $company_admin_id . '` (';
                 $tries = 0;
                 foreach ($templateFields as $templateField) {
                     if($tries == 0){

@@ -295,20 +295,20 @@
             const gridDiv = document.querySelector('#myGrid');
             new agGrid.Grid(gridDiv, gridOptions);
             data = gridOptions.api.getFilterModel();
-            {{--fetch('{{ route('templatesData1',"0") }}')--}}
-            {{--    .then(response => response.json())--}}
-            {{--    .then(data => {--}}
-            {{--        gridOptions.api.setRowData(data);--}}
-            {{--    });--}}
-
-            fetch('{{ route('templatesData') }}', {
-                method: 'post',
-                body: JSON.stringify(data)
-            }).then(response => response.json())
+            fetch('{{ route('templatesData1',"0") }}')
+                .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     gridOptions.api.setRowData(data);
                 });
+
+            {{--fetch('{{ route('templatesData') }}', {--}}
+            {{--    method: 'post',--}}
+            {{--    body: JSON.stringify(data)--}}
+            {{--}).then(response => response.json())--}}
+            {{--    .then(data => {--}}
+            {{--        console.log(data);--}}
+            {{--        gridOptions.api.setRowData(data);--}}
+            {{--    });--}}
         });
 
         $(document).ready(function () {

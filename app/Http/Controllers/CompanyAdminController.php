@@ -37,7 +37,7 @@ class CompanyAdminController extends Controller
 
     public function companyParticipants($companyId, $eventId)
     {
-    
+
         // $addable = 1;
         // $companyAccrediationCategories = CompanyAccreditaionCategory::where(['company_id'=>$companyId,'event_id'=>$eventId])->get()->all();
         // if($companyAccrediationCategories == null){
@@ -64,7 +64,7 @@ class CompanyAdminController extends Controller
         //         $addable = 0;
         //     }
         // }
-    
+
     	$addable = 1;
         $companyAccrediationCategories = CompanyAccreditaionCategory::where(['company_id'=>$companyId,'event_id'=>$eventId])->get()->all();
         if($companyAccrediationCategories == null){
@@ -168,7 +168,7 @@ class CompanyAdminController extends Controller
                     $companies = $companies.','.$eventcompnay->company_id;
                 }
             }
-            $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')');
+            $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '`' . ' t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')');
         //$participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {
@@ -432,7 +432,7 @@ class CompanyAdminController extends Controller
 
     public function storeCompanyAccrCatSize($id, $accredit_cat_id, $size, $company_id, $event_id)
     {
-    	
+
         $where = array('company_id'=>$company_id, 'event_id' => $event_id);
         $eventcompnay = EventCompany::where($where)->first();
     	$status = 0;
@@ -503,10 +503,10 @@ class CompanyAdminController extends Controller
             foreach ($event_security_officers as $event_security_officer){
 //                NotificationController::sendAlertNotification($event_security_officer->security_officer_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', '/security-officer-participant-details/' . $staffId);
                 // NotificationController::sendAlertNotification($event_security_officer->security_officer_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approval', Route('securityParticipantDetails' , $staffId));
-            
+
             	$notification_type = Config::get('enums.notification_types.PAR');
                 NotificationController::sendNotification($notification_type, $event->name, $company->name, $event_security_officer->security_officer_id, $staffId,
-                    $event->name . ': ' . $company->name . ': ' . 'Participant approval', 
+                    $event->name . ': ' . $company->name . ': ' . 'Participant approval',
                     Route('securityParticipantDetails' , $staffId));
             }
 
@@ -678,7 +678,7 @@ class CompanyAdminController extends Controller
         $companyStatus1 = new SelectOption(1, 'Active');
         $companyStatus2 = new SelectOption(0, 'InActive');
         $companyStatuss = [$companyStatus1, $companyStatus2];
-    
+
         $parentId = $post->parent_id;
 
         $eventcompanysize = EventCompany::where(['event_id'=> $eventid,'company_id'=> $parentId])->first();
@@ -688,11 +688,11 @@ class CompanyAdminController extends Controller
         $allwoedSize = $allwoedSize + $eventsubcompanysize->size;
         $eventcompanies = EventCompany::where(['event_id'=> $eventid,'parent_id'=> $parentId])->get()->all();
         foreach($eventcompanies as $eventcompnay){
-            $allwoedSize = $allwoedSize - $eventcompnay->size; 
+            $allwoedSize = $allwoedSize - $eventcompnay->size;
         }
         $participants = CompanyStaff::where(['company_id'=>$parentId])->get()->all();
         foreach($participants as $participant){
-            $allwoedSize = $allwoedSize - 1; 
+            $allwoedSize = $allwoedSize - 1;
         }
 
         if (request()->ajax()) {
@@ -787,11 +787,11 @@ class CompanyAdminController extends Controller
         $allwoedSize = $eventcompanysize->size;
         $eventcompanies = EventCompany::where(['event_id'=> $id,'parent_id'=> $companyId])->get()->all();
         foreach($eventcompanies as $eventcompnay){
-            $allwoedSize = $allwoedSize - $eventcompnay->size; 
+            $allwoedSize = $allwoedSize - $eventcompnay->size;
         }
         $participants = CompanyStaff::where(['company_id'=>$companyId])->get()->all();
         foreach($participants as $participant){
-            $allwoedSize = $allwoedSize - 1; 
+            $allwoedSize = $allwoedSize - 1;
         }
         return view('pages.CompanyAdmin.subCompany-add')->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
             ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventId', $id)->with('event_name', $event->name)->with('statuss', $companyStatuss)->with('company_name', $company->name)

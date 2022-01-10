@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Http\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    use HasFactory;
+    use HasFactory, Uuids;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $primaryKey   = 'id';
 
     protected $fillable = [
         'name', 'period', 'location', 'size', 'organizer', 'owner', 'event_type', 'accreditation_period',

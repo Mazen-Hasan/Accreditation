@@ -160,10 +160,10 @@ class EventAdminController extends Controller
             //$participants = DB::select('select t.* , c.* from temp' . $company_admin_id . ' t inner join company_staff c on t.id = c.id');
             if($companyId != 0){
                	$eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
-            	$companies = $companyId;
+            	$companies = "'".$companyId."'";
             	if($eventcompanies != null){
                 	foreach($eventcompanies as $eventcompnay){
-                    	$companies = $companies.','.$eventcompnay->company_id;
+                    	$companies = $companies.",'".$eventcompnay->company_id."'";
                 	}
             	}
             	$participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')');

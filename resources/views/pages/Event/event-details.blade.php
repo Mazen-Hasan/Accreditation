@@ -199,10 +199,39 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Logo</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <div class="col-sm-12">
+                                            <div class="row" style="margin-left: 25%; max-height: 100%; max-width: 50%; object-fit: fill">
+                                                <img id="logo"  src="" alt="Logo">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+    $(document).ready(function () {
+        // var imag = $('#logo').attr('src');
+        var imag = 'event.png';
+        var image_path = "{{URL::asset('events/')}}/";
+        console.log(image_path);
+        $('#logo').attr('src', image_path + imag);
+        }
+    );
+    </script>
 @endsection

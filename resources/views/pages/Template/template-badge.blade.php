@@ -121,7 +121,7 @@
                                 <div class="form-group col">
                                     <label>Width</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="width" min="100" name="width"
+                                        <input type="number" id="width" min="50" name="width"
                                                placeholder="enter width (mm)"
                                                required="">
                                     </div>
@@ -140,14 +140,6 @@
                         </div>
 
                         <div class="row">
-<!--                             <div class="col-md-6">
-                                <div class="form-group col">
-                                    <label>Background Color</label>
-                                    <div class="col-sm-12">
-                                        <input type="color" id="bg_color" name="bg_color" value="#ffffff">
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="col-md-6">
                                 <div class="form-group col">
                                     <label>Registration form</label>
@@ -293,7 +285,7 @@
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
-        
+
         	var oTable = $('#laravel_datatable').DataTable();
 
             $('#search').on('keyup', function () {
@@ -339,8 +331,10 @@
                     $("#file_type_error").html('');
 
                     var imag = data.bg_image;
-                    var image_path = "{{URL::asset('storage/badges/')}}/";
-                    {{--var image_path = "{{URL::asset('badges/')}}/";--}}
+                    // server
+                    {{--var image_path = "{{URL::asset('storage/badges/')}}/";--}}
+                    // localy
+                    var image_path = "{{URL::asset('badges/')}}/";
 
                     $('#badge_bg').attr('src', image_path + imag);
                     $('#badge_bg').show();
@@ -467,7 +461,7 @@
 
 
         $('.img-upload').submit(function (e) {
-        	
+
         	var file = $('#file').val();
             if(file=='')
             {
@@ -475,7 +469,7 @@
                 $("#file_type_error").html('Please choose file');
                 return false;
             }
-        
+
             $('#btn-upload').html('Sending..');
             e.preventDefault();
             var formData = new FormData(this);

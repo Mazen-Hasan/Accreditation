@@ -111,19 +111,19 @@ class FullFillmentController extends Controller
 
         if ($accreditId == 'All') {
             if ($companyId != 0) {
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status = 9", [$companyId]);
-                $printedParticipants = DB::select("select count(*) as p from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status = 10", [$companyId]);
+                $participants = DB::select("select t.* , c.* from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status = 9", [$companyId]);
+                $printedParticipants = DB::select("select count(*) as p from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status = 10", [$companyId]);
             } else {
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id  and c.status = 9");
-                $printedParticipants = DB::select("select count(*) as p from temp_" . $eventId . " t inner join company_staff c on t.id = c.id  and c.status = 10");
+                $participants = DB::select("select t.* , c.* from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id  and c.status = 9");
+                $printedParticipants = DB::select("select count(*) as p from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id  and c.status = 10");
             }
         } else {
             if ($companyId != 0) {
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ?  and c.status = 9", [$companyId]);
-                $printedParticipants = DB::select("select count(*) as p from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ?  and c.status = 10", [$companyId]);
+                $participants = DB::select("select t.* , c.* from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ?  and c.status = 9", [$companyId]);
+                $printedParticipants = DB::select("select count(*) as p from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ?  and c.status = 10", [$companyId]);
             } else {
-                $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'  and c.status = 9");
-                $printedParticipants = DB::select("select count(*) as p from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'  and c.status = 10");
+                $participants = DB::select("select t.* , c.* from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'  and c.status = 9");
+                $printedParticipants = DB::select("select count(*) as p from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "'  and c.status = 10");
             }
         }
         foreach ($participants as $participant) {
@@ -234,15 +234,15 @@ class FullFillmentController extends Controller
             // }
             if ($accreditId == 'All') {
                 if ($companyId != 0) {
-                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status > 8", [$companyId]);
+                    $participants = DB::select("select t.* , c.* from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status > 8", [$companyId]);
                 } else {
-                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id and c.status > 8");
+                    $participants = DB::select("select t.* , c.* from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id and c.status > 8");
                 }
             } else {
                 if ($companyId != 0) {
-                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ? and c.status > 8", [$companyId]);
+                    $participants = DB::select("select t.* , c.* from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.company_id = ? and c.status > 8", [$companyId]);
                 } else {
-                    $participants = DB::select("select t.* , c.* from temp_" . $eventId . " t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.status > 8");
+                    $participants = DB::select("select t.* , c.* from `temp_" . $eventId . "` t inner join company_staff c on t.id = c.id where t.Accreditation_category ='" . $accreditId . "' and c.status > 8");
                 }
             }
             return datatables()->of($participants)

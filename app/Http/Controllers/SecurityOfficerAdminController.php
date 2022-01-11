@@ -151,10 +151,10 @@ class SecurityOfficerAdminController extends Controller
                     	$companies = $companies.','.$eventcompnay->company_id;
                 	}
             	}
-            	$participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.') and c.status in (1,3,9,10)');
+            	$participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.') and c.status in (1,3,9,10)');
                 //$participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status in (1,3,9,10)',[$companyId]);
             }else{
-                $participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id and c.status in (1,3,9,10)');
+                $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id and c.status in (1,3,9,10)');
             }
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {

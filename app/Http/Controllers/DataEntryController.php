@@ -344,7 +344,7 @@ class DataEntryController extends Controller
         // }
         if (request()->ajax()) {
             //$participants = DB::select('select t.* , c.* from temp_dataentry_' . Auth::user()->id . ' t inner join company_staff c on t.id = c.id');
-        	$participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
+        	$participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
             return datatables()->of($participants)
                 ->addColumn('status', function ($data) {
                     $status_value = "Initiated";
@@ -801,7 +801,7 @@ class DataEntryController extends Controller
         $query = '';
         foreach ($alldata as $data) {
             if ($participant_id != null) {
-                $query = 'update temp_' . $company_admin_id.' set ';
+                $query = 'update `temp_' . $company_admin_id.'` set ';
                 foreach ($templateFields as $templateField) {
                     $query = $query. preg_replace('/\s+/', '_', $templateField->label_en). ' = ? ,' ;
                 }
@@ -809,7 +809,7 @@ class DataEntryController extends Controller
                 $query = $query. ' where id = ?';
                 DB::update($query,$data);
             }else{
-                $query = 'insert into temp_' . $company_admin_id . ' (';
+                $query = 'insert into `temp_' . $company_admin_id . '` (';
                 $tries = 0;
                 foreach ($templateFields as $templateField) {
                     if($tries == 0){

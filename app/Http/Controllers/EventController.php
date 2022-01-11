@@ -12,6 +12,7 @@ use App\Models\EventType;
 use App\Models\SecurityCategory;
 use App\Models\SelectOption;
 use App\Models\Template;
+use App\Models\CompanyAccreditaionCategory;
 use App\Models\EventAccreditationCategory;
 use DateTime;
 use Illuminate\Http\Request;

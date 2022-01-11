@@ -195,7 +195,7 @@
         });
 
         $('#event').on('change', function () {
-            $('#loader-modal').modal('show');
+            //$('#loader-modal').modal('show');
             resetAll();
 
             var url = "{{ route('getCompanies', ":id") }}";
@@ -233,7 +233,7 @@
             if ($('#btn-filter').html() == 'Reset') {
                 resetAll();
             } else {
-                $('#loader-modal').modal('show');
+                //$('#loader-modal').modal('show');
                 var selectedEvent = $('#event option:selected').val();
                 var selectedCompany = $('#company option:selected').val();
                 var selectedAccredit = $('#category option:selected').text();

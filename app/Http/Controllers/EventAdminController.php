@@ -276,7 +276,7 @@ class EventAdminController extends Controller
 
         $event_security_officers = DB::select('select * from event_security_officers_view e where e.id=?',[$eventId]);
 
-        if ($approval == 2) {
+        if ($approval == 1) {
             DB::update('update company_staff set status = ? where id = ?', [6, $staffId]);
             $event_companies = EventCompany::where(['event_id'=>$eventId, 'company_id'=> $companyId])->first();
             $focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
@@ -323,7 +323,7 @@ class EventAdminController extends Controller
         $approval = $event->approval_option;
         $eventCompanies = EventCompany::where(['company_id'=> $companyId ,'event_id'=> $eventId])->first();
         $focalPoint = FocalPoint::where(['id'=>$eventCompanies->focal_point_id])->first();
-        if ($approval == 2) {
+        if ($approval == 1) {
             DB::update('update company_staff set status = ? where id = ?', [5, $staffId]);
         	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
 
@@ -362,7 +362,7 @@ class EventAdminController extends Controller
         $focalPoint = FocalPoint::where(['id'=>$eventCompanies->focal_point_id])->first();
 
         $approval = $event->approval_option;
-        if ($approval == 2) {
+        if ($approval == 1) {
             DB::update('update company_staff set status = ? where id = ?', [8, $staffId]);
             DB::update('update company_staff set event_admin_reject_reason = ? where id = ?', [$reason, $staffId]);
         	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));

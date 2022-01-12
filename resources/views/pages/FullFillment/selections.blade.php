@@ -42,7 +42,7 @@
                                         <div class="form-group col">
                                             <label>Company</label>
                                             <div id="container" class="col-sm-12">
-                                                <select id="company" name="company" required="">
+                                                <select id="company" name="company" required="" class="hi">
                                                     @foreach ($companySelectOptions as $companySelectOption)
                                                         <option value="{{ $companySelectOption->key }}"
                                                                 @if ($companySelectOption->key == 0)
@@ -59,7 +59,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group col">
                                             <label>Accreditation Category</label>
-                                            <div class="col-sm-12">
+                                            <div id="ac_container" class="col-sm-12">
                                                 <select id="category" name="category" required="">
                                                     @foreach ($accrediationCategorySelectOptions as $accrediationCategorySelectOption)
                                                         <option value="{{ $accrediationCategorySelectOption->key }}"
@@ -194,13 +194,49 @@
             resetAll();
         });
 
+        $(document).on('change' , '.hi', function () {
+            //$('#loader-modal').modal('show');
+            //alert('hi');
+            resetAll();
+            var selectedEvent = $('#event option:selected').val();
+            var url = "{{ route('getEventCompanyACs', [":id",":companyidd"]) }}";
+            url = url.replace(':id', selectedEvent);
+            url = url.replace(':companyidd', this.value);
+            $.ajax({
+                type: "get",
+                url: url,
+                success: function (data) {
+                    $('#loader-modal').modal('hide');
+                    console.log('success: hide');
+                    var acSelectOptions = data;
+                    $('#ac_container').html('');
+                    var html = '<select id="category" name="category" required="">';
+                            var count = 0;
+                            while (count < acSelectOptions.length) {
+                                if (count == 0) {
+                                    html = html + "<option selected='selected' value=" + acSelectOptions[count].key + ">" + acSelectOptions[count].value + "</option>";
+                                } else {
+                                    html = html + "<option value=" + acSelectOptions[count].key + ">" + acSelectOptions[count].value + "</option>";
+                                }
+                                count++;
+                            }
+                            html = html + '<select/>';
+                            $('#ac_container').append(html);
+                },
+                error: function (data) {
+                    $('#loader-modal').modal('hide');
+                    console.log('Error:', data);
+                }
+            });
+        });
+
         $('#event').on('change', function () {
             //$('#loader-modal').modal('show');
             resetAll();
 
             var url = "{{ route('getCompanies', ":id") }}";
             url = url.replace(':id', this.value);
-
+            var eventIdd = this.value;
             $.ajax({
                 type: "get",
                 url: url,
@@ -209,7 +245,7 @@
                     console.log('success: hide');
                     var companySelectOptions = data;
                     $('#container').html('');
-                    var html = '<select id="company" name="company" required="">';
+                    var html = "<select id='company' name='company' required='' class='hi'>";
                     var count = 0;
                     while (count < companySelectOptions.length) {
                         if (count == 0) {
@@ -221,6 +257,35 @@
                     }
                     html = html + '<select/>';
                     $('#container').append(html);
+                    url = "{{ route('getEventACs', ":id") }}";
+                    url = url.replace(':id', eventIdd);
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        success: function (data) {
+                            $('#loader-modal').modal('hide');
+                            console.log('success: hide');
+                            var acSelectOptions = data;
+                            //alert(data);
+                            $('#ac_container').html('');
+                            var html = '<select id="category" name="category" required="">';
+                            var count = 0;
+                            while (count < acSelectOptions.length) {
+                                if (count == 0) {
+                                    html = html + "<option selected='selected' value=" + acSelectOptions[count].key + ">" + acSelectOptions[count].value + "</option>";
+                                } else {
+                                    html = html + "<option value=" + acSelectOptions[count].key + ">" + acSelectOptions[count].value + "</option>";
+                                }
+                                count++;
+                            }
+                            html = html + '<select/>';
+                            $('#ac_container').append(html);
+                        },
+                        error: function (data) {
+                            $('#loader-modal').modal('hide');
+                            console.log('Error:', data);
+                        }
+                    });
                 },
                 error: function (data) {
                     $('#loader-modal').modal('hide');

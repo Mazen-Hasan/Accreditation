@@ -737,7 +737,7 @@ class DataEntryController extends Controller
     
         $where = array('id' => $request->event_id);
         $event = Event::where($where)->get()->first();
-        $query = 'update templates t set t.is_locked = 1 where t.id = ' . $event->event_form;
+        $query = "update templates t set t.is_locked = 1 where t.id = '" . $event->event_form."'";
         DB::update($query);
         $data = $request->all();
 

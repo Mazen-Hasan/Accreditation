@@ -97,6 +97,8 @@ Route::group(['middleware' => 'role:event-admin'], function () {
     Route::get('fullFillmentController/getParticipants/{event_id}/{company_id}/{accredit_id}', [App\Http\Controllers\FullFillmentController::class, 'getParticipants'])->name('getParticipants');
     Route::post('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
     Route::post('/fullFillment', [App\Http\Controllers\FullFillmentController::class, 'fullFillment'])->name('fullFillment');
+    Route::get('fullFillmentController/getEventACs/{event_id}', [App\Http\Controllers\FullFillmentController::class, 'getEventACs'])->name('getEventACs');
+    Route::get('fullFillmentController/getEventCompanyACs/{event_id}/{company_id}', [App\Http\Controllers\FullFillmentController::class, 'getEventCompanyACs'])->name('getEventCompanyACs');
 });
 
 Route::group(['middleware' => 'role:super-admin'], function () {

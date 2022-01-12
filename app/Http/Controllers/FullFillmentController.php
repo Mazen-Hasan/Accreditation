@@ -21,11 +21,12 @@ class FullFillmentController extends Controller
         $eventsSelectOptions = array();
         $companySelectOptions = array();
         $accrediationCategorySelectOptions = array();
-        $events = DB::select('select * from event_admins_view e where e.event_admin=?', [Auth::user()->id]);
-
+        $events = DB::select('select * from event_admins_view e where e.event_admin=? and e.status = 1', [Auth::user()->id]);
+        $eventId = 0;
         $count = 0;
         foreach ($events as $event) {
             if ($count == 0) {
+                $eventId = $event->id;
                 $companies = DB::select('select * from companies_view e where e.event_id=? and e.status=?', [$event->id, 3]);
                 $subcount = 0;
                 foreach ($companies as $company) {
@@ -44,7 +45,8 @@ class FullFillmentController extends Controller
         }
 
         $where = array('predefined_field_id' => 14);
-        $acrrediationCategories = PreDefinedFieldElement::where($where)->get()->all();
+        //$acrrediationCategories = PreDefinedFieldElement::where($where)->get()->all();
+        $acrrediationCategories = DB::select('select * from event_accreditation_categories_view e where e.event_id = ? ', [$eventId]);
         $mycount = 0;
         foreach ($acrrediationCategories as $acrrediationCategory) {
             if ($mycount == 0) {
@@ -52,7 +54,8 @@ class FullFillmentController extends Controller
                 $accrediationCategorySelectOptions[] = $accrediationCategorySelectOption;
                 $mycount = 1;
             }
-            $accrediationCategorySelectOption = new SelectOption($acrrediationCategory->value_id, $acrrediationCategory->value_en);
+            //$accrediationCategorySelectOption = new SelectOption($acrrediationCategory->value_id, $acrrediationCategory->value_en);
+            $accrediationCategorySelectOption = new SelectOption($acrrediationCategory->accreditation_category_id, $acrrediationCategory->name);
             $accrediationCategorySelectOptions[] = $accrediationCategorySelectOption;
         }
         return view('pages.FullFillment.selections')->with('eventsSelectOptions', $eventsSelectOptions)->with('companySelectOptions', $companySelectOptions)->with('accrediationCategorySelectOptions', $accrediationCategorySelectOptions);
@@ -74,6 +77,41 @@ class FullFillmentController extends Controller
             $companySelectOptions[] = $compnaySelectOption;
         }
         return Response::json($companySelectOptions);
+    }
+
+    public function getEventACs($eventId)
+    {
+        $accreditationCategories = DB::select('select * from event_accreditation_categories_view e where e.event_id = ? ', [$eventId]);
+        $subcount = 0;
+        $acSelectOptions = array();
+        foreach ($accreditationCategories as $accreditationCategory) {
+            if ($subcount == 0) {
+                $acSelectOption = new SelectOption(0, 'All');
+                $acSelectOptions[] = $acSelectOption;
+                $subcount = 1;
+            }
+            $acSelectOption = new SelectOption($accreditationCategory->accreditation_category_id, $accreditationCategory->name);
+            $acSelectOptions[] = $acSelectOption;
+        }
+        return Response::json($acSelectOptions);
+    }
+
+    public function getEventCompanyACs($eventId,$companyId)
+    {
+        $accreditationCategories = DB::select('select * from event_company_accrediation_categories_view e where e.event_id=? and company_id = ?', [$eventId,$companyId]);
+
+        $subcount = 0;
+        $acSelectOptions = array();
+        foreach ($accreditationCategories as $accreditationCategory) {
+            if ($subcount == 0) {
+                $acSelectOption = new SelectOption(0, 'All');
+                $acSelectOptions[] = $acSelectOption;
+                $subcount = 1;
+            }
+            $acSelectOption = new SelectOption($accreditationCategory->accredit_cat_id, $accreditationCategory->name);
+            $acSelectOptions[] = $acSelectOption;
+        }
+        return Response::json($acSelectOptions);
     }
 
     public function getParticipants($eventId, $companyId, $accreditId)

@@ -43,8 +43,10 @@ class EventController extends Controller
                     $button .= '<a href="' . route('eventSecurityCategories', $data->id) . '" data-toggle="tooltip"  id="event-security-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event security categories"><i class="fas fa-users-cog"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventAdmins', $data->id) . '" data-toggle="tooltip"  id="event-admins" data-id="' . $data->id . '" data-original-title="Edit" title="Event admins"><i class="fas fa-user-cog"></i></a>';
+                    if($data->approval_option != 1){
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
+                    }
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventAccreditationCategories', $data->id) . '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-users"></i></a>';
                     $button .= '&nbsp;&nbsp;';
@@ -69,8 +71,10 @@ class EventController extends Controller
                     $button .= '<a href="' . route('eventSecurityCategories', $data->id) . '" data-toggle="tooltip"  id="event-security-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event security categories"><i class="fas fa-users-cog"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventAdmins', $data->id) . '" data-toggle="tooltip"  id="event-admins" data-id="' . $data->id . '" data-original-title="Edit" title="Event admins"><i class="fas fa-user-cog"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
+                    if($data->approval_option != 1){
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
+                    }
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventAccreditationCategories', $data->id) . '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-users"></i></a>';
                     $button .= '&nbsp;&nbsp;';
@@ -294,40 +298,44 @@ class EventController extends Controller
 
         if ($postId == null) {
             $counter = 1;
-            foreach ($request->security_categories as $security_category) {
-                $help = EventSecurityCategory::updateOrCreate(['id' => $postId],
-                    ['event_id' => $post->id,
-                        'security_category_id' => $security_category,
-                        'order' => $counter,
-                        'creator' => $request->creator
-                    ]);
-                $counter = $counter + 1;
+            if($request->security_categories != null){
+                foreach ($request->security_categories as $security_category) {
+                    $help = EventSecurityCategory::updateOrCreate(['id' => $postId],
+                        ['event_id' => $post->id,
+                            'security_category_id' => $security_category,
+                            'order' => $counter,
+                            'creator' => $request->creator
+                        ]);
+                    $counter = $counter + 1;
+                }
             }
+            if($request->event_admins != null){
+                foreach ($request->event_admins as $event_admin) {
+                    $help = EventAdmin::updateOrCreate(['id' => $postId],
+                        ['event_id' => $post->id,
+                            'user_id' => $event_admin
+                        ]);
+                        $event = Event::where(['id'=>$post->id])->first();
+                        // NotificationController::sendAlertNotification($event_admin, 0, $event->name . ':' . 'Event assignment', Route('eventCompanies' , [$post->id]));
 
-            foreach ($request->event_admins as $event_admin) {
-                $help = EventAdmin::updateOrCreate(['id' => $postId],
-                    ['event_id' => $post->id,
-                        'user_id' => $event_admin
-                    ]);
-                    $event = Event::where(['id'=>$post->id])->first();
-                    // NotificationController::sendAlertNotification($event_admin, 0, $event->name . ':' . 'Event assignment', Route('eventCompanies' , [$post->id]));
-
-            		$notification_type = Config::get('enums.notification_types.EIN');
-                	NotificationController::sendNotification($notification_type, $event->name, '', $event_admin, 0,
-                    $event->name . ':' . 'Event assignment', Route('eventCompanies', [$post->id]));
+                        $notification_type = Config::get('enums.notification_types.EIN');
+                        NotificationController::sendNotification($notification_type, $event->name, '', $event_admin, 0,
+                        $event->name . ':' . 'Event assignment', Route('eventCompanies', [$post->id]));
+                }
             }
+            if($request->security_officers != null){
+                foreach ($request->security_officers as $security_officer) {
+                    $help = EventSecurityOfficer::updateOrCreate(['id' => $postId],
+                        ['event_id' => $post->id,
+                            'user_id' => $security_officer
+                        ]);
+                        $event = Event::where(['id'=>$post->id])->first();
+                        // NotificationController::sendAlertNotification($security_officer, 0, $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies' , [$post->id]));
 
-            foreach ($request->security_officers as $security_officer) {
-                $help = EventSecurityOfficer::updateOrCreate(['id' => $postId],
-                    ['event_id' => $post->id,
-                        'user_id' => $security_officer
-                    ]);
-                    $event = Event::where(['id'=>$post->id])->first();
-                    // NotificationController::sendAlertNotification($security_officer, 0, $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies' , [$post->id]));
-
-            		$notification_type = Config::get('enums.notification_types.EIN');
-                	NotificationController::sendNotification($notification_type, $event->name, '', $security_officer, 0,
-                    $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies', [$post->id]));
+                        $notification_type = Config::get('enums.notification_types.EIN');
+                        NotificationController::sendNotification($notification_type, $event->name, '', $security_officer, 0,
+                        $event->name . ':' . 'Event assignment', Route('securityOfficerCompanies', [$post->id]));
+                }
             }
 			if($event_companies != null){
             	foreach ($event_companies as $row){

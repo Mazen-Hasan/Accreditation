@@ -333,7 +333,7 @@
                     var imag = data.bg_image;
                     // server
                     {{--var image_path = "{{URL::asset('storage/badges/')}}/";--}}
-                    // localy
+                    // local
                     var image_path = "{{URL::asset('badges/')}}/";
 
                     $('#badge_bg').attr('src', image_path + imag);

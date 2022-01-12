@@ -20,7 +20,7 @@ class FileUploadController extends Controller
 
                  //$path = public_path() . '/images';
             $path = 'badges/';
-                
+
                 $stored_file = $file->move(
                     $path, $fileName);
 
@@ -37,6 +37,41 @@ class FileUploadController extends Controller
             "success" => false,
             "fileName" =>'',
             "file" => ''
+        ]);
+    }
+
+    public function eventLogoUpload(Request $request)
+    {
+        if ($files = $request->allFiles()) {
+            foreach ($files as $file){
+
+                $extension = $file->extension();
+
+                $fileName = now();
+                $fileName = str_replace(':','_',$fileName);
+                $fileName = str_replace(' ', '_', $fileName) . '.' . $extension;
+
+                $path = 'events/';
+
+                $stored_file = $file->move(
+                    $path, $fileName);
+
+                chmod($stored_file, 0777);
+                return Response()->json([
+                    "code" => 1,
+                    "message" => "Success",
+                    "data" => [
+                        "fileName" =>$fileName,
+                        "filePath" => $stored_file
+                    ],
+                ]);
+            }
+        }
+
+        return Response()->json([
+            "code" => -1,
+            "message" => "Error",
+            "data" => "",
         ]);
     }
 }

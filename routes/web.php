@@ -226,6 +226,7 @@ Route::group(['middleware' => 'role:data-entry'], function () {
 });
 
 Route::post('upload-file', 'App\Http\Controllers\FileUploadController@store');
+Route::post('upload-logo', 'App\Http\Controllers\FileUploadController@eventLogoUpload')->name('uploadLogo');
 
 Route::get('/send-notification', [App\Http\Controllers\NotificationController::class, 'sendAlertNotification']);
 Route::get('/get-notification', [App\Http\Controllers\NotificationController::class, 'getNotifications']);

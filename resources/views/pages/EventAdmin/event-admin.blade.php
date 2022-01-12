@@ -18,9 +18,10 @@
                                 <div class="col-sm-4">
                                     <div class="card">
                                         <div>
+                                            <input type="hidden" id="logoName" value="{{ $event->logo }}">
                                             <a href="{{route('eventCompanies',[$event->id])}}">
-                                                <img class="card-img-top"
-                                                     style="border-top-left-radius: 20px; border-top-right-radius: 20px"
+                                                <img id="logo" class="card-img-top"
+                                                     style="width: 374px; height:374px; border-top-left-radius: 20px; border-top-right-radius: 20px"
                                                      src="{{ asset('images/event.png') }}" alt="Event">
                                             </a>
                                         </div>
@@ -89,7 +90,8 @@
                                                     <p class="card_event_label">Accreditation period:</p>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p class="card_event_text">{{ $event->accreditation_period}} days</p>
+                                                    <p class="card_event_text">{{ $event->accreditation_period}}
+                                                        days</p>
                                                 </div>
                                             </div>
 
@@ -97,7 +99,8 @@
                                                 <div class="col-6">
                                                     <p class="card_event_label">Registration form:</p>
                                                 </div>
-                                                <div class="col-6" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                <div class="col-6"
+                                                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                                     <p class="card_event_text">{{ $event->template_name}}</p>
                                                 </div>
                                             </div>
@@ -107,7 +110,8 @@
                                                 <div class="col-8">
                                                     <a href="{{route('eventCompanyParticipants',[0,$event->id])}}"
                                                        class="ha_icon_btn">
-                                                        <i class="fa fa-users" style="font-size: 25px; color: white"></i>&nbsp;
+                                                        <i class="fa fa-users"
+                                                           style="font-size: 25px; color: white"></i>&nbsp;
                                                         Participants
                                                     </a>
                                                 </div>
@@ -124,4 +128,16 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        $(document).ready(function () {
+                let imag = $('#logoName').val();
+                if (imag) {
+                    var image_path = "{{URL::asset('events/')}}/";
+                    $('#logo').attr('src', image_path + imag);
+                }
+            }
+        );
+    </script>
 @endsection

@@ -7,7 +7,7 @@
     <script src="{{ URL::asset('js/dataTable.js') }}"></script>
 @endsection
 @section('content')
-     <div class="content-wrapper">
+    <div class="content-wrapper">
         <br><br>
         <div class="row">
             <div class="col-12 grid-margin">
@@ -22,14 +22,15 @@
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
                             <input type="hidden" name="post_id" id="post_id">
-                         	<input type="hidden" name="current_date" id="current_date" value="">
+                            <input type="hidden" name="current_date" id="current_date" value="">
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Event Name</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" minlength="1" maxlength="100" name="name" value="" required=""
+                                            <input type="text" id="name" minlength="1" maxlength="100" name="name"
+                                                   value="" required=""
                                                    placeholder="enter event name"/>
                                         </div>
                                     </div>
@@ -166,7 +167,8 @@
                                     <div class="form-group col">
                                         <label>Location</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="location" minlength="1" maxlength="100" name="location" value=""
+                                            <input type="text" id="location" minlength="1" maxlength="100"
+                                                   name="location" value=""
                                                    placeholder="enter location" required=""/>
                                         </div>
                                     </div>
@@ -233,7 +235,7 @@
                                     <div class="form-group col">
                                         <label>Security Option</label>
                                         <div class="col-sm-12">
-                                            <select id="approval_option" name="approval_option" required="" >
+                                            <select id="approval_option" name="approval_option" required="">
                                                 <option value="default">Please select Security Option</option>
                                                 @foreach ($approvalOptions as $approvalOption)
                                                     <option value="{{ $approvalOption->key }}"
@@ -250,7 +252,8 @@
                                     <div class="form-group col">
                                         <label>Security Officer</label>
                                         <div class="col-sm-12">
-                                            <select id="security_officers" name="security_officers[]" required="" multiple>
+                                            <select id="security_officers" name="security_officers[]" required=""
+                                                    multiple>
                                                 <option value="default">Please select Security Officer</option>
                                                 @foreach ($securityOfficers as $securityOfficer)
                                                     <option value="{{ $securityOfficer->key }}"
@@ -264,9 +267,44 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-offset-2 col-sm-2">
-                                <button type="submit" id="btn-save" value="create">Save
-                                </button>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Event logo</label>
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <input type="file" id="file" name="file">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <button type="submit" id="btn-upload" value="Upload">Upload
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group col">
+                                        <label id="file_type_error"></label>
+                                        <div style="background-color: #ffffff00!important;" class="progress">
+                                            <div id="file-progress-bar" class="progress-bar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-offset-2 col-sm-2">
+                                    <button type="submit" id="btn-save" value="create">Save
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -299,8 +337,7 @@
         </div>
     </div>
 
-	
-	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+    <div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
          role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="width: 250px">
             <div class="modal-content">
@@ -331,15 +368,15 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-        
+
             var d = new Date();
-            var month = d.getMonth()+1;
+            var month = d.getMonth() + 1;
             var day = d.getDate();
             var output = d.getFullYear() + '/' +
-                (month<10 ? '0' : '') + month + '/' +
-                (day<10 ? '0' : '') + day;
-			//alert(output);
-        	$('#current_date').val(output);
+                (month < 10 ? '0' : '') + month + '/' +
+                (day < 10 ? '0' : '') + day;
+            //alert(output);
+            $('#current_date').val(output);
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
                 $('#post_id').val('');
@@ -365,7 +402,7 @@
                     type: "get",
                     url: url,
                     success: function (data) {
-                        if(data.exist === 1){
+                        if (data.exist === 1) {
                             $('#confirmTitle').html('Add new event');
                             var confirmText = 'This organizer has another events, all companies, subsidiaries, focal points, data entries will be copied to the new event';
                             $('#confirmText').html(confirmText);
@@ -410,8 +447,8 @@
 
                 submitHandler: function (form) {
                     $('#post_id').val('');
-                	$('#loader-modal').modal('show');
-                	$('#btn-save').prop('disabled', true);
+                    $('#loader-modal').modal('show');
+                    $('#btn-save').prop('disabled', true);
                     $('#btn-save').html('Sending..');
                     $.ajax({
                         data: $('#postForm').serialize(),
@@ -420,12 +457,12 @@
                         dataType: 'json',
                         success: function (data) {
                             $('#postForm').trigger("reset");
-                        	$('#loader-modal').modal('hide');
+                            $('#loader-modal').modal('hide');
                             $('#btn-save').html('Done');
                             window.location.href = "{{ route('events')}}";
                         },
                         error: function (data) {
-                        	$('#loader-modal').modal('hide');
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }
@@ -433,7 +470,7 @@
                 }
             })
         }
-    
+
         jQuery.validator.addMethod("greaterThanOrEqual",
             function (value, element, params) {
                 if (!/Invalid|NaN/.test(new Date(value))) {
@@ -465,6 +502,77 @@
             function (value, element, params) {
                 return params !== value;
             }, " Please select a value");
+
+        $("#file").change(function () {
+            let allowedTypes = ['image/png','image/jpeg'];
+            let file = this.files[0];
+            let fileType = file.type;
+            if (!allowedTypes.includes(fileType)) {
+                $("#file-progress-bar").width('0%');
+                $("#file_type_error").html('Please choose a valid file (jpeg, png)');
+                $("#file").val('');
+                $("#btn-upload").attr('disabled', true);
+                return false;
+            } else {
+                $("button").removeAttr('disabled');
+                $("#file_type_error").html('');
+                $("#file-progress-bar").width('0%');
+            }
+        });
+
+        $('.img-upload').submit(function (e) {
+            console.log('upload');
+            var file = $('#file').val();
+            if(file=='')
+            {
+                $('#file_type_error').removeClass('info').addClass('error');
+                $("#file_type_error").html('Please choose file');
+                return false;
+            }
+
+            $('#btn-upload').html('Sending..');
+            e.preventDefault();
+            var formData = new FormData(this);
+            formData.append('template_id', $('#h_template_id').val());
+            $.ajax({
+                xhr: function () {
+                    let xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function (element) {
+                        if (element.lengthComputable) {
+                            var percentComplete = ((element.loaded / element.total) * 100);
+                            $("#file-progress-bar").width(percentComplete + '%');
+                            $("#file-progress-bar").html(percentComplete + '%');
+                        }
+                    }, false);
+                    return xhr;
+                },
+
+                type: 'POST',
+                url: "{{ route('uploadLogo') }}",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+
+                beforeSend: function () {
+                    $("#file-progress-bar").width('0%');
+                },
+
+                success: (data) => {
+                    console.log(data);
+                    // this.reset();
+                    $('#file_type_error').removeClass('error').addClass('info');
+                    $("#file_type_error").html('File uploaded successfully');
+                    $('#btn-upload').html('Upload');
+                    $("#bg_image").val(data.fileName);
+                },
+
+                error: function (data) {
+                    $("#file_type_error").html('Error uploading file');
+                    console.log(data);
+                }
+            });
+        });
 
         // $("#event_admin_add").click(function () {
         //     var event_admin_id = $("#event_admin_multi").val();

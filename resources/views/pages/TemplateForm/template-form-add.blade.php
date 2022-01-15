@@ -4,35 +4,35 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('custom_navbar')
-            @if($subCompany_nav == 1)
-                <li id="subsidiaries_nav" class="nav-item">
-                     <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}"
-                        href="{{ route('subCompanies',[$companyId,$eventId]) }} ">
-                         <i class="logout">
-                             <img src="{{ asset('images/menu.png') }}" alt="My Sidries">
-                         </i>
-                         <span class="menu-title">Subsidiaries</span>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}"
-                        href="{{ route('dataentrys',[$companyId,$eventId]) }}">
-                         <i class="logout">
-                             <img src="{{ asset('images/menu.png') }}" alt="Data Entry">
-                         </i>
-                         <span class="menu-title">Data Entry</span>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                    <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
-                    href="{{ route('focalpoints') }}">
-                        <i class="logout">
-                            <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
-                        </i>
-                        <span class="menu-title">Focal Points</span>
-                    </a>
-                </li>
-                @endif
+    @if($subCompany_nav == 1)
+        <li id="subsidiaries_nav" class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}"
+               href="{{ route('subCompanies',[$companyId,$eventId]) }} ">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="My Sidries">
+                </i>
+                <span class="menu-title">Subsidiaries</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}"
+               href="{{ route('dataentrys',[$companyId,$eventId]) }}">
+                <i class="logout">
+                    <img src="{{ asset('images/menu.png') }}" alt="Data Entry">
+                </i>
+                <span class="menu-title">Data Entry</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
+               href="{{ route('focalpoints') }}">
+                <i class="logout">
+                    <img src="{{ asset('images/user_mng.png') }}" alt="Focal Points">
+                </i>
+                <span class="menu-title">Focal Points</span>
+            </a>
+        </li>
+    @endif
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -71,7 +71,7 @@
         </div>
     </div>
 
-	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+    <div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
          role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="width: 250px">
             <div class="modal-content">
@@ -102,7 +102,8 @@
                         <div class="form-group">
                             <label for="name" class="col-sm-12 control-label">Full Name</label>
                             <div class="col-sm-12">
-                                <input type="text" id="participantFullName" name="participantFullName" minlength="5" maxlength="50"
+                                <input type="text" id="participantFullName" name="participantFullName" minlength="5"
+                                       maxlength="50"
                                        placeholder="enter Full Name" required="">
                             </div>
                         </div>
@@ -113,6 +114,7 @@
                                 <select id="participants" name="participants">
                                 </select>
                             </div>
+                            <label id="import_error" class="error"></label>
                         </div>
                         <div class="row">
                             <div class="col-sm-4"></div>
@@ -151,13 +153,15 @@
             $('#importForm').trigger("reset");
             $('#participants').find('option[value]').remove();
             $('#modalTitle').html("Import Participant");
+            // $('#btn-import').prop('disabled', true);
+            $("#import_error").html('');
             $('#import-modal').modal('show');
         });
 
-        $('#participantFullName').keyup(function(){
+        $('#participantFullName').keyup(function () {
             $('#participants').find('option[value]').remove();
             var fullName = $("#participantFullName").val();
-            if(fullName.length > 4){
+            if (fullName.length > 4) {
                 var url = "{{ route('searchParticipants', ":fullName") }}";
                 url = url.replace(':fullName', fullName);
                 $.ajax({
@@ -165,6 +169,8 @@
                     url: url,
                     success: function (data) {
                         participantsData = data.list;
+                        $("#import_error").html('');
+                        // $('#btn-import').prop('disabled', false);
                         buildParticipantsList(data.searchRes);
                     },
                     error: function (data) {
@@ -172,33 +178,41 @@
                     }
                 });
             }
+            else {
+                $("#import_error").html('');
+            }
         });
 
-        function buildParticipantsList(data){
-            $.each(data, function(key,value) {
+        function buildParticipantsList(data) {
+            if (data.length === 0) {
+                $("#import_error").html('No participants was found');
+            } else {
+                $("#import_error").html('');
+                $.each(data, function (key, value) {
                     $('#participants').append($('<option>', {
                         value: value['staff_id'],
-                        text : value['value']
+                        text: value['value']
                     }));
-            });
+                });
+            }
         }
 
-        function fillForm(participant_id){
+        function fillForm(participant_id) {
             var formFields = '';
 
-            $.each($(':input:not([type=hidden],[type=submit],[type=file])', '#templateForm'),function(k){
+            $.each($(':input:not([type=hidden],[type=submit],[type=file])', '#templateForm'), function (k) {
                 formFields += 'Id: ' + $(this).attr('id') + ', Name: ' + $(this).attr('name') + ', Value: ' + $(this).val() + ', Type: ' + $(this).attr('type') + '\n';
                 // if($(this).attr('type')=='text'){
-                    fillFormField($(this).attr('id'), participant_id);
+                fillFormField($(this).attr('id'), participant_id);
                 // }
             });
-            console.log(formFields);
+            // console.log(formFields);
         }
 
-        function fillFormField(field_id, participant_id){
-            console.log('fillFormData');
-            console.log('participant_id:' + participant_id);
-            console.log(participantsData[participant_id][field_id]);
+        function fillFormField(field_id, participant_id) {
+            // console.log('fillFormData');
+            // console.log('participant_id:' + participant_id);
+            // console.log(participantsData[participant_id][field_id]);
             $('#' + field_id).val(participantsData[participant_id][field_id]);
         }
 
@@ -208,8 +222,11 @@
             $(this).closest('.modal').one('hidden.bs.modal', function () {
                 if ($button[0].id === 'btn-import') {
                     var participant_id = $('#participants').find('option:selected').val();
-                    console.log(participant_id);
-                    fillForm(participant_id);
+                    if (!participant_id) {
+                        $("#import_error").html('No participants found');
+                    } else {
+                        fillForm(participant_id);
+                    }
                 }
             });
         });
@@ -218,7 +235,7 @@
             $("#templateForm").validate({
                 submitHandler: function (form) {
                     $('#loader-modal').modal('show');
-                	$('#btn-save').prop('disabled', true);
+                    $('#btn-save').prop('disabled', true);
                     var compnayId = $('#company_id').val();
                     $('#btn-save').html('Sending..');
                     $.ajax({
@@ -232,12 +249,12 @@
                             $('#btn-save').html('Done');
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
-                        	$('#loader-modal').modal('hide');
+                            $('#loader-modal').modal('hide');
                             window.location.href = "{{ route('companyParticipants',[$companyId,$eventId])}}";
                         },
                         error: function (data) {
                             console.log('Error:', data);
-                        	$('#loader-modal').modal('hide');
+                            $('#loader-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
                         }
                     });

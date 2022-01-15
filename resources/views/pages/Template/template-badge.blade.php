@@ -111,11 +111,13 @@
                     </form>
                     <hr>
                     <form id="badgeForm" name="badgeForm" class="form-horizontal">
-                        <input style="visibility: hidden" type="text" name="h_template_id" id="h_template_id">
-                        <input style="visibility: hidden" type="text" name="bg_image" id="bg_image">
+                        <div class="row" style="margin-left: 25%;justify-content: center; max-height: 100%; max-width: 50%; object-fit: fill">
                         <img id="badge_bg" src="{{URL::asset('badges/')}}" alt="im"
                              style="width:200px;height:200px;">
+                        </div>
                         <input type="hidden" name="badge_id" id="badge_id">
+                        <input style="visibility: hidden" type="text" name="h_template_id" id="h_template_id">
+                        <input style="visibility: hidden" type="text" name="bg_image" id="bg_image">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group col">
@@ -418,6 +420,7 @@
             let fileType = file.type;
             if (!allowedTypes.includes(fileType)) {
                 $("#file-progress-bar").width('0%');
+                $('#file_type_error').removeClass('info').addClass('error');
                 $("#file_type_error").html('Please choose a valid file (jpeg, png)');
                 $("#file").val('');
                 $("#btn-upload").attr('disabled', true);

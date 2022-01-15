@@ -83,7 +83,7 @@
 
                             <div class="col-md-4">
                                 <div class="col-sm-12">
-                                    <input type="file" id="file" name="file" required="">
+                                    <input type="file" id="file" name="file">
                                 </div>
                             </div>
 
@@ -181,8 +181,8 @@
 
                 console.log(badge_bg_id);
                 $.get('../templateBadgeBGController/' + badge_bg_id + '/edit', function (data) {
-                    $('#name-error').hide();
                     $('#modalTitle').html("Edit " + data.name + " Background");
+                    $('#file').val('');
                     $('#badge_bg-modal').modal('show');
                     $('#badge_bg_id').val(data.id);
 
@@ -197,7 +197,7 @@
                     $('#bg_image_view').show();
                 })
             });
-        
+
         	var oTable = $('#laravel_datatable').DataTable();
 
             $('#search').on('keyup', function () {
@@ -212,6 +212,7 @@
             let fileType = file.type;
             if (!allowedTypes.includes(fileType)) {
                 $("#file-progress-bar").width('0%');
+                $('#file_type_error').removeClass('info').addClass('error');
                 $("#file_type_error").html('Please choose a valid file (jpeg, png)');
                 $("#file").val('');
                 $("#btn-upload").attr('disabled', true);
@@ -250,6 +251,13 @@
         }
 
         $('.img-upload').submit(function (e) {
+            var file = $('#file').val();
+            if(file=='')
+            {
+                $('#file_type_error').removeClass('info').addClass('error');
+                $("#file_type_error").html('Please choose file');
+                return false;
+            }
             $('#btn-upload').html('Sending..');
             e.preventDefault();
             var formData = new FormData(this);
@@ -281,6 +289,7 @@
 
                 success: (data) => {
                     // this.reset();
+                    $('#file_type_error').removeClass('error').addClass('info');
                     $("#file_type_error").html('File uploaded successfully');
                     $('#btn-upload').html('Upload');
                     $("#bg_image").val(data.fileName);

@@ -82,6 +82,34 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="hidden" id="event_id">
+                        <input type="hidden" id="event_name">
+                        <label class="col-sm-12 confirm-text" id="confirmText"></label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                            </button>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" data-dismiss="modal" id="btn-yes">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -129,7 +157,11 @@
                                 if(data == 2){
                                     return "<span style='color: red'>InActive</span>"
                                 }else{
-                                    return "<span style='color: orange'>Archived</span>"
+                                    if(data == 3){
+                                        return "<span style='color: black'>Finished</span>"
+                                    }else{
+                                        return "<span style='color: orange'>Archived</span>"
+                                    }
                                 }
                             }
                         }
@@ -144,6 +176,40 @@
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Post");
+            });
+
+            $('body').on('click', '#complete-event', function () {
+                $('#event_id').val($(this).data("id"));
+                $('#event_name').val($(this).data("name"));
+                var eventName = $('#event_name').val();
+                //alert(eventName);
+                $('#confirmTitle').html('Event completion');
+                var confirmText = 'Are you sure you want to complete event: ' + eventName + '?';
+                $('#confirmText').html(confirmText);
+                $('#delete-element-confirm-modal').modal('show');
+            });
+
+            $('#delete-element-confirm-modal button').on('click', function (event) {
+                var $button = $(event.target);
+                $(this).closest('.modal').one('hidden.bs.modal', function () {
+                    if ($button[0].id === 'btn-yes') {
+                        var eventName = $('#event_name').val();
+                        var eventId = $('#event_id').val();
+                        var url = "{{ route('eventComplete', [":eventId"]) }}";
+                        url = url.replace(':eventId', eventId);
+                        $.ajax({
+                            type: "get",
+                            url: url,
+                            success: function (data) {
+                                var oTable = $('#laravel_datatable').dataTable();
+                                oTable.fnDraw(false);
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
+                });
             });
         
             $('body').on('click', '#showAll', function () {

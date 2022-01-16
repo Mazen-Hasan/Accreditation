@@ -44,12 +44,16 @@ class EventController extends Controller
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventAdmins', $data->id) . '" data-toggle="tooltip"  id="event-admins" data-id="' . $data->id . '" data-original-title="Edit" title="Event admins"><i class="fas fa-user-cog"></i></a>';
                     if($data->approval_option != 1){
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="' . route('eventSecurityOfficers', $data->id) . '" data-toggle="tooltip"  id="event-security-officers" data-id="' . $data->id . '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
                     }
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventAccreditationCategories', $data->id) . '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-users"></i></a>';
                     $button .= '&nbsp;&nbsp;';
+                    if($data->status == 3){
+                        $button .= '<a href="javascript:void(0);" id="complete-event" data-toggle="tooltip" data-id="' . $data->id . '" data-name="' . $data->name . '" data-original-title="Edit" title="Complete Events"><i class="fas fa-list-alt"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -78,6 +82,10 @@ class EventController extends Controller
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventAccreditationCategories', $data->id) . '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-users"></i></a>';
                     $button .= '&nbsp;&nbsp;';
+                    if($data->status == 3){
+                        $button .= '<a href="javascript:void(0);" id="complete-event" data-toggle="tooltip"  data-id="' . $data->id . '" data-name="' . $data->name . '" data-original-title="Edit" title="Complete Events"><i class="fas fa-list-alt"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -648,6 +656,20 @@ class EventController extends Controller
     {
         $where = array('id' => $security_category_id);
         $post = EventAccreditationCategory::where($where)->delete();
+        return Response::json($post);
+    }
+
+    public function eventComplete($eventId)
+    {
+        $post = Event::updateOrCreate(['id'=>$eventId],
+            [
+                'status' => 4
+            ]);
+
+    	// $notification_type = Config::get('enums.notification_types.EIN');
+        // NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, 0,
+        //     $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('companyParticipants' , [$companyId, $eventId]));
+        
         return Response::json($post);
     }
 

@@ -121,7 +121,7 @@
 
             let imag = $('#logoName').val();
             if (imag) {
-                var image_path = "{{URL::asset('events/')}}/";
+                var image_path = "{{URL::asset('logo/')}}/";
                 $('#logo').attr('src', image_path + imag);
             }
         });

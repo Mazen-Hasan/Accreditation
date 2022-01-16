@@ -228,7 +228,7 @@
     $(document).ready(function () {
         // var imag = $('#logo').attr('src');
         var imag = 'event.png';
-        var image_path = "{{URL::asset('events/')}}/";
+        var image_path = "{{URL::asset('logo/')}}/";
         console.log(image_path);
         $('#logo').attr('src', image_path + imag);
         }

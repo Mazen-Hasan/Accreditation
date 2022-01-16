@@ -31,8 +31,8 @@ class HomeController extends Controller
         // exit;
         switch ($role) {
             case 'super-admin':
-                //return view('pages.Event.events');
-                return Redirect::to('allEvents');
+                return view('pages.Event.events');
+//                return Redirect::to('allEvents');
                 break;
             case 'event-admin':
                 return Redirect::to('event-admin');

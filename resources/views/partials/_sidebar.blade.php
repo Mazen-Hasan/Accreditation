@@ -18,7 +18,7 @@
         @role('super-admin')
         <li class="nav-item">
             <a class="nav-link {{ str_contains( Request::route()->getName(),'event') =="1" ? "active" : "" }}"
-               href="{{ route('events') }} ">
+               href="{{ route('allEvents') }} ">
                 <i class="logout">
                     <img src="{{ asset('images/menu.png') }}" alt="Events">
                 </i>

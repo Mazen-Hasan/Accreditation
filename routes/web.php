@@ -99,6 +99,9 @@ Route::group(['middleware' => 'role:event-admin'], function () {
     Route::post('/fullFillment', [App\Http\Controllers\FullFillmentController::class, 'fullFillment'])->name('fullFillment');
     Route::get('fullFillmentController/getEventACs/{event_id}', [App\Http\Controllers\FullFillmentController::class, 'getEventACs'])->name('getEventACs');
     Route::get('fullFillmentController/getEventCompanyACs/{event_id}/{company_id}', [App\Http\Controllers\FullFillmentController::class, 'getEventCompanyACs'])->name('getEventCompanyACs');
+
+    Route::get('/event-participnat-add/{template_id}/{companyId}/{eventId}', [App\Http\Controllers\EventAdminController::class, 'eventParticipantAdd'])->name('eventParticipantAdd');
+    Route::post('eventContoller/eventStoreParticipant', [App\Http\Controllers\EventAdminController::class, 'eventStoreParticipant'])->name('eventStoreParticipant');
 });
 
 Route::group(['middleware' => 'role:super-admin'], function () {
@@ -202,6 +205,7 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::get('contactTitlesController/store/{contact_id}/{title_id}', 'App\Http\Controllers\ContactTitleController@store')->name('storeContactTitle');
 
     Route::get('templatesData/{values}', 'App\Http\Controllers\TemplateController@getData1')->name('templatesData1');
+    Route::get('/allEvents', [App\Http\Controllers\EventController::class, 'index'])->name('allEvents');
 });
 
 Route::group(['middleware' => 'role:security-officer'], function () {

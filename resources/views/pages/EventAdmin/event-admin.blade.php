@@ -18,7 +18,7 @@
                                 <div class="col-sm-4">
                                     <div class="card">
                                         <div>
-                                            <input type="hidden" id="logoName" value="{{ $event->logo }}">
+                                            <input type="hidden" id="logoName">
                                             <a href="{{route('eventCompanies',[$event->id])}}">
                                                 <img id="logo" class="card-img-top"
                                                      style="width: 374px; height:374px; border-top-left-radius: 20px; border-top-right-radius: 20px"

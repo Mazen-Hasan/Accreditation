@@ -20,6 +20,7 @@
                 <input type="hidden" id="data_values" name="data_values" value=""/>
                 <input type="hidden" id="company_id" name="company_id" value="{{$company_id}}"/>
                 <input type="hidden" id="event_id" name="event_id" value="{{$event_id}}"/>
+                <input type="hidden" id="addable_status" value={{$addable}} />
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
@@ -56,14 +57,12 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                @role('company-admin')
-                                <a href="{{route('templateForm',0)}}" id="add-new-post" class="add-hbtn">
+                                <a href="#" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Add</span>
                                 </a>
-                                @endrole
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -180,6 +179,9 @@
                 }
             });
             var company_id = $('#company_id').val();
+            if(company_id == 0){
+                $('#add-new-post').hide();
+            }
             var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
             var myColumns = [];
             var i = 0;
@@ -227,12 +229,12 @@
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
 
-            $('#add-new-post').click(function () {
-                $('#btn-save').val("create-post");
-                $('#post_id').val('');
-                $('#postForm').trigger("reset");
-                $('#postCrudModal').html("Add New Post");
-            });
+            // $('#add-new-post').click(function () {
+            //     $('#btn-save').val("create-post");
+            //     $('#post_id').val('');
+            //     $('#postForm').trigger("reset");
+            //     $('#postCrudModal').html("Add New Post");
+            // });
 
             $('body').on('click', '#approve', function () {
                 var post_id = $(this).data("id");
@@ -397,7 +399,7 @@
                                 success: function (data) {
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
-                                    $('#add-new-post').hide();
+                                    //$('#add-new-post').hide();
                                     oTable.fnDraw(false);
                                 },
                                 error: function (data) {
@@ -407,6 +409,38 @@
                         }
                     }
                 });
+            });
+
+            $('#add-new-post').click(function () {
+            	var addableStatus = $('#addable_status').val();
+                var company_id = $('#company_id').val();
+                //alert(company_id);
+                if(company_id != 0){
+                    if(addableStatus == 1){
+                        var url = "{{route('eventParticipantAdd',[0,$company_id,$event_id])}}";
+                        window.location.href = url;
+                    }
+                    if(addableStatus == 2){
+                        $('#errorTitle').html('Error: Adding');
+                        $('#errorText').html('No accreditation categories size defined yet');
+                        $('#error-pop-up-modal').modal('show');
+                    }
+                    if(addableStatus == 3){
+                        $('#errorTitle').html('Error: Adding');
+                        $('#errorText').html('Accreditation size is not approved yet from event admin');
+                        $('#error-pop-up-modal').modal('show');
+                    }
+                    if(addableStatus == 0){
+                        $('#errorTitle').html('Error: Adding');
+                        $('#errorText').html('you have reached the max size of participants');
+                        $('#error-pop-up-modal').modal('show');
+                    }
+                }
+                // $('#btn-save').val("create-post");
+                // $('#post_id').val('');
+                // $('#postForm').trigger("reset");
+                // $('#postCrudModal').html("Add New Post");
+                //$('#ajax-crud-modal').modal('show');
             });
 
             $('#delete-element-confirm-modal-new button').on('click', function (event) {

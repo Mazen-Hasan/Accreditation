@@ -297,7 +297,7 @@
 
                         var url = "{{ route('securityOfficerAdminControllerRejectToCorrect', [":staffId",":reason"]) }}";
                         url = url.replace(':staffId', staffId);
-                        url = url.replace(':eventId', reason);
+                        url = url.replace(':reason', reason);
 
                         $.ajax({
                             type: "get",

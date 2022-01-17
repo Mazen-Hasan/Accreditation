@@ -46,12 +46,14 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('super-admin')
+                                @if($event->status < 3)
                                 <a href="javascript:void(0)" id="add-event-security-officer" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Add</span>
                                 </a>
+                                @endif
                                 @endrole
                             </div>
                         </div>

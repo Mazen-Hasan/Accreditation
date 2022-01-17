@@ -32,14 +32,16 @@ class EventController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $events = DB::select('select * from events_view e where e.event_end_date >= CURRENT_DATE()');
+            $events = DB::select('select * from events_view e where e.status < 4');
             return datatables()->of($events)
 
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('EventController.show', $data->id) . '" data-toggle="tooltip"  id="event-details" data-id="' . $data->id . '" data-original-title="Details" title="Details"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
+                    if($data->status < 3){
+                        $button .= '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     $button .= '<a href="' . route('eventSecurityCategories', $data->id) . '" data-toggle="tooltip"  id="event-security-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event security categories"><i class="fas fa-users-cog"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventAdmins', $data->id) . '" data-toggle="tooltip"  id="event-admins" data-id="' . $data->id . '" data-original-title="Edit" title="Event admins"><i class="fas fa-user-cog"></i></a>';
@@ -70,8 +72,10 @@ class EventController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('EventController.show', $data->id) . '" data-toggle="tooltip"  id="event-details" data-id="' . $data->id . '" data-original-title="Details" title="Details"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
+                    if($data->status < 3){
+                        $button .= '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     $button .= '<a href="' . route('eventSecurityCategories', $data->id) . '" data-toggle="tooltip"  id="event-security-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event security categories"><i class="fas fa-users-cog"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<a href="' . route('eventAdmins', $data->id) . '" data-toggle="tooltip"  id="event-admins" data-id="' . $data->id . '" data-original-title="Edit" title="Event admins"><i class="fas fa-user-cog"></i></a>';
@@ -95,22 +99,23 @@ class EventController extends Controller
 
     public function eventAdmins($event_id)
     {
+        $where = array('id' => $event_id);
+        $event = Event::where($where)->first();
         if (request()->ajax()) {
-            $event = DB::select('select * from event_admins_info_view where event_id=?',[$event_id]);
-            return datatables()->of($event)
-
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-admin"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
+            $event_admins = DB::select('select * from event_admins_info_view where event_id=?',[$event_id]);
+            return datatables()->of($event_admins)
+                ->addColumn('action', function ($data) use ($event) {
+                    $button = '&nbsp;&nbsp;';
+                    if($event->status < 3){
+                        $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-admin"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
-        }
-
-        $where = array('id' => $event_id);
-        $event = Event::where($where)->first();
-
+        }        
+        //$event_status = $event->status;
         //$event_admins = DB::select('select * from event_admin_users_view e where e.user_id NOT in (select ea.user_id from event_admins ea where ea.event_id = ? )',[$event_id]);
     	$event_admins = DB::select('select * from event_admin_users_view');
         return view('pages.Event.eventAdmins')->with('event', $event)->with('eventAdmins',$event_admins);
@@ -146,22 +151,22 @@ class EventController extends Controller
 
     public function eventSecurityOfficers($event_id)
     {
+        $where = array('id' => $event_id);
+        $event = Event::where($where)->first();
         if (request()->ajax()) {
-            $event = DB::select('select * from event_security_officers_info_view where event_id=?',[$event_id]);
-            return datatables()->of($event)
-
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-security-officer"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
+            $eventsecurity_officer = DB::select('select * from event_security_officers_info_view where event_id=?',[$event_id]);
+            return datatables()->of($eventsecurity_officer)
+                ->addColumn('action', function ($data) use ($event)  {
+                    $button = '&nbsp;&nbsp;';
+                    if($event->status < 3){
+                        $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-security-officer"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-
-        $where = array('id' => $event_id);
-        $event = Event::where($where)->first();
-
         //$security_officer = DB::select('select * from security_officer_users_view s where s.user_id NOT in (select eso.user_id from event_security_officers eso where eso.event_id = ? )',[$event_id]);
     	$security_officer = DB::select('select * from security_officer_users_view');
         return view('pages.Event.eventSecurityOfficers')->with('event', $event)->with('securityOfficers',$security_officer);
@@ -200,21 +205,22 @@ class EventController extends Controller
 
     public function eventSecurityCategories($event_id)
     {
+        $where = array('id' => $event_id);
+        $event = Event::where($where)->first();
         if (request()->ajax()) {
-            $event = DB::select('select * from event_security_categories_info_view where event_id=?',[$event_id]);
-            return datatables()->of($event)
-
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-security-category"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
+            $eventsecurity_Categories = DB::select('select * from event_security_categories_info_view where event_id=?',[$event_id]);
+            return datatables()->of($eventsecurity_Categories)
+                ->addColumn('action', function ($data) use ($event) {
+                    $button = '&nbsp;&nbsp;';
+                    if($event->status < 3){
+                        $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-security-category"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-
-        $where = array('id' => $event_id);
-        $event = Event::where($where)->first();
 
         $security_Categories = DB::select('select * from security_categories sc where sc.id NOT in (select esc.security_category_id from event_security_categories esc where esc.event_id = ? )',[$event_id]);
         return view('pages.Event.eventSecurityCategories')->with('event', $event)->with('securityCategories',$security_Categories);
@@ -614,21 +620,22 @@ class EventController extends Controller
 
 	public function eventAccreditationCategories($event_id)
     {
+        $where = array('id' => $event_id);
+        $event = Event::where($where)->first();
         if (request()->ajax()) {
-            $event = DB::select('select * from event_accreditation_categories_view where event_id=?', [$event_id]);
-            return datatables()->of($event)
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-accreditation-category"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
+            $eventaccreditation_categories = DB::select('select * from event_accreditation_categories_view where event_id=?', [$event_id]);
+            return datatables()->of($eventaccreditation_categories)
+                ->addColumn('action', function ($data) use ($event) {
+                    $button = '&nbsp;&nbsp;';
+                    if($event->status < 3){
+                        $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="delete-event-accreditation-category"  data-id="' . $data->id . '" data-original-title="Delete" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-
-        $where = array('id' => $event_id);
-        $event = Event::where($where)->first();
-
         $accreditation_categories = DB::select('select * from accreditation_categories');
         return view('pages.Event.eventAccreditationCategories')->with('event', $event)->with('accreditationCategories', $accreditation_categories);
     }

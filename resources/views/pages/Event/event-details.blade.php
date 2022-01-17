@@ -24,12 +24,14 @@
                             </div>
                             <div class="col-md-2 align-content-md-center">
                                 @role('super-admin')
+                                @if($event->event_status < 3)
                                 <a href="{{route('eventEdit', [$event->id])}}" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/edit.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Edit</span>
                                 </a>
+                                @endif
                                 @endrole
                             </div>
                         </div>

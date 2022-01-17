@@ -392,7 +392,6 @@
             if (filters.name != null) {
                 if (filters.name.operator != null) {
                     //alert(filters.name.operator);
-
                     nameFilter = getCondition(filters.name.condition1.type);
                     nameFilter = nameFilter + ",";
                     nameFilter = nameFilter + filters.name.condition1.filter;

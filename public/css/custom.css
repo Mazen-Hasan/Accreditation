@@ -753,6 +753,10 @@ select {
     background-repeat: no-repeat;
 }
 
+select:disabled {
+    background: #a7a2a28c;
+}
+
 select[multiple] {
     height: 150px;
     background-image: none;
@@ -1214,6 +1218,13 @@ a.disabled {
 
 .pic-img{
     border-radius: 50%;
+    width:120px;
+    height:120px;
+    float:right;
+    margin-right:50px
+}
+
+.event-logo{
     width:120px;
     height:120px;
     float:right;

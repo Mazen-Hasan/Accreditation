@@ -11,7 +11,19 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">Participant - New</h4>
+                        <div class="row align-content-md-center" style="height: 80px">
+                            <div class="col-md-10">
+                                <p class="card-title">Participant - New</p>
+                            </div>
+                            <div class="col-md-2 align-content-md-center">
+                                <a href="javascript:void(0)" id="import" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">Import</span>
+                                </a>
+                            </div>
+                        </div>
                         <form class="form-sample" id="templateForm" name="templateForm">
                             <?php echo $form ?>
                         </form>
@@ -45,6 +57,48 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="import-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="importForm" name="importForm" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-12 control-label">Full Name</label>
+                            <div class="col-sm-12">
+                                <input type="text" id="participantFullName" name="participantFullName" minlength="5"
+                                       maxlength="50"
+                                       placeholder="enter Full Name" required="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Participants</label>
+                            <div class="col-sm-12">
+                                <select id="participants" name="participants">
+                                </select>
+                            </div>
+                            <label id="import_error" class="error"></label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
+                                </button>
+                            </div>
+                            <div class="col-sm-4">
+                                <button type="button" data-dismiss="modal" id="btn-import">Import</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 @section('script')
     <script>
@@ -56,6 +110,89 @@
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        });
+
+        $('#import').click(function () {
+            $('#fullName').val('');
+            $('#importForm').trigger("reset");
+            $('#participants').find('option[value]').remove();
+            $('#modalTitle').html("Import Participant");
+            // $('#btn-import').prop('disabled', true);
+            $("#import_error").html('');
+            $('#import-modal').modal('show');
+        });
+
+        $('#participantFullName').keyup(function () {
+            $('#participants').find('option[value]').remove();
+            var fullName = $("#participantFullName").val();
+            if (fullName.length > 4) {
+                var url = "{{ route('searchParticipants', ":fullName") }}";
+                url = url.replace(':fullName', fullName);
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    success: function (data) {
+                        participantsData = data.list;
+                        $("#import_error").html('');
+                        // $('#btn-import').prop('disabled', false);
+                        buildParticipantsList(data.searchRes);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            }
+            else {
+                $("#import_error").html('');
+            }
+        });
+
+        function buildParticipantsList(data) {
+            if (data.length === 0) {
+                $("#import_error").html('No participants was found');
+            } else {
+                $("#import_error").html('');
+                $.each(data, function (key, value) {
+                    $('#participants').append($('<option>', {
+                        value: value['staff_id'],
+                        text: value['value']
+                    }));
+                });
+            }
+        }
+
+        function fillForm(participant_id) {
+            var formFields = '';
+
+            $.each($(':input:not([type=hidden],[type=submit],[type=file])', '#templateForm'), function (k) {
+                formFields += 'Id: ' + $(this).attr('id') + ', Name: ' + $(this).attr('name') + ', Value: ' + $(this).val() + ', Type: ' + $(this).attr('type') + '\n';
+                // if($(this).attr('type')=='text'){
+                fillFormField($(this).attr('id'), participant_id);
+                // }
+            });
+            // console.log(formFields);
+        }
+
+        function fillFormField(field_id, participant_id) {
+            // console.log('fillFormData');
+            // console.log('participant_id:' + participant_id);
+            // console.log(participantsData[participant_id][field_id]);
+            $('#' + field_id).val(participantsData[participant_id][field_id]);
+        }
+
+        $('#import-modal button').on('click', function (event) {
+            var $button = $(event.target);
+
+            $(this).closest('.modal').one('hidden.bs.modal', function () {
+                if ($button[0].id === 'btn-import') {
+                    var participant_id = $('#participants').find('option:selected').val();
+                    if (!participant_id) {
+                        $("#import_error").html('No participants found');
+                    } else {
+                        fillForm(participant_id);
+                    }
                 }
             });
         });

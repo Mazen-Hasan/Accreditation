@@ -42,7 +42,6 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('/template-form/{template_id}/{company_id}/{event_id}', [App\Http\Controllers\TemplateFormController::class, 'index'])->name('templateForm');
     Route::get('/template-form-details/{participant_id}', [App\Http\Controllers\TemplateFormController::class, 'details'])->name('templateFormDetails');
 
-    Route::get('/search-participant/{fullName}', [App\Http\Controllers\TemplateFormController::class, 'searchParticipants'])->name('searchParticipants');
 
 
 
@@ -241,6 +240,8 @@ Route::get('/focalpoints', [App\Http\Controllers\FocalPointController::class, 'i
 Route::get('/focalpoint-add', [App\Http\Controllers\FocalPointController::class, 'focalpointAdd'])->name('focalpointAdd');
 Route::get('/focalpoint-edit/{id}', [App\Http\Controllers\FocalPointController::class, 'edit'])->name('focalpointEdit');
 Route::get('focalpointController/reset_password/{id}/{password}', 'App\Http\Controllers\FocalPointController@resetPassword')->name('focalPointControllerResetPassword');
+
+Route::get('/search-participant/{fullName}', [App\Http\Controllers\TemplateFormController::class, 'searchParticipants'])->name('searchParticipants');
 
 //Route::any('{query}',
 //    function () {

@@ -7,6 +7,7 @@ use App\Models\ContactTitle;
 use App\Models\SelectOption;
 use App\Models\Title;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 class ContactController extends Controller
@@ -38,8 +39,8 @@ class ContactController extends Controller
                 })
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route('contactEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="' . route('contactTitles', $data->id) . '" data-toggle="tooltip"  id="contact-title" data-id="' . $data->id . '" data-original-title="Titles" title="Titles"><i class="fas fa-user-tie"></i></a>';
+//                    $button .= '&nbsp;&nbsp;';
+//                    $button .= '<a href="' . route('contactTitles', $data->id) . '" data-toggle="tooltip"  id="contact-title" data-id="' . $data->id . '" data-original-title="Titles" title="Titles"><i class="fas fa-user-tie"></i></a>';
                     $button .= '&nbsp;&nbsp;';
                     return $button;
                 })
@@ -77,8 +78,7 @@ class ContactController extends Controller
 
     public function store(Request $request)
     {
-        $num = 0;
-        //xdebug_break();
+
         $postId = $request->post_id;
         $post = Contact::updateOrCreate(['id' => $postId],
             ['name' => $request->name,
@@ -88,20 +88,26 @@ class ContactController extends Controller
                 'telephone' => $request->telephone,
                 'mobile' => $request->mobile,
                 'status' => $request->status,
-                //'creation_date' => $request->creation_date,
-                //'creator' => $request->creator
+                'creator' => Auth::user()->id
             ]);
-        if ($postId == null) {
-            foreach ($request->titles as $title) {
-                $help = ContactTitle::updateOrCreate(['id' => $postId],
-                    ['contact_id' => $post->id,
-                        'title_id' => $title,
-                        'status' => 1
-                        //'creation_date' => $request->creation_date,
-                        //'creator' => $request->creator
-                    ]);
-            }
-        }
+
+        $post = ContactTitle::updateOrCreate(['id' => $postId],
+            ['contact_id' => $post->id,
+                'title_id' => 3,
+                'status' => 1
+            ]);
+
+//        if ($postId == null) {
+//            foreach ($request->titles as $title) {
+//                $help = ContactTitle::updateOrCreate(['id' => $postId],
+//                    ['contact_id' => $post->id,
+//                        'title_id' => $title,
+//                        'status' => 1
+//                        //'creation_date' => $request->creation_date,
+//                        //'creator' => $request->creator
+//                    ]);
+//            }
+//        }
         return Response::json($post);
     }
 

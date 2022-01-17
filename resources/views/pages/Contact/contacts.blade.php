@@ -1,5 +1,5 @@
 @extends('main')
-@section('subtitle',' Contacts')
+@section('subtitle',' Event Organizer')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">
@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                             <div class="col-md-7">
-                                <p class="card-title">Event Organizer/Owner</p>
+                                <p class="card-title">Event Organizer</p>
                             </div>
                             <div class="col-md-1 align-content-md-center">
                                 <div class="search-container">

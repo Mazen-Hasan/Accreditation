@@ -86,28 +86,28 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Title</label>
-                                        <div class="col-sm-12">
-                                            <select multiple id="titles" name="titles[]" required="">
-                                                <option value="default">Please select Contact Title</option>
-                                                @foreach ($titles as $titles)
-                                                    <option value="{{ $titles->key }}"
-                                                            @if ($titles->key == -1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $titles->value }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                                {{--                                <div class="col-md-6">--}}
+                                {{--                                    <div class="form-group col">--}}
+                                {{--                                        <label>Title</label>--}}
+                                {{--                                        <div class="col-sm-12">--}}
+                                {{--                                            <select multiple id="titles" name="titles[]" required="">--}}
+                                {{--                                                <option value="default">Please select Contact Title</option>--}}
+                                {{--                                                @foreach ($titles as $titles)--}}
+                                {{--                                                    <option value="{{ $titles->key }}"--}}
+                                {{--                                                            @if ($titles->key == -1)--}}
+                                {{--                                                            selected="selected"--}}
+                                {{--                                                        @endif--}}
+                                {{--                                                    >{{ $titles->value }}</option>--}}
+                                {{--                                                @endforeach--}}
+                                {{--                                            </select>--}}
+                                {{--                                        </div>--}}
+                                {{--                                    </div>--}}
+                                {{--                                </div>--}}
                                 <div class="col-md-6">
                                     <div class="form-group col">
                                         <label>Status</label>
                                         <div class="col-sm-12">
-                                            <select id="status" name="status"  required="">
+                                            <select id="status" name="status" required="">
                                                 <option value="default">Please select Status</option>
                                                 @foreach ($contactStatuss as $contactStatus)
                                                     <option value="{{ $contactStatus->key }}"

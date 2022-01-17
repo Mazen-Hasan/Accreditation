@@ -113,7 +113,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal -->
     <div class="modal fade" id="delete-title-confirm-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">

@@ -103,7 +103,7 @@
                 <i class="logout">
                     <img src="{{ asset('images/participant.png') }}" alt="Contact">
                 </i>
-                <span class="menu-title">Event Organizer/Owner</span>
+                <span class="menu-title">Event Organizer</span>
             </a>
         </li>
         <li class="nav-item">

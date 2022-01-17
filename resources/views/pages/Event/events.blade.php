@@ -55,13 +55,14 @@
                                     <th>Name</th>
                                     <th>Size</th>
                                     <th>Organizer</th>
-                                    <th>Registeration Form</th>
+                                    <th>Registration Form</th>
                                     <th>Type</th>
                                     <th>Start</th>
                                     <th>End</th>
                                     <th>Accredit Start</th>
                                     <th>Accredit End</th>
                                     <th style="color: black">Status</th>
+                                    <th>Logo</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -166,6 +167,14 @@
                             }
                         }
                     },
+                    {
+                        "data": "logo",
+                        "render": function (val) {
+                            // var image_path = "{{URL::asset('storage/logo/')}}/";
+                            var image_path = "{{URL::asset('logo/')}}/";
+                            return "<img src= " + image_path + val + "></img>";
+                        }
+                    },
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[0, 'desc']]
@@ -211,13 +220,13 @@
                     }
                 });
             });
-        
+
             $('body').on('click', '#showAll', function () {
                 if(showStatus == 1){
                     murl = "{{ route('eventsShowall', [":id"]) }}";
                     murl = murl.replace(':id', showStatus);
                     $('#showAllSpan').html("Hide archived");
-                    showStatus = 0;     
+                    showStatus = 0;
                 }else{
                     murl = "{{ route('EventController.index') }}";
                     $('#showAllSpan').html("Show all");
@@ -225,13 +234,13 @@
                 }
                 //alert(showStatus + "," + murl);
                 var mtable = $('#laravel_datatable').DataTable();
-                mtable.ajax.url(murl).load(); 
+                mtable.ajax.url(murl).load();
             });
 
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
-        
+
         	var oTable = $('#laravel_datatable').DataTable();
 
             $('#search').on('keyup', function () {

@@ -44,12 +44,12 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                    <a href="javascript:void(0)" id="add-new-title" class="add-hbtn">
-                                        <i>
-                                            <img src="{{ asset('images/add.png') }}" alt="Add">
-                                        </i>
-                                        <span class="dt-hbtn">Add</span>
-                                    </a>
+                                <a href="javascript:void(0)" id="add-new-title" class="add-hbtn">
+                                    <i>
+                                        <img src="{{ asset('images/add.png') }}" alt="Add">
+                                    </i>
+                                    <span class="dt-hbtn">Add</span>
+                                </a>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -79,7 +79,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="titleForm" name="titleForm" class="form-horizontal">
-                        <input style="visibility: hidden"  type="text" name="contact_id" id="contact_id"
+                        <input style="visibility: hidden" type="text" name="contact_id" id="contact_id"
                                value="{{$contact->id}}">
                         <div class="row">
                             <div class="col-md-12">

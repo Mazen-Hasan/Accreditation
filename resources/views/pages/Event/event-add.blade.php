@@ -92,16 +92,19 @@
                                     <div class="form-group col">
                                         <label>Event Owner</label>
                                         <div class="col-sm-12">
-                                            <select id="owner" name="owner" required="">
-                                                <option value="default">Please select Event Owner</option>
-                                                @foreach ($owners as $owner)
-                                                    <option value="{{ $owner->key }}"
-                                                            @if ($owner->key == -1)
-                                                            selected="selected"
-                                                        @endif
-                                                    >{{ $owner->value }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" id="owner" minlength="1" maxlength="100"
+                                                   name="owner" value=""
+                                                   placeholder="enter owner" required=""/>
+{{--                                            <select id="owner" name="owner" required="">--}}
+{{--                                                <option value="default">Please select Event Owner</option>--}}
+{{--                                                @foreach ($owners as $owner)--}}
+{{--                                                    <option value="{{ $owner->key }}"--}}
+{{--                                                            @if ($owner->key == -1)--}}
+{{--                                                            selected="selected"--}}
+{{--                                                        @endif--}}
+{{--                                                    >{{ $owner->value }}</option>--}}
+{{--                                                @endforeach--}}
+{{--                                            </select>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -267,39 +270,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group col">
-                                        <label>Event logo</label>
-                                        <div class="col-sm-12">
-                                            <div class="row">
-                                                <div class="col-sm-8">
-                                                    <input type="file" id="file" name="file">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <button type="submit" id="btn-upload" value="Upload">Upload
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group col">
-                                        <label id="file_type_error"></label>
-                                        <div style="background-color: #ffffff00!important;" class="progress">
-                                            <div id="file-progress-bar" class="progress-bar"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
                             <div class="row">
                                 <div class="col-sm-offset-2 col-sm-2">
                                     <button type="submit" id="btn-save" value="create">Save
@@ -464,7 +434,7 @@
                         error: function (data) {
                             $('#loader-modal').modal('hide');
                             console.log('Error:', data);
-                            $('#btn-save').html('Save Changes');
+                            $('#btn-save').html('Saved');
                         }
                     });
                 }
@@ -502,77 +472,6 @@
             function (value, element, params) {
                 return params !== value;
             }, " Please select a value");
-
-        $("#file").change(function () {
-            let allowedTypes = ['image/png','image/jpeg'];
-            let file = this.files[0];
-            let fileType = file.type;
-            if (!allowedTypes.includes(fileType)) {
-                $("#file-progress-bar").width('0%');
-                $("#file_type_error").html('Please choose a valid file (jpeg, png)');
-                $("#file").val('');
-                $("#btn-upload").attr('disabled', true);
-                return false;
-            } else {
-                $("button").removeAttr('disabled');
-                $("#file_type_error").html('');
-                $("#file-progress-bar").width('0%');
-            }
-        });
-
-        $('.img-upload').submit(function (e) {
-            console.log('upload');
-            var file = $('#file').val();
-            if(file=='')
-            {
-                $('#file_type_error').removeClass('info').addClass('error');
-                $("#file_type_error").html('Please choose file');
-                return false;
-            }
-
-            $('#btn-upload').html('Sending..');
-            e.preventDefault();
-            var formData = new FormData(this);
-            formData.append('template_id', $('#h_template_id').val());
-            $.ajax({
-                xhr: function () {
-                    let xhr = new window.XMLHttpRequest();
-                    xhr.upload.addEventListener("progress", function (element) {
-                        if (element.lengthComputable) {
-                            var percentComplete = ((element.loaded / element.total) * 100);
-                            $("#file-progress-bar").width(percentComplete + '%');
-                            $("#file-progress-bar").html(percentComplete + '%');
-                        }
-                    }, false);
-                    return xhr;
-                },
-
-                type: 'POST',
-                url: "{{ route('uploadLogo') }}",
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-
-                beforeSend: function () {
-                    $("#file-progress-bar").width('0%');
-                },
-
-                success: (data) => {
-                    console.log(data);
-                    // this.reset();
-                    $('#file_type_error').removeClass('error').addClass('info');
-                    $("#file_type_error").html('File uploaded successfully');
-                    $('#btn-upload').html('Upload');
-                    $("#bg_image").val(data.fileName);
-                },
-
-                error: function (data) {
-                    $("#file_type_error").html('Error uploading file');
-                    console.log(data);
-                }
-            });
-        });
 
         // $("#event_admin_add").click(function () {
         //     var event_admin_id = $("#event_admin_multi").val();

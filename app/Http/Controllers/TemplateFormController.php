@@ -164,12 +164,14 @@ class TemplateFormController extends Controller
         return view('pages.TemplateForm.template-form-add')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)->with('eventId',$eventId);
     }
 
-    public function searchParticipants($fullName){
+    public function searchParticipants($fullName, $companyID){
         $returnedParticipants = array();
         $data = array();
 
         //search return id & full name
-        $participants = DB::select('select s.staff_id, s.value from staff_data s where s.key = ? and lower(s.value) like ?', ['Full_Name', strtolower($fullName) . '%']);
+        $participants = DB::select('select s.staff_id, s.value from staff_data s where s.key = "Full_name" and lower(s.value) like ? AND s.staff_id IN(
+        SELECT i.staff_id FROM staff_data i WHERE i.key = "company_id" AND i.value = ?)',
+            [ strtolower($fullName) . '%', $companyID]);
 
         //get staff ids
         $staff_ids = array();
@@ -180,30 +182,15 @@ class TemplateFormController extends Controller
         //get staff data based on ids
         $participantsData = DB::table('staff_data')->select(['staff_id','key','value'])->whereIn('staff_id', $staff_ids)->get();
 
-        //loop through particpants (staff id & full name)
-//        foreach ($participants as $participant){
-//            $data = array();
-//            foreach ($participantsData as $participantData){
-//                if($participantData->staff_id == $participant->staff_id){
-//                    $data [] = $participantData;
-//                }
-//            }
-//            $returnedParticipants  [] = [$participant->staff_id, $participant->value, $data];
-//        }
-
-            $data = array();
-            foreach ($participantsData as $participantData){
-                    $data [$participantData->staff_id][$participantData->key] = $participantData->value;
-            }
-//            $returnedParticipants  [] = [$participant->staff_id, $participant->value, $data];
+        $data = array();
+        foreach ($participantsData as $participantData){
+            $data [$participantData->staff_id][$participantData->key] = $participantData->value;
+        }
 
         return Response()->json([
             "searchRes" => $participants,
             "list" => $data
         ]);
-
-//        return Response::json($returnedParticipants);
-
     }
 
     public function createHiddenField($id, $label, $value)

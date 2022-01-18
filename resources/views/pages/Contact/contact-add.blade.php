@@ -70,7 +70,7 @@
                                     <div class="form-group col">
                                         <label>Telephone</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="telephone" name="telephone"
+                                            <input type="number" id="telephone" name="telephone"
                                                    placeholder="enter telephone" required=""/>
                                         </div>
                                     </div>
@@ -79,7 +79,7 @@
                                     <div class="form-group col">
                                         <label>Mobile</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="mobile" name="mobile" placeholder="enter mobile"
+                                            <input type="number" id="mobile" name="mobile" placeholder="enter mobile"
                                                    required=""/>
                                         </div>
                                     </div>
@@ -131,6 +131,26 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -158,6 +178,7 @@
                 },
 
                 submitHandler: function (form) {
+                    $('#loader-modal').modal('show');
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
@@ -168,16 +189,17 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
-                            $('#btn-save').html('Add successfully');
+                            $('#btn-save').html('Saved');
                             window.location.href = "{{ route('contacts')}}";
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
-                            $('#btn-save').html('Save Changes');
                         }
                     });
                 }

@@ -241,7 +241,7 @@ Route::get('/focalpoint-add', [App\Http\Controllers\FocalPointController::class,
 Route::get('/focalpoint-edit/{id}', [App\Http\Controllers\FocalPointController::class, 'edit'])->name('focalpointEdit');
 Route::get('focalpointController/reset_password/{id}/{password}', 'App\Http\Controllers\FocalPointController@resetPassword')->name('focalPointControllerResetPassword');
 
-Route::get('/search-participant/{fullName}', [App\Http\Controllers\TemplateFormController::class, 'searchParticipants'])->name('searchParticipants');
+Route::get('/search-participant/{fullName}/{companyId}', [App\Http\Controllers\TemplateFormController::class, 'searchParticipants'])->name('searchParticipants');
 
 //Route::any('{query}',
 //    function () {

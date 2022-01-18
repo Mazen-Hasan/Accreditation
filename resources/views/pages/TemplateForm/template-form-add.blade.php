@@ -160,10 +160,13 @@
 
         $('#participantFullName').keyup(function () {
             $('#participants').find('option[value]').remove();
-            var fullName = $("#participantFullName").val();
+            let companyID = $("#company_id").val();
+            let fullName = $("#participantFullName").val();
+
             if (fullName.length > 4) {
-                var url = "{{ route('searchParticipants', ":fullName") }}";
+                let url = "{{ route('searchParticipants', [':fullName',':companyId']) }}";
                 url = url.replace(':fullName', fullName);
+                url = url.replace(':companyId', companyID);
                 $.ajax({
                     type: "get",
                     url: url,

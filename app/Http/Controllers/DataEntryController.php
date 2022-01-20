@@ -40,16 +40,19 @@ class DataEntryController extends Controller
                 ->addColumn('name', function ($row) {
                     return $row->name . ' ' . $row->last_name;
                 })
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('dataentryEdit', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="reset_password" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->account_id . '" title="Reset password"><i class="fas fa-retweet"></i></a>';
+                ->addColumn('action', function ($data) use ($event) {
+                    $button = "";
+                    if($event->status < 3){
+                        $button .= '<a href="' . route('dataentryEdit', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="javascript:void(0);" id="reset_password" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->account_id . '" title="Reset password"><i class="fas fa-retweet"></i></a>';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.DataEntry.dataentrys')->with('companyId',$companyId)->with('eventId',$eventId)->with('company_name',$company->name)->with('event_name',$event->name);
+        return view('pages.DataEntry.dataentrys')->with('companyId',$companyId)->with('eventId',$eventId)->with('company_name',$company->name)->with('event_name',$event->name)->with('event_status',$event->status);
     }
 
 
@@ -385,14 +388,15 @@ class DataEntryController extends Controller
                     }
                     return $status_value;
                 })
-                ->addColumn('action', function ($data) {
+                ->addColumn('action', function ($data) use ($event) {
                     $button = '';
-                    switch ($data->status) {
-
-                        case 0:
-                            $button .= '<a href="' . route('participantAdd', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                            $button .= '&nbsp;&nbsp;';
-                            break;
+                    if($event->status < 3){
+                        switch ($data->status) {
+                            case 0:
+                                $button .= '<a href="' . route('participantAdd', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                                $button .= '&nbsp;&nbsp;';
+                                break;
+                        }
                     }
                     return $button;
                 })
@@ -410,7 +414,7 @@ class DataEntryController extends Controller
         }
         $subCompany_nav = 1;
         return view('pages.DataEntry.dataentry-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)
-            ->with('companyId',$companyId)->with('eventId',$eventId)->with('event_name',$event->name)->with('company_name',$company->name)->with('addable',$addable);
+            ->with('companyId',$companyId)->with('eventId',$eventId)->with('event_name',$event->name)->with('company_name',$company->name)->with('addable',$addable)->with('event_status',$event->status);
     }
 
     public function participantAdd($participant_id,$companyId,$eventId)

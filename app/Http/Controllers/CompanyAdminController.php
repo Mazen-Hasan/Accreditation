@@ -30,7 +30,8 @@ class CompanyAdminController extends Controller
 {
     public function index()
     {
-        $events = DB::select('select * from company_admins_view cc where cc.account_id = ? and cc.status = ? and cc.event_end_date >= CURRENT_DATE()', [Auth::user()->id, 3]);
+        //$events = DB::select('select * from company_admins_view cc where cc.account_id = ? and cc.status = ? and cc.event_end_date >= CURRENT_DATE()', [Auth::user()->id, 3]);
+        $events = DB::select('select * from company_admins_view cc where cc.account_id = ? and cc.status = ? and cc.event_status < ?', [Auth::user()->id, 3,4]);
         $subCompany_nav = 1;
         return view('pages.CompanyAdmin.company-admin')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }
@@ -210,27 +211,29 @@ class CompanyAdminController extends Controller
                     }
                     return $status_value;
                 })
-                ->addColumn('action', function ($data) {
+                ->addColumn('action', function ($data) use ($event) {
                     $button = '';
                     $button .= '<a href="' . route('templateFormDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    switch ($data->status) {
+                    if($event->status < 3){
+                        switch ($data->status) {
 
-                        case 0:
-                            $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                            $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Send request"><i class="far fa-paper-plane"></i></a>';
-                            break;
-                        case 7:
-                            $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                            $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
-                            break;
-                        case 8:
-                            $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                            $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->event_admin_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
-                            break;
+                            case 0:
+                                $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                                $button .= '&nbsp;&nbsp;';
+                                $button .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Send request"><i class="far fa-paper-plane"></i></a>';
+                                break;
+                            case 7:
+                                $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                                $button .= '&nbsp;&nbsp;';
+                                $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
+                                break;
+                            case 8:
+                                $button .= '<a href="' . route('templateForm', [$data->id,$data->company_id,$data->event_id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                                $button .= '&nbsp;&nbsp;';
+                                $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->event_admin_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
+                                break;
+                        }
                     }
                     return $button;
                 })
@@ -251,7 +254,7 @@ class CompanyAdminController extends Controller
             $subCompany_nav = 0;
         }
         return view('pages.CompanyAdmin.company-participants')->with('dataTableColumns', $dataTableColumuns)->with('subCompany_nav', $subCompany_nav)->with('companyId',$companyId)
-            ->with('eventId',$eventId)->with('event_name', $event->name)->with('company_name', $company->name)->with('addable',$addable);
+            ->with('eventId',$eventId)->with('event_name', $event->name)->with('company_name', $company->name)->with('addable',$addable)->with('event_status',$event->status);
     }
 
 
@@ -387,10 +390,13 @@ class CompanyAdminController extends Controller
             // $status = 1;
             if ($status == 0) {
                 return datatables()->of($companyAccreditationCategories)
-                    ->addColumn('action', function ($data) {
-                        $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" title="Edit Size"><i class="fas fa-chart-pie"></i></a>';
-                        $button .= '&nbsp;&nbsp;';
-                        $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip"  data-size="' . $data->size . '" data-original-title="Delete" data-id="' . $data->id . '" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                    ->addColumn('action', function ($data) use($event) {
+                        $button = '';
+                        if($event->status < 3){
+                            $button .= '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" title="Edit Size"><i class="fas fa-chart-pie"></i></a>';
+                            $button .= '&nbsp;&nbsp;';
+                            $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip"  data-size="' . $data->size . '" data-original-title="Delete" data-id="' . $data->id . '" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                        }
                         return $button;
                     })
                     ->rawColumns(['action'])
@@ -419,7 +425,7 @@ class CompanyAdminController extends Controller
         if($company->parent_id != null){
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('subCompany_nav', $subCompany_nav);
+        return view('pages.CompanyAdmin.company-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('subCompany_nav', $subCompany_nav)->with('event_status',$event->status);
     }
 
     public function editCompanyAccreditSize($id)
@@ -542,11 +548,14 @@ class CompanyAdminController extends Controller
         if (request()->ajax()) {
             $companies = DB::select('select * from companies_view where parent_id = ? and event_id = ?', [$company->id,$eventId]);
             return datatables()->of($companies)
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route('subCompanyEdit', [$data->id, $data->event_id]) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" title="Invite"><i class="far fa-share-square"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
+                ->addColumn('action', function ($data) use ($event) {
+                    $button = "";
+                    if($event->status < 3){
+                        $button .= '<a href="' . route('subCompanyEdit', [$data->id, $data->event_id]) . '" data-toggle="tooltip"  id="edit-company" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-name="' . $data->name . '" data-focalpoint="' . $data->focal_point . '" title="Invite"><i class="far fa-share-square"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                    }
                     $button .= '<a href="' . route('subCompanyAccreditCategories', [$data->id, $data->event_id]) . '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" title="Accreditation Size"><i class="fas fa-sitemap"></i></a>';
                     return $button;
                 })
@@ -557,7 +566,7 @@ class CompanyAdminController extends Controller
         if($company->parent_id != null){
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventId', $event->id)->with('companyId',$companyId)->with('subCompany_nav',$subCompany_nav);
+        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventId', $event->id)->with('companyId',$companyId)->with('subCompany_nav',$subCompany_nav)->with('event_status',$event->status);
     }
 
     public function storeSubCompnay(Request $request)
@@ -838,10 +847,13 @@ class CompanyAdminController extends Controller
             }
             //if ($status == 0) {
                 return datatables()->of($companyAccreditationCategories)
-                    ->addColumn('action', function ($data) {
-                        $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" title="Edit Size"><i class="fas fa-chart-pie"></i></a>';
-                        $button .= '&nbsp;&nbsp;';
-                        $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip"  data-size="' . $data->size . '" data-original-title="Delete" data-id="' . $data->id . '" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                    ->addColumn('action', function ($data) use ($event) {
+                        $button = "";
+                        if($event->status < 3){
+                            $button .= '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" title="Edit Size"><i class="fas fa-chart-pie"></i></a>';
+                            $button .= '&nbsp;&nbsp;';
+                            $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip"  data-size="' . $data->size . '" data-original-title="Delete" data-id="' . $data->id . '" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                        }
                         return $button;
                     })
                     ->rawColumns(['action'])

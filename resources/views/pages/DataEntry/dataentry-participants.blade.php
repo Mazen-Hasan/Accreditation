@@ -45,12 +45,14 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('data-entry')
+                                @if($event_status < 3)
                                 <a href="#" id="add-new-post" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Add</span>
                                 </a>
+                                @endif
                                 @endrole
                             </div>
                         </div>

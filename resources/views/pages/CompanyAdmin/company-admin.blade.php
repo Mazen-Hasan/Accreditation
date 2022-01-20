@@ -18,7 +18,11 @@
                         <div class="row">
                             @foreach($events as $event)
                                 <div class="col-sm-4">
-                                    <div class="card">
+                                    <div class="card"
+                                    @if($event->status > 2)
+                                        style="background-color: #d7d4d4;"
+                                    @endif
+                                    >
                                         <div>
                                             <input type="hidden" id="logoName" value="{{$event->logo}}">
                                             <a href="{{route('companyParticipants',[$event->company_id,$event->id])}}">

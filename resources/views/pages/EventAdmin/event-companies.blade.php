@@ -36,12 +36,14 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
+                                @if($event_status < 3)
                                 <a href="../company-add/{{$eventid}}" id="add-new-company" class="add-hbtn">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
                                     <span class="dt-hbtn">Add</span>
                                 </a>
+                                @endif
                             </div>
                         </div>
                         <div class="table-responsive">

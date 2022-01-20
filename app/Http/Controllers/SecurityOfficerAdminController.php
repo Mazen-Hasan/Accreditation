@@ -196,21 +196,23 @@ class SecurityOfficerAdminController extends Controller
                     }
                     return $status_value;
                 })
-                ->addColumn('action', function ($data) {
+                ->addColumn('action', function ($data) use($event) {
                     $button = '';
                     $button .= '<a href="' . route('securityParticipantDetails', $data->id) . '" data-toggle="tooltip"  id="participant-details" data-id="' . $data->id . '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
                     $button .= '&nbsp;&nbsp;';
-                    switch ($data->status) {
-                        case 1:
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' . $data->id . '" data-original-title="Edit" title="Approve"><i class="fas fa-vote-yea"></i></a>';
-                            $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" title="Reject"><i class="fas fa-ban"></i></a>';
-                            $button .= '&nbsp;&nbsp;';
-                            $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" title="Return for correction"><i class="far fa-window-close"></i></a>';
-                            break;
-                        case 7:
-                            $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
-                            break;
+                    if($event->status < 3){
+                        switch ($data->status) {
+                            case 1:
+                                $button .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' . $data->id . '" data-original-title="Edit" title="Approve"><i class="fas fa-vote-yea"></i></a>';
+                                $button .= '&nbsp;&nbsp;';
+                                $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $data->id . '" data-original-title="Edit" title="Reject"><i class="fas fa-ban"></i></a>';
+                                $button .= '&nbsp;&nbsp;';
+                                $button .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $data->id . '" data-original-title="Edit" title="Return for correction"><i class="far fa-window-close"></i></a>';
+                                break;
+                            case 7:
+                                $button .= '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' . $data->id . '" data-reason="' . $data->security_officer_reject_reason . '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
+                                break;
+                        }
                     }
                     return $button;
                 })
@@ -515,14 +517,16 @@ class SecurityOfficerAdminController extends Controller
             $form .= '<div class="col-md-6"><div class="form-group col"></div></div>';
         }
         $buttons = '';
-        switch ($status) {
-            case 1:
-                $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Aprrove</a>';
-                $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject</a>';
-                $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Return for correction</a>';
-                break;
+        if($event->status < 3){
+            switch ($status) {
+                case 1:
+                    $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Aprrove</a>';
+                    $buttons .= '&nbsp;&nbsp;';
+                    $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Reject</a>';
+                    $buttons .= '&nbsp;&nbsp;';
+                    $buttons .= '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Return for correction</a>';
+                    break;
+            }
         }
         return view('pages.SecurityOfficerAdmin.security-officer-participant-details')->with('form', $form)->with('attachmentForm', $attachmentForm)->with('buttons', $buttons)->with('companyId', $participant->company_id)->with('eventId', $participant->event_id);
     }

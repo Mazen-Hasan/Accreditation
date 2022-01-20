@@ -325,16 +325,19 @@ class CompanyController extends Controller
         if (request()->ajax()) {
             $companyAccreditationCategories = DB::select('select * from event_company_accrediation_categories_view where company_id = ? and event_id = ?', [$Id, $eventId]);
             return datatables()->of($companyAccreditationCategories)
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" title="Edit Size"><i class="fas fa-chart-pie"></i></a>';
-                    $button .= '&nbsp;&nbsp;';
-                    $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip" data-original-title="Delete" data-size="' . $data->size . '" data-id="' . $data->id . '" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                ->addColumn('action', function ($data) use ($event) {
+                    $button = "";
+                    if($event->status < 3){
+                        $button .= '<a href="javascript:void(0);" data-toggle="tooltip"  id="edit-company-accreditation" data-id="' . $data->id . '" data-original-title="Edit" title="Edit Size"><i class="fas fa-chart-pie"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="javascript:void(0);" id="delete-company-accreditation" data-toggle="tooltip" data-original-title="Delete" data-size="' . $data->size . '" data-id="' . $data->id . '" title="Delete"><i class="far fa-trash-alt"></i></a>';
+                    }
                     return $button;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.Company.company-accreditation-size-new')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $Id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize);
+        return view('pages.Company.company-accreditation-size-new')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $Id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('event_status', $event->status);
     }
 
     public function editCompanyAccreditSize($id)

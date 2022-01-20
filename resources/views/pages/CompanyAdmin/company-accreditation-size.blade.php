@@ -72,7 +72,7 @@
                                     <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                @if($status == 0)
+                                @if($status == 0 && $event_status < 3)
                                     <a href="javascript:void(0)" id="add-new-post" class="add-hbtn">
                                         <i>
                                             <img src="{{ asset('images/add.png') }}" alt="Add">

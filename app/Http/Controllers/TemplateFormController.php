@@ -639,22 +639,23 @@ class TemplateFormController extends Controller
             $form .= '<div class="col-md-6"><div class="form-group col"></div></div>';
         }
         $buttons = '';
-        switch ($status) {
-
-            case 0:
-                $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id,$event->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $participant_id . '" class="delete btn btn-danger">Send Request</a>';
-                break;
-            case 7:
-                $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id,$event->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                break;
-            case 8:
-                $buttons .= '&nbsp;&nbsp;';
-                $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id,$event->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
-                break;
+        if($event->status < 3){
+            switch ($status) {
+                case 0:
+                    $buttons .= '&nbsp;&nbsp;';
+                    $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id,$event->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    $buttons .= '&nbsp;&nbsp;';
+                    $buttons .= '<a href="javascript:void(0);" id="send_request" data-toggle="tooltip" data-original-title="Delete" data-id="' . $participant_id . '" class="delete btn btn-danger">Send Request</a>';
+                    break;
+                case 7:
+                    $buttons .= '&nbsp;&nbsp;';
+                    $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id,$event->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    break;
+                case 8:
+                    $buttons .= '&nbsp;&nbsp;';
+                    $buttons .= '<a href="' . route('templateForm', [$participant_id,$company->id,$event->id]) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $participant_id . '" data-original-title="Edit" class="edit btn btn-success edit-post">Edit</a>';
+                    break;
+            }
         }
         $subCompany_nav = 1;
         if($company->parent_id != null){

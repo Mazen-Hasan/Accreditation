@@ -92,15 +92,17 @@
                                     <div class="form-group col">
                                         <label>Owner</label>
                                         <div class="col-sm-12">
-                                            <select id="owner" name="owner" required="">
-                                                @foreach ($owners as $owner)
-                                                    <option value="{{ $owner->key }}"
-                                                            @if ($owner->key == $event->owner)
-                                                    selected="selected"
-                                                        @endif
-                                                    >{{ $owner->value }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" id="name" name="name" value="{{$event->owner}}"
+                                                   required="" placeholder="enter name"/>
+{{--                                            <select id="owner" name="owner" required="">--}}
+{{--                                                @foreach ($owners as $owner)--}}
+{{--                                                    <option value="{{ $owner->key }}"--}}
+{{--                                                            @if ($owner->key == $event->owner)--}}
+{{--                                                    selected="selected"--}}
+{{--                                                        @endif--}}
+{{--                                                    >{{ $owner->value }}</option>--}}
+{{--                                                @endforeach--}}
+{{--                                            </select>--}}
                                         </div>
                                     </div>
                                 </div>

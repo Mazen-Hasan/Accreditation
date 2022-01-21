@@ -356,17 +356,17 @@
             });
 
             $(document).on('change', '#approval_option', function () {
-                var choosed = $('#approval_option').find(":selected").val();
-                if (choosed == 1) {
+                let choose = $('#approval_option').find(":selected").val();
+                if (choose == 1) {
                     $("#security_officers").prop('disabled', true);
-                } else {
+                }  else{
                     $('#security_officers').prop('disabled', false);
                 }
             });
 
             $('#organizer').on('change', function () {
-                var organizer_id = $('#organizer').val();
-                var url = "{{ route('eventCheckSameEventOrganizer', ":id") }}";
+                let organizer_id = $('#organizer').val();
+                let url = "{{ route('eventCheckSameEventOrganizer', ":id") }}";
                 url = url.replace(':id', organizer_id);
                 $.ajax({
                     type: "get",

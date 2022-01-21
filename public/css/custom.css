@@ -1242,6 +1242,11 @@ a.disabled {
     font-size: 20px;
 }
 
+.fa-image{
+    color: #795b0f;
+    font-size: 20px;
+}
+
 label.loading{
     padding-left: 15px;
     padding-bottom: 0;

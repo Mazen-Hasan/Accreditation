@@ -51,7 +51,7 @@ class FileUploadController extends Controller
                 $fileName = str_replace(':','_',$fileName);
                 $fileName = str_replace(' ', '_', $fileName) . '.' . $extension;
 
-                $path = 'events/';
+                $path = 'logo/';
 
                 $stored_file = $file->move(
                     $path, $fileName);

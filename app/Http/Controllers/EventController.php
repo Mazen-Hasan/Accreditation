@@ -41,6 +41,8 @@ class EventController extends Controller
                     if($data->status < 3){
                         $button .= '<a href="' . route('eventEdit', $data->id) . '" data-toggle="tooltip"  id="edit-event" data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
                         $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="javascript:void(0);" id="edit-logo" data-toggle="tooltip" data-id="' . $data->id  . '" data-name="' . $data->name . '" data-l="' . $data->logo . '" data-original-title="Edit" title="Edit Logo"><i class="far fa-image"></i></a>';
+                        $button .= '&nbsp;&nbsp;';
                     }
                     $button .= '<a href="' . route('eventSecurityCategories', $data->id) . '" data-toggle="tooltip"  id="event-security-categories" data-id="' . $data->id . '" data-original-title="Edit" title="Event security categories"><i class="fas fa-users-cog"></i></a>';
                     $button .= '&nbsp;&nbsp;';
@@ -114,7 +116,7 @@ class EventController extends Controller
                 })
                 ->rawColumns(['action'])
                 ->make(true);
-        }        
+        }
         //$event_status = $event->status;
         //$event_admins = DB::select('select * from event_admin_users_view e where e.user_id NOT in (select ea.user_id from event_admins ea where ea.event_id = ? )',[$event_id]);
     	$event_admins = DB::select('select * from event_admin_users_view');
@@ -408,14 +410,14 @@ class EventController extends Controller
             $organizersSelectOption[] = $organizerSelectOption;
         }
 
-        $sql = 'select CONCAT(COALESCE(c.name,"")," ",COALESCE(c.middle_name,"")," ",COALESCE(c.last_name,"")) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Owner")';
-        $query = $sql;
-        $contacts = DB::select($query);
-        $ownersSelectOption = array();
-        foreach ($contacts as $contact) {
-            $ownerSelectOption = new SelectOption($contact->id, $contact->name);
-            $ownersSelectOption[] = $ownerSelectOption;
-        }
+//        $sql = 'select CONCAT(COALESCE(c.name,"")," ",COALESCE(c.middle_name,"")," ",COALESCE(c.last_name,"")) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Owner")';
+//        $query = $sql;
+//        $contacts = DB::select($query);
+//        $ownersSelectOption = array();
+//        foreach ($contacts as $contact) {
+//            $ownerSelectOption = new SelectOption($contact->id, $contact->name);
+//            $ownersSelectOption[] = $ownerSelectOption;
+//        }
 
         $securityCategories = SecurityCategory::get()->where('status', '=', '1');
         $securityCategoriesSelectOption = array();
@@ -464,7 +466,7 @@ class EventController extends Controller
             $templatesSelectOption[] = $templateSelectOption;
         }
 
-        return view('pages.Event.event-add')->with('owners', $ownersSelectOption)->with('organizers', $organizersSelectOption)->with('eventAdmins', $eventAdmins)
+        return view('pages.Event.event-add')->with('organizers', $organizersSelectOption)->with('eventAdmins', $eventAdmins)
             ->with('securityOfficers', $securityOfficers)->with('approvalOptions', $approvalOptions)->with('eventTypes', $eventTypesSelectOption)
             ->with('eventStatuss', $eventStatuss)->with('eventForms', $templatesSelectOption)->with('securityCategories', $securityCategoriesSelectOption);
     }
@@ -482,14 +484,14 @@ class EventController extends Controller
             $organizerSelectOption = new SelectOption($contact->id, $contact->name);
             $organizersSelectOption[] = $organizerSelectOption;
         }
-        $sql = 'select CONCAT(COALESCE(c.name,"")," ",COALESCE(c.middle_name,"")," ",COALESCE(c.last_name,"")) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Owner")';
-        $query = $sql;
-        $contacts = DB::select($query);
-        $ownersSelectOption = array();
-        foreach ($contacts as $contact) {
-            $ownerSelectOption = new SelectOption($contact->id, $contact->name);
-            $ownersSelectOption[] = $ownerSelectOption;
-        }
+//        $sql = 'select CONCAT(COALESCE(c.name,"")," ",COALESCE(c.middle_name,"")," ",COALESCE(c.last_name,"")) "name" , c.id "id" from contacts c inner join contact_titles ct on c.id = ct.contact_id where ct.title_id = (select id from titles where title_label = "Owner")';
+//        $query = $sql;
+//        $contacts = DB::select($query);
+//        $ownersSelectOption = array();
+//        foreach ($contacts as $contact) {
+//            $ownerSelectOption = new SelectOption($contact->id, $contact->name);
+//            $ownersSelectOption[] = $ownerSelectOption;
+//        }
 
         $eventTypes = EventType::get()->where('status', '=', '1');
         $eventTypesSelectOption = array();
@@ -558,9 +560,21 @@ class EventController extends Controller
                 ->make(true);
         }
 
-        return view('pages.Event.event-edit')->with('owners', $ownersSelectOption)->with('organizers', $organizersSelectOption)->with('eventAdmins', $eventAdmins)
+        return view('pages.Event.event-edit')->with('organizers', $organizersSelectOption)->with('eventAdmins', $eventAdmins)
             ->with('securityOfficers', $securityOfficers)->with('approvalOptions', $approvalOptions)->with('eventTypes', $eventTypesSelectOption)
             ->with('eventStatuss', $eventStatuss)->with('eventForms', $templatesSelectOption)->with('event', $event)->with('securityCategories', $securityCategoriesSelectOption);;
+    }
+
+    public function updateLogo(Request $request){
+        $event_id = $request->event_id;
+        $logo = $request->logo;
+
+        $event = Event::updateOrCreate(['id'=>$event_id],
+            [
+                'logo' => $logo
+            ]);
+
+        return Response::json($event);
     }
 
     public function show($id)
@@ -676,7 +690,7 @@ class EventController extends Controller
     	// $notification_type = Config::get('enums.notification_types.EIN');
         // NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, 0,
         //     $event->name . ': ' . $company->name . ': ' . 'Event invitation', Route('companyParticipants' , [$companyId, $eventId]));
-        
+
         return Response::json($post);
     }
 

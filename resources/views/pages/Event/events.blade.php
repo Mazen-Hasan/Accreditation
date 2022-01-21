@@ -111,6 +111,67 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="logo-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle"></h4>
+                </div>
+                <div class="modal-body">
+
+                    <form id="logoUploadForm" name="logoUploadForm" class="form-horizontal  img-upload"
+                          enctype="multipart/form-data" action="javascript:void(0)">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label>New Logo</label>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="col-sm-12">
+                                    <input type="file" id="file" name="file">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <button type="submit" id="btn-upload" value="Upload">Upload
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group col">
+                                    <label id="file_type_error"></label>
+                                    <div style="background-color: #ffffff00!important;" class="progress">
+                                        <div id="file-progress-bar" class="progress-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+
+                    <form id="logoForm" name="logoForm" class="form-horizontal">
+                        <input type="hidden" name="event_id" id="event_id">
+                        <div class="form-group">
+                            <div class="row" style="margin-left: 25%;justify-content: center; max-height: 100%; max-width: 50%; object-fit: fill">
+                                <img id="logo" src="" alt="Logo"
+                                     style="width:200px;height:200px;">
+                            </div>
+                        </div>
+                        <input style="visibility: hidden" type="text" name="logo-name" id="logo-name">
+                        <div class="modal-footer">
+                            <div class="col-sm-12">
+                                <button type="submit" id="btn-save" value="create">Save
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 @section('script')
     <script>
@@ -187,6 +248,92 @@
                 $('#postCrudModal').html("Add New Post");
             });
 
+
+            $('body').on('click', '#edit-logo', function () {
+                $('#event_id').val($(this).data("id"));
+                let eventName = $(this).data("name");
+                $('#modalTitle').html("Edit " + eventName + " Logo");
+                let imag = $(this).data("l");
+                // server
+                {{--let image_path = "{{URL::asset('storage/badges/')}}/";--}}
+                // local
+                let image_path = "{{URL::asset('logo/')}}/";
+                $('#logo').attr('src', image_path + imag);
+                $('#logo-modal').modal('show');
+            });
+
+            $("#file").change(function () {
+                let allowedTypes = ['image/png','image/jpeg'];
+                let file = this.files[0];
+                let fileType = file.type;
+                if (!allowedTypes.includes(fileType)) {
+                    $("#file-progress-bar").width('0%');
+                    $('#file_type_error').removeClass('info').addClass('error');
+                    $("#file_type_error").html('Please choose a valid file (jpeg, png)');
+                    $("#file").val('');
+                    $("#btn-upload").attr('disabled', true);
+                    return false;
+                } else {
+                    $("button").removeAttr('disabled');
+                    $("#file_type_error").html('');
+                    $("#file-progress-bar").width('0%');
+                }
+            });
+
+            $('.img-upload').submit(function (e) {
+
+                var file = $('#file').val();
+                if(file=='')
+                {
+                    $('#file_type_error').removeClass('info').addClass('error');
+                    $("#file_type_error").html('Please choose file');
+                    return false;
+                }
+
+                $('#btn-upload').html('Sending..');
+                e.preventDefault();
+                var formData = new FormData(this);
+                formData.append('event_id', $('#event_id').val());
+                $.ajax({
+                    xhr: function () {
+                        let xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function (element) {
+                            if (element.lengthComputable) {
+                                var percentComplete = ((element.loaded / element.total) * 100);
+                                $("#file-progress-bar").width(percentComplete + '%');
+                                $("#file-progress-bar").html(percentComplete + '%');
+                            }
+                        }, false);
+                        return xhr;
+                    },
+
+                    type: 'POST',
+                    url: "{{ route('uploadLogo')}}",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+
+                    beforeSend: function () {
+                        $("#file-progress-bar").width('0%');
+                    },
+
+                    success: (data) => {
+                        // this.reset();
+                        $('#file_type_error').removeClass('error').addClass('info');
+                        $("#file_type_error").html('File uploaded successfully');
+                        $('#btn-upload').html('Upload');
+                        $("#logo-name").val(data.data.fileName);
+                        console.log(data.data.fileName);
+                    },
+
+                    error: function (data) {
+                        $("#file_type_error").html('Error uploading file');
+                        console.log(data);
+                    }
+                });
+            });
+
             $('body').on('click', '#complete-event', function () {
                 $('#event_id').val($(this).data("id"));
                 $('#event_name').val($(this).data("name"));
@@ -220,6 +367,10 @@
                     }
                 });
             });
+
+            if ($("#postForm").length > 0) {
+
+            }
 
             $('body').on('click', '#showAll', function () {
                 if(showStatus == 1){

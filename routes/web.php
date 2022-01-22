@@ -125,8 +125,6 @@ Route::group(['middleware' => 'role:super-admin'], function () {
     Route::get('/titles', [App\Http\Controllers\TitleController::class, 'index'])->name('titles');
     Route::get('/companyCategories', [App\Http\Controllers\CompanyCategoryController::class, 'index'])->name('companyCategories');
 
-    Route::post('/update-logo', [App\Http\Controllers\EventController::class, 'updateLogo'])->name('updateLogo');
-
     Route::post('/event-update-logo', [App\Http\Controllers\EventController::class, 'updateLogo'])->name('updateLogo');
 
 

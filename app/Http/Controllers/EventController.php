@@ -569,10 +569,6 @@ class EventController extends Controller
         $event_id = $request->eventId;
         $logo = $request->logoName;
 
-//        var_dump($event_id);
-//        var_dump($logo);
-//        exit;
-
         $event = Event::updateOrCreate(['id'=>$event_id],
             [
                 'logo' => $logo

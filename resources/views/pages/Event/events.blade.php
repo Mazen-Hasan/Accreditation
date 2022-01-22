@@ -152,14 +152,14 @@
                     <hr>
 
                     <form id="logoForm" name="logoForm" class="form-horizontal">
-                        <input type="hidden" name="event_id" id="event_id">
+                        <input  style="visibility: hidden" name="eventId" id="eventId">
                         <div class="form-group">
                             <div class="row" style="margin-left: 25%;justify-content: center; max-height: 100%; max-width: 50%; object-fit: fill">
-                                <img id="logo" src="" alt="Logo"
+                                <img id="logo" name="logo" src="" alt="Logo"
                                      style="width:200px;height:200px;">
                             </div>
                         </div>
-                        <input style="visibility: hidden" type="text" name="logo-name" id="logo-name">
+                        <input style="visibility: hidden" type="text" name="logoName" id="logoName">
                         <div class="modal-footer">
                             <div class="col-sm-12">
                                 <button type="submit" id="btn-save" value="create">Save
@@ -250,7 +250,11 @@
 
 
             $('body').on('click', '#edit-logo', function () {
-                $('#event_id').val($(this).data("id"));
+                $('#file').val('');
+                $("#file-progress-bar").width('0%');
+                $("#file_type_error").html('');
+                $("#logoName").val('');
+                $('#eventId').val($(this).data("id"));
                 let eventName = $(this).data("name");
                 $('#modalTitle').html("Edit " + eventName + " Logo");
                 let imag = $(this).data("l");
@@ -293,7 +297,7 @@
                 $('#btn-upload').html('Sending..');
                 e.preventDefault();
                 var formData = new FormData(this);
-                formData.append('event_id', $('#event_id').val());
+                // formData.append('event_id', $('#event-id').val());
                 $.ajax({
                     xhr: function () {
                         let xhr = new window.XMLHttpRequest();
@@ -323,7 +327,7 @@
                         $('#file_type_error').removeClass('error').addClass('info');
                         $("#file_type_error").html('File uploaded successfully');
                         $('#btn-upload').html('Upload');
-                        $("#logo-name").val(data.data.fileName);
+                        $("#logoName").val(data.data.fileName);
                         console.log(data.data.fileName);
                     },
 
@@ -368,8 +372,30 @@
                 });
             });
 
-            if ($("#postForm").length > 0) {
+            if ($("#logoForm").length > 0) {
+                $("#logoForm").validate({
 
+                    submitHandler: function (form) {
+                        $('#btn-save').html('Sending..');
+                        $.ajax({
+                            data: $('#logoForm').serialize(),
+                            url: "{{ route('updateLogo') }}",
+                            type: "POST",
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#logoForm').trigger("reset");
+                                $('#logo-modal').modal('hide');
+                                $('#btn-save').html('Save Changes');
+                                var oTable = $('#laravel_datatable').dataTable();
+                                oTable.fnDraw(false);
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                                $('#btn-save').html('Save Changes');
+                            }
+                        });
+                    }
+                })
             }
 
             $('body').on('click', '#showAll', function () {

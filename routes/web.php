@@ -127,6 +127,9 @@ Route::group(['middleware' => 'role:super-admin'], function () {
 
     Route::post('/update-logo', [App\Http\Controllers\EventController::class, 'updateLogo'])->name('updateLogo');
 
+    Route::post('/event-update-logo', [App\Http\Controllers\EventController::class, 'updateLogo'])->name('updateLogo');
+
+
     Route::resource('titleController', 'App\Http\Controllers\TitleController');
     Route::get('titleController/destroy/{id}', 'App\Http\Controllers\TitleController@destroy');
     Route::get('titleController/changeStatus/{id}/{status}', 'App\Http\Controllers\TitleController@changeStatus');

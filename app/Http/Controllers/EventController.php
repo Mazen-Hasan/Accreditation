@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use App\Http\Traits\LogTrait;
 
 
 class EventController extends Controller
@@ -292,25 +293,43 @@ class EventController extends Controller
             }
         }
 
-        $post = Event::updateOrCreate(['id' => $postId],
-            ['name' => $request->name,
-                'location' => $request->location,
-                'size' => $request->size,
-                'organizer' => $request->organizer,
-                'owner' => $request->owner,
-                'event_type' => $request->event_type,
-                'period' => $period_days,
-                'accreditation_period' => $accredition_period_days,
-                'status' => $request->status,
-                'approval_option' => $request->approval_option,
-                'event_form' => $request->event_form,
-                'event_start_date' => $request->event_start_date,
-                'event_end_date' => $request->event_end_date,
-                'accreditation_start_date' => $request->accreditation_start_date,
-                'accreditation_end_date' => $request->accreditation_end_date,
-                'creator' => Auth::user()->id
-            ]);
+        $action_id = Config::get('actionEnum.actions.event-add');
 
+        $action_result ='';
+        $params = 'eventName=' . $request->name . ', location=' . $request->location . ', size=' . $request->size .
+        ', organizer=' . $request->organizer . ', owner=' . $request->owner . ', event_type=' . $request->event_type .
+        ', period=' . $period_days . ', accreditation_period=' . $accredition_period_days . ', status=' . $request->status .
+        ', approval_option=' . $request->approval_option . ', event_form=' . $request->event_form .
+        ', event_start_date=' . $request->event_start_date . ', event_end_date=' . $request->event_end_date .
+        ', accreditation_start_date=' . $request->accreditation_start_date . ', accreditation_end_date=' . $request->accreditation_end_date;
+
+        try{
+            $post = Event::updateOrCreate(['id' => $postId],
+                ['name' => $request->name,
+                    'location' => $request->location,
+                    'size' => $request->size,
+                    'organizer' => $request->organizer,
+                    'owner' => $request->owner,
+                    'event_type' => $request->event_type,
+                    'period' => $period_days,
+                    'accreditation_period' => $accredition_period_days,
+                    'status' => $request->status,
+                    'approval_option' => $request->approval_option,
+                    'event_form' => $request->event_form,
+                    'event_start_date' => $request->event_start_date,
+                    'event_end_date' => $request->event_end_date,
+                    'accreditation_start_date' => $request->accreditation_start_date,
+                    'accreditation_end_date' => $request->accreditation_end_date,
+                    'creator' => Auth::user()->id
+                ]);
+
+            $action_result = Config::get('resultEnum.results.SUCCESS');
+            LogTrait::supperAdminLog($action_id, $action_result, $params, 'No');
+
+        } catch (\Exception $e) {
+            $action_result = Config::get('resultEnum.results.FAILED');
+            LogTrait::supperAdminLog($action_id, $action_result, $params, $e);
+        }
 
         if ($postId == null) {
             $counter = 1;

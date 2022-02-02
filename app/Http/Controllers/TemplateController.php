@@ -28,30 +28,46 @@ class TemplateController extends Controller
     }
 
     public function getData1($values){
-        //var_dump($values);
+        $totalSize = Template::latest()->get();
         $size = 10;
         if($values != null){
-            if($values != "0"){
+            if(str_contains($values,",")){
                 $comands = explode(",",$values);
-                $size = sizeof($comands);
-                if($size > 2){
-                    $condition1 = $comands[0];
-                    $condition1token = $comands[1];
-                    $operator = $comands[2];
-                    $condition2 = $comands[3];
-                    $condition2token = $comands[4];
-                    $templates = DB::select('select * from templates where '. TemplateController::getConditionPart("name",$condition1,$condition1token) . " ".$operator ." ". TemplateController::getConditionPart("name",$condition2,$condition2token));
+                $c_size = sizeof($comands);
+                if($c_size > 3){
+                    $skip = $size * $comands[0];
+                    $condition1 = $comands[1];
+                    $condition1token = $comands[2];
+                    $operator = $comands[3];
+                    $condition2 = $comands[4];
+                    $condition2token = $comands[5];
+                    $totalSize = DB::select('select * from templates where '. TemplateController::getConditionPart("name",$condition1,$condition1token) . " ".$operator ." ". TemplateController::getConditionPart("name",$condition2,$condition2token));
+                    $templates = DB::select('select * from templates where '. TemplateController::getConditionPart("name",$condition1,$condition1token) . " ".$operator ." ". TemplateController::getConditionPart("name",$condition2,$condition2token)." LIMIT ". $size. " OFFSET ". $skip);
                 }else{
-                    $condition1 = $comands[0];
-                    $condition1token = $comands[1];
-                    $templates = DB::select('select * from templates where '. TemplateController::getConditionPart("name",$condition1,$condition1token));
+                    $skip = $size * $comands[0];
+                    $condition1 = $comands[1];
+                    $condition1token = $comands[2];
+                    $totalSize = DB::select('select * from templates where '. TemplateController::getConditionPart("name",$condition1,$condition1token));
+                    $query = 'select * from templates where '. TemplateController::getConditionPart("name",$condition1,$condition1token)." LIMIT ". $size. " OFFSET ". $skip;
+                    // var_dump($query);
+                    // exit;
+                    //$templates = DB::select('select * from templates where '. TemplateController::getConditionPart("name",$condition1,$condition1token)." LIMIT ". $skip. " OFFSET ". $size);
+                    $templates = DB::select($query);
                 }
             }else{
-                $templates =  Template::latest()->take($size)->get();
+                $skip = $size * $values;
+                $templates =  Template::latest()->skip($skip)->take($size)->get();
             }
         }
         //$templates = DB::select('select * from templates where ');
-        return Response::json($templates);
+        return Response::json(array(
+            'success' =>true,
+            'code' => 1,
+            'size' => round(sizeof($totalSize)/2),
+            'templates' => $templates,
+            'message' => 'hi'
+        ));
+        //return Response::json($templates);
     }
     /**
      * Display a listing of the resource.
@@ -176,7 +192,6 @@ class TemplateController extends Controller
                 }
             }
         }
-
         return Response::json($post);
     }
 

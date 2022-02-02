@@ -86,6 +86,7 @@
 }
 .ag-theme-alpine .ag-icon-last::before {
   content: "\f118";
+  
 }
 .ag-theme-alpine .ag-icon-left::before {
   content: "\f119";

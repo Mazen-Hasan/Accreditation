@@ -10,6 +10,7 @@
     <script src="{{ URL::asset('js/ag-grid/ag-grid-enterprise.min.js') }}"></script>
     <script src="{{ URL::asset('js/templates/CustomTooltip.js') }}"></script>
     <script src="{{ URL::asset('js/templates/ShowMoreComponent.js') }}"></script>
+    <script src="{{ URL::asset('js/templates/PageCountComponent.js') }}"></script>
 
 @endsection
 @section('content')
@@ -50,14 +51,14 @@
                         </div>
 
                         <div id="myGrid" class="ag-theme-alpine" style="height: 600px; width:100%;"></div>
-                        <div>
+                        <!-- <div>
                             <a href="javascript:void(0)" id="filtersButton" class="add-hbtn">
                                 <i>
                                     <img src="{{ asset('images/add.png') }}" alt="Add">
                                 </i>
                                 <span class="dt-hbtn">See more</span>
                             </a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -136,6 +137,8 @@
     <script>
         // specify the columns
         var filters;
+        var allData = "";
+        var totalSize = 0;
         const columnDefs = [
             {field: "id", headerName: "Template ID", hide: true},
             {
@@ -210,9 +213,7 @@
             // sets 10 rows per page (default is 100)
             paginationPageSize: 2,
             onFirstDataRendered: onFirstDataRendered,
-
             rowSelection: 'single',
-
             tooltipShowDelay: 0,
 
             // set rowData to null or undefined to show loading panel by default
@@ -223,6 +224,7 @@
             components: {
                 customTooltip: CustomTooltip,
                 ShowMoreComponent: ShowMoreComponent,
+                PageCountComponent: PageCountComponent,
             },
 
             // sideBar: {
@@ -256,6 +258,10 @@
                 statusPanels: [
                     {
                         statusPanel: 'ShowMoreComponent',
+                    },
+                    {
+                        statusPanel: 'PageCountComponent',
+                        align:'left',
                     },
                 ],
             },
@@ -298,7 +304,11 @@
             fetch('{{ route('templatesData1',"0") }}')
                 .then(response => response.json())
                 .then(data => {
-                    gridOptions.api.setRowData(data);
+                    //alert(data.data);
+                    $('#total_count').html('Total pages count: ' + data.size);
+                    totalSize = data.size;
+                    gridOptions.api.setRowData(data.templates);
+                    allData = data.templates;
                 });
 
             {{--fetch('{{ route('templatesData') }}', {--}}
@@ -381,6 +391,122 @@
             $('#confirmModal').modal('show');
         });
 
+        $('body').on('click', '.ag-icon-previous', function () {
+            var value = $('.ag-paging-number').html();
+            //alert('i am here' + value);
+        });
+
+        $(document).on('click', '.ag-standard-button', function () {
+            var value = $(this).html();
+            value = value.replace(/\s/g, '');
+            if(value == "Apply"){
+                $('#filtersButton').show();
+            }else{
+                $('#filtersButton').click();
+                $('#filtersButton').hide();
+            }
+        });
+
+        $('body').on('click', '.ag-icon-next', function () {
+            var value = $('.ag-paging-number').html();
+            var size = 0;
+            if(value % 5 == 0){
+                var size = value / 5;
+                filters = gridOptions.api.getFilterModel();
+                nameFilter = size;
+                if (filters.name != null) {
+                    if (filters.name.operator != null) {
+                        //alert(filters.name.operator);
+                        nameFilter = nameFilter + ",";
+                        nameFilter = nameFilter +  getCondition(filters.name.condition1.type);
+                        nameFilter = nameFilter + ",";
+                        nameFilter = nameFilter + filters.name.condition1.filter;
+                        nameFilter = nameFilter + ",";
+                        nameFilter = nameFilter + filters.name.operator;
+                        nameFilter = nameFilter + ",";
+                        nameFilter = nameFilter + getCondition(filters.name.condition2.type);
+                        nameFilter = nameFilter + ",";
+                        nameFilter = nameFilter + filters.name.condition2.filter;
+                    } else {
+                        //alert(filters.name.filterType);
+                        nameFilter = nameFilter + ",";
+                        nameFilter = nameFilter + getCondition(filters.name.type);
+                        nameFilter = nameFilter + ",";
+                        nameFilter = nameFilter + filters.name.filter;
+                    }
+                }
+                var url = '{{ route('templatesData1',":id") }}';
+                url = url.replace(":id",nameFilter);
+                fetch(url)
+                                .then(response => response.json())
+                                .then(data => {
+                                    var newdata = allData.concat(data.templates);
+                                    gridOptions.api.setRowData(newdata);
+                                    //gridOptions.api.refreshCells({force: true});
+                                    allData = newdata;
+                                    var page = parseInt(value);
+                                    //gridOptions.api.paginationGoToPage(page);
+                                });
+
+                            gridOptions.api.refreshCells({force: true});
+                            //this.goToPage(page);
+            }else{
+                //alert('i am here too' + value);
+            }
+        });
+
+        // $('body').on('click', '.ag-icon-previous', function () {
+        //     var value = $('.ag-paging-number').html();
+        //     var size = 0;
+        //     if(value % 5 == 0){
+        //         var size = value / 5;
+        //         var url = '{{ route('templatesData1',":id") }}';
+        //         url = url.replace(":id",size);
+        //         fetch(url)
+        //                         .then(response => response.json())
+        //                         .then(data => {
+        //                             var newdata = allData.concat(data.templates);
+        //                             gridOptions.api.setRowData(newdata);
+        //                             //gridOptions.api.refreshCells({force: true});
+        //                             allData = newdata;
+        //                             var page = parseInt(value -1);
+        //                             gridOptions.api.paginationGoToPage(page);
+        //                         });
+
+        //                     gridOptions.api.refreshCells({force: true});
+        //                     //this.goToPage(page);
+        //     }else{
+        //         //alert('i am here too' + value);
+        //     }
+        // });
+
+        // $('body').on('click', '.ag-icon-last', function () {
+        //     //var value = $('.ag-paging-number').html();
+        //     var value = 5;
+        //     var size = 0;
+        //     if(value % 5 == 0){
+        //         var size = parseInt((totalSize-1) / 5);
+        //         alert('totalSize:' + totalSize + "," + 'size:' + size);
+        //         var url = '{{ route('templatesData1',":id") }}';
+        //         url = url.replace(":id",size);
+        //         fetch(url)
+        //                         .then(response => response.json())
+        //                         .then(data => {
+        //                             var newdata = allData.concat(data.templates);
+        //                             gridOptions.api.setRowData(newdata);
+        //                             //gridOptions.api.refreshCells({force: true});
+        //                             var page = parseInt(totalSize-1);
+        //                             allData = newdata;
+        //                             gridOptions.api.paginationGoToPage(page);
+        //                         });
+
+        //                     gridOptions.api.refreshCells({force: true});
+        //                     //this.goToPage(page);
+        //     }else{
+        //         //alert('i am here too' + value);
+        //     }
+        // });
+
         $('body').on('click', '#filtersButton', function () {
             var hi = "";
             //var soso = gridOptions.api.getFilterModel();
@@ -390,9 +516,11 @@
             //alert(data);
             var nameFilter = 0;
             if (filters.name != null) {
+                nameFilter = "0"
                 if (filters.name.operator != null) {
                     //alert(filters.name.operator);
-                    nameFilter = getCondition(filters.name.condition1.type);
+                    nameFilter = nameFilter + ",";
+                    nameFilter = nameFilter + getCondition(filters.name.condition1.type);
                     nameFilter = nameFilter + ",";
                     nameFilter = nameFilter + filters.name.condition1.filter;
                     nameFilter = nameFilter + ",";
@@ -403,27 +531,44 @@
                     nameFilter = nameFilter + filters.name.condition2.filter;
                 } else {
                     //alert(filters.name.filterType);
-                    nameFilter = getCondition(filters.name.type);
+                    nameFilter = nameFilter + ",";
+                    nameFilter = nameFilter + getCondition(filters.name.type);
                     nameFilter = nameFilter + ",";
                     nameFilter = nameFilter + filters.name.filter;
+                    alert(nameFilter);
                 }
             }
             // alert(nameFilter);
-            data = 8;
+            //data = 8;
             data = nameFilter;
             var url = "{{ route('templatesData1', ":id") }}";
             url = url.replace(':id', data);
             //fetch('{{ route('templatesData1',"") }}')
             //alert(url);
             fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    gridOptions.api.setRowData(data);
-                });
+                    .then(response => response.json())
+                                .then(data => {
+                                    // var newdata = allData.concat(data.templates);
+                                    // gridOptions.api.setRowData(newdata);
+                                    gridOptions.api.setRowData(data.templates);
+                                    //gridOptions.api.refreshCells({force: true});
+                                    //allData = newdata;
+                                    //var page = parseInt(value);
+                                    //gridOptions.api.paginationGoToPage(page);
+                                    totalSize = data.size;
+                                    $('#total_count').html('Total pages count: ' + data.size);
+                                    allData = data.templates;
+                                    $('.ag-icon-first').click();
+                                });
+                // .then(response => response.json())
+                // .then(data => {
+                //     gridOptions.api.setRowData(data);
+                // });
             gridOptions.api.refreshCells({force: true});
             if (filters != null) {
                 gridOptions.api.setFilterModel(filters);
             }
+            $('#filtersButton').hide();
         });
 
         function getCondition($condition) {
@@ -478,7 +623,8 @@
                                 fetch('{{ route('templatesData1',"0") }}')
                                     .then(response => response.json())
                                     .then(data => {
-                                        gridOptions.api.setRowData(data);
+                                        //alert(data);
+                                        gridOptions.api.setRowData(data.templates);
                                     });
                                 gridOptions.api.refreshCells({force: true});
                             },
@@ -499,7 +645,8 @@
                                 fetch('{{ route('templatesData1',"0") }}')
                                     .then(response => response.json())
                                     .then(data => {
-                                        gridOptions.api.setRowData(data);
+                                        //alert(data);
+                                        gridOptions.api.setRowData(data.templates);
                                     });
                                 gridOptions.api.refreshCells({force: true});
                             },
@@ -532,7 +679,12 @@
                             fetch('{{ route('templatesData1',"0") }}')
                                 .then(response => response.json())
                                 .then(data => {
-                                    gridOptions.api.setRowData(data);
+                                    //alert(data);
+                                    gridOptions.api.setRowData(data.templates);
+                                    totalSize = data.size;
+                                    $('#total_count').html('Total pages count: ' + data.size);
+                                    allData = data.templates;
+                                    $('.ag-icon-first').click();
                                 });
                             gridOptions.api.refreshCells({force: true});
                         },
@@ -544,5 +696,12 @@
                 }
             })
         }
+
+        function jsonConcat(o1, o2) {
+            for (var key in o2) {
+            o1[key] = o2[key];
+            }
+            return o1;
+            }
     </script>
 @endsection

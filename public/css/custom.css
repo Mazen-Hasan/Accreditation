@@ -1329,3 +1329,11 @@ label.loading{
     padding: 0 0 0 16px;
 }
 
+.ag-theme-alpine .ag-icon-last{
+    display: none;
+}
+
+.ag-theme-alpine .ag-icon-first{
+    display: none;
+}
+

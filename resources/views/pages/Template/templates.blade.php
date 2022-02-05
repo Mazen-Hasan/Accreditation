@@ -280,13 +280,7 @@
             if (filters != null) {
                 params.api.setFilterModel(filters);
             }
-            //params.api.filter.onFilterChanged();
         }
-
-        // var statusValueGetter = function (params) {
-        //     console.log('params');
-        //     return params.getValue('status') == 1 ? "Active" : "InActive";
-        // };
 
         $('.export-to-excel').click(function () {
             gridOptions.api.exportDataAsExcel({
@@ -393,7 +387,6 @@
 
         $('body').on('click', '.ag-icon-previous', function () {
             var value = $('.ag-paging-number').html();
-            //alert('i am here' + value);
         });
 
         $(document).on('click', '.ag-standard-button', function () {

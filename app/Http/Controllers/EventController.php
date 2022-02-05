@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ConditionTrait;
 use App\Models\Event;
 use App\Models\EventAdmin;
 use App\Models\EventCompany;
@@ -25,11 +26,60 @@ use App\Http\Traits\LogTrait;
 
 class EventController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function getData($values){
+        $totalSize = DB::select('select * from events_view e where e.status < 4');
+        $size = 10;
+
+        $whereCondition = "";
+        if($values != null){
+            if(str_contains($values,",")){
+                $comands = explode(",",$values);
+                $skip = $size * $comands[0];
+                $c_size = sizeof($comands);
+                $i = 1;
+                while($i < sizeof($comands)){
+                    $token = $comands[$i];
+                    $i = $i + 1;
+                    $complexityType = $comands[$i];
+                    if($complexityType == "C"){
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $i = $i + 1;
+                        $operator = $comands[$i];
+                        $i = $i + 1;
+                        $condition2 = $comands[$i];
+                        $i = $i + 1;
+                        $condition2token = $comands[$i];
+                        $whereCondition =  $whereCondition." and ".ConditionTrait::getConditionPart($token,$condition1,$condition1token) . " ".$operator ." ". ConditionTrait::getConditionPart($token,$condition2,$condition2token);
+                    }else{
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $whereCondition = $whereCondition." and ".ConditionTrait::getConditionPart($token,$condition1,$condition1token);
+                    }
+                    $i = $i + 1;
+                }
+                $totalSize = DB::select('select * from events_view where e.status < 4 '. $whereCondition);
+                $events = DB::select('select * from events_view where e.status < 4 '. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
+            }else{
+                $skip = $size * $values;
+                $events = DB::select("select * from events_view where e.status < 4 LIMIT ". $size. " OFFSET ". $skip);
+            }
+        }
+
+        return Response::json(array(
+            'success' =>true,
+            'code' => 1,
+            'size' => round(sizeof($totalSize)/2),
+            'events' => $events,
+            'message' => 'hi'
+        ));
+    }
+
+
     public function index()
     {
         if (request()->ajax()) {
@@ -712,6 +762,4 @@ class EventController extends Controller
 
         return Response::json($post);
     }
-
-
 }

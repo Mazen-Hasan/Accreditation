@@ -8,7 +8,7 @@
     <script src="{{ URL::asset('js/dataTables.buttons.min.js') }}"></script>
     <script src="{{ URL::asset('js/buttons.html5.min.js') }}"></script>
     <script src="{{ URL::asset('js/jszip.min.js') }}"></script>
-    
+
     <link rel="stylesheet" href="{{ URL::asset('css/ag-grid/ag-grid.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('css/ag-grid/ag-theme-alpine.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('css/ag-grid/style.css') }}">
@@ -193,7 +193,7 @@
                         if(params.value == "InActive"){
                             return  {color: 'red'} ;
                         }else{
-                            return {color: 'orange'} 
+                            return {color: 'orange'}
                         }
                     }
                     //return params.value == 'Active' ? {color: 'green'} : {color: 'red'};
@@ -240,7 +240,7 @@
                     url = url.replace(':company_id', company_id);
                     url = url.replace(':event_id', event_id);
                     button += '<a href="' + url + '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' + company_id +  '" title="Participants"><i class="fas fa-users"></i></a>';
-                    
+
                     return button;
                 }
             },
@@ -312,13 +312,7 @@
             if (filters != null) {
                 params.api.setFilterModel(filters);
             }
-            //params.api.filter.onFilterChanged();
         }
-
-        var statusValueGetter = function (params) {
-            console.log('params');
-            return params.getValue('status') == 1 ? "Active" : "InActive";
-        };
 
         $('.export-to-excel').click(function () {
             gridOptions.api.exportDataAsExcel({
@@ -477,6 +471,7 @@
         $('body').on('click', '.ag-icon-previous', function () {
             var value = $('.ag-paging-number').html();
         });
+
         $(document).on('click', '.ag-standard-button', function () {
             var value = $(this).html();
             value = value.replace(/\s/g, '');
@@ -516,6 +511,7 @@
                 }
             }
         });
+
         $('body').on('click', '#filtersButton', function () {
             var hi = "";
             filters = gridOptions.api.getFilterModel();
@@ -573,6 +569,7 @@
             }
             return result;
         }
+
         function buildFilters(mfilters){
             var returnFilters = "";
             var nameFilter = "";

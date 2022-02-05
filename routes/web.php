@@ -107,6 +107,8 @@ Route::group(['middleware' => 'role:event-admin'], function () {
 
 Route::group(['middleware' => 'role:super-admin'], function () {
     Route::resource('EventController', 'App\Http\Controllers\EventController');
+    Route::get('eventsData/{values}', 'App\Http\Controllers\EventController@getData')->name('eventsData');
+
     Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events');
     Route::get('/eventsShowAll/{status}', [App\Http\Controllers\EventController::class, 'showAll'])->name('eventsShowall');
     Route::get('/event-admins/{event_id}', [App\Http\Controllers\EventController::class, 'eventAdmins'])->name('eventAdmins');

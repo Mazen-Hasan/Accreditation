@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\LogTrait;
 use App\Models\CompanyCategory;
+use Exception;
 use Illuminate\Http\Request;
-use Redirect;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
+use Redirect;
 
 class CompanyCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         if (request()->ajax()) {
+            $action_id = Config::get('actionEnum.actions.com-cat-all');
+            $action_result = '1';
+            LogTrait::supperAdminLog($action_id, $action_result, '', '');
+
             return datatables()->of(CompanyCategory::latest()->get())
                 ->addColumn('action', function ($data) {
                     $button = '<a href="javascript:void(0)" id="edit-category" data-toggle="tooltip"  data-id="' . $data->id . '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
@@ -34,36 +37,42 @@ class CompanyCategoryController extends Controller
         return view('pages.CompanyCategory.companyCategories');
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-
     public function store(Request $request)
     {
-        try{
-        $categoryId = $request->category_id;
-        $category = CompanyCategory::updateOrCreate(['id' => $categoryId],
-            ['name' => $request->name,
-                'status' => $request->status
-            ]);
-        } catch (\Exception $e) {
+        $action_result = '';
+        $action_id = '';
+        try {
+            $categoryId = $request->category_id;
+
+            $params = 'companyCategoryName=' . $request->name . ', status=' . $request->status;
+
+            if($categoryId == null){
+                $action_id = Config::get('actionEnum.actions.com-cat-add');
+            }
+            else{
+                $action_id = Config::get('actionEnum.actions.com-cat-edit');
+                $params = 'companyCategoryId=' . $categoryId . ', ' . $params;
+            }
+
+            $category = CompanyCategory::updateOrCreate(['id' => $categoryId],
+                ['name' => $request->name,
+                    'status' => $request->status
+                ]);
+            $action_result = '1';
+            LogTrait::supperAdminLog($action_id, $action_result, $params, '');
+
+        } catch (Exception $e) {
+            $action_result = Config::get('resultEnum.results.FAILED');
+            LogTrait::supperAdminLog($action_id, $action_result, $params, $e);
+
             return Response::json(array(
-                'code' => 400,
-                'message' => $e->getMessage()
-            ), 400);
+                'code' => -999,
+                'message' => $e->getMessage(),
+                'data' => ''
+            ), -999);
         }
         return Response::json($category);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     */
-
 
     public function edit($id)
     {
@@ -73,24 +82,47 @@ class CompanyCategoryController extends Controller
     }
 
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     */
-    public function destroy($id)
-    {
-        $category = CompanyCategory::where('id', $id)->delete();
-
-        return Response::json($category);
-    }
+//    /**
+//     * Remove the specified resource from storage.
+//     *
+//     */
+//    public function destroy($id)
+//    {
+//        $category = CompanyCategory::where('id', $id)->delete();
+//
+//        return Response::json($category);
+//    }
 
     public function changeStatus($id, $status)
     {
-        $category = CompanyCategory::updateOrCreate(['id' => $id],
-            [
-                'status' => $status
-            ]);
-        return Response::json($category);
-    }
+        if($status == 1){
+            $action_id = Config::get('actionEnum.actions.com-cat-activate');
+        }
+        else{
+            $action_id = Config::get('actionEnum.actions.com-cat-deactivate');
+        }
 
+        $params = 'companyCategoryID=' . $id . ', status=' . $status;
+
+        try {
+            $category = CompanyCategory::updateOrCreate(['id' => $id],
+                [
+                    'status' => $status
+                ]);
+
+            $action_result = '1';
+            LogTrait::supperAdminLog($action_id, $action_result, $params, '');
+            return Response::json($category);
+
+        } catch (Exception $e) {
+            $action_result = Config::get('resultEnum.results.FAILED');
+            LogTrait::supperAdminLog($action_id, $action_result, $params, $e);
+
+            return Response::json(array(
+                'code' => -999,
+                'message' => $e->getMessage(),
+                'data' => ''
+            ), -999);
+        }
+    }
 }

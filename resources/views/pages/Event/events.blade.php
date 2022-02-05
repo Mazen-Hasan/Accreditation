@@ -308,6 +308,7 @@
 
         function onFirstDataRendered(params) {
             params.api.sizeColumnsToFit();
+            autoSizeAll();
             params.api.setDomLayout('autoHeight');
             if (filters != null) {
                 params.api.setFilterModel(filters);

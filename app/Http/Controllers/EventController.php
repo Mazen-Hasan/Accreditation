@@ -62,11 +62,11 @@ class EventController extends Controller
                     }
                     $i = $i + 1;
                 }
-                $totalSize = DB::select('select * from events_view where e.status < 4 '. $whereCondition);
-                $events = DB::select('select * from events_view where e.status < 4 '. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
+                $totalSize = DB::select('select * from events_view e where e.status < 4 '. $whereCondition);
+                $events = DB::select('select * from events_view e where e.status < 4 '. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
             }else{
                 $skip = $size * $values;
-                $events = DB::select("select * from events_view where e.status < 4 LIMIT ". $size. " OFFSET ". $skip);
+                $events = DB::select("select * from events_view e where e.status < 4 LIMIT ". $size. " OFFSET ". $skip);
             }
         }
 

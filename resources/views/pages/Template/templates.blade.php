@@ -283,10 +283,10 @@
             //params.api.filter.onFilterChanged();
         }
 
-        var statusValueGetter = function (params) {
-            console.log('params');
-            return params.getValue('status') == 1 ? "Active" : "InActive";
-        };
+        // var statusValueGetter = function (params) {
+        //     console.log('params');
+        //     return params.getValue('status') == 1 ? "Active" : "InActive";
+        // };
 
         $('.export-to-excel').click(function () {
             gridOptions.api.exportDataAsExcel({

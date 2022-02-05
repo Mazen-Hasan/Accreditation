@@ -291,49 +291,15 @@
                     if(event_status < 3){
                         switch(params.data.status){
                             case 1:
-                                // button += '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' + participent_id + '" data-original-title="Edit" title="Approve"><i class="fas fa-vote-yea"></i></a>';
-                                // button += '&nbsp;&nbsp;';
-                                // button += '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' + participent_id + '" data-original-title="Edit" title="Reject"><i class="fas fa-ban"></i></a>';
-                                // button += '&nbsp;&nbsp;';
-                                // button += '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' + participent_id + '" data-original-title="Edit" title="Return for correction"><i class="far fa-window-close"></i></a>';
                                 button += '<a href="javascript:void(0)" data-toggle="tooltip" id="approve"  data-id="' + participent_id +  '" data-original-title="Edit" title="Approve"><i class="fas fa-vote-yea"></i></a>';
                                 button += '&nbsp;&nbsp;';
                                 button += '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject" data-id="' + participent_id +  '" data-original-title="Edit" title="Reject"><i class="fas fa-ban"></i></a>';
                                 button += '&nbsp;&nbsp;';
                                 button += '<a href="javascript:void(0)" data-toggle="tooltip"  id="reject_with_correction" data-id="' + participent_id +  '" data-original-title="Edit" title="Return for correction"><i class="far fa-window-close"></i></a>';
                                 break;
-                            // case 1:
-                            //     url = "{{ route('eventParticipantAdd', [':participent_id',':company_id',':event_id']) }}";
-                            //     url = url.replace(':participent_id', participent_id);
-                            //     url = url.replace(':company_id', company_id);
-                            //     url = url.replace(':event_id', event_id);
-                            //     button += '<a href="' + url + '" data-toggle="tooltip"  id="edit-event" data-id="' + participent_id + '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                            //     button += '&nbsp;&nbsp;';
-                            //     break;
-                            // case 7:
-                            //     url = "{{ route('eventParticipantAdd', [':participent_id',':company_id',':event_id']) }}";
-                            //     url = url.replace(':participent_id', participent_id);
-                            //     url = url.replace(':company_id', company_id);
-                            //     url = url.replace(':event_id', event_id);
-                            //     button += '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' + participent_id +  '" data-reason="' + params.data.security_officer_reject_reason + '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
-                            //     button += '&nbsp;&nbsp;';
-                            //     button += '<a href="' + url + '" data-toggle="tooltip"  id="edit-event" data-id="' + participent_id +  '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                            //     break;
                             case 7:
                                 button += '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' + participent_id +  '" data-reason="' + params.data.security_officer_reject_reason + '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
-                                //button += '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' + participent_id +  '" data-reason="' + params.data.event_admin_reject_reason + '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
                                 break;
-                            // case 6:
-                            // case 3:
-                            //     if (params.data.print_status == 0) {
-                            //         button += '<a href="javascript:void(0);" id="generate-badge" data-toggle="tooltip" data-original-title="Generate" data-id="' + participent_id +  '" title="Generate"><i class="fas fa-cogs"></i></a>';
-                            //         button += '&nbsp;&nbsp;';
-                            //     } else {
-                            //         printed = params.data.print_status == 2 ? 'printed' : '';
-                            //         button += '<a href="javascript:void(0);" id="preview-badge" data-toggle="tooltip" data-original-title="Preview" data-id="' + participent_id + '" class="preview-badge"' + printed + '" title="Preview"><i class="far fa-eye"></i></a>';
-                            //         button += '&nbsp;&nbsp;';
-                            //     }
-                            //     break;
                         }
                     }                    
                     return button;

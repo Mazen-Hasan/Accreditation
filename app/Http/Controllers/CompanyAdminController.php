@@ -257,6 +257,99 @@ class CompanyAdminController extends Controller
             ->with('eventId',$eventId)->with('event_name', $event->name)->with('company_name', $company->name)->with('addable',$addable)->with('event_status',$event->status);
     }
 
+    public function getPaticipantsData($companyId,$eventId,$values){
+        if($companyId != 0){
+            $eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+            $companies = "'".$companyId."'";
+            if($eventcompanies != null){
+                foreach($eventcompanies as $eventcompnay){
+                    $companies = $companies.",'".$eventcompnay->company_id."'";
+                }
+            }
+            $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')');
+        }else{
+            $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id');
+        }
+        //$totalSize = DB::select('select * from companies_view where event_id = ? and parent_id is null', [$id]);
+        //$totalSize = Template::latest()->get();
+        $size = 10;
+        $whereCondition = "";
+        if($values != null){
+            if(str_contains($values,",")){
+                $comands = explode(",",$values);
+                $skip = $size * $comands[0];
+                $c_size = sizeof($comands);
+                $i = 1;
+                while($i < sizeof($comands)){
+                    $token = $comands[$i];
+                    $i = $i + 1;
+                    $complexityType = $comands[$i];
+                    if($complexityType == "C"){
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $i = $i + 1;
+                        $operator = $comands[$i];
+                        $i = $i + 1;
+                        $condition2 = $comands[$i];
+                        $i = $i + 1;
+                        $condition2token = $comands[$i];
+                        $whereCondition =  $whereCondition." and ".TemplateController::getConditionPart($token,$condition1,$condition1token) . " ".$operator ." ". TemplateController::getConditionPart($token,$condition2,$condition2token);
+                    }else{
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $whereCondition = $whereCondition." and ".TemplateController::getConditionPart($token,$condition1,$condition1token);
+                    }
+                    $i = $i + 1;
+                }
+                if($companyId != 0){
+                    $eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+                    $companies = "'".$companyId."'";
+                    if($eventcompanies != null){
+                        foreach($eventcompanies as $eventcompnay){
+                            $companies = $companies.",'".$eventcompnay->company_id."'";
+                        }
+                    }
+                    //$totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')');
+                    $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')'. $whereCondition);
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')'. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
+                }else{
+                    //$totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id');
+                    $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where 1=1 '. $whereCondition);
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where 1=1 '. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
+                }
+                //$totalSize = DB::select('select * from companies_view where event_id = ? and parent_id is null '. $whereCondition, [$id]);
+                //$participants = DB::select('select * from companies_view where event_id = ? and parent_id is null '. $whereCondition." LIMIT ". $size. " OFFSET ". $skip, [$id]);
+            }else{
+                $skip = $size * $values;
+                if($companyId != 0){
+                    $eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+                    $companies = "'".$companyId."'";
+                    if($eventcompanies != null){
+                        foreach($eventcompanies as $eventcompnay){
+                            $companies = $companies.",'".$eventcompnay->company_id."'";
+                        }
+                    }
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.') LIMIT '. $size. " OFFSET ". $skip);
+                }else{
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id LIMIT '. $size. " OFFSET ". $skip);
+                }
+                //$participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id  LIMIT '. $size. " OFFSET ". $skip);
+            }
+        }
+        return Response::json(array(
+            'success' =>true,
+            'code' => 1,
+            'size' => round(sizeof($totalSize)/2),
+            'templates' => $participants,
+            'message' => 'hi'
+        ));
+        //return Response::json($templates);
+    }
+
 
 //    public function companyParticipantAdd()
 //    {

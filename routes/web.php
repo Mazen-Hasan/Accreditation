@@ -29,6 +29,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::resource('companyAdminController', 'App\Http\Controllers\CompanyAdminController');
     Route::get('/company-admin', [App\Http\Controllers\CompanyAdminController::class, 'index'])->name('company-admin');
     Route::get('/company-participants/{companyId}/{eventId}', [App\Http\Controllers\CompanyAdminController::class, 'companyParticipants'])->name('companyParticipants');
+    Route::get('/company-participants/{companyId}/{eventId}/{values}', [App\Http\Controllers\CompanyAdminController::class, 'getPaticipantsData'])->name('companyParticipantsData');
     Route::get('/company-participant-add', [App\Http\Controllers\CompanyAdminController::class, 'companyParticipantAdd'])->name('companyParticipantAdd');
     Route::get('/company-participant-edit/{id}', [App\Http\Controllers\CompanyAdminController::class, 'edit'])->name('companyParticipantEdit');
     Route::get('/company-accreditation-size/{eventId}/{companyId}', [App\Http\Controllers\CompanyAdminController::class, 'companyAccreditCategories'])->name('companyAccreditCategories');

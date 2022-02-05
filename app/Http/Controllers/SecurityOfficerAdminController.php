@@ -21,7 +21,7 @@ class SecurityOfficerAdminController extends Controller
 
     public function index()
     {
-        $events = DB::select('select * from event_security_officers_view where security_officer_id = ? and approval_option in (2,3) and event_end_date >= CURRENT_DATE() ', [Auth::user()->id]);
+        $events = DB::select('select * from event_security_officers_view where security_officer_id = ? and approval_option in (2,3) and status < ? ', [Auth::user()->id,4]);
         return view('pages.SecurityOfficerAdmin.security-officer-admin')->with('events', $events);
     }
 
@@ -40,6 +40,59 @@ class SecurityOfficerAdminController extends Controller
                 ->make(true);
         }
         return view('pages.SecurityOfficerAdmin.security-officer-companies')->with('eventid', $id)->with('event_name', $event->name);
+    }
+
+    public function getData($id,$values){
+        $totalSize = DB::select('select * from companies_view where event_id = ? and parent_id is null', [$id]);
+        //$totalSize = Template::latest()->get();
+        $size = 10;
+        $whereCondition = "";
+        if($values != null){
+            if(str_contains($values,",")){
+                $comands = explode(",",$values);
+                $skip = $size * $comands[0];
+                $c_size = sizeof($comands);
+                $i = 1;
+                while($i < sizeof($comands)){
+                    $token = $comands[$i];
+                    $i = $i + 1;
+                    $complexityType = $comands[$i];
+                    if($complexityType == "C"){
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $i = $i + 1;
+                        $operator = $comands[$i];
+                        $i = $i + 1;
+                        $condition2 = $comands[$i];
+                        $i = $i + 1;
+                        $condition2token = $comands[$i];
+                        $whereCondition =  $whereCondition." and ".TemplateController::getConditionPart($token,$condition1,$condition1token) . " ".$operator ." ". TemplateController::getConditionPart($token,$condition2,$condition2token);
+                    }else{
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $whereCondition = $whereCondition." and ".TemplateController::getConditionPart($token,$condition1,$condition1token);
+                    }
+                    $i = $i + 1;
+                }
+                $totalSize = DB::select('select * from companies_view where event_id = ? and parent_id is null '. $whereCondition, [$id]);
+                $templates = DB::select('select * from companies_view where event_id = ? and parent_id is null '. $whereCondition." LIMIT ". $size. " OFFSET ". $skip, [$id]);
+            }else{
+                $skip = $size * $values;
+                $templates = DB::select("select * from companies_view where event_id = ? and parent_id is null  LIMIT ". $size. " OFFSET ". $skip, [$id]);
+            }
+        }
+        return Response::json(array(
+            'success' =>true,
+            'code' => 1,
+            'size' => round(sizeof($totalSize)/2),
+            'templates' => $templates,
+            'message' => 'hi'
+        ));
+        //return Response::json($templates);
     }
 
     public function Invite($companyId)
@@ -228,7 +281,114 @@ class SecurityOfficerAdminController extends Controller
                 ->rawColumns(['identifier','image','status', 'action'])
                 ->make(true);
         }
-        return view('pages.SecurityOfficerAdmin.security-officer-company-participants')->with('dataTableColumns', $dataTableColumuns)->with('company_id', $companyId)->with('event_id', $eventId);
+        return view('pages.SecurityOfficerAdmin.security-officer-company-participants')->with('dataTableColumns', $dataTableColumuns)->with('company_id', $companyId)->with('event_id', $eventId)->with('event_status',$event->status);
+    }
+
+    public function getPaticipantsData($companyId,$eventId,$values){
+        // if($companyId != 0){
+        //     $eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+        //     $companies = "'".$companyId."'";
+        //     if($eventcompanies != null){
+        //         foreach($eventcompanies as $eventcompnay){
+        //             $companies = $companies.",'".$eventcompnay->company_id."'";
+        //         }
+        //     }
+        //     $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.') and c.status in (1,3,9,10)');
+        //     //$participants = DB::select('select t.* , c.* from temp_' . $eventId . ' t inner join company_staff c on t.id = c.id where c.company_id = ? and c.status in (1,3,9,10)',[$companyId]);
+        // }else{
+        //     $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id and c.status in (1,3,9,10)');
+        // }
+
+        if($companyId != 0){
+            $eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+            $companies = "'".$companyId."'";
+            if($eventcompanies != null){
+                foreach($eventcompanies as $eventcompnay){
+                    $companies = $companies.",'".$eventcompnay->company_id."'";
+                }
+            }
+            $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.') and c.status in (1,3,9,10)');
+        }else{
+            $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.status in (1,3,9,10)');
+        }
+        //$totalSize = DB::select('select * from companies_view where event_id = ? and parent_id is null', [$id]);
+        //$totalSize = Template::latest()->get();
+        $size = 10;
+        $whereCondition = "";
+        if($values != null){
+            if(str_contains($values,",")){
+                $comands = explode(",",$values);
+                $skip = $size * $comands[0];
+                $c_size = sizeof($comands);
+                $i = 1;
+                while($i < sizeof($comands)){
+                    $token = $comands[$i];
+                    $i = $i + 1;
+                    $complexityType = $comands[$i];
+                    if($complexityType == "C"){
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $i = $i + 1;
+                        $operator = $comands[$i];
+                        $i = $i + 1;
+                        $condition2 = $comands[$i];
+                        $i = $i + 1;
+                        $condition2token = $comands[$i];
+                        $whereCondition =  $whereCondition." and ".TemplateController::getConditionPart($token,$condition1,$condition1token) . " ".$operator ." ". TemplateController::getConditionPart($token,$condition2,$condition2token);
+                    }else{
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $whereCondition = $whereCondition." and ".TemplateController::getConditionPart($token,$condition1,$condition1token);
+                    }
+                    $i = $i + 1;
+                }
+                if($companyId != 0){
+                    $eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+                    $companies = "'".$companyId."'";
+                    if($eventcompanies != null){
+                        foreach($eventcompanies as $eventcompnay){
+                            $companies = $companies.",'".$eventcompnay->company_id."'";
+                        }
+                    }
+                    //$totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')');
+                    $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.') and c.status in (1,3,9,10)'. $whereCondition);
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.') and c.status in (1,3,9,10)'. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
+                }else{
+                    //$totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id');
+                    $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.status in (1,3,9,10)'. $whereCondition);
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.status in (1,3,9,10)'. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
+                }
+                //$totalSize = DB::select('select * from companies_view where event_id = ? and parent_id is null '. $whereCondition, [$id]);
+                //$participants = DB::select('select * from companies_view where event_id = ? and parent_id is null '. $whereCondition." LIMIT ". $size. " OFFSET ". $skip, [$id]);
+            }else{
+                $skip = $size * $values;
+                if($companyId != 0){
+                    $eventcompanies = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+                    $companies = "'".$companyId."'";
+                    if($eventcompanies != null){
+                        foreach($eventcompanies as $eventcompnay){
+                            $companies = $companies.",'".$eventcompnay->company_id."'";
+                        }
+                    }
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.') and c.status in (1,3,9,10) LIMIT '. $size. " OFFSET ". $skip);
+                }else{
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.status in (1,3,9,10) LIMIT '. $size. " OFFSET ". $skip);
+                }
+                //$participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id  LIMIT '. $size. " OFFSET ". $skip);
+            }
+        }
+        return Response::json(array(
+            'success' =>true,
+            'code' => 1,
+            'size' => round(sizeof($totalSize)/2),
+            'templates' => $participants,
+            'message' => 'hi'
+        ));
+        //return Response::json($templates);
     }
 
     public function Approve($staffId)

@@ -217,7 +217,9 @@ Route::group(['middleware' => 'role:security-officer'], function () {
     Route::resource('securityOfficerAdminController', 'App\Http\Controllers\SecurityOfficerAdminController');
     Route::get('/security-officer-admin', [App\Http\Controllers\SecurityOfficerAdminController::class, 'index'])->name('security-officer-admin');
     Route::get('/security-officer-companies/{id}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'securityOfficerCompanies'])->name('securityOfficerCompanies');
+    Route::get('/security-officer-companies/{id}/{values}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'getData'])->name('securityOfficerCompaniesData');
     Route::get('/security-officer-company-participants/{id}/{companyId}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'securityOfficerCompanyParticipants'])->name('securityOfficerCompanyParticipants');
+    Route::get('/security-officer-company-participants/{companyId}/{eventId}/{values}', [App\Http\Controllers\SecurityOfficerAdminController::class, 'getPaticipantsData'])->name('securityOfficerCompanyParticipantsData');
     Route::get('securityOfficerAdminController/Approve/{staffId}', 'App\Http\Controllers\SecurityOfficerAdminController@Approve')->name('securityOfficerAdminControllerApprove');
     Route::get('securityOfficerAdminController/Reject/{staffId}', 'App\Http\Controllers\SecurityOfficerAdminController@Reject')->name('securityOfficerAdminControllerReject');
     Route::get('securityOfficerAdminController/RejectToCorrect/{staffId}/{reason}', 'App\Http\Controllers\SecurityOfficerAdminController@RejectToCorrect')->name('securityOfficerAdminControllerRejectToCorrect');

@@ -468,8 +468,8 @@ class EventAdminController extends Controller
                     $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in ('.$companies.')'. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
                 }else{
                     //$totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id');
-                    $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id'. $whereCondition);
-                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id'. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
+                    $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where 1=1 '. $whereCondition);
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where 1=1 '. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
                 }
                 //$totalSize = DB::select('select * from companies_view where event_id = ? and parent_id is null '. $whereCondition, [$id]);
                 //$participants = DB::select('select * from companies_view where event_id = ? and parent_id is null '. $whereCondition." LIMIT ". $size. " OFFSET ". $skip, [$id]);

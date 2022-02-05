@@ -355,7 +355,7 @@
                     const event_id = params.data.event_id;
                     const company_id = params.data.company_id;
                     let button = "";
-                    var url = "route('participantDetails', ':id')";
+                    var url = "{{route('participantDetails', [':id'])}}";
                     url = url.replace(':id', participent_id);
                     button += '<a href="' + url + '" data-toggle="tooltip"  id="participant-details" data-id="' + participent_id + '" data-original-title="Edit" title="Details"><i class="far fa-list-alt"></i></a>';
                     button += '&nbsp;&nbsp;';

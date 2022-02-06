@@ -417,6 +417,61 @@ class DataEntryController extends Controller
             ->with('companyId',$companyId)->with('eventId',$eventId)->with('event_name',$event->name)->with('company_name',$company->name)->with('addable',$addable)->with('event_status',$event->status);
     }
 
+    public function getPaticipantsData($companyId,$eventId,$values){
+        $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id = ?',[$companyId]);
+        $size = 10;
+        $whereCondition = "";
+        if($values != null){
+            if(str_contains($values,",")){
+                $comands = explode(",",$values);
+                $skip = $size * $comands[0];
+                $c_size = sizeof($comands);
+                $i = 1;
+                while($i < sizeof($comands)){
+                    $token = $comands[$i];
+                    $i = $i + 1;
+                    $complexityType = $comands[$i];
+                    if($complexityType == "C"){
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $i = $i + 1;
+                        $operator = $comands[$i];
+                        $i = $i + 1;
+                        $condition2 = $comands[$i];
+                        $i = $i + 1;
+                        $condition2token = $comands[$i];
+                        $whereCondition =  $whereCondition." and ".TemplateController::getConditionPart($token,$condition1,$condition1token) . " ".$operator ." ". TemplateController::getConditionPart($token,$condition2,$condition2token);
+                    }else{
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $whereCondition = $whereCondition." and ".TemplateController::getConditionPart($token,$condition1,$condition1token);
+                    }
+                    $i = $i + 1;
+                }
+                $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id = ?'. $whereCondition,[$companyId]);
+                $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id = ?'. $whereCondition." LIMIT ". $size. " OFFSET ". $skip,[$companyId]);
+            }else{
+                $skip = $size * $values;
+                //$query = 
+                $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id = ? LIMIT '. $size. " OFFSET ". $skip,[$companyId]);
+                // var_dump($participants);
+                // exit;
+            }
+        }
+        return Response::json(array(
+            'success' =>true,
+            'code' => 1,
+            'size' => round(sizeof($totalSize)/2),
+            'templates' => $participants,
+            'message' => 'hi'
+        ));
+        //return Response::json($templates);
+    }
+
     public function participantAdd($participant_id,$companyId,$eventId)
     {
         $where = array('id' => $companyId);
@@ -838,7 +893,7 @@ class DataEntryController extends Controller
 
     public function dataEntryEvents()
     {
-        $events = DB::select('select * from data_entries_view dd where dd.account_id = ? and dd.status <> ? and dd.company_status = ? and dd.event_end_date >= CURRENT_DATE()', [Auth::user()->id, 0,3]);
+        $events = DB::select('select * from data_entries_view dd where dd.account_id = ? and dd.status < ? and dd.company_status = ? ', [Auth::user()->id, 4,3]);
         $subCompany_nav = 1;
         return view('pages.DataEntry.data-entry')->with('events', $events)->with('subCompany_nav', $subCompany_nav);
     }

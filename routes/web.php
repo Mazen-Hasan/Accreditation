@@ -49,6 +49,7 @@ Route::group(['middleware' => 'role:company-admin'], function () {
     Route::get('/pdf-generate', [App\Http\Controllers\pdfController::class, 'generate'])->name('pdf-generate');
 
     Route::get('/subCompanies/{companyId}/{eventId}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanies'])->name('subCompanies');
+    Route::get('/subCompanies/{companyId}/{eventId}/{values}', [App\Http\Controllers\CompanyAdminController::class, 'getsubCompaniesData'])->name('subCompaniesData');
     Route::get('/subCompany-add/{eventid}/{companyid}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanyAdd'])->name('subCompanyAdd');
     Route::get('/subCompany-edit/{id}/{eventid}', [App\Http\Controllers\CompanyAdminController::class, 'subCompanyEdit'])->name('subCompanyEdit');
     Route::post('storeSubCompnay', [App\Http\Controllers\CompanyAdminController::class, 'storeSubCompnay'])->name('storeSubCompnay');
@@ -233,6 +234,7 @@ Route::group(['middleware' => 'role:security-officer'], function () {
 Route::group(['middleware' => 'role:data-entry'], function () {
     Route::get('/data-entry', [App\Http\Controllers\DataEntryController::class, 'dataEntryEvents'])->name('dataEntryEvents');
     Route::get('/dataentry-participants/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'dataEntryParticipants'])->name('dataEntryParticipants');
+    Route::get('/dataentry-participants/{companyId}/{eventId}/{values}', [App\Http\Controllers\DataEntryController::class, 'getPaticipantsData'])->name('dataEntryParticipantsData');
     //Route::resource('dataentryController', 'App\Http\Controllers\DataEntryController');
     Route::get('/dataentry-participnat-add/{template_id}/{companyId}/{eventId}', [App\Http\Controllers\DataEntryController::class, 'participantAdd'])->name('participantAdd');
     Route::post('dataentryContoller/storeParticipant', [App\Http\Controllers\DataEntryController::class, 'storeParticipant'])->name('storeParticipant');

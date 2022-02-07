@@ -149,6 +149,8 @@
 @section('script')
     <script>
         // specify the columns
+        var filtercolIds = ['name', 'size', 'organizer', 'template_name', 'event_type', 'event_start_date',
+                    'event_end_date', 'accreditation_start_date', 'accreditation_end_date'];
         var filters;
         var allData = "";
         var totalSize = 0;
@@ -381,7 +383,7 @@
                     fetch(url)
                         .then(response => response.json())
                         .then(data => {
-                            var newdata = allData.concat(data.templates);
+                            var newdata = allData.concat(data.events);
                             gridOptions.api.setRowData(newdata);
                             allData = newdata;
                             var page = parseInt(value);
@@ -404,10 +406,10 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    gridOptions.api.setRowData(data.templates);
+                    gridOptions.api.setRowData(data.events);
                     totalSize = data.size;
                     $('#total_count').html('Total pages count: ' + data.size);
-                    allData = data.templates;
+                    allData = data.events;
                     $('.ag-icon-first').click();
                 });
 
@@ -657,37 +659,23 @@
                 })
             }
 
-            {{--$('body').on('click', '#showAll', function () {--}}
-            {{--    if (showStatus == 1) {--}}
-            {{--        murl = "{{ route('eventsShowall', [":id"]) }}";--}}
-            {{--        murl = murl.replace(':id', showStatus);--}}
-            {{--        $('#showAllSpan').html("Hide archived");--}}
-            {{--        showStatus = 0;--}}
-            {{--    } else {--}}
-            {{--        murl = "{{ route('EventController.index') }}";--}}
-            {{--        $('#showAllSpan').html("Show all");--}}
-            {{--        showStatus = 1;--}}
-            {{--    }--}}
-            {{--    var mtable = $('#laravel_datatable').DataTable();--}}
-            {{--    mtable.ajax.url(murl).load();--}}
-            {{--});--}}
-
             $('#show-all').on('change', function() {
 
-                var url = '{{ route('eventsData',[':showAll','0']) }}';
-                var showAll = $('#show-all').prop("checked") == true ? '1' : '0';
-                url = url.replace(":showAll", showAll);
+                // var url = '{{ route('eventsData',[':showAll','0']) }}';
+                // var showAll = $('#show-all').prop("checked") == true ? '1' : '0';
+                // url = url.replace(":showAll", showAll);
 
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        gridOptions.api.setRowData(data.events);
-                        totalSize = data.size;
-                        $('#total_count').html('Total pages count: ' + data.size);
-                        allData = data.templates;
-                        $('.ag-icon-first').click();
-                    });
-                gridOptions.api.refreshCells({force: true});
+                // fetch(url)
+                //     .then(response => response.json())
+                //     .then(data => {
+                //         gridOptions.api.setRowData(data.events);
+                //         totalSize = data.size;
+                //         $('#total_count').html('Total pages count: ' + data.size);
+                //         allData = data.templates;
+                //         $('.ag-icon-first').click();
+                //     });
+                // gridOptions.api.refreshCells({force: true});
+                $('#filtersButton').click();
             });
 
         });

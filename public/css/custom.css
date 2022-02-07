@@ -1406,3 +1406,12 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
+.ag-standard-button{
+    height: 30px;
+    font-size: 16px;
+}
+
+.ag-input-field-input.ag-text-field-input{
+    height: 30px;
+}
+

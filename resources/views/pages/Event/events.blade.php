@@ -171,23 +171,42 @@
                     return '<img class="event-logo-grid" src= ' + image_path + params.data.logo + '></img>';
                 },
             },
-            {field: 'size', headerName: "Size", sortable: true, filter: 'agTextColumnFilter',},
-            {field: 'organizer', headerName: "Organizer", sortable: true, filter: 'agTextColumnFilter'},
-            {field: 'template_name', headerName: "Template", sortable: true, filter: 'agTextColumnFilter'},
-            {field: 'event_type', headerName: "Type", sortable: true, filter: 'agTextColumnFilter'},
-            {field: 'event_start_date', headerName: "Start", sortable: true, filter: 'agTextColumnFilter'},
-            {field: 'event_end_date', headerName: "End", sortable: true, filter: 'agTextColumnFilter'},
+            {field: 'size', headerName: "Size", sortable: true},
+            {
+                field: 'organizer', headerName: "Organizer", sortable: true, filter: 'agTextColumnFilter', filterParams: {
+                    buttons: ['apply', 'cancel', 'reset'],
+                    closeOnApply: true
+                },
+                tooltipField: 'organizer',
+                tooltipComponentParams: {color: '#ececec'},
+            },
+            {
+                field: 'template_name', headerName: "Template", sortable: true, filter: 'agTextColumnFilter', filterParams: {
+                    buttons: ['apply', 'cancel', 'reset'],
+                    closeOnApply: true
+                },
+                tooltipField: 'template_name',
+                tooltipComponentParams: {color: '#ececec'},
+            },
+            {
+                field: 'event_type', headerName: "Type", sortable: true, filter: 'agTextColumnFilter', filterParams: {
+                    buttons: ['apply', 'cancel', 'reset'],
+                    closeOnApply: true
+                },
+                tooltipField: 'event_type',
+                tooltipComponentParams: {color: '#ececec'},
+            },
+            {field: 'event_start_date', headerName: "Start", sortable: true},
+            {field: 'event_end_date', headerName: "End", sortable: true},
             {
                 field: 'accreditation_start_date',
                 headerName: "Accreditation Start",
-                sortable: true,
-                filter: 'agTextColumnFilter'
+                sortable: true
             },
             {
                 field: 'accreditation_end_date',
                 headerName: "Accreditation End",
-                sortable: true,
-                filter: 'agTextColumnFilter'
+                sortable: true
             },
             {
                 field: "status", headerName: "Status", sortable: true, filter: 'agTextColumnFilter',

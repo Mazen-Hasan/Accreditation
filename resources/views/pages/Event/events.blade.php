@@ -43,9 +43,9 @@
                             <div class="col-md-3">
                                 <label class="switch">
                                     <input type="checkbox" id="show-all">
-                                    <span class="slider round"></span>
+                                    <span class="slider round"></span><label class="customShowAll"> Show all</label>
                                 </label>
-                                Show all
+                                
                             </div>
                         </div>
 

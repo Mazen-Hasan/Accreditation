@@ -1415,3 +1415,10 @@ input:checked + .slider:before {
     height: 30px;
 }
 
+.customShowAll{
+    width: 140px;
+    font-size: 20px;
+    padding-left: 35px;
+
+}
+

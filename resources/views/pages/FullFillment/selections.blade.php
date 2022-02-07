@@ -264,9 +264,7 @@
                         url: url,
                         success: function (data) {
                             $('#loader-modal').modal('hide');
-                            console.log('success: hide');
                             var acSelectOptions = data;
-                            //alert(data);
                             $('#ac_container').html('');
                             var html = '<select id="category" name="category" required="">';
                             var count = 0;
@@ -313,7 +311,6 @@
                     url: url,
                     success: function (data) {
                         $('#loader-modal').modal('hide');
-                        console.log(data);
                         companySelectOptions = data['selected'];
                         $('#lbl_select').html(companySelectOptions.length);
                         $('#lbl_print').html(data['printed']);

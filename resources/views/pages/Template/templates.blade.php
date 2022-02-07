@@ -22,16 +22,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <p class="card-title">Registration Forms</p>
-                            </div>
-                            <div class="col-md-1 align-content-md-center">
-                                <div class="search-container">
-                                    <input class="search expandright" id="search" type="text" placeholder="Search">
-                                    <label class="search-button search-button-icon" for="search">
-                                        <i class="icon-search"></i>
-                                    </label>
-                                </div>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -51,14 +43,6 @@
                         </div>
 
                         <div id="myGrid" class="ag-theme-alpine" style="height: 600px; width:100%;"></div>
-                        <!-- <div>
-                            <a href="javascript:void(0)" id="filtersButton" class="add-hbtn">
-                                <i>
-                                    <img src="{{ asset('images/add.png') }}" alt="Add">
-                                </i>
-                                <span class="dt-hbtn">See more</span>
-                            </a>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -205,8 +189,6 @@
             },
             columnDefs: columnDefs,
 
-            debug: true,
-
             // enables pagination in the grid
             pagination: true,
 
@@ -226,33 +208,6 @@
                 ShowMoreComponent: ShowMoreComponent,
                 PageCountComponent: PageCountComponent,
             },
-
-            // sideBar: {
-            //     toolPanels: [
-            //         {
-            //             id: 'columns',
-            //             labelDefault: 'Columns',
-            //             labelKey: 'columns',
-            //             iconKey: 'columns',
-            //             toolPanel: 'agColumnsToolPanel',
-            //         },
-            //         {
-            //             id: 'filters',
-            //             labelDefault: 'Filters',
-            //             labelKey: 'filters',
-            //             iconKey: 'filter',
-            //             toolPanel: 'agFiltersToolPanel',
-            //         },
-            //         // {
-            //         //     id: 'customStats',
-            //         //     labelDefault: 'Custom Stats',
-            //         //     labelKey: 'customStats',
-            //         //     iconKey: 'custom-stats',
-            //         //     toolPanel: 'CustomTooltip',
-            //         // },
-            //     ],
-            //     defaultToolPanel: 'customStats',
-            // },
 
             statusBar: {
                 statusPanels: [
@@ -298,21 +253,11 @@
             fetch('{{ route('templatesData1',"0") }}')
                 .then(response => response.json())
                 .then(data => {
-                    //alert(data.data);
                     $('#total_count').html('Total pages count: ' + data.size);
                     totalSize = data.size;
                     gridOptions.api.setRowData(data.templates);
                     allData = data.templates;
                 });
-
-            {{--fetch('{{ route('templatesData') }}', {--}}
-            {{--    method: 'post',--}}
-            {{--    body: JSON.stringify(data)--}}
-            {{--}).then(response => response.json())--}}
-            {{--    .then(data => {--}}
-            {{--        console.log(data);--}}
-            {{--        gridOptions.api.setRowData(data);--}}
-            {{--    });--}}
         });
 
         $(document).ready(function () {
@@ -385,10 +330,6 @@
             $('#confirmModal').modal('show');
         });
 
-        $('body').on('click', '.ag-icon-previous', function () {
-            var value = $('.ag-paging-number').html();
-        });
-
         $(document).on('click', '.ag-standard-button', function () {
             var value = $(this).html();
             value = value.replace(/\s/g, '');
@@ -409,7 +350,6 @@
                 nameFilter = size;
                 if (filters.name != null) {
                     if (filters.name.operator != null) {
-                        //alert(filters.name.operator);
                         nameFilter = nameFilter + ",";
                         nameFilter = nameFilter +  getCondition(filters.name.condition1.type);
                         nameFilter = nameFilter + ",";
@@ -421,7 +361,6 @@
                         nameFilter = nameFilter + ",";
                         nameFilter = nameFilter + filters.name.condition2.filter;
                     } else {
-                        //alert(filters.name.filterType);
                         nameFilter = nameFilter + ",";
                         nameFilter = nameFilter + getCondition(filters.name.type);
                         nameFilter = nameFilter + ",";
@@ -435,83 +374,23 @@
                                 .then(data => {
                                     var newdata = allData.concat(data.templates);
                                     gridOptions.api.setRowData(newdata);
-                                    //gridOptions.api.refreshCells({force: true});
                                     allData = newdata;
                                     var page = parseInt(value);
-                                    //gridOptions.api.paginationGoToPage(page);
                                 });
 
                             gridOptions.api.refreshCells({force: true});
-                            //this.goToPage(page);
             }else{
                 //alert('i am here too' + value);
             }
         });
 
-        // $('body').on('click', '.ag-icon-previous', function () {
-        //     var value = $('.ag-paging-number').html();
-        //     var size = 0;
-        //     if(value % 5 == 0){
-        //         var size = value / 5;
-        //         var url = '{{ route('templatesData1',":id") }}';
-        //         url = url.replace(":id",size);
-        //         fetch(url)
-        //                         .then(response => response.json())
-        //                         .then(data => {
-        //                             var newdata = allData.concat(data.templates);
-        //                             gridOptions.api.setRowData(newdata);
-        //                             //gridOptions.api.refreshCells({force: true});
-        //                             allData = newdata;
-        //                             var page = parseInt(value -1);
-        //                             gridOptions.api.paginationGoToPage(page);
-        //                         });
-
-        //                     gridOptions.api.refreshCells({force: true});
-        //                     //this.goToPage(page);
-        //     }else{
-        //         //alert('i am here too' + value);
-        //     }
-        // });
-
-        // $('body').on('click', '.ag-icon-last', function () {
-        //     //var value = $('.ag-paging-number').html();
-        //     var value = 5;
-        //     var size = 0;
-        //     if(value % 5 == 0){
-        //         var size = parseInt((totalSize-1) / 5);
-        //         alert('totalSize:' + totalSize + "," + 'size:' + size);
-        //         var url = '{{ route('templatesData1',":id") }}';
-        //         url = url.replace(":id",size);
-        //         fetch(url)
-        //                         .then(response => response.json())
-        //                         .then(data => {
-        //                             var newdata = allData.concat(data.templates);
-        //                             gridOptions.api.setRowData(newdata);
-        //                             //gridOptions.api.refreshCells({force: true});
-        //                             var page = parseInt(totalSize-1);
-        //                             allData = newdata;
-        //                             gridOptions.api.paginationGoToPage(page);
-        //                         });
-
-        //                     gridOptions.api.refreshCells({force: true});
-        //                     //this.goToPage(page);
-        //     }else{
-        //         //alert('i am here too' + value);
-        //     }
-        // });
 
         $('body').on('click', '#filtersButton', function () {
-            var hi = "";
-            //var soso = gridOptions.api.getFilterModel();
-            //var soso1 = soso[0];
-            //alert(soso);
             filters = gridOptions.api.getFilterModel();
-            //alert(data);
             var nameFilter = 0;
             if (filters.name != null) {
                 nameFilter = "0"
                 if (filters.name.operator != null) {
-                    //alert(filters.name.operator);
                     nameFilter = nameFilter + ",";
                     nameFilter = nameFilter + getCondition(filters.name.condition1.type);
                     nameFilter = nameFilter + ",";
@@ -523,7 +402,6 @@
                     nameFilter = nameFilter + ",";
                     nameFilter = nameFilter + filters.name.condition2.filter;
                 } else {
-                    //alert(filters.name.filterType);
                     nameFilter = nameFilter + ",";
                     nameFilter = nameFilter + getCondition(filters.name.type);
                     nameFilter = nameFilter + ",";
@@ -531,32 +409,18 @@
                     alert(nameFilter);
                 }
             }
-            // alert(nameFilter);
-            //data = 8;
             data = nameFilter;
             var url = "{{ route('templatesData1', ":id") }}";
             url = url.replace(':id', data);
-            //fetch('{{ route('templatesData1',"") }}')
-            //alert(url);
             fetch(url)
                     .then(response => response.json())
                                 .then(data => {
-                                    // var newdata = allData.concat(data.templates);
-                                    // gridOptions.api.setRowData(newdata);
                                     gridOptions.api.setRowData(data.templates);
-                                    //gridOptions.api.refreshCells({force: true});
-                                    //allData = newdata;
-                                    //var page = parseInt(value);
-                                    //gridOptions.api.paginationGoToPage(page);
                                     totalSize = data.size;
                                     $('#total_count').html('Total pages count: ' + data.size);
                                     allData = data.templates;
                                     $('.ag-icon-first').click();
                                 });
-                // .then(response => response.json())
-                // .then(data => {
-                //     gridOptions.api.setRowData(data);
-                // });
             gridOptions.api.refreshCells({force: true});
             if (filters != null) {
                 gridOptions.api.setFilterModel(filters);
@@ -689,12 +553,5 @@
                 }
             })
         }
-
-        // function jsonConcat(o1, o2) {
-        //     for (var key in o2) {
-        //     o1[key] = o2[key];
-        //     }
-        //     return o1;
-        //     }
     </script>
 @endsection

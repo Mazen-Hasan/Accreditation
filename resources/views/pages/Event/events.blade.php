@@ -42,7 +42,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="switch">
-                                    <input type="checkbox">
+                                    <input type="checkbox" id="show-all">
                                     <span class="slider round"></span>
                                 </label>
                                 Show all
@@ -268,8 +268,6 @@
             },
             columnDefs: columnDefs,
 
-            debug: true,
-
             // enables pagination in the grid
             pagination: true,
 
@@ -327,10 +325,11 @@
 
         // setup the grid after the page has finished loading
         document.addEventListener('DOMContentLoaded', () => {
+            console.log($('#show-all').prop("checked"));
             const gridDiv = document.querySelector('#myGrid');
             new agGrid.Grid(gridDiv, gridOptions);
             data = gridOptions.api.getFilterModel();
-            fetch('{{ route('eventsData',"0") }}')
+            fetch('{{ route('eventsData',["0","0"]) }}')
                 .then(response => response.json())
                 .then(data => {
                     $('#total_count').html('Total pages count: ' + data.size);
@@ -375,8 +374,10 @@
                     filters = gridOptions.api.getFilterModel();
                     nameFilter = size;
                     nameFilter = nameFilter + buildFilters(filters);
-                    var url = '{{ route('eventsData',[':values']) }}';
+                    var url = '{{ route('eventsData',[':showAll',':values']) }}';
                     url = url.replace(":values", nameFilter);
+                    var showAll = $('#show-all').prop("checked") == true ? '1' : '0';
+                    url = url.replace(":showAll", showAll);
                     fetch(url)
                         .then(response => response.json())
                         .then(data => {
@@ -396,8 +397,10 @@
             var nameFilter = 0;
             nameFilter = nameFilter + buildFilters(filters);
             data = nameFilter;
-            var url = '{{ route('eventsData',[':values']) }}';
+            var url = '{{ route('eventsData',[':showAll',':values']) }}';
             url = url.replace(":values", data);
+            var showAll = $('#show-all').prop("checked") == true ? '1' : '0';
+            url = url.replace(":showAll", showAll);
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -490,9 +493,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var showStatus = 1;
-            var murl = "{{ route('EventController.index') }}";
-
 
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
@@ -548,7 +548,6 @@
                 $('#btn-upload').html('Sending..');
                 e.preventDefault();
                 var formData = new FormData(this);
-                // formData.append('event_id', $('#event-id').val());
                 $.ajax({
                     xhr: function () {
                         let xhr = new window.XMLHttpRequest();
@@ -602,7 +601,6 @@
                 var $button = $(event.target);
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
                     if ($button[0].id === 'btn-yes') {
-                        var eventName = $('#event_name').val();
                         var eventId = $('#event_id').val();
                         var url = "{{ route('eventComplete', [":eventId"]) }}";
                         url = url.replace(':eventId', eventId);
@@ -610,7 +608,7 @@
                             type: "get",
                             url: url,
                             success: function (data) {
-                                fetch('{{ route('eventsData',"0") }}')
+                                fetch('{{ route('eventsData',["1","0"]) }}')
                                     .then(response => response.json())
                                     .then(data => {
                                         gridOptions.api.setRowData(data.events);
@@ -630,16 +628,20 @@
 
                     submitHandler: function (form) {
                         $('#btn-save').html('Sending..');
+                        var url = '{{ route('eventsData',[':showAll','0']) }}';
+                        url = url.replace(":showAll", $('#show-all').prop("checked"));
+
                         $.ajax({
                             data: $('#logoForm').serialize(),
                             url: "{{ route('updateLogo') }}",
                             type: "POST",
                             dataType: 'json',
+
                             success: function (data) {
                                 $('#logoForm').trigger("reset");
                                 $('#logo-modal').modal('hide');
                                 $('#btn-save').html('Save Changes');
-                                fetch('{{ route('eventsData',"0") }}')
+                                fetch(url)
                                     .then(response => response.json())
                                     .then(data => {
                                         gridOptions.api.setRowData(data.events);
@@ -655,19 +657,37 @@
                 })
             }
 
-            $('body').on('click', '#showAll', function () {
-                if (showStatus == 1) {
-                    murl = "{{ route('eventsShowall', [":id"]) }}";
-                    murl = murl.replace(':id', showStatus);
-                    $('#showAllSpan').html("Hide archived");
-                    showStatus = 0;
-                } else {
-                    murl = "{{ route('EventController.index') }}";
-                    $('#showAllSpan').html("Show all");
-                    showStatus = 1;
-                }
-                var mtable = $('#laravel_datatable').DataTable();
-                mtable.ajax.url(murl).load();
+            {{--$('body').on('click', '#showAll', function () {--}}
+            {{--    if (showStatus == 1) {--}}
+            {{--        murl = "{{ route('eventsShowall', [":id"]) }}";--}}
+            {{--        murl = murl.replace(':id', showStatus);--}}
+            {{--        $('#showAllSpan').html("Hide archived");--}}
+            {{--        showStatus = 0;--}}
+            {{--    } else {--}}
+            {{--        murl = "{{ route('EventController.index') }}";--}}
+            {{--        $('#showAllSpan').html("Show all");--}}
+            {{--        showStatus = 1;--}}
+            {{--    }--}}
+            {{--    var mtable = $('#laravel_datatable').DataTable();--}}
+            {{--    mtable.ajax.url(murl).load();--}}
+            {{--});--}}
+
+            $('#show-all').on('change', function() {
+
+                var url = '{{ route('eventsData',[':showAll','0']) }}';
+                var showAll = $('#show-all').prop("checked") == true ? '1' : '0';
+                url = url.replace(":showAll", showAll);
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        gridOptions.api.setRowData(data.events);
+                        totalSize = data.size;
+                        $('#total_count').html('Total pages count: ' + data.size);
+                        allData = data.templates;
+                        $('.ag-icon-first').click();
+                    });
+                gridOptions.api.refreshCells({force: true});
             });
 
         });

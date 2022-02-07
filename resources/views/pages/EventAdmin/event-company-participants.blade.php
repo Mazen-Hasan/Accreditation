@@ -115,7 +115,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-        
+
                     </div>
                     <div class="row">
                         <img id="badge" src="" alt="Badge">
@@ -400,7 +400,7 @@
                                 }
                                 break;
                         }
-                    }                    
+                    }
                     return button;
                 }
             });
@@ -413,8 +413,6 @@
                 filterParams: {newRowsAction: 'keep'}
             },
             columnDefs: columnDefs,
-
-            debug: true,
 
             // enables pagination in the grid
             pagination: true,
@@ -775,9 +773,9 @@
                     }
                 });
             });
-        
+
         	// var oTable = $('#laravel_datatable').DataTable();
-        
+
         	// $('#search').on('keyup', function () {
             //     oTable.search(this.value).draw();
             // });

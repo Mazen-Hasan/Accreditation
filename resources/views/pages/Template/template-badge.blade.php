@@ -112,7 +112,7 @@
                     <hr>
                     <form id="badgeForm" name="badgeForm" class="form-horizontal">
                         <div class="row" style="margin-left: 25%;justify-content: center; max-height: 100%; max-width: 50%; object-fit: fill">
-                        <img id="badge_bg" src="{{URL::asset('badges/')}}" alt="im"
+                        <img id="badge_bg" src="" alt="im"
                              style="width:200px;height:200px;">
                         </div>
                         <input type="hidden" name="badge_id" id="badge_id">

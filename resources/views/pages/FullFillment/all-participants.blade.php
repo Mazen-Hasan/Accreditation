@@ -388,7 +388,7 @@
             var companyId = $('#company_id').val();
             var eventId = $('#event_id').val();
 
-            var url = "{{ route('eventCompanyParticipantsData', [":companyId",":eventId",":values"]) }}";
+            var url = "{{ route('getParticipantsData', [":companyId",":eventId",":values"]) }}";
             url = url.replace(':companyId', companyId);
             url = url.replace(':eventId', eventId);
             url = url.replace(":values",'0');
@@ -431,45 +431,45 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var company_id = $('#company_id').val();
-            var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
-            var myColumns = [];
-            var i = 0;
-        	var exportColumns = [];
-            myColumns.push({data: "id", name: "id", 'visible': false});
-            myColumns.push({data: "action", name: "action", orderable: false});
-            myColumns.push({data: "status", name: "status"});
-        	exportColumns.push(2);
-            while (i < jqueryarray.length) {
-                myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
-            	exportColumns.push(i+3);
-                i++;
-            }
-            myColumns.push({data: "identifier", name: "identifier"});
-            myColumns.push({data: "image", name: "image"});
-        	exportColumns.push(i);
-            var companyId = $('#company_id').val();
-            var eventId = $('#event_id').val();
-            var accredit = $('#accredit').val();
-            var isChecked = $('#isChecked').val();
-            $('#laravel_datatable').DataTable({
-                dom: 'lBfrtip',
-                buttons: [{
-                    extend: 'excelHtml5',
-                    title: 'Company-Participants',
-                    exportOptions: {
-                        columns: exportColumns
-                    }
-                }],
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '../../../../all-participants/' + eventId + '/' + companyId + '/' + accredit + '/' + isChecked,
-                    type: 'GET',
-                },
-                columns: myColumns,
-                order: [[2, 'desc']],
-            });
+            {{--var company_id = $('#company_id').val();--}}
+            {{--var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;--}}
+            {{--var myColumns = [];--}}
+            {{--var i = 0;--}}
+        	{{--var exportColumns = [];--}}
+            {{--myColumns.push({data: "id", name: "id", 'visible': false});--}}
+            {{--myColumns.push({data: "action", name: "action", orderable: false});--}}
+            {{--myColumns.push({data: "status", name: "status"});--}}
+        	{{--exportColumns.push(2);--}}
+            {{--while (i < jqueryarray.length) {--}}
+            {{--    myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});--}}
+            {{--	exportColumns.push(i+3);--}}
+            {{--    i++;--}}
+            {{--}--}}
+            {{--myColumns.push({data: "identifier", name: "identifier"});--}}
+            {{--myColumns.push({data: "image", name: "image"});--}}
+        	{{--exportColumns.push(i);--}}
+            {{--var companyId = $('#company_id').val();--}}
+            {{--var eventId = $('#event_id').val();--}}
+            {{--var accredit = $('#accredit').val();--}}
+            {{--var isChecked = $('#isChecked').val();--}}
+            {{--$('#laravel_datatable').DataTable({--}}
+            {{--    dom: 'lBfrtip',--}}
+            {{--    buttons: [{--}}
+            {{--        extend: 'excelHtml5',--}}
+            {{--        title: 'Company-Participants',--}}
+            {{--        exportOptions: {--}}
+            {{--            columns: exportColumns--}}
+            {{--        }--}}
+            {{--    }],--}}
+            {{--    processing: true,--}}
+            {{--    serverSide: true,--}}
+            {{--    ajax: {--}}
+            {{--        url: '../../../../all-participants/' + eventId + '/' + companyId + '/' + accredit + '/' + isChecked,--}}
+            {{--        type: 'GET',--}}
+            {{--    },--}}
+            {{--    columns: myColumns,--}}
+            {{--    order: [[2, 'desc']],--}}
+            {{--});--}}
 
             $('body').on('click', '#generate', function () {
                 console.log(checkedItems);

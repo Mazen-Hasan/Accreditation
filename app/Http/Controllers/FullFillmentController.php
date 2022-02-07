@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ConditionTrait;
 use App\Models\Company;
 use App\Models\CompanyStaff;
 use App\Models\Event;
-use App\Models\PreDefinedFieldElement;
+use App\Models\EventCompany;
 use App\Models\SelectOption;
 use App\Models\TemplateField;
 use Illuminate\Http\Request;
@@ -96,9 +97,9 @@ class FullFillmentController extends Controller
         return Response::json($acSelectOptions);
     }
 
-    public function getEventCompanyACs($eventId,$companyId)
+    public function getEventCompanyACs($eventId, $companyId)
     {
-        $accreditationCategories = DB::select('select * from event_company_accrediation_categories_view e where e.event_id=? and company_id = ?', [$eventId,$companyId]);
+        $accreditationCategories = DB::select('select * from event_company_accrediation_categories_view e where e.event_id=? and company_id = ?', [$eventId, $companyId]);
 
         $subcount = 0;
         $acSelectOptions = array();
@@ -113,6 +114,93 @@ class FullFillmentController extends Controller
         }
         return Response::json($acSelectOptions);
     }
+
+    public function getParticipantsData($companyId, $eventId, $values)
+    {
+        if ($companyId != 0) {
+            $eventcompanies = EventCompany::where(['event_id' => $eventId, 'parent_id' => $companyId])->get()->all();
+            $companies = "'" . $companyId . "'";
+            if ($eventcompanies != null) {
+                foreach ($eventcompanies as $eventcompnay) {
+                    $companies = $companies . ",'" . $eventcompnay->company_id . "'";
+                }
+            }
+            $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in (' . $companies . ')');
+        } else {
+            $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id');
+        }
+        $size = 10;
+        $whereCondition = "";
+        if ($values != null) {
+            if (str_contains($values, ",")) {
+                $comands = explode(",", $values);
+                $skip = $size * $comands[0];
+                $c_size = sizeof($comands);
+                $i = 1;
+                while ($i < sizeof($comands)) {
+                    $token = $comands[$i];
+                    $i = $i + 1;
+                    $complexityType = $comands[$i];
+                    if ($complexityType == "C") {
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $i = $i + 1;
+                        $operator = $comands[$i];
+                        $i = $i + 1;
+                        $condition2 = $comands[$i];
+                        $i = $i + 1;
+                        $condition2token = $comands[$i];
+                        $whereCondition = $whereCondition . " and " . ConditionTrait::getConditionPart($token, $condition1, $condition1token) . " " . $operator . " " . TemplateController::getConditionPart($token, $condition2, $condition2token);
+                    } else {
+                        $i = $i + 1;
+                        $condition1 = $comands[$i];
+                        $i = $i + 1;
+                        $condition1token = $comands[$i];
+                        $whereCondition = $whereCondition . " and " . ConditionTrait::getConditionPart($token, $condition1, $condition1token);
+                    }
+                    $i = $i + 1;
+                }
+                if ($companyId != 0) {
+                    $eventcompanies = EventCompany::where(['event_id' => $eventId, 'parent_id' => $companyId])->get()->all();
+                    $companies = "'" . $companyId . "'";
+                    if ($eventcompanies != null) {
+                        foreach ($eventcompanies as $eventcompnay) {
+                            $companies = $companies . ",'" . $eventcompnay->company_id . "'";
+                        }
+                    }
+                    $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in (' . $companies . ')' . $whereCondition);
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in (' . $companies . ')' . $whereCondition . " LIMIT " . $size . " OFFSET " . $skip);
+                } else {
+                    $totalSize = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where 1=1 ' . $whereCondition);
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where 1=1 ' . $whereCondition . " LIMIT " . $size . " OFFSET " . $skip);
+                }
+            } else {
+                $skip = $size * $values;
+                if ($companyId != 0) {
+                    $eventcompanies = EventCompany::where(['event_id' => $eventId, 'parent_id' => $companyId])->get()->all();
+                    $companies = "'" . $companyId . "'";
+                    if ($eventcompanies != null) {
+                        foreach ($eventcompanies as $eventcompnay) {
+                            $companies = $companies . ",'" . $eventcompnay->company_id . "'";
+                        }
+                    }
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id where c.company_id in (' . $companies . ') LIMIT ' . $size . " OFFSET " . $skip);
+                } else {
+                    $participants = DB::select('select t.* , c.* from `temp_' . $eventId . '` t inner join company_staff c on t.id = c.id LIMIT ' . $size . " OFFSET " . $skip);
+                }
+            }
+        }
+        return Response::json(array(
+            'success' => true,
+            'code' => 1,
+            'size' => round(sizeof($totalSize) / 2),
+            'templates' => $participants,
+            'message' => 'hi'
+        ));
+    }
+
 
     public function getParticipants($eventId, $companyId, $accreditId)
     {

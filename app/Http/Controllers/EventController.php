@@ -26,8 +26,15 @@ use App\Http\Traits\LogTrait;
 
 class EventController extends Controller
 {
-    public function getData($values){
-        $totalSize = DB::select('select * from events_view e where e.status < 4');
+    public function getData($all, $values){
+        $whereStatusCondition = '';
+        if($all == 1){
+            $whereStatusCondition = 'where 1=1 ';
+        }
+        else{
+            $whereStatusCondition = ' where e.status < 4';
+        }
+        $totalSize = DB::select('select * from events_view e ' . $whereStatusCondition);
         $size = 10;
 
         $whereCondition = "";
@@ -62,11 +69,11 @@ class EventController extends Controller
                     }
                     $i = $i + 1;
                 }
-                $totalSize = DB::select('select * from events_view e where e.status < 4 '. $whereCondition);
-                $events = DB::select('select * from events_view e where e.status < 4 '. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
+                $totalSize = DB::select('select * from events_view e ' . $whereStatusCondition . $whereCondition);
+                $events = DB::select('select * from events_view e ' . $whereStatusCondition. $whereCondition." LIMIT ". $size. " OFFSET ". $skip);
             }else{
                 $skip = $size * $values;
-                $events = DB::select("select * from events_view e where e.status < 4 LIMIT ". $size. " OFFSET ". $skip);
+                $events = DB::select("select * from events_view e " . $whereStatusCondition . " LIMIT ". $size. " OFFSET ". $skip);
             }
         }
 

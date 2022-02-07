@@ -610,12 +610,7 @@
                             type: "get",
                             url: url,
                             success: function (data) {
-                                fetch('{{ route('eventsData',["1","0"]) }}')
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        gridOptions.api.setRowData(data.events);
-                                    });
-                                gridOptions.api.refreshCells({force: true});
+                                $('#filtersButton').click();
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -643,12 +638,7 @@
                                 $('#logoForm').trigger("reset");
                                 $('#logo-modal').modal('hide');
                                 $('#btn-save').html('Save Changes');
-                                fetch(url)
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        gridOptions.api.setRowData(data.events);
-                                    });
-                                gridOptions.api.refreshCells({force: true});
+                                $('#filtersButton').click();
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -660,24 +650,8 @@
             }
 
             $('#show-all').on('change', function() {
-
-                // var url = '{{ route('eventsData',[':showAll','0']) }}';
-                // var showAll = $('#show-all').prop("checked") == true ? '1' : '0';
-                // url = url.replace(":showAll", showAll);
-
-                // fetch(url)
-                //     .then(response => response.json())
-                //     .then(data => {
-                //         gridOptions.api.setRowData(data.events);
-                //         totalSize = data.size;
-                //         $('#total_count').html('Total pages count: ' + data.size);
-                //         allData = data.templates;
-                //         $('.ag-icon-first').click();
-                //     });
-                // gridOptions.api.refreshCells({force: true});
                 $('#filtersButton').click();
             });
-
         });
     </script>
 @endsection

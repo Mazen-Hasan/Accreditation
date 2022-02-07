@@ -56,26 +56,6 @@
                             </div>
                         </div>
                         <div id="myGrid" class="ag-theme-alpine" style="height: 600px; width:100%;"></div>
-                        <!-- <div class="table-responsive">
-                            <table class="table table-hover" id="laravel_datatable" style="text-align: center">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Event ID</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Country</th>
-                                    <th>City</th><th>Website</th>
-                                    <th>Telephone</th>
-                                    <th>Focal point</th>
-                                    <th style="color: black">Status</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -359,55 +339,9 @@
                 }
             });
             var eventId = $('#h_event_id').val();
-
-            // $('#laravel_datatable').DataTable({
-            //     dom: 'lBfrtip',
-            //     buttons: [{
-            //         extend: 'excelHtml5',
-            //         title: 'Event-Companies',
-            //         exportOptions: {
-            //             columns: [2, 3, 4, 5, 6, 7, 8, 9]
-            //         }
-            //     }],
-
-            //     processing: true,
-            //     serverSide: true,
-
-            //     ajax: {
-            //         url: '',
-            //         type: 'GET',
-            //     },
-            //     columns: [
-            //         {data: 'id', name: 'id', 'visible': false},
-            //         {data: 'event_id', name: 'event_id', 'visible': false},
-            //         {data: 'name', name: 'name'},
-            //         {data: 'category', name: 'category'},
-            //         {data: 'country', name: 'country'},
-            //         {data: 'city', name: 'city'},
-            //         {data: 'website', name: 'website'},
-            //         {data: 'telephone', name: 'telephone'},
-            //         {data: 'focal_point', name: 'focal_point'},
-            //         {
-            //             data: 'status', render: function (data) {
-            //                 if (data == 1) {
-            //                     return "<p style='color: green'>Active</p>"
-            //                 } else {
-            //                     if (data == 0) {
-            //                         return "<p style='color: red'>InActive</p>"
-            //                     } else {
-            //                         return "<p style='color: orange'>Invited</p>"
-            //                     }
-            //                 }
-            //             }
-            //         },
-            //         {data: 'action', name: 'action', orderable: false},
-            //     ],
-            //     order: [[0, 'desc']]
+            // $('.export-to-excel').click(function () {
+            //     $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             // });
-
-            $('.export-to-excel').click(function () {
-                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
-            });
 
             $('#add-new-company').click(function () {
                 $('#btn-save').val("create-company");
@@ -457,7 +391,7 @@
                                     allData = data.templates;
                                     $('.ag-icon-first').click();
                                 });
-                            gridOptions.api.refreshCells({force: true});
+                                gridOptions.api.refreshCells({force: true});
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -608,30 +542,6 @@
             returnFilters = nameFilter;
             return returnFilters;
         }
-                // function addFilterCol(colName){
-        //     var i =0;
-        //     var exist = false;
-        //     while(i <filtercolIds.length){
-        //         if(filtercolIds[i] == colName){
-        //             exist = true;
-        //             i = filtercolId.size;
-        //         }
-        //         i++;
-        //     }
-        //     if(!exist){
-        //         filtercolIds.push(colName);
-        //     }
-        // }
-        // function removeFilterCol(colName){
-        //     if(filtercolIds.length > 0){
-        //         const index = filtercolIds.indexOf(colName);
-        //         if (index > -1) {
-        //             filtercolIds.splice(index, 1); // 2nd parameter means remove one item only
-        //         }
-        //     }
-        // }
-
-            ////end new lines
         });
     </script>
 @endsection

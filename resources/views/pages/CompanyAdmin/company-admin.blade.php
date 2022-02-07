@@ -19,7 +19,7 @@
                             @foreach($events as $event)
                                 <div class="col-sm-4">
                                     <div class="card"
-                                    @if($event->status > 2)
+                                    @if($event->event_status > 2)
                                         style="background-color: #d7d4d4;"
                                     @endif
                                     >

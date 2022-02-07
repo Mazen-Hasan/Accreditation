@@ -353,9 +353,9 @@
 
         $('.export-to-excel').click(function () {
             gridOptions.api.exportDataAsExcel({
-                sheetName: 'Companies',
+                sheetName: 'subsidiaries',
                 columnKeys: ['name', 'category','country','city','webiste','telephone','focal_point','status'],
-                fileName: 'companies.xlsx',
+                fileName: 'subsidiaries.xlsx',
             });
         });
 
@@ -397,54 +397,54 @@
                 }
             });
             var companyId = $('#company_id').val();
-            $('#laravel_datatable').DataTable({
-                dom: 'lBfrtip',
-                buttons: [{
-                    extend: 'excelHtml5',
-                    title: 'Event-Companies',
-                    exportOptions: {
-                        columns: [2, 3, 4, 5, 6, 7, 8, 9]
-                    }
-                }],
+            // $('#laravel_datatable').DataTable({
+            //     dom: 'lBfrtip',
+            //     buttons: [{
+            //         extend: 'excelHtml5',
+            //         title: 'Event-Companies',
+            //         exportOptions: {
+            //             columns: [2, 3, 4, 5, 6, 7, 8, 9]
+            //         }
+            //     }],
 
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    //url: '/subCompanies/'+companyId,
-                    url: "{{ route('subCompanies',[$companyId,$eventId]) }}",
-                    type: 'GET',
-                },
-                columns: [
-                    {data: 'id', name: 'id', 'visible': false},
-                    {data: 'event_id', name: 'event_id', 'visible': false},
-                    {data: 'name', name: 'name'},
-                    {data: 'category', name: 'category'},
-                    {data: 'country', name: 'country'},
-                    {data: 'city', name: 'city'},
-                    {data: 'website', name: 'website'},
-                    {data: 'telephone', name: 'telephone'},
-                    {data: 'focal_point', name: 'focal_point'},
-                    {
-                        data: 'status', render: function (data) {
-                            if (data == 1) {
-                                return "<p style='color: green'>Active</p>"
-                            } else {
-                                if (data == 0) {
-                                    return "<p style='color: red'>InActive</p>"
-                                } else {
-                                    return "<p style='color: orange'>Invited</p>"
-                                }
-                            }
-                        }
-                    },
-                    {data: 'action', name: 'action', orderable: false},
-                ],
-                order: [[0, 'desc']]
-            });
+            //     processing: true,
+            //     serverSide: true,
+            //     ajax: {
+            //         //url: '/subCompanies/'+companyId,
+            //         url: "{{ route('subCompanies',[$companyId,$eventId]) }}",
+            //         type: 'GET',
+            //     },
+            //     columns: [
+            //         {data: 'id', name: 'id', 'visible': false},
+            //         {data: 'event_id', name: 'event_id', 'visible': false},
+            //         {data: 'name', name: 'name'},
+            //         {data: 'category', name: 'category'},
+            //         {data: 'country', name: 'country'},
+            //         {data: 'city', name: 'city'},
+            //         {data: 'website', name: 'website'},
+            //         {data: 'telephone', name: 'telephone'},
+            //         {data: 'focal_point', name: 'focal_point'},
+            //         {
+            //             data: 'status', render: function (data) {
+            //                 if (data == 1) {
+            //                     return "<p style='color: green'>Active</p>"
+            //                 } else {
+            //                     if (data == 0) {
+            //                         return "<p style='color: red'>InActive</p>"
+            //                     } else {
+            //                         return "<p style='color: orange'>Invited</p>"
+            //                     }
+            //                 }
+            //             }
+            //         },
+            //         {data: 'action', name: 'action', orderable: false},
+            //     ],
+            //     order: [[0, 'desc']]
+            // });
 
-            $('.export-to-excel').click(function () {
-                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
-            });
+            // $('.export-to-excel').click(function () {
+            //     $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            // });
 
             $('#add-new-company').click(function () {
                 $('#btn-save').val("create-company");
@@ -472,12 +472,18 @@
                     if ($button[0].id === 'btn-yes') {
                         var company_id = $('#curr_element_id').val();
                         var event_id = $('#event_id').val();
+                        var url = "{{ route('subsidiariesInvite', [":company_id",":eventId"]) }}";
+                        url = url.replace(':company_id', company_id);
+                        url = url.replace(':eventId', event_id);
                         $.ajax({
                             type: "get",
-                            url: "../../companyAdminController/Invite/" + company_id + "/" + event_id,
+                            //url: "../../companyAdminController/Invite/" + company_id + "/" + event_id,
+                            url:url,
                             success: function (data) {
-                                var oTable = $('#laravel_datatable').dataTable();
-                                oTable.fnDraw(false);
+                                // var oTable = $('#laravel_datatable').dataTable();
+                                // oTable.fnDraw(false);
+                                $('#filtersButton').click();
+                                $('#filtersButton').hide();
                             },
                             error: function (data) {
                                 console.log('Error:', data);

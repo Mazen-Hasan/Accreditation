@@ -185,22 +185,6 @@
                     const event_id = params.data.event_id;
                     let button = "";
                     var url = "";
-                    // if(event_status < 3){
-                    //     url = "{{ route('companyEdit', [':company_id',':event_id']) }}";
-                    //     url = url.replace(':company_id', company_id);
-                    //     url = url.replace(':event_id', event_id);
-                    //     button += '<a href="' + url + '"  data-toggle="tooltip"  id="edit-company" data-id="' + company_id + '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                    //     button += '&nbsp;&nbsp;';
-                    //     if(params.data.status > 0){
-                    //         button += '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="' + company_id + '" data-name="' + params.data.name + '" data-focalpoint="' + params.data.focal_point + '" title="Invite"><i class="far fa-share-square"></i></a>';
-                    //         button += '&nbsp;&nbsp;';
-                    //     }
-                    // }
-                    // url = "{{ route('companyAccreditCat', [':company_id',':event_id']) }}";
-                    // url = url.replace(':company_id', company_id);
-                    // url = url.replace(':event_id', event_id);
-                    // button += '<a href="' + url + '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' + company_id + '" title="Accreditation Size"><i class="fas fa-sitemap"></i></a>';
-                    // button += '&nbsp;&nbsp;';
                     url = "{{ route('securityOfficerCompanyParticipants', [':company_id',':event_id']) }}";
                     url = url.replace(':company_id', company_id);
                     url = url.replace(':event_id', event_id);
@@ -330,53 +314,53 @@
                 }
             });
 
-            $('#laravel_datatable').DataTable({
-                dom: 'lBfrtip',
-                buttons: [{
-                    extend: 'excelHtml5',
-                    title: 'Event-Companies',
-                    exportOptions: {
-                        columns: [2, 3, 4, 5, 6, 7, 8, 9]
-                    }
-                }],
+            // $('#laravel_datatable').DataTable({
+            //     dom: 'lBfrtip',
+            //     buttons: [{
+            //         extend: 'excelHtml5',
+            //         title: 'Event-Companies',
+            //         exportOptions: {
+            //             columns: [2, 3, 4, 5, 6, 7, 8, 9]
+            //         }
+            //     }],
 
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "{{ route('securityOfficerCompanies', $eventid) }}",
-                    type: 'GET',
-                },
-                columns: [
-                    {data: 'id', name: 'id', 'visible': false},
-                    {data: 'event_id', name: 'event_id', 'visible': false},
-                    {data: 'name', name: 'name'},
-                    {data: 'category', name: 'category'},
-                    {data: 'country', name: 'country'},
-                    {data: 'city', name: 'city'},
-                    {data: 'website', name: 'website'},
-                    {data: 'telephone', name: 'telephone'},
-                    {data: 'focal_point', name: 'focal_point'},
-                    {
-                        data: 'status', render: function (data) {
-                            if (data == 1) {
-                                return "<p style='color: green'>Active</p>"
-                            } else {
-                                if (data == 0) {
-                                    return "<p style='color: red'>InActive</p>"
-                                } else {
-                                    return "<p style='color: orange'>Invited</p>"
-                                }
-                            }
-                        }
-                    },
-                    {data: 'action', name: 'action', orderable: false},
-                ],
-                order: [[0, 'desc']]
-            });
+            //     processing: true,
+            //     serverSide: true,
+            //     ajax: {
+            //         url: "{{ route('securityOfficerCompanies', $eventid) }}",
+            //         type: 'GET',
+            //     },
+            //     columns: [
+            //         {data: 'id', name: 'id', 'visible': false},
+            //         {data: 'event_id', name: 'event_id', 'visible': false},
+            //         {data: 'name', name: 'name'},
+            //         {data: 'category', name: 'category'},
+            //         {data: 'country', name: 'country'},
+            //         {data: 'city', name: 'city'},
+            //         {data: 'website', name: 'website'},
+            //         {data: 'telephone', name: 'telephone'},
+            //         {data: 'focal_point', name: 'focal_point'},
+            //         {
+            //             data: 'status', render: function (data) {
+            //                 if (data == 1) {
+            //                     return "<p style='color: green'>Active</p>"
+            //                 } else {
+            //                     if (data == 0) {
+            //                         return "<p style='color: red'>InActive</p>"
+            //                     } else {
+            //                         return "<p style='color: orange'>Invited</p>"
+            //                     }
+            //                 }
+            //             }
+            //         },
+            //         {data: 'action', name: 'action', orderable: false},
+            //     ],
+            //     order: [[0, 'desc']]
+            // });
 
-            $('.export-to-excel').click(function () {
-                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
-            });
+            // $('.export-to-excel').click(function () {
+            //     $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            // });
 
             $('#add-new-company').click(function () {
                 $('#btn-save').val("create-company");

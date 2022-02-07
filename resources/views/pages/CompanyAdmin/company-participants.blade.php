@@ -494,9 +494,9 @@
 
         $('.export-to-excel').click(function () {
             gridOptions.api.exportDataAsExcel({
-                sheetName: 'Companies',
+                sheetName: 'Participants',
                 columnKeys: filtercolIds,
-                fileName: 'companies.xlsx',
+                fileName: 'participants.xlsx',
             });
         });
 
@@ -545,46 +545,46 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
-            var myColumns = [];
-            var i = 0;
-            myColumns.push({data: "id", name: "id", 'visible': false});
-        	var expotColumns = [];
-            while (i < jqueryarray.length) {
-                myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
-                expotColumns.push(i+1);
-            	i++;
-            }
-       	 	myColumns.push({data: "identifier", name: "identifier"});
-        	myColumns.push({data: "image", name: "image", orderable: "false"});
-            myColumns.push({data: "status", name: "status"});
-            myColumns.push({data: "action", name: "action", orderable: "false"});
-        	expotColumns.push(i+1);
-        	expotColumns.push(i+3);
-            $('#laravel_datatable').DataTable({
-                dom: 'lBrtip',
-                buttons: [{
-                    extend: 'excelHtml5',
-                    title: 'Company-Participants',
-                    exportOptions: {
-                        columns: expotColumns
-                    }
-                }],
+            // var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
+            // var myColumns = [];
+            // var i = 0;
+            // myColumns.push({data: "id", name: "id", 'visible': false});
+        	// var expotColumns = [];
+            // while (i < jqueryarray.length) {
+            //     myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
+            //     expotColumns.push(i+1);
+            // 	i++;
+            // }
+       	 	// myColumns.push({data: "identifier", name: "identifier"});
+        	// myColumns.push({data: "image", name: "image", orderable: "false"});
+            // myColumns.push({data: "status", name: "status"});
+            // myColumns.push({data: "action", name: "action", orderable: "false"});
+        	// expotColumns.push(i+1);
+        	// expotColumns.push(i+3);
+            // $('#laravel_datatable').DataTable({
+            //     dom: 'lBrtip',
+            //     buttons: [{
+            //         extend: 'excelHtml5',
+            //         title: 'Company-Participants',
+            //         exportOptions: {
+            //             columns: expotColumns
+            //         }
+            //     }],
 
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    //url: '../../company-participants/' + companyId + '/' + eventId,
-                    url: "{{ route('companyParticipants',[$companyId,$eventId]) }}",
-                    type: 'GET',
-                },
-                columns: myColumns,
-                order: [[0, 'desc']]
-            });
+            //     processing: true,
+            //     serverSide: true,
+            //     ajax: {
+            //         //url: '../../company-participants/' + companyId + '/' + eventId,
+            //         url: "{{ route('companyParticipants',[$companyId,$eventId]) }}",
+            //         type: 'GET',
+            //     },
+            //     columns: myColumns,
+            //     order: [[0, 'desc']]
+            // });
 
-            $('.export-to-excel').click(function () {
-                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
-            });
+            // $('.export-to-excel').click(function () {
+            //     $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            // });
 
             $('#add-new-post').click(function () {
                 var addableStatus = $('#addable_status').val();
@@ -631,8 +631,10 @@
                         var image_path = "{{URL::asset('badges/')}}/";
 
                         $('#badge').attr('src', image_path + imag);
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
+                        $('#filtersButton').click();
+                        $('#filtersButton').hide();
+                        //var oTable = $('#laravel_datatable').dataTable();
+                        //oTable.fnDraw(false);
                     },
                     error: function (data) {
                         console.log('Error:', data);
@@ -678,8 +680,10 @@
                     success: function (data) {
                         $('#badge-modal').modal('show');
                         printJS($('#badge').attr('src'), 'image');
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
+                        //var oTable = $('#laravel_datatable').dataTable();
+                        //oTable.fnDraw(false);
+                        $('#filtersButton').click();
+                        $('#filtersButton').hide();
                         return false;
                     },
                     error: function (data) {
@@ -729,10 +733,12 @@
                                 type: "get",
                                 url: url,
                                 success: function (data) {
-                                    var oTable = $('#laravel_datatable').dataTable();
+                                    //var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
+                                    $('#filtersButton').click();
+                                    $('#filtersButton').hide();
                                     //$('#add-new-post').hide();
-                                    oTable.fnDraw(false);
+                                    //oTable.fnDraw(false);
                                 },
                                 error: function (data) {
                                     console.log('Error:', data);
@@ -759,8 +765,10 @@
                             // url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
                             url: url,
                             success: function (data) {
-                                var oTable = $('#laravel_datatable').dataTable();
-                                oTable.fnDraw(false);
+                                $('#filtersButton').click();
+                                $('#filtersButton').hide();
+                                // var oTable = $('#laravel_datatable').dataTable();
+                                // oTable.fnDraw(false);
                             },
                             error: function (data) {
                                 console.log('Error:', data);

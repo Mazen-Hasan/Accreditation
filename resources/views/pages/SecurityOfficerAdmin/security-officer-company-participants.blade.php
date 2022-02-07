@@ -378,9 +378,9 @@
 
         $('.export-to-excel').click(function () {
             gridOptions.api.exportDataAsExcel({
-                sheetName: 'Companies',
+                sheetName: 'Participants',
                 columnKeys: filtercolIds,
-                fileName: 'companies.xlsx',
+                fileName: 'participants.xlsx',
             });
         });
 
@@ -423,53 +423,53 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
-            var myColumns = [];
-            var i = 0;
-            myColumns.push({data: "id", name: "id", 'visible': false});
-            var expotColumns = [];
-        	while (i < jqueryarray.length) {
-                myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
-                expotColumns.push(i+1);
-            	i++;
-            }
-        	myColumns.push({data: "identifier", name: "identifier"});
-            myColumns.push({data: "image", name: "image", orderable: "false"});
-            myColumns.push({data: "status", name: "status"});
-            myColumns.push({data: "action", name: "action", orderable: "false"});
-			expotColumns.push(i+1);
-        	expotColumns.push(i+3);
-            var companyId = $('#company_id').val();
-            var eventId = $('#event_id').val();
+            // var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
+            // var myColumns = [];
+            // var i = 0;
+            // myColumns.push({data: "id", name: "id", 'visible': false});
+            // var expotColumns = [];
+        	// while (i < jqueryarray.length) {
+            //     myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
+            //     expotColumns.push(i+1);
+            // 	i++;
+            // }
+        	// myColumns.push({data: "identifier", name: "identifier"});
+            // myColumns.push({data: "image", name: "image", orderable: "false"});
+            // myColumns.push({data: "status", name: "status"});
+            // myColumns.push({data: "action", name: "action", orderable: "false"});
+			// expotColumns.push(i+1);
+        	// expotColumns.push(i+3);
+            // var companyId = $('#company_id').val();
+            // var eventId = $('#event_id').val();
 
-            var url = "{{ route('securityOfficerCompanyParticipants', [":companyId",":eventId"]) }}";
-            url = url.replace(':companyId', companyId);
-            url = url.replace(':eventId', eventId);
+            // var url = "{{ route('securityOfficerCompanyParticipants', [":companyId",":eventId"]) }}";
+            // url = url.replace(':companyId', companyId);
+            // url = url.replace(':eventId', eventId);
 
-            $('#laravel_datatable').DataTable({
-                dom: 'lBfrtip',
-                buttons: [{
-                    extend: 'excelHtml5',
-                    title: 'Company-Participants',
-                    exportOptions: {
-                        columns: expotColumns
-                    }
-                }],
+            // $('#laravel_datatable').DataTable({
+            //     dom: 'lBfrtip',
+            //     buttons: [{
+            //         extend: 'excelHtml5',
+            //         title: 'Company-Participants',
+            //         exportOptions: {
+            //             columns: expotColumns
+            //         }
+            //     }],
 
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    // url: '../../security-officer-company-participants/' + companyId + '/' + eventId,
-                    url: url,
-                    type: 'GET',
-                },
-                columns: myColumns,
-                order: [[0, 'desc']]
-            });
+            //     processing: true,
+            //     serverSide: true,
+            //     ajax: {
+            //         // url: '../../security-officer-company-participants/' + companyId + '/' + eventId,
+            //         url: url,
+            //         type: 'GET',
+            //     },
+            //     columns: myColumns,
+            //     order: [[0, 'desc']]
+            // });
 
-            $('.export-to-excel').click(function () {
-                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
-            });
+            // $('.export-to-excel').click(function () {
+            //     $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            // });
 
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
@@ -545,8 +545,10 @@
                                 // url: "../../securityOfficerAdminController/Approve/" + staffId,
                                 url: url,
                                 success: function (data) {
-                                    var oTable = $('#laravel_datatable').dataTable();
-                                    oTable.fnDraw(false);
+                                    // var oTable = $('#laravel_datatable').dataTable();
+                                    // oTable.fnDraw(false);
+                                    $('#filtersButton').click();
+                                    $('#filtersButton').hide();
                                 },
                                 error: function (data) {
                                     console.log('Error:', data);
@@ -565,10 +567,12 @@
                                 // url: "../../securityOfficerAdminController/Reject/" + staffId,
                                 url: url,
                                 success: function (data) {
-                                    var oTable = $('#laravel_datatable').dataTable();
+                                    //var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
                                     $('#add-new-post').hide();
-                                    oTable.fnDraw(false);
+                                    $('#filtersButton').click();
+                                    $('#filtersButton').hide();
+                                    //oTable.fnDraw(false);
                                 },
                                 error: function (data) {
                                     console.log('Error:', data);
@@ -594,8 +598,10 @@
                             // url: "../../securityOfficerAdminController/RejectToCorrect/" + staffId + "/" + reason,
                             url: url,
                             success: function (data) {
-                                var oTable = $('#laravel_datatable').dataTable();
-                                oTable.fnDraw(false);
+                                // var oTable = $('#laravel_datatable').dataTable();
+                                // oTable.fnDraw(false);
+                                $('#filtersButton').click();
+                                $('#filtersButton').hide();
                             },
                             error: function (data) {
                                 console.log('Error:', data);

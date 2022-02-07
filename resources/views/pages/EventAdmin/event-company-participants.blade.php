@@ -477,9 +477,9 @@
 
         $('.export-to-excel').click(function () {
             gridOptions.api.exportDataAsExcel({
-                sheetName: 'Companies',
+                sheetName: 'Participants',
                 columnKeys: filtercolIds,
-                fileName: 'companies.xlsx',
+                fileName: 'participants.xlsx',
             });
         });
 
@@ -526,53 +526,6 @@
             if(company_id == 0){
                 $('#add-new-post').hide();
             }
-            var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
-            var myColumns = [];
-            var i = 0;
-            myColumns.push({data: "id", name: "id", 'visible': false});
-        	var expotColumns = [];
-            while (i < jqueryarray.length) {
-                myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
-            	expotColumns.push(i+1);
-                i++;
-            }
-        	myColumns.push({data: "identifier", name: "identifier", orderable: "true"});
-            myColumns.push({data: "image", name: "image", orderable: "false"});
-            myColumns.push({data: "status", name: "status"});
-            myColumns.push({data: "action", name: "action", orderable: "false"});
-           	expotColumns.push(i+1);
-        	expotColumns.push(i+3);
-            var companyId = $('#company_id').val();
-            var eventId = $('#event_id').val();
-
-            var url = "{{ route('eventCompanyParticipants', [":companyId",":eventId"]) }}";
-            url = url.replace(':companyId', companyId);
-            url = url.replace(':eventId', eventId);
-
-            $('#laravel_datatable').DataTable({
-                dom: 'lBrtip',
-                buttons: [{
-                    extend: 'excelHtml5',
-                    title: 'Company-Participants',
-                    exportOptions: {
-                        columns: expotColumns
-                    }
-                }],
-
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: url,
-                    type: 'GET',
-                },
-                columns: myColumns,
-                order: [[0, 'desc']]
-            });
-
-            $('.export-to-excel').click(function () {
-                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
-            });
-
             // $('#add-new-post').click(function () {
             //     $('#btn-save').val("create-post");
             //     $('#post_id').val('');
@@ -647,8 +600,10 @@
                         var image_path = "{{URL::asset('badges/')}}/";
 
                         $('#badge').attr('src', image_path + imag);
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
+                        $('#filtersButton').click();
+                        $('#filtersButton').hide();
+                        //var oTable = $('#laravel_datatable').dataTable();
+                        //oTable.fnDraw(false);
                     },
                     error: function (data) {
                         console.log('Error:', data);
@@ -694,8 +649,10 @@
                     success: function (data) {
                         $('#badge-modal').modal('show');
                         printJS($('#badge').attr('src'), 'image');
-                        var oTable = $('#laravel_datatable').dataTable();
-                        oTable.fnDraw(false);
+                        //var oTable = $('#laravel_datatable').dataTable();
+                        //oTable.fnDraw(false);
+                        $('#filtersButton').click();
+                        $('#filtersButton').hide();
                         return false;
                     },
                     error: function (data) {
@@ -721,8 +678,10 @@
                                 // url: "../../eventAdminController/Approve/" + staffId,
                                 url: url,
                                 success: function (data) {
-                                    var oTable = $('#laravel_datatable').dataTable();
-                                    oTable.fnDraw(false);
+                                    $('#filtersButton').click();
+                                    $('#filtersButton').hide();
+                                    // var oTable = $('#laravel_datatable').dataTable();
+                                    // oTable.fnDraw(false);
                                 },
                                 error: function (data) {
                                     console.log('Error:', data);
@@ -741,10 +700,12 @@
                                 // url: "../../eventAdminController/Reject/" + staffId,
                                 url: url,
                                 success: function (data) {
-                                    var oTable = $('#laravel_datatable').dataTable();
+                                    $('#filtersButton').click();
+                                    $('#filtersButton').hide();
+                                    //var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
                                     //$('#add-new-post').hide();
-                                    oTable.fnDraw(false);
+                                    //oTable.fnDraw(false);
                                 },
                                 error: function (data) {
                                     console.log('Error:', data);
@@ -802,8 +763,10 @@
                             // url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
                             url: url,
                             success: function (data) {
-                                var oTable = $('#laravel_datatable').dataTable();
-                                oTable.fnDraw(false);
+                                $('#filtersButton').click();
+                                $('#filtersButton').hide();
+                                // var oTable = $('#laravel_datatable').dataTable();
+                                // oTable.fnDraw(false);
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -813,11 +776,11 @@
                 });
             });
         
-        	var oTable = $('#laravel_datatable').DataTable();
+        	// var oTable = $('#laravel_datatable').DataTable();
         
-        	$('#search').on('keyup', function () {
-                oTable.search(this.value).draw();
-            });
+        	// $('#search').on('keyup', function () {
+            //     oTable.search(this.value).draw();
+            // });
         ///new lines
         $('body').on('click', '.ag-icon-previous', function () {
             var value = $('.ag-paging-number').html();

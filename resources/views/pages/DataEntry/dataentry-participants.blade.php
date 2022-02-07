@@ -429,9 +429,9 @@
 
         $('.export-to-excel').click(function () {
             gridOptions.api.exportDataAsExcel({
-                sheetName: 'Companies',
+                sheetName: 'Paticipants',
                 columnKeys: filtercolIds,
-                fileName: 'companies.xlsx',
+                fileName: 'participants.xlsx',
             });
         });
 
@@ -478,46 +478,46 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
-            var myColumns = [];
-            var i = 0;
-            myColumns.push({data: "id", name: "id", 'visible': false});
-        	var expotColumns = [];
-            while (i < jqueryarray.length) {
-                myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
-                expotColumns.push(i+1);             
-            	i++;
-            }
-        	myColumns.push({data: "identifier", name: "identifier"});
-            myColumns.push({data: "image", name: "image", orderable: "false"});
-            myColumns.push({data: "status", name: "status"});
-            myColumns.push({data: "action", name: "action", orderable: "false"});
-            expotColumns.push(i+1);
-        	expotColumns.push(i+3);
-            $('#laravel_datatable').DataTable({
-                dom: 'lBfrtip',
-                buttons: [{
-                    extend: 'excelHtml5',
-                    title: 'DataEntry-Participants',
-                    exportOptions: {
-                        columns: expotColumns
-                    }
-                }],
+            //var jqueryarray = <?php echo json_encode($dataTableColumns); ?>;
+            // var myColumns = [];
+            // var i = 0;
+            // myColumns.push({data: "id", name: "id", 'visible': false});
+        	// var expotColumns = [];
+            // while (i < jqueryarray.length) {
+            //     myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
+            //     expotColumns.push(i+1);             
+            // 	i++;
+            // }
+        	// myColumns.push({data: "identifier", name: "identifier"});
+            // myColumns.push({data: "image", name: "image", orderable: "false"});
+            // myColumns.push({data: "status", name: "status"});
+            // myColumns.push({data: "action", name: "action", orderable: "false"});
+            // expotColumns.push(i+1);
+        	// expotColumns.push(i+3);
+            // $('#laravel_datatable').DataTable({
+            //     dom: 'lBfrtip',
+            //     buttons: [{
+            //         extend: 'excelHtml5',
+            //         title: 'DataEntry-Participants',
+            //         exportOptions: {
+            //             columns: expotColumns
+            //         }
+            //     }],
 
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    //url: 'dataentry-participants',
-                    url: "{{ route('dataEntryParticipants',[$companyId,$eventId]) }}",
-                    type: 'GET',
-                },
-                columns: myColumns,
-                order: [[0, 'desc']]
-            });
+            //     processing: true,
+            //     serverSide: true,
+            //     ajax: {
+            //         //url: 'dataentry-participants',
+            //         url: "{{ route('dataEntryParticipants',[$companyId,$eventId]) }}",
+            //         type: 'GET',
+            //     },
+            //     columns: myColumns,
+            //     order: [[0, 'desc']]
+            // });
 
-            $('.export-to-excel').click(function () {
-                $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
-            });
+            // $('.export-to-excel').click(function () {
+            //     $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            // });
 
             $('#add-new-post').click(function () {
             	var addableStatus = $('#addable_status').val();

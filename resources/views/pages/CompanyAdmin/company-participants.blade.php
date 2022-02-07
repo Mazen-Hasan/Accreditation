@@ -417,7 +417,7 @@
                                 button += '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' + participent_id + '" data-reason="' + params.data.event_admin_reject_reason + '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
                                 break;
                         }
-                    }                    
+                    }
                     return button;
                 }
             });
@@ -620,7 +620,7 @@
 
                 var url = "{{ route('badgeGenerate', ":staff_id") }}";
                 url = url.replace(':staff_id', staff_id);
-                
+
                 $.ajax({
                     type: "get",
                     // url: "badge-generate/" + staff_id,
@@ -646,7 +646,7 @@
 
                 var url = "{{ route('badgePreview', ":staff_id") }}";
                 url = url.replace(':staff_id', staff_id);
-                
+
                 $.ajax({
                     type: "get",
                     // url: "badge-preview/" + staff_id,
@@ -670,7 +670,7 @@
 
                 var url = "{{ route('badgePrint', ":staff_id") }}";
                 url = url.replace(':staff_id', staff_id);
-                
+
                 $.ajax({
                     type: "get",
                     // url: "badge-print/" + staff_id,
@@ -742,7 +742,7 @@
                     }
                 });
             });
-            
+
             $('#delete-element-confirm-modal-new button').on('click', function (event) {
                 var $button = $(event.target);
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
@@ -753,7 +753,7 @@
                         var url = "{{ route('eventAdminControllerRejectToCorrect', [":staffId",":reason"]) }}";
                         url = url.replace(':staffId', staffId);
                         url = url.replace(':reason', reason);
-                        
+
                         $.ajax({
                             type: "get",
                             // url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,

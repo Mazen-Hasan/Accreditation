@@ -2,13 +2,6 @@
 @section('subtitle',' Events')
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-{{--    <link rel="stylesheet" href="{{ URL::asset('css/dataTable.css') }}">--}}
-
-{{--    <script src="{{ URL::asset('js/dataTable.js') }}"></script>--}}
-{{--    <script src="{{ URL::asset('js/dataTables.buttons.min.js') }}"></script>--}}
-{{--    <script src="{{ URL::asset('js/buttons.html5.min.js') }}"></script>--}}
-{{--    <script src="{{ URL::asset('js/jszip.min.js') }}"></script>--}}
-{{--    <script src="{{ URL::asset('js/pdfmake.min.js') }}"></script>--}}
 
     <link rel="stylesheet" href="{{ URL::asset('css/ag-grid/ag-grid.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('css/ag-grid/ag-theme-alpine.css') }}">
@@ -27,16 +20,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-7">
+                            <div class="col-md-5">
                                 <h4 class="card-title">Event Management</h4>
-                            </div>
-                            <div class="col-md-1 align-content-md-center">
-                                <div class="search-container">
-                                    <input class="search expandright" id="search" type="text" placeholder="Search">
-                                    <label class="search-button search-button-icon" for="search">
-                                        <i class="icon-search"></i>
-                                    </label>
-                                </div>
                             </div>
                             <div class="col-md-4 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
@@ -55,41 +40,16 @@
                                 </a>
                                 @endrole
                             </div>
+                            <div class="col-md-3">
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                                Show all
+                            </div>
                         </div>
 
                         <div id="myGrid" class="ag-theme-alpine" style="height: 600px;"></div>
-
-{{--                        <div class="table-responsive">--}}
-{{--                            <table class="table table-hover" id="laravel_datatable" style="text-align: center">--}}
-{{--                                <thead>--}}
-{{--                                <tr>--}}
-{{--                                    <th>ID</th>--}}
-{{--                                    <th>Name</th>--}}
-{{--                                    <th>Size</th>--}}
-{{--                                    <th>Organizer</th>--}}
-{{--                                    <th>Registration Form</th>--}}
-{{--                                    <th>Type</th>--}}
-{{--                                    <th>Start</th>--}}
-{{--                                    <th>End</th>--}}
-{{--                                    <th>Accredit Start</th>--}}
-{{--                                    <th>Accredit End</th>--}}
-{{--                                    <th style="color: black">Status</th>--}}
-{{--                                    <th>Logo</th>--}}
-{{--                                    <th>Action</th>--}}
-{{--                                </tr>--}}
-{{--                                </thead>--}}
-{{--                                <tbody>--}}
-{{--                                </tbody>--}}
-{{--                            </table>--}}
-{{--                        </div>--}}
-                        <div>
-                            <a href="javascript:void(0)" id="showAll" class="add-hbtn">
-                                <i>
-                                    <img src="{{ asset('images/add.png') }}" alt="show all">
-                                </i>
-                                <span class="dt-hbtn" id="showAllSpan">Show all</span>
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -202,15 +162,31 @@
                 tooltipField: 'name',
                 tooltipComponentParams: {color: '#ececec'},
             },
-
-            {field: 'size', headerName: "Size", sortable: true, filter: 'agTextColumnFilter', },
-            {field: 'organizer', headerName: "Organizer" ,sortable: true, filter: 'agTextColumnFilter'},
+            {
+                field: "logo", headerName: "Logo", sortable: false,
+                cellRenderer: params => {
+                    var image_path = "{{URL::asset('logo/')}}/";
+                    return '<img class="event-logo-grid" src= ' + image_path + params.data.logo + '></img>';
+                },
+            },
+            {field: 'size', headerName: "Size", sortable: true, filter: 'agTextColumnFilter',},
+            {field: 'organizer', headerName: "Organizer", sortable: true, filter: 'agTextColumnFilter'},
             {field: 'template_name', headerName: "Template", sortable: true, filter: 'agTextColumnFilter'},
             {field: 'event_type', headerName: "Type", sortable: true, filter: 'agTextColumnFilter'},
             {field: 'event_start_date', headerName: "Start", sortable: true, filter: 'agTextColumnFilter'},
             {field: 'event_end_date', headerName: "End", sortable: true, filter: 'agTextColumnFilter'},
-            {field: 'accreditation_start_date', headerName: "Accreditation Start", sortable: true, filter: 'agTextColumnFilter'},
-            {field: 'accreditation_end_date', headerName: "Accreditation End", sortable: true, filter: 'agTextColumnFilter'},
+            {
+                field: 'accreditation_start_date',
+                headerName: "Accreditation Start",
+                sortable: true,
+                filter: 'agTextColumnFilter'
+            },
+            {
+                field: 'accreditation_end_date',
+                headerName: "Accreditation End",
+                sortable: true,
+                filter: 'agTextColumnFilter'
+            },
             {
                 field: "status", headerName: "Status", sortable: true, filter: 'agTextColumnFilter',
                 filterParams: {
@@ -225,40 +201,60 @@
                 },
             },
             {
-                field: "logo", headerName: "Logo", sortable: false,
-                cellRenderer: params => {
-                    var image_path = "{{URL::asset('logo/')}}/";
-                    return "<img src= " + image_path + params.data.logo + "></img>";
-                },
-            },
-            {
                 field: "Actions",
-                pinned:"right",
+                pinned: "right",
                 cellRenderer: params => {
-                    const template_id = params.data.id;
-                    let button = '<a href="javascript:void(0)" id="edit-template" data-id="' + template_id + '"title="Edit"><i class="fas fa-edit"></i></a>';
-                    button += '&nbsp;&nbsp;';
+                    const event_id = params.data.id;
+                    const logo = params.data.logo;
+                    const status = params.data.status;
+                    const approval_option = params.data.approval_option;
+                    const name = params.data.name;
 
-                    var url = "{{ route('templateFields', [':template_id']) }}";
-                    url = url.replace(':template_id', template_id);
+                    var url = "{{ route('EventController.show', [':event_id']) }}";
+                    url = url.replace(':event_id', event_id);
 
-                    button += '<a href="' + url + '" id="template-fields" data-id="' + template_id + '" title="Fields"><i class="far fa-list-alt"></i></a>';
-                    button += '&nbsp;&nbsp;';
+                    let $button = '<a href="' + url + '" data-toggle="tooltip"  id="event-details" data-id="' + event_id + '" data-original-title="Details" title="Details"><i class="far fa-list-alt"></i></a>';
+                    $button += '&nbsp;&nbsp;';
+                    if (status < 3) {
+                        url = "{{ route('eventEdit', [':event_id']) }}";
+                        url = url.replace(':event_id', event_id);
 
-                    if (params.data.is_locked == 1) {
-                        if (params.data.can_unlock == 1) {
-                            button += '<a href="javascript:void(0);" id="unLock-template" data-toggle="tooltip" data-original-title="Unlock" data-id="' + template_id + '" title="Un-Lock"><i class="fas fa-unlock"></i></a>';
-                        }
-                    } else {
-                        button += '<a href="javascript:void(0);" id="lock-template" data-toggle="tooltip" data-original-title="Lock" data-id="' + template_id + '" title="Lock"><i class="fas fa-lock"></i></a>';
+                        $button += '<a href="' + url + '" data-toggle="tooltip"  id="edit-event" data-id="' + event_id + '" data-original-title="Edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                        $button += '&nbsp;&nbsp;';
+                        $button += '<a href="javascript:void(0);" id="edit-logo" data-toggle="tooltip" data-id="' + event_id + '" data-name="' + name + '" data-l="' + logo + '" data-original-title="Edit" title="Edit Logo"><i class="far fa-image"></i></a>';
+                        $button += '&nbsp;&nbsp;';
                     }
-                    button += '&nbsp;&nbsp;';
-                    if (params.data.status == 1) {
-                        button += '<a href="javascript:void(0);" id="deActivate-template" data-toggle="tooltip" data-original-title="Delete" data-id="' + template_id + '" title="Deactivate"><i class="fas fa-ban"></i></a>';
-                    } else {
-                        button += '<a href="javascript:void(0);" id="activate-template" data-toggle="tooltip" data-original-title="Delete" data-id="' + template_id + '" title="Activate"><i class="fas fa-check-circle"></i></a>';
+
+                    url = "{{ route('eventSecurityCategories', [':event_id']) }}";
+                    url = url.replace(':event_id', event_id);
+
+                    $button += '<a href="' + url + '" data-toggle="tooltip"  id="event-security-categories" data-id="' + event_id + '" data-original-title="Edit" title="Event security categories"><i class="fas fa-users-cog"></i></a>';
+                    $button += '&nbsp;&nbsp;';
+
+                    url = "{{ route('eventAdmins', [':event_id']) }}";
+                    url = url.replace(':event_id', event_id);
+
+                    $button += '<a href="' + url + '" data-toggle="tooltip"  id="event-admins" data-id="' + event_id + '" data-original-title="Edit" title="Event admins"><i class="fas fa-user-cog"></i></a>';
+                    if (approval_option != 1) {
+                        $button += '&nbsp;&nbsp;';
+
+                        url = "{{ route('eventSecurityOfficers', [':event_id']) }}";
+                        url = url.replace(':event_id', event_id);
+
+                        $button += '<a href="' + url + '" data-toggle="tooltip"  id="event-security-officers" data-id="' + event_id + '" data-original-title="Edit" title="Event security officers"><i class="fas fa-user-shield"></i></a>';
                     }
-                    return button;
+                    $button += '&nbsp;&nbsp;';
+
+                    url = "{{ route('eventAccreditationCategories', [':event_id']) }}";
+                    url = url.replace(':event_id', event_id);
+
+                    $button += '<a href="' + url + '" data-toggle="tooltip"  id="event-accreditation-categories" data-id="' + event_id + '" data-original-title="Edit" title="Event accreditation categories"><i class="fas fa-users"></i></a>';
+                    $button += '&nbsp;&nbsp;';
+                    if (status == 3) {
+                        $button += '<a href="javascript:void(0);" id="complete-event" data-toggle="tooltip" data-id="' + event_id + '" data-name="' + name + '" data-original-title="Edit" title="Complete Events"><i class="far fa-calendar-check"></i></a>';
+                        $button += '&nbsp;&nbsp;';
+                    }
+                    return $button;
                 }
             },
         ];
@@ -300,14 +296,13 @@
                     },
                     {
                         statusPanel: 'PageCountComponent',
-                        align:'left',
+                        align: 'left',
                     },
                 ],
             },
         };
 
         function onFirstDataRendered(params) {
-            params.api.sizeColumnsToFit();
             autoSizeAll();
             params.api.setDomLayout('autoHeight');
             if (filters != null) {
@@ -342,7 +337,6 @@
                     totalSize = data.size;
                     gridOptions.api.setRowData(data.events);
                     allData = data.events;
-                    console.log(data.events);
                 });
         });
 
@@ -362,10 +356,10 @@
         $(document).on('click', '.ag-standard-button', function () {
             var value = $(this).html();
             value = value.replace(/\s/g, '');
-            if(value == "Apply"){
+            if (value == "Apply") {
                 $('#filtersButton').show();
-            }else{
-                if(value == "Reset"){
+            } else {
+                if (value == "Reset") {
                     $('#filtersButton').click();
                     $('#filtersButton').hide();
                 }
@@ -375,16 +369,14 @@
         $('body').on('click', '.ag-icon-next', function () {
             var value = $('.ag-paging-number').html();
             var size = 0;
-            if(value % 5 == 0){
-                if(value == (allData.length/2)){
+            if (value % 5 == 0) {
+                if (value == (allData.length / 2)) {
                     var size = value / 5;
                     filters = gridOptions.api.getFilterModel();
                     nameFilter = size;
                     nameFilter = nameFilter + buildFilters(filters);
-                    var $eventIdd = $('#h_event_id').val();
-                    var url = '{{ route('eventCompaniesData',[':id',':values']) }}';
-                    url = url.replace(":id",$eventIdd);
-                    url = url.replace(":values",nameFilter);
+                    var url = '{{ route('eventsData',[':values']) }}';
+                    url = url.replace(":values", nameFilter);
                     fetch(url)
                         .then(response => response.json())
                         .then(data => {
@@ -400,15 +392,12 @@
         });
 
         $('body').on('click', '#filtersButton', function () {
-            var hi = "";
             filters = gridOptions.api.getFilterModel();
             var nameFilter = 0;
             nameFilter = nameFilter + buildFilters(filters);
             data = nameFilter;
-            var $eventIdd = $('#h_event_id').val();
-            var url = '{{ route('eventCompaniesData',[':id',':values']) }}';
-            url = url.replace(":id",$eventIdd);
-            url = url.replace(":values",data);
+            var url = '{{ route('eventsData',[':values']) }}';
+            url = url.replace(":values", data);
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -457,19 +446,19 @@
             return result;
         }
 
-        function buildFilters(mfilters){
+        function buildFilters(mfilters) {
             var returnFilters = "";
             var nameFilter = "";
-            var i =0;
-            while(i < filtercolIds.length){
+            var i = 0;
+            while (i < filtercolIds.length) {
                 if (mfilters[filtercolIds[i]] != null) {
                     if (mfilters[filtercolIds[i]].operator != null) {
                         nameFilter = nameFilter + ",";
-                        nameFilter = nameFilter +  filtercolIds[i];
+                        nameFilter = nameFilter + filtercolIds[i];
                         nameFilter = nameFilter + ",";
-                        nameFilter = nameFilter +  "C";
+                        nameFilter = nameFilter + "C";
                         nameFilter = nameFilter + ",";
-                        nameFilter = nameFilter +  getCondition(mfilters[filtercolIds[i]].condition1.type);
+                        nameFilter = nameFilter + getCondition(mfilters[filtercolIds[i]].condition1.type);
                         nameFilter = nameFilter + ",";
                         nameFilter = nameFilter + mfilters[filtercolIds[i]].condition1.filter;
                         nameFilter = nameFilter + ",";
@@ -480,16 +469,15 @@
                         nameFilter = nameFilter + mfilters[filtercolIds[i]].condition2.filter;
                     } else {
                         nameFilter = nameFilter + ",";
-                        nameFilter = nameFilter +  filtercolIds[i];
+                        nameFilter = nameFilter + filtercolIds[i];
                         nameFilter = nameFilter + ",";
-                        nameFilter = nameFilter +  "N";
+                        nameFilter = nameFilter + "N";
                         nameFilter = nameFilter + ",";
                         nameFilter = nameFilter + getCondition(mfilters[filtercolIds[i]].type);
                         nameFilter = nameFilter + ",";
                         nameFilter = nameFilter + mfilters[filtercolIds[i]].filter;
                     }
                 }
-
                 i++;
             }
             returnFilters = nameFilter;
@@ -505,62 +493,6 @@
             var showStatus = 1;
             var murl = "{{ route('EventController.index') }}";
 
-            {{--$('#laravel_datatable').DataTable({--}}
-            {{--    dom: 'lBrtip',--}}
-            {{--    buttons: [{--}}
-            {{--        extend: 'excelHtml5',--}}
-            {{--        title: 'Events',--}}
-            {{--        exportOptions: {--}}
-            {{--            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]--}}
-            {{--        }--}}
-            {{--    }],--}}
-
-            {{--    processing: true,--}}
-            {{--    serverSide: true,--}}
-            {{--    ajax: {--}}
-            {{--        url: murl,--}}
-            {{--        type: 'GET',--}}
-            {{--    },--}}
-            {{--    columns: [--}}
-            {{--        {data: 'id', name: 'id', 'visible': false},--}}
-            {{--        {data: 'name', name: 'name'},--}}
-            {{--        {data: 'size', name: 'size'},--}}
-            {{--        {data: 'organizer', name: 'organizer'},--}}
-            {{--        {data: 'template_name', name: 'template_name'},--}}
-            {{--        {data: 'event_type', name: 'event_type'},--}}
-            {{--        {data: 'event_start_date', name: 'event_start_date'},--}}
-            {{--        {data: 'event_end_date', name: 'event_end_date'},--}}
-            {{--        {data: 'accreditation_start_date', name: 'accreditation_start_date'},--}}
-            {{--        {data: 'accreditation_end_date', name: 'accreditation_end_date'},--}}
-            {{--        {--}}
-            {{--            data: 'status', render: function (data) {--}}
-            {{--                if (data == 1) {--}}
-            {{--                    return "<span style='color: green'>Active</span>"--}}
-            {{--                } else {--}}
-            {{--                    if (data == 2) {--}}
-            {{--                        return "<span style='color: red'>InActive</span>"--}}
-            {{--                    } else {--}}
-            {{--                        if (data == 3) {--}}
-            {{--                            return "<span style='color: black'>Finished</span>"--}}
-            {{--                        } else {--}}
-            {{--                            return "<span style='color: orange'>Archived</span>"--}}
-            {{--                        }--}}
-            {{--                    }--}}
-            {{--                }--}}
-            {{--            }--}}
-            {{--        },--}}
-            {{--        {--}}
-            {{--            "data": "logo",--}}
-            {{--            "render": function (val) {--}}
-            {{--                // var image_path = "{{URL::asset('storage/logo/')}}/";--}}
-            {{--                var image_path = "{{URL::asset('logo/')}}/";--}}
-            {{--                return "<img src= " + image_path + val + "></img>";--}}
-            {{--            }--}}
-            {{--        },--}}
-            {{--        {data: 'action', name: 'action', orderable: false},--}}
-            {{--    ],--}}
-            {{--    order: [[0, 'desc']]--}}
-            {{--});--}}
 
             $('#add-new-post').click(function () {
                 $('#btn-save').val("create-post");
@@ -642,7 +574,6 @@
                     },
 
                     success: (data) => {
-                        // this.reset();
                         $('#file_type_error').removeClass('error').addClass('info');
                         $("#file_type_error").html('File uploaded successfully');
                         $('#btn-upload').html('Upload');
@@ -661,7 +592,6 @@
                 $('#event_id').val($(this).data("id"));
                 $('#event_name').val($(this).data("name"));
                 var eventName = $('#event_name').val();
-                //alert(eventName);
                 $('#confirmTitle').html('Event completion');
                 var confirmText = 'Are you sure you want to complete event: ' + eventName + '?';
                 $('#confirmText').html(confirmText);
@@ -680,8 +610,12 @@
                             type: "get",
                             url: url,
                             success: function (data) {
-                                var oTable = $('#laravel_datatable').dataTable();
-                                oTable.fnDraw(false);
+                                fetch('{{ route('eventsData',"0") }}')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        gridOptions.api.setRowData(data.events);
+                                    });
+                                gridOptions.api.refreshCells({force: true});
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -705,8 +639,12 @@
                                 $('#logoForm').trigger("reset");
                                 $('#logo-modal').modal('hide');
                                 $('#btn-save').html('Save Changes');
-                                var oTable = $('#laravel_datatable').dataTable();
-                                oTable.fnDraw(false);
+                                fetch('{{ route('eventsData',"0") }}')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        gridOptions.api.setRowData(data.events);
+                                    });
+                                gridOptions.api.refreshCells({force: true});
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -728,7 +666,6 @@
                     $('#showAllSpan').html("Show all");
                     showStatus = 1;
                 }
-                //alert(showStatus + "," + murl);
                 var mtable = $('#laravel_datatable').DataTable();
                 mtable.ajax.url(murl).load();
             });

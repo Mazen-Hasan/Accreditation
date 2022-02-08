@@ -32,14 +32,14 @@ class GenerateBadgeController extends Controller
     }
 
     public function generate($staff_id){
-    
+
     	$where = array('id' => $staff_id);
         $eventID = CompanyStaff::where($where)->first()->event_id;
 
         $where = array('id' => $eventID);
         $template_id = Event::where($where)->first()->event_form;
-        
-    
+
+
         $staffInfo = DB::select('select * from staff_badges_view where staff_id = ? and template_id = ?', [$staff_id,$template_id]);
 //        $template_id = $staffInfo[0]->template_id;
 
@@ -54,25 +54,25 @@ class GenerateBadgeController extends Controller
         $event = Event::where($where)->first();
 
 
-    	
+
     	// $bg_image_path = public_path('badges');
     	// $bg_image_path .= '/'.$badge->bg_image;
-    
+
     	//get bg
-    
+
     	//$bg = DB::select('select * from staff_acc_bg_image_view where staff_id = ? and template_id = "?"', [$staff_id, $template_id]);
-    
+
         $bg = DB::select('select * from staff_acc_bg_image_view where staff_id = ' . $staff_id . ' and template_id = "' . $template_id . '"');
-    
-    	
-    
+
+
+
 		if($bg){
         	$bg_image_path = 'badges/' . $bg[0]->bg_image;
         }
     	else{
         	$bg_image_path = 'badges/' . $badge->bg_image;
     	}
-    
+
 
     	// $bg_image_path = 'badges/' . $badge->bg_image;
 
@@ -81,7 +81,7 @@ class GenerateBadgeController extends Controller
 
         $fontPath = 'fonts/Poppins/Poppins-Regular.ttf';
 
-    
+
         foreach ($staffInfo as $staff){
              if (str_contains($staff->value, '.png') || str_contains($staff->value, '.jpeg') || str_contains($staff->value, '.jpg')) {
             	$image_path = 'badges/' . $staff->value;
@@ -99,12 +99,12 @@ class GenerateBadgeController extends Controller
             }
         }
 
-    
+
     	$path = 'badges';
         $path .=  '/'.$event->id . '_'. $template_id . '_' . $staff_id . '.png';
 
         $res = imagepng($badgeImg, $path );
-    
+
     	chmod($path, 0777);
 
     	$path = $event->id . '_'. $template_id . '_' . $staff_id . '.png';
@@ -113,10 +113,10 @@ class GenerateBadgeController extends Controller
         }
 
         imagedestroy($badgeImg);
-    
-    	$query = 'update template_badges tb set tb.is_locked = 1, tb.can_unlock = 0 where tb.id = "' . $event->event_form . '"';
+
+    	$query = 'update template_badges tb set tb.is_locked = 1, tb.can_unlock = 0 where tb.template_id = "' . $event->event_form . '"';
         DB::update($query);
-    
+
         return Response::json($path);
     }
 
@@ -156,7 +156,7 @@ class GenerateBadgeController extends Controller
         $res = imagepng($badgeImg, $path );
 
     	chmod($path, 0777);
-        
+
     	imagedestroy($badgeImg);
 
         $path = '/' . $badge_id . '.png';
@@ -215,7 +215,7 @@ class GenerateBadgeController extends Controller
 //     {
 //         $im = @imagecreatefrompng($img_path);
 //     	imagealphablending($im, true);
-    
+
 //         return $im;
 //     }
 

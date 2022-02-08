@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <h4 class="card-title">Event Management</h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
@@ -40,12 +40,13 @@
                                 </a>
                                 @endrole
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2 align-content-md-center">
                                 <label class="switch">
                                     <input type="checkbox" id="show-all">
-                                    <span class="slider round"></span><label class="customShowAll"> Show all</label>
+                                    <span class="slider round"></span>
+                                    <label class="customShowAll"> Show all</label>
                                 </label>
-                                
+
                             </div>
                         </div>
 

@@ -321,7 +321,7 @@
             pagination: true,
 
             // sets 10 rows per page (default is 100)
-            paginationPageSize: 10,
+            paginationPageSize: 2,
             onFirstDataRendered: onFirstDataRendered,
             rowSelection: 'multiple',
             onSelectionChanged: onSelectionChanged,

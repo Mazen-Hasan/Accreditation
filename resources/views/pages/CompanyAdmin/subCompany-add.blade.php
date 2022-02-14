@@ -237,8 +237,7 @@
             </div>
         </div>
     </div>
-<div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-bs-backdrop="static"
-         data-bs-keyboard="false" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="add-focal-point-modal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -357,11 +356,10 @@
                                 </div>
                             </div>
                         <div class="row">
-                            <!-- <div class="col-sm-8">
-                                <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-cancel">No, Manage
-                                    them myself
+                            <div class="col-sm-8">
+                                <button type="button" style="width:200px" class="btn-cancel" data-dismiss="modal" id="btn-cancel">Cancel
                                 </button>
-                            </div> -->
+                            </div>
                             <div class="col-sm-4">
                                 <button type="submit" id="btn-add-focal">Add</button>
                             </div>

@@ -292,7 +292,7 @@
 
             // enables pagination in the grid
             pagination: true,
-
+            
             // sets 10 rows per page (default is 100)
             paginationPageSize: 2,
             onFirstDataRendered: onFirstDataRendered,
@@ -303,7 +303,7 @@
             rowData: null,
             onGridReady: onGridReady,
             animateRows: true,
-
+            enableCellTextSelection:true,
             components: {
                 customTooltip: CustomTooltip,
                 ShowMoreComponent: ShowMoreComponent,

@@ -401,5 +401,21 @@
                 $('#max_char').prop('disabled', true);
             }
         });
+        $('#label_en').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+        $("#label_en").keypress(function(event){
+            var ew = event.which;
+            //alert(ew);
+            if(ew == 32)
+                return true;
+            if(48 <= ew && ew <= 57)
+                return true;
+            if(65 <= ew && ew <= 90)
+                return true;
+            if(97 <= ew && ew <= 122)
+                return true;
+            return false;
+        });
     </script>
 @endsection

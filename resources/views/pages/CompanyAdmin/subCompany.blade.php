@@ -268,11 +268,11 @@
                         button += '<a href="javascript:void(0);" id="invite-company" data-toggle="tooltip" data-original-title="Delete" data-id="'  + company_id +  '" data-name="' + params.data.name + '" data-focalpoint="'  + params.data.focal_point +  '" title="Invite"><i class="far fa-share-square"></i></a>';
                         button += '&nbsp;&nbsp;';
                     }
-                    // url = "{{ route('companyAccreditCat', [':company_id',':event_id']) }}";
-                    // url = url.replace(':company_id', company_id);
-                    // url = url.replace(':event_id', event_id);
-                    // button += '<a href="' + url + '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' + company_id + '" title="Accreditation Size"><i class="fas fa-sitemap"></i></a>';
-                    // button += '&nbsp;&nbsp;';
+                    url = "{{ route('subCompanyAccreditCategories', [':company_id',':event_id']) }}";
+                    url = url.replace(':company_id', company_id);
+                    url = url.replace(':event_id', event_id);
+                    button += '<a href="' + url + '" id="delete-company" data-toggle="tooltip" data-original-title="Delete" data-id="' + company_id + '" title="Accreditation Size"><i class="fas fa-sitemap"></i></a>';
+                    button += '&nbsp;&nbsp;';
                     // url = "{{ route('eventCompanyParticipants', [':company_id',':event_id']) }}";
                     // url = url.replace(':company_id', company_id);
                     // url = url.replace(':event_id', event_id);

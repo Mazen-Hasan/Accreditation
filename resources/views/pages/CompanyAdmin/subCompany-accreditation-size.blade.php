@@ -63,6 +63,7 @@
                                 </h4>
                             </div>
                             <div class="col-md-4 align-content-md-center">
+                                <input type="hidden" id="addable" value={{$addable}} />
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
@@ -236,24 +237,32 @@
             });
 
             $('#add-new-post').click(function () {
-                remaining_size = parseInt($('#remaining_size').val());
-                if (remaining_size > 0) {
-                    $('#error_message').text('');
-                    $('#error_message').hide();
-                    $('#btn-save').val("create-post");
-                    $('#post_id').val('0');
-                    $('#size').val('0');
-                    $('#prev_size').val('0');
-                    $('#postForm').trigger("reset");
-                    $('#postCrudModal').html("Add New Accreditation Category");
-                    $('#ajax-crud-modal').modal('show');
-                    $('#accredit_cat_id').attr('disabled', false);
-                } else {
-                    $('#errorTitle').html('Error: Max Size');
-                    $('#errorText').html('you have reached accreditation categories max size');
-                    $('#error-pop-up-modal').modal('show');
-                    //alert('you reached the max size');
-                }
+                var addable = $('#addable').val();
+                //alert(addable);
+                if(addable == 1){
+                    remaining_size = parseInt($('#remaining_size').val());
+                    if (remaining_size > 0) {
+                        $('#error_message').text('');
+                        $('#error_message').hide();
+                        $('#btn-save').val("create-post");
+                        $('#post_id').val('0');
+                        $('#size').val('0');
+                        $('#prev_size').val('0');
+                        $('#postForm').trigger("reset");
+                        $('#postCrudModal').html("Add New Accreditation Category");
+                        $('#ajax-crud-modal').modal('show');
+                        $('#accredit_cat_id').attr('disabled', false);
+                    } else {
+                        $('#errorTitle').html('Error: Max Size');
+                        $('#errorText').html('you have reached accreditation categories max size');
+                        $('#error-pop-up-modal').modal('show');
+                        //alert('you reached the max size');
+                    }
+                }else{
+                        $('#errorTitle').html('Adding Accreditation Category');
+                        $('#errorText').html('you can not manage accrediation categories till Event Admin approval');
+                        $('#error-pop-up-modal').modal('show');
+                    }
             });
             $('body').on('click', '#edit-company-accreditation', function () {
                 var post_id = $(this).data('id');

@@ -934,6 +934,19 @@ class CompanyAdminController extends Controller
 
     public function subCompanyAccreditCategories($companyId, $eventId)
     {
+        $addable = 1;
+        $companyParents = EventCompany::where(['company_id'=>$companyId,'event_id'=>$eventId])->get()->all();
+        foreach($companyParents as $companyParent){
+            $parentId = $companyParent->parent_id;
+        }
+        $parentAcredititationCategories = CompanyAccreditaionCategory::where(['company_id'=> $parentId,'event_id'=>$eventId])->get()->all();
+        foreach($parentAcredititationCategories as $parentAcredititationCategory){
+            $parentAcredititationCategorystatus = $parentAcredititationCategory->status;
+            if($parentAcredititationCategorystatus != 2){
+                $addable = 0;
+            }
+        }
+
         $companies = DB::select('select * from companies_view where id = ? and event_id = ?', [$companyId,$eventId]);
         foreach($companies as $company1){
             $company = $company1;
@@ -1007,7 +1020,7 @@ class CompanyAdminController extends Controller
         if($company->parent_id != null){
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.subCompany-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('subCompany_nav',$subCompany_nav)->with('company_parent',$company->parent_id)->with('event_status',$event->status);
+        return view('pages.CompanyAdmin.subCompany-accreditation-size')->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('companyId', $company->id)->with('eventId', $eventId)->with('status', $status)->with('event_name', $event->name)->with('company_name', $company->name)->with('company_size', $company->size)->with('remaining_size', $remainingSize)->with('subCompany_nav',$subCompany_nav)->with('company_parent',$company->parent_id)->with('event_status',$event->status)->with('addable',$addable);
     }
 
     // public function Invite($companyId,$eventId)

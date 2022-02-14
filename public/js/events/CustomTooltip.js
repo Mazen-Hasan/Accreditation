@@ -8,7 +8,7 @@ class CustomTooltip {
         eGui.style['background-color'] = color;
         eGui.innerHTML = `
             <p>
-                <span class"name">${data.name}</span>
+                <span>${data.name}</span>
             </p>
             <p>
                 <span>Size: </span>

@@ -105,7 +105,7 @@
                                         <select id="template_field_id" name="template_field_id" required="">
                                             @foreach ($templateFields as $templateField)
                                                 <option value="{{ $templateField->id }}"
-                                                        data-slug="{{$templateField->label_en}}"
+                                                        data-slug="{{$templateField->field_type_id}}"
                                                         @if ($templateField->id == 1)
                                                         selected="selected"
                                                     @endif
@@ -147,7 +147,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div id="div-txt-color" class="row">
                             <div class="col-md-6">
                                 <div class="form-group col">
                                     <label>Text Color</label>
@@ -156,15 +156,6 @@
                                     </div>
                                 </div>
                             </div>
-
-<!--                             <div class="col-md-6">
-                                <div class="form-group col">
-                                    <label>Background Color</label>
-                                    <div class="col-sm-12">
-                                        <input type="color" id="bg_color" name="bg_color" value="#ffffff">
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
 
                         <div class="modal-footer">
@@ -261,7 +252,12 @@
                     {
                         "data": "text_color",
                         "render": function (val) {
-                            return "<div class='div-color' style='background-color: " + val + "'></div>";
+                            if(val !== ""){
+                                return "<div class='div-color' style='background-color: " + val + "'></div>";
+                            }
+                            else{
+                                return "";
+                            }
                         }
                     },
                     {data: 'action', name: 'action', orderable: false}
@@ -272,7 +268,7 @@
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
-        
+
         	$('#search').on('keyup', function () {
                 oTable.search(this.value).draw();
             });
@@ -336,7 +332,6 @@
 
         $('#preview-badge').click(function () {
             var badge_id = $('#badge_id').val();
-            console.log(badge_id);
             $.ajax({
                 type: "get",
                 url: "../badge-design-generate/" + badge_id,
@@ -345,7 +340,7 @@
 
                     var imag = data;
                     var image_path = "{{URL::asset('preview/')}}/";
-					
+
                     $('#badge').attr('src', image_path + imag + '?verion=' + (new Date().getTime()));
                 },
                 error: function (data) {
@@ -379,6 +374,16 @@
                 }
             })
         }
+
+        $('select').on('change', function () {
+            var selected = $(this).find('option:selected');
+            var slug = selected.data('slug');
+            if (slug === 14) {
+                $('#div-txt-color').hide();
+            } else {
+                $('#div-txt-color').show();
+            }
+        });
 
     </script>
 @endsection

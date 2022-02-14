@@ -224,11 +224,6 @@
     </div>
 @endsection
 @section('script')
-    {{--    <script src="vendors/typeahead.js/typeahead.bundle.min.js"></script>--}}
-    {{--    <script src="vendors/select2/select2.min.js"></script>--}}
-    {{--    <script src="js/file-upload.js"></script>--}}
-    {{--    <script src="js/typeahead.js"></script>--}}
-    {{--    <script src="js/select2.js"></script>--}}
     <script>
         $(document).ready(function () {
             $.ajaxSetup({
@@ -245,37 +240,6 @@
                 $('#postCrudModal').html("Add New Post");
                 $('#ajax-crud-modal').modal('show');
             });
-
-
-            // $('body').on('click', '.edit-post', function () {
-            //     var post_id = $(this).data('id');
-            //     $.get('dtable-posts/'+post_id+'/edit', function (data) {
-            //         $('#name-error').hide();
-            //         $('#email-error').hide();
-            //         $('#postCrudModal').html("Edit Post");
-            //         $('#btn-save').val("edit-post");
-            //         $('#ajax-crud-modal').modal('show');
-            //         $('#post_id').val(data.id);
-            //         $('#title').val(data.title);
-            //         $('#body').val(data.body);
-            //     })
-            // });
-            //
-            // $('body').on('click', '#delete-post', function () {
-            //     var post_id = $(this).data("id");
-            //     confirm("Are You sure want to delete !");
-            //     $.ajax({
-            //         type: "get",
-            //         url: "dtable-posts/destroy/"+post_id,
-            //         success: function (data) {
-            //             var oTable = $('#laravel_datatable').dataTable();
-            //             oTable.fnDraw(false);
-            //         },
-            //         error: function (data) {
-            //             console.log('Error:', data);
-            //         }
-            //     });
-            // });
         });
 
         if ($("#postForm").length > 0) {
@@ -284,7 +248,6 @@
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
-                    //alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('companyAdminController.store') }}",
@@ -295,8 +258,6 @@
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Add successfully');
                             window.location.href = "{{ route('companyParticipants')}}";
-                            // var oTable = $('#laravel_datatable').dataTable();
-                            // oTable.fnDraw(false);
                         },
                         error: function (data) {
                             console.log('Error:', data);

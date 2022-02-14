@@ -17,7 +17,7 @@
     <script src="{{ URL::asset('js/ag-grid/ag-grid-enterprise.min.js') }}"></script>
     <!-- <script src="{{ URL::asset('js/templates/CustomTooltip.js') }}"></script> -->
     <script src="{{ URL::asset('js/templates/ShowMoreComponent.js') }}"></script>
-    <script src="{{ URL::asset('js/templates/PageCountComponent.js') }}"></script>  
+    <script src="{{ URL::asset('js/templates/PageCountComponent.js') }}"></script>
 @endsection
 @section('custom_navbar')
             @if($subCompany_nav == 1)
@@ -298,7 +298,7 @@
             pagination: true,
 
             // sets 10 rows per page (default is 100)
-            paginationPageSize: 2,
+            paginationPageSize: 10,
             onFirstDataRendered: onFirstDataRendered,
             rowSelection: 'single',
             tooltipShowDelay: 0,

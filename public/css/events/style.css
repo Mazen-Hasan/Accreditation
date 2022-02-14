@@ -1,7 +1,7 @@
 .custom-tooltip {
     position: absolute;
     width: 300px;
-    height: 1000px;
+    height: 280px;
     border: 1px solid cornflowerblue;
     overflow: hidden;
     pointer-events: none;
@@ -14,11 +14,11 @@
 
 .custom-tooltip p {
     margin: 5px;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .custom-tooltip p:first-of-type {
-    font-weight: bold;
+    font-weight: 100;
 }
 
 .button-group {

@@ -20,10 +20,10 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-7">
+                            <div class="col-md-10">
                                 <p class="card-title">Badges</p>
                             </div>
-                         	<div class="col-md-1 align-content-md-center">
+                         	<div class="col-md-1">
                                 <div class="search-container">
                                     <input class="search expandright" id="search" type="text" placeholder="Search">
                                     <label class="search-button search-button-icon" for="search">
@@ -31,19 +31,16 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
-                                <span class="dt-hbtn"></span>
-                                <a href="javascript:void(0)" id="add-new-badge" class="add-hbtn">
+                                <a href="javascript:void(0)" id="add-new-badge" class="add-hbtn" title="Add">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
-                                    <span class="dt-hbtn">Add</span>
                                 </a>
                             </div>
                         </div>
@@ -56,7 +53,6 @@
                                     <th>Registration Form</th>
                                     <th>Width (mm)</th>
                                     <th>Height (mm)</th>
-<!--                                     <th>Background Color</th> -->
                                     <th>Default Background</th>
                                     <th>Locked</th>
                                     <th>Action</th>
@@ -123,7 +119,7 @@
                                 <div class="form-group col">
                                     <label>Width</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="width" min="50" name="width"
+                                        <input type="number" id="width" min="20" max="100" name="width"
                                                placeholder="enter width (mm)"
                                                required="">
                                     </div>
@@ -133,7 +129,7 @@
                                 <div class="form-group col">
                                     <label>Height</label>
                                     <div class="col-sm-12">
-                                        <input type="number" id="high" name="high" min="100"
+                                        <input type="number" id="high" name="high" min="20" max="100"
                                                placeholder="enter high (mm)"
                                                required="">
                                     </div>
@@ -502,13 +498,15 @@
                 },
 
                 success: (data) => {
-                    // this.reset();
                 	$('#file_type_error').removeClass('error').addClass('info');
                     $("#file_type_error").html('File uploaded successfully');
                     $('#btn-upload').html('Upload');
                     $("#bg_image").val(data.fileName);
-                    console.log(data);
 
+                    var imag = data.fileName;
+                    var image_path = "{{URL::asset('badges/')}}/";
+
+                    $('#badge_bg').attr('src', image_path + imag);
                 },
 
                 error: function (data) {

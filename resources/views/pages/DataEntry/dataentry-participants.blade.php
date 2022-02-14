@@ -352,7 +352,7 @@
                                 button += '&nbsp;&nbsp;';
                                 break;
                         }
-                    }                    
+                    }
                     return button;
                 }
             });
@@ -372,7 +372,7 @@
             pagination: true,
 
             // sets 10 rows per page (default is 100)
-            paginationPageSize: 2,
+            paginationPageSize: 10,
             onFirstDataRendered: onFirstDataRendered,
             rowSelection: 'single',
             tooltipShowDelay: 0,
@@ -485,7 +485,7 @@
         	// var expotColumns = [];
             // while (i < jqueryarray.length) {
             //     myColumns.push({data: jqueryarray[i].replace(/ /g, "_"), name: jqueryarray[i].replace(/ /g, "_")});
-            //     expotColumns.push(i+1);             
+            //     expotColumns.push(i+1);
             // 	i++;
             // }
         	// myColumns.push({data: "identifier", name: "identifier"});

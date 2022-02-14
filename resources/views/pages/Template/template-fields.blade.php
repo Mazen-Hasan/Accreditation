@@ -266,7 +266,7 @@
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
-        
+
         	var oTable = $('#laravel_datatable').DataTable();
 
             $('#search').on('keyup', function () {
@@ -388,7 +388,6 @@
 
 
         $('select').on('change', function () {
-            console.log('changed');
             var selected = $(this).find('option:selected');
             var slug = selected.data('slug');
             if (slug === 'text' || slug === 'number' || slug === 'textarea') {

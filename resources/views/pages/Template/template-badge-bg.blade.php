@@ -179,7 +179,6 @@
             $('body').on('click', '#edit-bg', function () {
                 var badge_bg_id = $(this).data('id');
 
-                console.log(badge_bg_id);
                 $.get('../templateBadgeBGController/' + badge_bg_id + '/edit', function (data) {
                     $('#modalTitle').html("Edit " + data.name + " Background");
                     $('#file').val('');
@@ -293,7 +292,12 @@
                     $("#file_type_error").html('File uploaded successfully');
                     $('#btn-upload').html('Upload');
                     $("#bg_image").val(data.fileName);
-                    console.log(data);
+
+                    var imag = data.fileName;
+                    // var image_path = "{{URL::asset('storage/badges/')}}/";
+                    var image_path = "{{URL::asset('badges/')}}/";
+
+                    $('#bg_image_view').attr('src', image_path + imag);
                 },
 
                 error: function (data) {

@@ -301,7 +301,7 @@
                                 button += '<a href="javascript:void(0);" id="show_reason" data-toggle="tooltip" data-original-title="Delete" data-id="' + participent_id +  '" data-reason="' + params.data.security_officer_reject_reason + '" title="Reject reason"><i class="far fa-comment-alt"></i></a>';
                                 break;
                         }
-                    }                    
+                    }
                     return button;
                 }
             });
@@ -321,7 +321,7 @@
             pagination: true,
 
             // sets 10 rows per page (default is 100)
-            paginationPageSize: 2,
+            paginationPageSize: 10,
             onFirstDataRendered: onFirstDataRendered,
             rowSelection: 'single',
             tooltipShowDelay: 0,

@@ -6,26 +6,9 @@
                 <span class="icon-menu"></span>
             </button>
         </div>
-        {{--        <div>--}}
-        {{--            <a class="navbar-brand brand-logo-mini" href="index.html">--}}
-        {{--                <img src="{{ URL::asset('images/logo-mini.svg')}}" alt="logo" />--}}
-        {{--            </a>--}}
-        {{--        </div>--}}
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-top" style="background: transparent">
         <ul class="navbar-nav ms-auto">
-        {{--            <li class="nav-item">--}}
-        {{--                <form class="search-form" action="#">--}}
-        {{--                    <i class="icon-search"></i>--}}
-        {{--                    <input type="search" class="form-control" placeholder="Search Here" title="Search here">--}}
-        {{--                </form>--}}
-        {{--            </li>--}}
-        <!-- <li class="nav-item dropdown">
-            <a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-              <i class="icon-mail icon-lg"></i>
-            </a>
-
-          </li> -->
             <li class="nav-item dropdown">
                 <a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown"
                    aria-expanded="false">
@@ -37,16 +20,13 @@
                         @endif
 
                     </i>
-                    {{--                    <span class="count"></span>--}}
                 </a>
                 <div id="notify-container" class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
                      style="margin-top:-35px;overflow-y: scroll; height:200px;" aria-labelledby="notificationDropdown">
-                    <!-- <input type="hidden" id="notifications" value=""> -->
                     <a class="dropdown-item py-3 border-bottom">
                         <p class="mb-0 font-weight-medium float-left">You have
                             <?php echo auth()->user()->unreadNotifications->count() ?>
                             new notifications </p>
-                        <!-- <span class="badge badge-pill badge-primary float-right">View all</span> -->
                     </a>
                     <?php foreach (auth()->user()->unreadNotifications as $notification){
                     if($notification->type == "App\Notifications\AlertNotification"){
@@ -65,33 +45,6 @@
                 <?php
                 }
                 }?>
-                <!-- <a class="dropdown-item preview-item py-3">
-                <div class="preview-thumbnail">
-                  <i class="mdi mdi-alert m-auto text-primary"></i>
-                </div>
-                <div class="preview-item-content">
-                  <h6 class="preview-subject fw-normal text-dark mb-1">Application Error</h6>
-                  <p class="fw-light small-text mb-0"> Just now </p>
-                </div>
-              </a>
-              <a class="dropdown-item preview-item py-3">
-                <div class="preview-thumbnail">
-                  <i class="mdi mdi-settings m-auto text-primary"></i>
-                </div>
-                <div class="preview-item-content">
-                  <h6 class="preview-subject fw-normal text-dark mb-1">Settings</h6>
-                  <p class="fw-light small-text mb-0"> Private message </p>
-                </div>
-              </a>
-              <a class="dropdown-item preview-item py-3">
-                <div class="preview-thumbnail">
-                  <i class="mdi mdi-airballoon m-auto text-primary"></i>
-                </div>
-                <div class="preview-item-content">
-                  <h6 class="preview-subject fw-normal text-dark mb-1">New user registration</h6>
-                  <p class="fw-light small-text mb-0"> 2 days ago </p>
-                </div>
-              </a> -->
                 </div>
             </li>
         </ul>
@@ -116,34 +69,23 @@
 
     $('.markAsRead').click(function () {
         var id = $(this).data("id");
-        // alert(id);
         $.ajax({
             type: "get",
             url: "{{ url('markAsRead-notification')}}/" + id,
             success: function (data) {
-                // alert($(this).data("url"));
-                // window.location.href = $(this).data("url");
-                //window.open($(this).data("url"),'_blank');
             },
             error: function (data) {
                 console.log('Error:', data);
             }
         });
-        //alert(id);
     });
 
     function goto() {
-        //alert($(this).data("id"));
         var id = $(this).data("id");
-        //alert(id);
         $.ajax({
             type: "get",
             url: "{{ url('markAsRead-notification')}}/" + id,
             success: function (data) {
-                //alert(data);
-                //alert($(this).data("url"));
-                //window.location.href = $(this).data("url");
-                //window.open($(this).data("url"),'_blank');
             },
             error: function (data) {
                 console.log('Error:', data);
@@ -178,7 +120,6 @@
                             + '</div>'
                             + '<div class="preview-item-content">'
                             + '<h6 class="preview-subject fw-normal text-dark mb-1">'
-                            //+ data[i].data["event_name"] + ': ' + data[i].data["company_name"] +': ' + data[i].data["action"]
                             + data[i].data["text"]
                             + '</h6>'
                             + '<p class="fw-light small-text mb-0">'

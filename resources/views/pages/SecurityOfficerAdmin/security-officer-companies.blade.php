@@ -158,7 +158,7 @@
                         if(params.value == "InActive"){
                             return  {color: 'red'} ;
                         }else{
-                            return {color: 'orange'} 
+                            return {color: 'orange'}
                         }
                     }
                     //return params.value == 'Active' ? {color: 'green'} : {color: 'red'};
@@ -189,7 +189,7 @@
                     url = url.replace(':company_id', company_id);
                     url = url.replace(':event_id', event_id);
                     button += '<a href="' + url + '" id="company-participant" data-toggle="tooltip" data-original-title="Delete" data-id="' + company_id +  '" title="Participants"><i class="fas fa-users"></i></a>';
-                    
+
                     return button;
                 }
             },
@@ -210,7 +210,7 @@
             pagination: true,
 
             // sets 10 rows per page (default is 100)
-            paginationPageSize: 2,
+            paginationPageSize: 10,
             onFirstDataRendered: onFirstDataRendered,
             rowSelection: 'single',
             tooltipShowDelay: 0,

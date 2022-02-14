@@ -19912,15 +19912,15 @@ code {
   margin-top: 1rem;
 }
 
-.demo-chart {
-  height: 300px;
-}
+/*.demo-chart {*/
+/*  height: 300px;*/
+/*}*/
 
-@media (max-width: 767px) {
-  .demo-chart {
-    height: 200px;
-  }
-}
+/*@media (max-width: 767px) {*/
+/*  .demo-chart {*/
+/*    height: 200px;*/
+/*  }*/
+/*}*/
 
 .documentation {
   padding-top: 0;
@@ -19974,38 +19974,38 @@ code {
   max-width: 100%;
 }
 
-.performance-overview-carousel .carousel-inner .item::after {
-  content: '';
-  width: 1px;
-  height: 60px;
-  background: #52CDFF;
-  position: absolute;
-  right: 0;
-  top: 25%;
-}
+/*.performance-overview-carousel .carousel-inner .item::after {*/
+/*  content: '';*/
+/*  width: 1px;*/
+/*  height: 60px;*/
+/*  background: #52CDFF;*/
+/*  position: absolute;*/
+/*  right: 0;*/
+/*  top: 25%;*/
+/*}*/
 
-@media (max-width: 767px) {
-  .performance-overview-carousel .carousel-inner .item::after {
-    display: none;
-  }
-}
+/*@media (max-width: 767px) {*/
+/*  .performance-overview-carousel .carousel-inner .item::after {*/
+/*    display: none;*/
+/*  }*/
+/*}*/
 
-.performance-overview-carousel .carousel-inner .item .icon::before {
-  position: absolute;
-  z-index: -1;
-}
+/*.performance-overview-carousel .carousel-inner .item .icon::before {*/
+/*  position: absolute;*/
+/*  z-index: -1;*/
+/*}*/
 
-.performance-overview-carousel .carousel-inner .item .icon.icon-a::before {
-  content: url("../../images/dashboard/shape-1.svg");
-}
+/*.performance-overview-carousel .carousel-inner .item .icon.icon-a::before {*/
+/*  content: url("../../images/dashboard/shape-1.svg");*/
+/*}*/
 
-.performance-overview-carousel .carousel-inner .item .icon.icon-b::before {
-  content: url("../../images/dashboard/shape-1.svg");
-}
+/*.performance-overview-carousel .carousel-inner .item .icon.icon-b::before {*/
+/*  content: url("../../images/dashboard/shape-1.svg");*/
+/*}*/
 
-.performance-overview-carousel .carousel-inner .item .icon.icon-c::before {
-  content: url("../../images/dashboard/shape-3.svg");
-}
+/*.performance-overview-carousel .carousel-inner .item .icon.icon-c::before {*/
+/*  content: url("../../images/dashboard/shape-3.svg");*/
+/*}*/
 
 .performance-overview-carousel .carousel-control-prev,
 .performance-overview-carousel .carousel-control-next {
@@ -28384,7 +28384,7 @@ div.tagsinput span.tag a {
 
 .content-wrapper {
   background: #F4F5F7;
-  padding: 1.5rem 2.187rem 1.5rem 3.5rem;
+  padding: 1rem 0.5rem 0.5rem 1rem;
   width: 100%;
   -webkit-flex-grow: 1;
   flex-grow: 1;
@@ -28403,7 +28403,7 @@ div.tagsinput span.tag a {
   font-family: Poppins-Regular;
   font-weight: 500;
   padding-left: 20px;
-  width: 380px;
+  width: 280px;
   z-index: 11;
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
@@ -28760,7 +28760,7 @@ div.tagsinput span.tag a {
     bottom: 0;
     padding-left: 0px;
     overflow: auto;
-    right: -380px;
+    right: -280px;
     -webkit-transition: all 0.25s ease-out;
     -o-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;

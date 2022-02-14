@@ -119,7 +119,6 @@
             $('#importForm').trigger("reset");
             $('#participants').find('option[value]').remove();
             $('#modalTitle').html("Import Participant");
-            // $('#btn-import').prop('disabled', true);
             $("#import_error").html('');
             $('#import-modal').modal('show');
         });
@@ -139,7 +138,6 @@
                     success: function (data) {
                         participantsData = data.list;
                         $("#import_error").html('');
-                        // $('#btn-import').prop('disabled', false);
                         buildParticipantsList(data.searchRes);
                     },
                     error: function (data) {
@@ -171,17 +169,11 @@
 
             $.each($(':input:not([type=hidden],[type=submit],[type=file])', '#templateForm'), function (k) {
                 formFields += 'Id: ' + $(this).attr('id') + ', Name: ' + $(this).attr('name') + ', Value: ' + $(this).val() + ', Type: ' + $(this).attr('type') + '\n';
-                // if($(this).attr('type')=='text'){
                 fillFormField($(this).attr('id'), participant_id);
-                // }
             });
-            // console.log(formFields);
         }
 
         function fillFormField(field_id, participant_id) {
-            // console.log('fillFormData');
-            // console.log('participant_id:' + participant_id);
-            // console.log(participantsData[participant_id][field_id]);
             $('#' + field_id).val(participantsData[participant_id][field_id]);
         }
 
@@ -213,11 +205,7 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
-                            // $('#templateForm').trigger("reset");
-                            // $('#template-modal').modal('hide');
                             $('#btn-save').html('Done');
-                            // var oTable = $('#laravel_datatable').dataTable();
-                            // oTable.fnDraw(false);
                         	$('#loader-modal').modal('hide');
                             window.location.href = "{{ route('dataEntryParticipants',[$companyId,$eventId])}}";
                         },
@@ -238,7 +226,6 @@
 
             $(btn_upl).html('Sending..');
 
-            // $('#btn-upload').html('Sending..');
             e.preventDefault();
             var formData = new FormData(this);
             formData.append('template_id', $('#h_template_id').val());
@@ -268,6 +255,7 @@
                 beforeSend: function () {
                     var file_progress_bar = '#file-progress-bar_' + btnID;
                     $(file_progress_bar).width('0%');
+                    $('#btn-save').prop('disabled', true);
                 },
 
                 success: (data) => {
@@ -276,19 +264,15 @@
                     $(file_type_error).html('File uploaded successfully');
 
                     $(btn_upl).html('Upload');
-                    // $('#btn-upload').html('Upload');
 
                     var bg_image = '#bg_image_' + btnID;
                     $(bg_image).val(data.fileName);
-
-                    // $("#bg_image").val(data.fileName);
 
                     var btnID = this.id;
                     btnID = btnID.substring(5, btnID.length - 1);
                     btnID = "#" + btnID;
                     $(btnID).val(data.fileName);
-                    console.log(data);
-
+                    $('#btn-save').prop('disabled', false);
                 },
 
                 error: function (data) {

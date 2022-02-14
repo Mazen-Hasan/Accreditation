@@ -652,6 +652,11 @@ button:hover {
     background: #333333;
 }
 
+button:disabled{
+    cursor: not-allowed;
+    pointer-events: all !important;
+}
+
 .btn-cancel {
     font-family: Poppins-Regular;
     font-size: 20px;
@@ -858,7 +863,7 @@ button.navbar-toggler {
         background: white;
         border-radius: 17px;
         margin-left: 10px;
-        width: 350px;
+        width: 280px;
     }
 }
 
@@ -1289,6 +1294,7 @@ label.loading{
     display: inline-block;
     height: 40px;
     width: 50px;
+    float: right;
 }
 
 .search-button-icon {

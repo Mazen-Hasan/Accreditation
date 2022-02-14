@@ -20,23 +20,21 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-6">
+                            <div class="col-md-9">
                                 <h4 class="card-title">Event Management</h4>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel"  title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @role('super-admin')
-                                <a href="{{route('eventAdd')}}" id="add-new-post" class="add-hbtn">
+                                <a href="{{route('eventAdd')}}" id="add-new-post" class="add-hbtn" title="Add">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
-                                    <span class="dt-hbtn">Add</span>
                                 </a>
                                 @endrole
                             </div>
@@ -292,7 +290,9 @@
 
             // enables pagination in the grid
             pagination: true,
-            
+
+            popupParent: document.querySelector('body'),
+
             // sets 10 rows per page (default is 100)
             paginationPageSize: 2,
             onFirstDataRendered: onFirstDataRendered,
@@ -303,7 +303,7 @@
             rowData: null,
             onGridReady: onGridReady,
             animateRows: true,
-            enableCellTextSelection:true,
+
             components: {
                 customTooltip: CustomTooltip,
                 ShowMoreComponent: ShowMoreComponent,
@@ -600,6 +600,13 @@
                         $('#btn-upload').html('Upload');
                         $("#logoName").val(data.data.fileName);
                         console.log(data.data.fileName);
+
+                        let imag = data.data.fileName;
+                        // server
+                        {{--let image_path = "{{URL::asset('storage/badges/')}}/";--}}
+                        // local
+                        let image_path = "{{URL::asset('logo/')}}/";
+                        $('#logo').attr('src', image_path + imag);
                     },
 
                     error: function (data) {

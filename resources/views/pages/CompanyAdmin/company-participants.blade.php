@@ -233,6 +233,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 @section('script')
@@ -620,12 +639,13 @@
 
                 var url = "{{ route('badgeGenerate', ":staff_id") }}";
                 url = url.replace(':staff_id', staff_id);
-
+                $('#loader-modal').modal('show');
                 $.ajax({
                     type: "get",
                     // url: "badge-generate/" + staff_id,
                     url: url,
                     success: function (data) {
+                        $('#loader-modal').modal('hide');
                         $('#badge-modal').modal('show');
                         var imag = data;
                         var image_path = "{{URL::asset('badges/')}}/";
@@ -637,6 +657,7 @@
                         //oTable.fnDraw(false);
                     },
                     error: function (data) {
+                        $('#loader-modal').modal('hide');
                         console.log('Error:', data);
                     }
                 });
@@ -648,12 +669,13 @@
 
                 var url = "{{ route('badgePreview', ":staff_id") }}";
                 url = url.replace(':staff_id', staff_id);
-
+                $('#loader-modal').modal('show');
                 $.ajax({
                     type: "get",
                     // url: "badge-preview/" + staff_id,
                     url: url,
                     success: function (data) {
+                        $('#loader-modal').modal('hide');
                         console.log($('#btn-print').attr('class'));
                         $('#badge-modal').modal('show');
                         var imag = data;
@@ -662,6 +684,7 @@
                         $('#badge').attr('src', image_path + imag);
                     },
                     error: function (data) {
+                        $('#loader-modal').modal('hide');
                         console.log('Error:', data);
                     }
                 });
@@ -672,12 +695,13 @@
 
                 var url = "{{ route('badgePrint', ":staff_id") }}";
                 url = url.replace(':staff_id', staff_id);
-
+                $('#loader-modal').modal('show');
                 $.ajax({
                     type: "get",
                     // url: "badge-print/" + staff_id,
                     url: url,
                     success: function (data) {
+                        $('#loader-modal').modal('hide');
                         $('#badge-modal').modal('show');
                         printJS($('#badge').attr('src'), 'image');
                         //var oTable = $('#laravel_datatable').dataTable();
@@ -687,6 +711,7 @@
                         return false;
                     },
                     error: function (data) {
+                        $('#loader-modal').modal('hide');
                         console.log('Error:', data);
                     }
                 });
@@ -726,6 +751,7 @@
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
                         if (action_button == 'sendRequest') {
+                            $('#loader-modal').modal('show');
                             var staffId = $('#curr_element_id').val();
                             var url = "{{ route('companyAdminControllerSendRequest', ":id") }}";
                             url = url.replace(':id', staffId);
@@ -733,6 +759,7 @@
                                 type: "get",
                                 url: url,
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     //var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
                                     $('#filtersButton').click();
@@ -741,6 +768,7 @@
                                     //oTable.fnDraw(false);
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });
@@ -759,18 +787,20 @@
                         var url = "{{ route('eventAdminControllerRejectToCorrect', [":staffId",":reason"]) }}";
                         url = url.replace(':staffId', staffId);
                         url = url.replace(':reason', reason);
-
+                        $('#loader-modal').modal('show');
                         $.ajax({
                             type: "get",
                             // url: "../../eventAdminController/RejectToCorrect/" + staffId + "/" + reason,
                             url: url,
                             success: function (data) {
+                                $('#loader-modal').modal('hide');
                                 $('#filtersButton').click();
                                 $('#filtersButton').hide();
                                 // var oTable = $('#laravel_datatable').dataTable();
                                 // oTable.fnDraw(false);
                             },
                             error: function (data) {
+                                $('#loader-modal').modal('hide');
                                 console.log('Error:', data);
                             }
                         });

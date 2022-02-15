@@ -113,7 +113,6 @@ class EventAdminController extends Controller
 
     public function Invite($companyId, $eventId)
     {
-        sleep(10);
         $post = EventCompany::updateOrCreate(['company_id' => $companyId,'event_id'=>$eventId],
             [
                 'status' => 3

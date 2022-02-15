@@ -208,6 +208,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -266,8 +285,10 @@
             });
             $('body').on('click', '#edit-company-accreditation', function () {
                 var post_id = $(this).data('id');
+                $('#loader-modal').modal('show');
                 //alert(post_id);
                 $.get('../../companyAdminController/editCompanyAccreditSize/' + post_id, function (data) {
+                    $('#loader-modal').modal('hide');
                     $('#name-error').hide();
                     $('#email-error').hide();
                     $('#postCrudModal').html("Edit Company Accreditation Category");
@@ -310,10 +331,12 @@
                     $('#error_message').text('Size has to be more than 0 and less than ' + remaining_size);
                     $('#error_message').show();
                 } else {
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         type: "get",
                         url: "../../companyAdminController/storeCompanyAccrCatSize/" + post_id + "/" + accredit_cat_id + "/" + size + "/" + company_id + "/" + eventId,
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#ajax-crud-modal').modal('hide');
                             var oTable = $('#laravel_datatable').dataTable();
                             oTable.fnDraw(false);
@@ -327,6 +350,7 @@
                             $('#error_message').hide();
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#ajax-crud-modal').modal('hide');
                             $('#errorTitle').html('Error: Duplicate accrediation category');
                             $('#errorText').html('Cant insert duplicate accreditation category size');
@@ -355,10 +379,12 @@
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
                         if (action_button == 'delete') {
+                            $('#loader-modal').modal('show');
                             $.ajax({
                                 type: "get",
                                 url: "../../companyAdminController/destroyCompanyAccreditCat/" + post_id,
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
                                     var remaining_size = parseInt($('#remaining_size').val());
@@ -369,6 +395,7 @@
                                     $('#curr_size').val('0');
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });
@@ -376,16 +403,19 @@
                         if (action_button == 'approve') {
                             var company_id = $('#company_id').val();
                             var eventId = $('#event_id').val();
+                            $('#loader-modal').modal('show');
                             $.ajax({
                                 type: "get",
                                 url: "../companyAdminController/sendApproval/" + company_id + "/" + eventId,
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
                                     $('#add-new-post').hide();
                                     oTable.fnDraw(false);
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });

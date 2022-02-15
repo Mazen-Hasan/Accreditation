@@ -146,6 +146,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -470,6 +489,7 @@
                 var $button = $(event.target);
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
                     if ($button[0].id === 'btn-yes') {
+                        $('#loader-modal').modal('show');
                         var company_id = $('#curr_element_id').val();
                         var event_id = $('#event_id').val();
                         var url = "{{ route('subsidiariesInvite', [":company_id",":eventId"]) }}";
@@ -480,12 +500,14 @@
                             //url: "../../companyAdminController/Invite/" + company_id + "/" + event_id,
                             url:url,
                             success: function (data) {
+                                $('#loader-modal').modal('hide');
                                 // var oTable = $('#laravel_datatable').dataTable();
                                 // oTable.fnDraw(false);
                                 $('#filtersButton').click();
                                 $('#filtersButton').hide();
                             },
                             error: function (data) {
+                                $('#loader-modal').modal('hide');
                                 console.log('Error:', data);
                             }
                         });

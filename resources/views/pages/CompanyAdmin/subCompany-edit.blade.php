@@ -368,6 +368,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -422,7 +441,7 @@
             // $('#lbl_select').html('');
             // $('#btn-filter').html('Filter');
             //resetAll();
-
+            $('#loader-modal').modal('show');
             var url = "{{ route('getSubCompnayCities', ":id") }}";
             url = url.replace(':id', this.value);
 
@@ -431,6 +450,7 @@
                 // url: "fullFillmentController/getCompanies/" + this.value,
                 url: url,
                 success: function (data) {
+                    $('#loader-modal').modal('hide');
                     var citySelectOptions = data;
                     $('#container').html('');
                     var html = '<select id="city" name="city" required="">';
@@ -447,6 +467,7 @@
                     $('#container').append(html);
                 },
                 error: function (data) {
+                    $('#loader-modal').modal('hide');
                     console.log('Error:', data);
                 }
             });
@@ -492,6 +513,7 @@
                     //     $('#need_management').val('0');
                     // }
                     $('#btn-save').html('Sending..');
+                    $('#loader-modal').modal('show');
                     //alert($('#postForm').serialize());
                     $.ajax({
                         data: $('#postForm').serialize(),
@@ -499,15 +521,18 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Edited successfully');
+                            
                             //window.location.href = "../../subCompanies/"+parentId + "/" + eventid;
                             window.location.href = "{{route('subCompanies',[$company->parent_id,$eventId])}}"
                             // var oTable = $('#laravel_datatable').dataTable();
                             // oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }
@@ -524,12 +549,14 @@
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-add-focal').html('Sending..');
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         data: $('#focaPointForm').serialize(),
                         url: "{{ route('focalpointController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             if(data.code == 401){
                                 $('#add-focal-point-modal').modal('hide');
                                 $('#focalentryconfirmTitle').html('Add new focal point');
@@ -560,6 +587,7 @@
                             }
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }

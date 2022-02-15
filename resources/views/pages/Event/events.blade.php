@@ -300,6 +300,8 @@
             rowSelection: 'single',
             tooltipShowDelay: 0,
 
+            suppressCopyRowsToClipboard:true,
+
             // set rowData to null or undefined to show loading panel by default
             rowData: null,
             onGridReady: onGridReady,

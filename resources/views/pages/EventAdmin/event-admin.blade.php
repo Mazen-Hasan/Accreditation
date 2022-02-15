@@ -24,8 +24,8 @@
                                         <div>
                                             <input type="hidden" id="logoName" value="{{$event->logo}}">
                                             <a href="{{route('eventCompanies',$event->id)}}">
-                                                <img id="logo" class="card-img-top"
-                                                     style="width: 374px; height:374px; border-top-left-radius: 20px; border-top-right-radius: 20px"
+                                                <img id="logo" class="card-img-top event-card-logo"
+
                                                      src="{{ asset('images/event.png') }}" alt="Event">
                                             </a>
                                         </div>

@@ -1434,3 +1434,12 @@ input:checked + .slider:before {
     border-top-right-radius: 20px;
 }
 
+@media (max-width: 1400px) {
+    .ha_icon_btn p{
+        visibility: hidden;
+    }
+    .ha_icon_btn i{
+        position: absolute ;
+    }
+}
+

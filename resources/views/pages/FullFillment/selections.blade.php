@@ -126,7 +126,7 @@
                                         <div class="col-md-12">
                                             <a id="btn-generate" title="Generate" href='javascript:void(0)'
                                                class="ha_icon_btn  disabled">
-                                                <i class="fas fa-cogs" style="font-size: 25px; color: white"></i>Generate
+                                                <i class="fas fa-cogs" style="font-size: 25px; color: white"></i><p style="color:white">Generate</p>
                                             </a>
                                         </div>
                                     </div>
@@ -134,7 +134,7 @@
                                         <div class="col-md-12">
                                             <a id="btn-Details" title="Details" href='javascript:void(0)'
                                                class="ha_icon_btn disabled">
-                                                <i class="fa fa-list" style="font-size: 25px"></i>Details
+                                                <i class="fa fa-list" style="font-size: 25px"></i><p style="color:white">Details</p>
                                             </a>
                                         </div>
                                     </div>
@@ -142,7 +142,7 @@
                                         <div class="col-md-12">
                                             <a id="btn-mark-printed" title="Mark as printed" href='javascript:void(0)'
                                                class="ha_icon_btn disabled">
-                                                <i class="fas fa-tasks" style="font-size: 25px"></i>Mark as printed
+                                                <i class="fas fa-tasks" style="font-size: 25px"></i><p style="color:white">Mark as printed</p>
                                             </a>
                                         </div>
                                     </div>

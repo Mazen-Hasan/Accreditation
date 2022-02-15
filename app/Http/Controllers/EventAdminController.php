@@ -1190,7 +1190,7 @@ public function createStatusFieldLabel($label, $value)
                 'status' => $status
             ]);
         $staff = CompanyStaff::updateOrCreate(['id' => $companyStaff->id],
-            ['identifier'=> '#'.$request->event_id.'-'.$request->company_id.'-'.$companyStaff->id
+            ['identifier'=> '#'. md5($request->event_id.'-'.$request->company_id.'-'.$companyStaff->id)
             ]);
     
         $where = array('id' => $request->event_id);

@@ -279,6 +279,7 @@
             },
         ];
 
+
         // let the grid know which columns and what data to use
         const gridOptions = {
             defaultColDef: {
@@ -340,7 +341,7 @@
             gridOptions.api.exportDataAsExcel({
                 sheetName: 'events',
                 columnKeys: ['name', 'size', 'organizer', 'template_name', 'event_type', 'event_start_date',
-                    'event_end_date', 'accreditation_start_date', 'accreditation_end_date'],
+                    'event_end_date', 'accreditation_start_date', 'accreditation_end_date','status'],
                 fileName: 'events.xlsx',
             });
         });

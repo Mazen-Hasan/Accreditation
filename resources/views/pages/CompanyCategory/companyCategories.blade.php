@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-7">
+                            <div class="col-md-10">
                                 <p class="card-title">Company Categories</p>
                             </div>
                             <div class="col-md-1 align-content-md-center">
@@ -31,19 +31,17 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
                                 <span class="dt-hbtn"></span>
-                                <a href="javascript:void(0)" id="add-new-category" class="add-hbtn">
+                                <a href="javascript:void(0)" id="add-new-category" class="add-hbtn" title="Add">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
-                                    <span class="dt-hbtn">Add</span>
                                 </a>
                             </div>
                         </div>

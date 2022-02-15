@@ -126,7 +126,7 @@ class SecurityOfficerAdminController extends Controller
         }else{
             $company_admin_id = $event->id;
         }
-    
+
         // $where = array('template_id' => $event->event_form);
         // $templateFields = TemplateField::where($where)->get()->all();
     	$where = array('template_id' => $event->event_form);
@@ -281,7 +281,7 @@ class SecurityOfficerAdminController extends Controller
                 ->rawColumns(['identifier','image','status', 'action'])
                 ->make(true);
         }
-        return view('pages.SecurityOfficerAdmin.security-officer-company-participants')->with('dataTableColumns', $dataTableColumuns)->with('company_id', $companyId)->with('event_id', $eventId)->with('event_status',$event->status);
+        return view('pages.SecurityOfficerAdmin.security-officer-company-participants')->with('dataTableColumns', $dataTableColumuns)->with('company_id', $companyId)->with('event_id', $eventId)->with('event_status',$event->status)->with('event_name',$event->name);
     }
 
     public function getPaticipantsData($companyId,$eventId,$values){
@@ -400,7 +400,7 @@ class SecurityOfficerAdminController extends Controller
 
         $eventWhere = array('id' => $eventId);
         $event = Event::where($eventWhere)->first();
-    
+
         $companyWhere = array('id' => $companyId);
         $company = Company::where($companyWhere)->first();
 
@@ -412,7 +412,7 @@ class SecurityOfficerAdminController extends Controller
             // NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
 
         	app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
-        
+
         	$notification_type = Config::get('enums.notification_types.PAP');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, $staffId,
                 $event->name . ': ' . $company->name . ': ' . 'Participant approved',
@@ -423,9 +423,9 @@ class SecurityOfficerAdminController extends Controller
                 $event_companies = EventCompany::where(['event_id'=>$eventId, 'company_id'=> $companyId])->first();
             	$focal_point = DB::select('select * from focal_points f where f.id = ?', [$event_companies->focal_point_id]);
             	// NotificationController::sendAlertNotification($focal_point[0]->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant approved', Route('templateFormDetails' , [$staffId]));
-            	
+
             	app('App\Http\Controllers\GenerateBadgeController')->generate($staffId);
-            
+
             	$notification_type = Config::get('enums.notification_types.PAP');
             	NotificationController::sendNotification($notification_type, $event->name, $company->name, $focal_point[0]->account_id, $staffId,
                 $event->name . ': ' . $company->name . ': ' . 'Participant approved',
@@ -454,7 +454,7 @@ class SecurityOfficerAdminController extends Controller
         if ($approval == 2) {
             DB::update('update company_staff set status = ? where id = ?', [4, $staffId]);
         	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
-        
+
         	$notification_type = Config::get('enums.notification_types.PRE');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
                 $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
@@ -462,7 +462,7 @@ class SecurityOfficerAdminController extends Controller
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [4, $staffId]);
             	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
-            	
+
             	$notification_type = Config::get('enums.notification_types.PRE');
             	NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
                 $event->name . ': ' . $company->name . ': ' . 'Participant rejected', Route('templateFormDetails' , $staffId));
@@ -491,20 +491,20 @@ class SecurityOfficerAdminController extends Controller
             DB::update('update company_staff set status = ? where id = ?', [7, $staffId]);
             DB::update('update company_staff set security_officer_reject_reason = ? where id = ?', [$reason, $staffId]);
         	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
-			
+
         	$notification_type = Config::get('enums.notification_types.PRC');
             NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
-                $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction', 
+                $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction',
                 Route('templateFormDetails' , $staffId));
         } else {
             if ($approval == 3) {
                 DB::update('update company_staff set status = ? where id = ?', [7, $staffId]);
                 DB::update('update company_staff set security_officer_reject_reason = ? where id = ?', [$reason, $staffId]);
             	// NotificationController::sendAlertNotification($focalPoint->account_id, $staffId, $event->name . ': ' . $company->name . ': ' . 'Participant returend for correction', Route('templateFormDetails' , $staffId));
-            
+
             	$notification_type = Config::get('enums.notification_types.PRC');
             	NotificationController::sendNotification($notification_type, $event->name, $company->name, $focalPoint->account_id, $staffId,
-                $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction', 
+                $event->name . ': ' . $company->name . ': ' . 'Participant returned for correction',
                 Route('templateFormDetails' , $staffId));
             }
         }
@@ -692,7 +692,7 @@ class SecurityOfficerAdminController extends Controller
     }
 
 
-	
+
 	public function createStatusFieldLabel($label, $value)
     {
         $textfield = '<div class="col-md-6"><div class="form-group col">';
@@ -759,7 +759,7 @@ class SecurityOfficerAdminController extends Controller
             }
         }
 
-    
+
     	$selectfield = '<div class="col-md-6"><div class="form-group col">';
         $selectfield .= '<label>' . $label . '</label><div class="col-sm-12">';
         $selectfield .= '<input type="text" value="'. $selectValue .'" disabled/>';
@@ -789,7 +789,7 @@ class SecurityOfficerAdminController extends Controller
         return $personalImage;
     }
 
-	
+
 
 
 //     public function createStatusFieldLabel($id, $label, $mandatory, $min_char, $max_char, $value)

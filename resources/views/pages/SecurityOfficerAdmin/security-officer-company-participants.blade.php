@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="{{ URL::asset('css/ag-grid/style.css') }}">
 
     <script src="{{ URL::asset('js/ag-grid/ag-grid-enterprise.min.js') }}"></script>
-    <!-- <script src="{{ URL::asset('js/templates/CustomTooltip.js') }}"></script> -->
     <script src="{{ URL::asset('js/templates/ShowMoreComponent.js') }}"></script>
     <script src="{{ URL::asset('js/templates/PageCountComponent.js') }}"></script>
 @endsection
@@ -32,23 +31,25 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
-                                <p class="card-title">Company / Participants</p>
+                            <div class="col-md-10">
+                                <h4 class="card-title">
+                                    <a class="url-nav" href="{{ route('security-officer-admin') }} ">
+                                        <span>My Events:</span>
+                                    </a>
+                                    {{$event_name}} / Companies / Participants
+                                </h4>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
-                                <span class="dt-hbtn"></span>
                                 @role('company-admin')
-                                <a href="{{route('templateForm',0)}}" id="add-new-post" class="add-hbtn">
+                                <a href="{{route('templateForm',0)}}" id="add-new-post" class="add-hbtn" title="Add">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
-                                    <span class="dt-hbtn">Add</span>
                                 </a>
                                 @endrole
                             </div>

@@ -19,30 +19,25 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-9">
+                            <div class="col-md-10">
                                 <h4 class="card-title">
-<!--                                 	@if($title_name == "Subsidiaries Accounts")
-                                    <a class="url-nav" href="{{ route('company-admin') }} ">
-                                        <span>My Events: </span>
-                                    </a>
-                                	@endif
-                                    @if($title_name == "Focal Points")
-                                    <a class="url-nav" href="{{ route('event-admin') }} ">
-                                        <span>My Events: </span>
-                                    </a>
-                                	@endif -->
                                      {{$title_name}}
                                 </h4>
-<!--                                 <p class="card-title">{{$title_name}}</p> -->
                             </div>
-                            <div class="col-md-3 align-content-md-center">
+                            <div class="col-md-1 align-content-md-center">
+                                <div class="search-container">
+                                    <input class="search expandright" id="search" type="text" placeholder="Search">
+                                    <label class="search-button search-button-icon" for="search">
+                                        <i class="icon-search"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1 align-content-md-center">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel">
                                     <i>
-                                        <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
+                                        <img src="{{ asset('images/excel.png') }}" alt="Export to excel" title="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
-                                <span class="dt-hbtn"></span>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -55,9 +50,7 @@
                                     <th>Mobile</th>
                                     <th>Account Name</th>
                                     <th>Account Email</th>
-                                    <!-- <th>Company</th> -->
                                     <th>Status</th>
-                                    {{--                                    <th style="color: black">Status</th>--}}
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -129,7 +122,7 @@
             });
 
             $('#laravel_datatable').DataTable({
-                dom: 'lBfrtip',
+                dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
                     title: 'Focal-points',
@@ -167,6 +160,10 @@
 
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
+            });
+
+            $('#search').on('keyup', function () {
+                oTable.search(this.value).draw();
             });
 
             $('#add-new-post').click(function () {

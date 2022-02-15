@@ -29,7 +29,7 @@
                         <div class="row align-content-md-center" style="height: 80px">
                             <input type="hidden" id="h_event_id" value={{$eventid}}>
                             <input type="hidden" id="h_event_status" value={{$event_status}}>
-                            <div class="col-md-8">
+                            <div class="col-md-11">
                                 <h4 class="card-title">
                                     <a class="url-nav" href="{{ route('event-admin') }} ">
                                         <span>My Events:</span>
@@ -37,20 +37,17 @@
                                     / {{$event_name}} / Companies
                                 </h4>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
-                                <span class="dt-hbtn"></span>
                                 @if($event_status < 3)
-                                <a href="../company-add/{{$eventid}}" id="add-new-company" class="add-hbtn">
+                                <a href="../company-add/{{$eventid}}" id="add-new-company" class="add-hbtn" title="Add">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
-                                    <span class="dt-hbtn">Add</span>
                                 </a>
                                 @endif
                             </div>

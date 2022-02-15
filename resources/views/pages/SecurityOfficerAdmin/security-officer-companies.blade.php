@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="{{ URL::asset('css/ag-grid/style.css') }}">
 
     <script src="{{ URL::asset('js/ag-grid/ag-grid-enterprise.min.js') }}"></script>
-    <!-- <script src="{{ URL::asset('js/templates/CustomTooltip.js') }}"></script> -->
     <script src="{{ URL::asset('js/templates/ShowMoreComponent.js') }}"></script>
     <script src="{{ URL::asset('js/templates/PageCountComponent.js') }}"></script>
 @endsection
@@ -29,7 +28,7 @@
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
                         <input type="hidden" id="h_event_id" value={{$eventid}}>
-                            <div class="col-md-8">
+                            <div class="col-md-11">
                                 <h4 class="card-title">
                                     <a class="url-nav" href="{{ route('event-admin') }} ">
                                         <span>My Events:</span>
@@ -37,38 +36,15 @@
                                     {{$event_name}} / Companies
                                 </h4>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
-                                <span class="dt-hbtn"></span>
                             </div>
                         </div>
                         <div id="myGrid" class="ag-theme-alpine" style="height: 600px; width:100%;"></div>
-                        <!-- <div class="table-responsive">
-                            <table class="table table-hover" id="laravel_datatable" style="text-align: center">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Event ID</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Country</th>
-                                    <th>City</th>
-                                    <th>Website</th>
-                                    <th>Telephone</th>
-                                    <th>Focal point</th>
-                                    <th style="color: black">Status</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div> -->
                     </div>
                 </div>
             </div>

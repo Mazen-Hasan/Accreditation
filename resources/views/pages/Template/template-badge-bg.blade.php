@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-10">
                                 <p class="card-title">
                                     <a class="url-nav" href="{{route('templateBadge')}}">
                                         <span>Badges:</span>
@@ -36,14 +36,12 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-3 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
-                                <span class="dt-hbtn"></span>
                             </div>
                         </div>
                         <div class="table-responsive">

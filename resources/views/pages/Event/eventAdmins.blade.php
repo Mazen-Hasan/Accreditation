@@ -18,7 +18,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-7">
+                            <div class="col-md-10">
                                 <h4 class="card-title">
                                     <a class="url-nav" href="{{route('events')}}">
                                         <span>Events:</span>
@@ -37,17 +37,15 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
-                                <span class="dt-hbtn"></span>
                                 @role('super-admin')
                                 @if($event->status < 3)
-                                <a href="javascript:void(0)" id="add-event-admin" class="add-hbtn">
+                                <a href="javascript:void(0)" id="add-event-admin" class="add-hbtn" title="Add">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
@@ -204,7 +202,7 @@
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
-        
+
         	var oTable = $('#laravel_datatable').DataTable();
 
             $('#search').on('keyup', function () {

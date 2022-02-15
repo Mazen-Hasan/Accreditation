@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="{{ URL::asset('css/ag-grid/style.css') }}">
 
     <script src="{{ URL::asset('js/ag-grid/ag-grid-enterprise.min.js') }}"></script>
-    <!-- <script src="{{ URL::asset('js/templates/CustomTooltip.js') }}"></script> -->
     <script src="{{ URL::asset('js/templates/ShowMoreComponent.js') }}"></script>
     <script src="{{ URL::asset('js/templates/PageCountComponent.js') }}"></script>
 @endsection
@@ -62,7 +61,7 @@
                             <input type="hidden" id="company_id" value={{$companyId}}>
                             <input type="hidden" id="event_id" value={{$eventId}}>
                             <input type="hidden" id="h_event_status" value={{$event_status}}>
-                            <div class="col-md-8">
+                            <div class="col-md-11">
                                 <h4 class="card-title">
                                     <a class="url-nav" href="{{ route('company-admin') }} ">
                                         <span>My Events:</span>
@@ -72,22 +71,18 @@
                                     </a>
                                      / Subsidiaries
                                 </h4>
-<!--                                 <p class="card-title">{{$event_name}} / {{$company_name}} / Subsidiaries</p> -->
                             </div>
-                            <div class="col-md-4 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
-                                <span class="dt-hbtn"></span>
                                 @if($event_status < 3)
-                                <a href="../../subCompany-add/{{$eventId}}/{{$companyId}}" id="add-new-company" class="add-hbtn">
+                                <a href="../../subCompany-add/{{$eventId}}/{{$companyId}}" id="add-new-company" class="add-hbtn" title="Add">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>
-                                    <span class="dt-hbtn">Add</span>
                                 </a>
                                 @endif
                             </div>

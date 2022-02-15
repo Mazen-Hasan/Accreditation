@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
+                            <div class="col-md-10">
                                 <p class="card-title">Email Templates</p>
                             </div>
                         	<div class="col-md-1 align-content-md-center">
@@ -31,12 +31,11 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-3 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
                             </div>
                         </div>
@@ -164,7 +163,7 @@
             $('.export-to-excel').click(function () {
                 $('#laravel_datatable').DataTable().button('.buttons-excel').trigger();
             });
-        
+
         	var oTable = $('#laravel_datatable').DataTable();
 
             $('#search').on('keyup', function () {

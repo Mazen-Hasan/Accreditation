@@ -11,33 +11,33 @@
     <script src="{{ URL::asset('js/pdfmake.min.js') }}"></script>
 @endsection
 @section('custom_navbar')
-                <li id="subsidiaries_nav" class="nav-item">
-                     <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}"
-                        href="{{ route('subCompanies',[$companyId,$eventId]) }} ">
-                         <i class="logout">
-                             <img src="{{ asset('images/menu.png') }}" alt="My Sidries">
-                         </i>
-                         <span class="menu-title">Subsidiaries</span>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}"
-                        href="{{ route('dataentrys',[$companyId,$eventId]) }}">
-                         <i class="logout">
-                             <img src="{{ asset('images/menu.png') }}" alt="Data Entry">
-                         </i>
-                         <span class="menu-title">Data Entry</span>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                    <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
-                    href="{{ route('focalpoints') }}">
-                        <i class="logout">
-                            <img src="{{ asset('images/user_mng.png') }}" alt="Subsidiaries Accounts">
-                        </i>
-                        <span class="menu-title">Subsidiaries Accounts</span>
-                    </a>
-                </li>
+    <li id="subsidiaries_nav" class="nav-item">
+        <a class="nav-link {{ str_contains( Request::route()->getName(),'subCompanies') =="1" ? "active" : "" }}"
+           href="{{ route('subCompanies',[$companyId,$eventId]) }} ">
+            <i class="logout">
+                <img src="{{ asset('images/menu.png') }}" alt="My Sidries">
+            </i>
+            <span class="menu-title">Subsidiaries</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ str_contains( Request::route()->getName(),'dataentrys') =="1" ? "active" : "" }}"
+           href="{{ route('dataentrys',[$companyId,$eventId]) }}">
+            <i class="logout">
+                <img src="{{ asset('images/menu.png') }}" alt="Data Entry">
+            </i>
+            <span class="menu-title">Data Entry</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ str_contains( Request::route()->getName(),'focalpoints') =="1" ? "active" : "" }}"
+           href="{{ route('focalpoints') }}">
+            <i class="logout">
+                <img src="{{ asset('images/user_mng.png') }}" alt="Subsidiaries Accounts">
+            </i>
+            <span class="menu-title">Subsidiaries Accounts</span>
+        </a>
+    </li>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -47,36 +47,33 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                    <input type="hidden" id="company_id" value={{$companyId}}>
-                    <input type="hidden" id="event_id" value={{$eventId}}>
+                        <input type="hidden" id="company_id" value={{$companyId}}>
+                        <input type="hidden" id="event_id" value={{$eventId}}>
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
-                               <h4 class="card-title">
+                            <div class="col-md-11">
+                                <h4 class="card-title">
                                     <a class="url-nav" href="{{ route('company-admin') }} ">
                                         <span>My Events:</span>
                                     </a>
                                     <a class="url-nav" href="{{route('companyParticipants',[$companyId ,$eventId])}}">
                                         <span>{{$event_name}} / {{$company_name}} </span>
                                     </a>
-                                     / Data Entries
+                                    / Data Entries
                                 </h4>
-<!--                                 <p class="card-title">Data Entries</p> -->
                             </div>
-                            <div class="col-md-4 align-content-md-center">
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                            <div class="col-md-1 align-content-md-center">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
-                                <span class="dt-hbtn"></span>
                                 @if($event_status < 3)
-                                <a href="{{route('dataentryAdd',[$companyId,$eventId])}}" id="add-new-post" class="add-hbtn">
-                                    <i>
-                                        <img src="{{ asset('images/add.png') }}" alt="Add">
-                                    </i>
-                                    <span class="dt-hbtn">Add</span>
-                                </a>
+                                    <a href="{{route('dataentryAdd',[$companyId,$eventId])}}" id="add-new-post"
+                                       class="add-hbtn" title="Add">
+                                        <i>
+                                            <img src="{{ asset('images/add.png') }}" alt="Add">
+                                        </i>
+                                    </a>
                                 @endif
                             </div>
                         </div>
@@ -86,14 +83,11 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-<!--                                     <th>Email</th> -->
                                     <th>Telephone</th>
                                     <th>Mobile</th>
                                     <th>Account Name</th>
                                     <th>Account Email</th>
-                                    <!-- <th>Company</th> -->
                                     <th>Status</th>
-                                    {{--                                    <th style="color: black">Status</th>--}}
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -220,7 +214,7 @@
                 url = url.replace(':userId', userId);
                 $.ajax({
                     type: "get",
-                	url:url,
+                    url: url,
                     //url: "dataentryController/reset_password/" + userId + "/" + password,
                     success: function (data) {
                         $('#ajax-crud-modal').modal('hide');

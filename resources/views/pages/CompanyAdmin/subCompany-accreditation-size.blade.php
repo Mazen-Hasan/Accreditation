@@ -42,15 +42,9 @@
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
-                <!--
-                    @if($status == 0)
-                    <a href="javascript:void(0)" class="ha_btn" id="add-new-post" style="margin: 10px">Add Accreditation Size</a>
-                    @endif -->
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-8">
-<!--                                 <p class="card-title">{{$event_name}} / {{$company_name}} : Size ({{$company_size}}) /
-                                    Accreditation Size Management</p> -->
+                            <div class="col-md-11">
                                 <h4 class="card-title">
                                     <a class="url-nav" href="{{ route('company-admin') }} ">
                                         <span>My Events:</span>
@@ -62,26 +56,22 @@
                                     Accreditation Size Management
                                 </h4>
                             </div>
-                            <div class="col-md-4 align-content-md-center">
+                            <div class="col-md-1 align-content-md-center">
                                 <input type="hidden" id="addable" value={{$addable}} />
-                                <a href="javascript:void(0)" class="add-hbtn export-to-excel">
+                                <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
-                                    <span class="dt-hbtn">Export to excel</span>
                                 </a>
-                                <span class="dt-hbtn"></span>
                                 @if($status == 0 && $event_status < 3)
-                                    <a href="javascript:void(0)" id="add-new-post" class="add-hbtn">
+                                    <a href="javascript:void(0)" id="add-new-post" class="add-hbtn" title="Add">
                                         <i>
                                             <img src="{{ asset('images/add.png') }}" alt="Add">
                                         </i>
-                                        <span class="dt-hbtn">Add</span>
                                     </a>
                                 @endif
                             </div>
                         </div>
-                        <!-- <h4 class="card-title">Accreditation Size Table</h4> -->
                         <div class="table-responsive">
                             <table class="table table-hover" id="laravel_datatable" style="text-align: center">
                                 <thead>
@@ -95,7 +85,6 @@
                                     @if($status != 0)
                                         <th>Status</th>
                                 @endif
-                                <!-- <th>Action</th> -->
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -107,6 +96,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="ajax-crud-modal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -114,7 +104,6 @@
                     <h4 class="modal-title" id="postCrudModal"></h4>
                 </div>
                 <div class="modal-body">
-                    {{--                    <form id="postForm" name="postForm" class="form-horizontal">--}}
                     <input type="hidden" name="company_id" id="company_id" value="{{$companyId}}">
                     <input type="hidden" name="event_id" id="event_id" value="{{$eventId}}">
                     <input type="hidden" name="status" id="status" value="{{$status}}">
@@ -127,7 +116,6 @@
                             <select id="accredit_cat_id" name="accredit_cat_id" value="" required="">
                                 @foreach ($accreditationCategorys as $accreditationCategory)
                                     <option value="{{ $accreditationCategory->key }}"
-                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
                                             @if ($accreditationCategory->key == 1)
                                             selected="selected"
                                         @endif
@@ -147,7 +135,6 @@
                         <button id="edit-size" value="create">Save
                         </button>
                     </div>
-                    {{--                    </form>--}}
                 </div>
                 <div class="modal-footer">
 
@@ -155,6 +142,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="delete-element-confirm-modal" tabindex="-1" data-bs-backdrop="static"
          data-bs-keyboard="false" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -208,25 +196,6 @@
             </div>
         </div>
     </div>
-    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
-         role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document" style="width: 250px">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <i class="fas fa-spinner fa-spin"></i>
-                        </div>
-                        <div class="col-sm-10">
-                            <label class="loading">
-                                loading...
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 @section('script')
     <script>
@@ -257,7 +226,6 @@
 
             $('#add-new-post').click(function () {
                 var addable = $('#addable').val();
-                //alert(addable);
                 if(addable == 1){
                     remaining_size = parseInt($('#remaining_size').val());
                     if (remaining_size > 0) {
@@ -275,7 +243,6 @@
                         $('#errorTitle').html('Error: Max Size');
                         $('#errorText').html('you have reached accreditation categories max size');
                         $('#error-pop-up-modal').modal('show');
-                        //alert('you reached the max size');
                     }
                 }else{
                         $('#errorTitle').html('Adding Accreditation Category');
@@ -308,7 +275,6 @@
                 var post_id = $(this).data("id");
                 var prev_size = $(this).data("size");
                 $('#curr_size').val(prev_size);
-                //alert(prev_size);
                 $('#confirmTitle').html('Delete Company Accreditation');
                 $('#curr_element_id').val(post_id);
                 $('#action_button').val('delete');
@@ -355,14 +321,12 @@
                             $('#errorTitle').html('Error: Duplicate accrediation category');
                             $('#errorText').html('Cant insert duplicate accreditation category size');
                             $('#error-pop-up-modal').modal('show');
-                            //console.log('Error:', data);
                         }
                     });
                 }
             });
             $('body').on('click', '#send-approval-request', function () {
                 var post_id = $('#id').val();
-                //alert(post_id);
                 var company_id = $('#company_id').val();
                 var eventId = $('#event_id').val();
                 $('#confirmTitle').html('Approve Accreditation Category Sizes');
@@ -389,7 +353,6 @@
                                     oTable.fnDraw(false);
                                     var remaining_size = parseInt($('#remaining_size').val());
                                     var inserted_size = parseInt($('#curr_size').val());
-                                    //alert(inserted_size);
                                     var new_remaining_size = remaining_size + inserted_size;
                                     $('#remaining_size').val(new_remaining_size);
                                     $('#curr_size').val('0');

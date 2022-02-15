@@ -310,10 +310,8 @@
                 $.get('templateBadgeController/' + badge_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Badge");
-                    $('#btn-save').val("edit-badge");
+                    $('#btn-save').html("Save");
                     $('#badge_id').val(data.id);
-                    // $('#width').val(data.width);
-                    // $('#high').val(data.high);
                 	$('#width').val(Math.round(data.width * 0.2645833333));
                     $('#high').val(Math.round(data.high * 0.2645833333));
                     $('#bg_color').val(data.bg_color);
@@ -328,6 +326,8 @@
                     $("#file-progress-bar").width('0%');
                     $("#file_type_error").html('');
 
+                    $("#bg_image").val(data.bg_image);
+
                     var imag = data.bg_image;
                     // server
                     {{--var image_path = "{{URL::asset('storage/badges/')}}/";--}}
@@ -336,14 +336,6 @@
 
                     $('#badge_bg').attr('src', image_path + imag);
                     $('#badge_bg').show();
-
-                    // if(data){
-                    //     $('#template_id').attr('disabled', 'disabled');
-                    // }
-                    // else {
-                    //     $('#template_id').removeAttr('disabled');
-                    // }
-
                 });
             });
         });

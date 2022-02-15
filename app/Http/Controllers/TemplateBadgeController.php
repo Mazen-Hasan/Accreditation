@@ -64,11 +64,8 @@ class TemplateBadgeController extends Controller
 
         $templateBadge = TemplateBadge::updateOrCreate(['id' => $badge_id],
             ['template_id' => $request->template_id,
-                // 'width' => $request->width,
-                // 'high' => $request->high,
              	'width' => round($request->width * 3.7795275591),
                 'high' => round($request->high * 3.7795275591),
-                'bg_color' => $request->bg_color,
                 'bg_image' => $request->bg_image,
                 'is_locked' => $request->has('locked'),
                 'creator' => Auth::user()->id

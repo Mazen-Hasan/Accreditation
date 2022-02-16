@@ -106,6 +106,26 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -121,7 +141,6 @@
                 $('#post_id').val('');
                 $('#postForm').trigger("reset");
                 $('#postCrudModal').html("Add New Contact");
-                $('#ajax-crud-modal').modal('show');
             });
 
             $('#togglePassword').click(function () {
@@ -165,6 +184,7 @@
                 },
 
                 submitHandler: function (form) {
+                    $('#loader-modal').modal('show');
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-save').html('Sending..');
@@ -174,12 +194,12 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#postForm').trigger("reset");
-                            $('#ajax-crud-modal').modal('hide');
-                            $('#btn-save').html('Add successfully');
                             window.location.href = "{{ route('users')}}";
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }

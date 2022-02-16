@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row align-content-md-center" style="height: 80px">
-                            <div class="col-md-10">
+                            <div class="col-md-9">
                                 <p class="card-title">
                                     <a class="url-nav" href="{{route('templateBadge')}}">
                                         <span>Badges:</span>
@@ -36,14 +36,14 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-2">
                                 <a href="javascript:void(0)" class="add-hbtn export-to-excel" title="Export to excel">
                                     <i>
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
                                 </a>
                                 @if($badge->is_locked == 0)
-                                    <a href="javascript:void(0)" id="add-new-badge" class="add-hbtn" title="Add">
+                                    <a href="javascript:void(0)" id="add-new-field" class="add-hbtn" title="Add">
                                         <i>
                                             <img src="{{ asset('images/add.png') }}" alt="Add">
                                         </i>

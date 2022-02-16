@@ -37,7 +37,7 @@
                                         <img src="{{ asset('images/excel.png') }}" alt="Export to excel">
                                     </i>
                                 </a>
-                                <a href="javascript:void(0)" id="add-new-badge" class="add-hbtn" title="Add">
+                                <a href="javascript:void(0)" id="add-new-template" class="add-hbtn" title="Add">
                                     <i>
                                         <img src="{{ asset('images/add.png') }}" alt="Add">
                                     </i>

@@ -81,7 +81,7 @@
                 dom: 'lBrtip',
                 buttons: [{
                     extend: 'excelHtml5',
-                    title: 'Owner-Organizer',
+                    title: 'Event-Owner',
                     exportOptions: {
                         columns: [1, 2, 3, 4, 5, 6]
                     }

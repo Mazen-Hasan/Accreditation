@@ -44,7 +44,7 @@
                                 </a>
                                 <span class="dt-hbtn"></span>
                                 @if($template->is_locked == 0)
-                                    <a href="javascript:void(0)" id="add-new-badge" class="add-hbtn" title="Add">
+                                    <a href="javascript:void(0)" id="add-new-field" class="add-hbtn" title="Add">
                                         <i>
                                             <img src="{{ asset('images/add.png') }}" alt="Add">
                                         </i>

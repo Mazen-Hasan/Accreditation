@@ -210,6 +210,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -293,7 +312,9 @@
 
             $('body').on('click', '#edit-field', function () {
                 var field_id = $(this).data('id');
+                $('#loader-modal').modal('show');
                 $.get('../templateFieldController/' + field_id + '/edit', function (data) {
+                    $('#loader-modal').modal('hide');
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Field");
                     $('#btn-save').val("edit-field");
@@ -341,15 +362,18 @@
 
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
                     if ($button[0].id === 'btn-yes') {
+                        $('#loader-modal').modal('show');
                         var field_id = $('#curr_field_id').val();
                         $.ajax({
                             type: "get",
                             url: "../templateFieldController/destroy/" + field_id,
                             success: function (data) {
+                                $('#loader-modal').modal('hide');
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);
                             },
                             error: function (data) {
+                                $('#loader-modal').modal('hide');
                                 console.log('Error:', data);
                             }
                         });
@@ -362,13 +386,14 @@
             $("#fieldForm").validate({
                 submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
-
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         data: $('#fieldForm').serialize(),
                         url: "{{ route('templateFieldController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#fieldForm').trigger("reset");
                             $('#field-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
@@ -376,6 +401,7 @@
                             oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }

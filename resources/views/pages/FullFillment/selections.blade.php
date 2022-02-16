@@ -155,7 +155,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
          role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="width: 250px">
             <div class="modal-content">
@@ -195,7 +195,7 @@
         });
 
         $(document).on('change' , '.hi', function () {
-            //$('#loader-modal').modal('show');
+            $('#loader-modal').modal('show');
             //alert('hi');
             resetAll();
             var selectedEvent = $('#event option:selected').val();
@@ -231,7 +231,7 @@
         });
 
         $('#event').on('change', function () {
-            //$('#loader-modal').modal('show');
+            $('#loader-modal').modal('show');
             resetAll();
 
             var url = "{{ route('getCompanies', ":id") }}";
@@ -241,7 +241,7 @@
                 type: "get",
                 url: url,
                 success: function (data) {
-                    $('#loader-modal').modal('hide');
+                    //$('#loader-modal').modal('hide');
                     console.log('success: hide');
                     var companySelectOptions = data;
                     $('#container').html('');
@@ -296,7 +296,7 @@
             if ($('#btn-filter').html() == 'Reset') {
                 resetAll();
             } else {
-                //$('#loader-modal').modal('show');
+                $('#loader-modal').modal('show');
                 var selectedEvent = $('#event option:selected').val();
                 var selectedCompany = $('#company option:selected').val();
                 var selectedAccredit = $('#category option:selected').text();
@@ -334,18 +334,21 @@
         $('#btn-generate').click(function () {
             var staff = companySelectOptions;
             if (staff.length > 0) {
+                $('#loader-modal').modal('show');
                 $.ajax({
                     type: "post",
                     data: {staff: staff},
                     dataType: "json",
                     url: "{{ route('pdf-generate') }}",
                     success: function (data) {
+                        $('#loader-modal').modal('hide');
                         window.open(data.file, '_blank');
                         $('#lbl_generate').html(companySelectOptions.length);
                         $('#lbl_generate').css("color", "#54af36");
                         $('#btn-mark-printed').removeClass('disabled')
                     },
                     error: function (data) {
+                        $('#loader-modal').modal('hide');
                         console.log('Error:', data);
                     }
                 });
@@ -355,16 +358,19 @@
         $('#btn-mark-printed').click(function () {
             var staff = companySelectOptions;
             if (staff.length > 0) {
+                $('#loader-modal').modal('show');
                 $.ajax({
                     type: "post",
                     data: {staff: staff},
                     dataType: "json",
                     url: "{{ route('fullFillment')}}",
                     success: function (data) {
+                        $('#loader-modal').modal('hide');
                         $('#btn-filter').html('Reset');
                         $('#lbl_print').html(companySelectOptions.length + Number($('#lbl_print').html()));
                     },
                     error: function (data) {
+                        $('#loader-modal').modal('hide');
                         console.log('Error:', data);
                     }
                 });

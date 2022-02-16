@@ -162,6 +162,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -254,12 +273,14 @@
 
                 submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         data: $('#eventSecurityCategoryForm').serialize(),
                         url: "{{ route('eventAccreditationCategoriesAdd') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#eventSecurityCategoryForm').trigger("reset");
                             $('#event-security-category-modal').modal('hide');
                             $('#btn-save').html('Save');
@@ -267,6 +288,7 @@
                             oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#event-security-category-modal').modal('hide');
                             $('#btn-save').html('Save');
                             $('#errorTitle').html('Error: Duplicate accrediation category');

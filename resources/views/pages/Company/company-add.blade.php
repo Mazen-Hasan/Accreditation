@@ -349,7 +349,7 @@
             </div>
         </div>
     </div>
-	<div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+	<div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
          role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="width: 250px">
             <div class="modal-content">
@@ -441,12 +441,13 @@
 
             var url = "{{ route('getCities', ":id") }}";
             url = url.replace(':id', this.value);
-
+            $('#loader-modal').modal('show');
             $.ajax({
                 type: "get",
                 // url: "fullFillmentController/getCompanies/" + this.value,
                 url: url,
                 success: function (data) {
+                    $('#loader-modal').modal('hdie');
                     var citySelectOptions = data;
                     $('#container').html('');
                     var html = '<select id="city" name="city" required="">';
@@ -464,6 +465,7 @@
                     $('#container').append(html);
                 },
                 error: function (data) {
+                    $('#loader-modal').modal('hide');
                     console.log('Error:', data);
                 }
             });
@@ -542,6 +544,7 @@
                     $('#post_id').val('');
                     var actionType = $('#btn-save').val();
                     $('#btn-add-focal').html('Sending..');
+                    $('#loader-modal').modal('show');
                     //alert($('#focaPointForm').serialize());
                     $.ajax({
                         data: $('#focaPointForm').serialize(),
@@ -549,6 +552,7 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             if(data.code == 401){
                                 $('#add-focal-point-modal').modal('hide');
                                 $('#focalentryconfirmTitle').html('Add new focal point');
@@ -579,6 +583,7 @@
                             }
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }

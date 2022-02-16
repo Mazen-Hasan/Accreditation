@@ -127,7 +127,7 @@
             $('#participants').find('option[value]').remove();
             let companyID = $("#company_id").val();
             let fullName = $("#participantFullName").val();
-
+            
             if (fullName.length > 4) {
                 let url = "{{ route('searchParticipants', [':fullName',':companyId']) }}";
                 url = url.replace(':fullName', fullName);

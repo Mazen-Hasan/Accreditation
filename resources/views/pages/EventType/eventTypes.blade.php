@@ -132,6 +132,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -245,40 +264,49 @@
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
                         if (action_button == 'delete') {
+                            $('#loader-modal').modal('show');
                             $.ajax({
                                 type: "get",
                                 url: "eventTypeController/destroy/" + post_id,
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });
                         }
                         if (action_button == 'activate') {
+                            $('#loader-modal').modal('show');
                             $.ajax({
                                 type: "get",
                                 url: "eventTypeController/changeStatus/" + post_id + "/1",
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });
                         }
                         if (action_button == 'deactivate') {
+                            $('#loader-modal').modal('show');
                             $.ajax({
                                 type: "get",
                                 url: "eventTypeController/changeStatus/" + post_id + "/0",
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });
@@ -296,12 +324,14 @@
                 submitHandler: function (form) {
                     $('#error').html("");
                     $('#btn-save').html('Sending..');
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         data: $('#postForm').serialize(),
                         url: "{{ route('eventTypeController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#postForm').trigger("reset");
                             $('#ajax-crud-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
@@ -309,6 +339,7 @@
                             oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save');
                             $('#error').html("Duplicate event type name");

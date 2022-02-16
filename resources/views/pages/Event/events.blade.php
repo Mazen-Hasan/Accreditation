@@ -143,6 +143,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 @section('script')
@@ -636,13 +655,16 @@
                         var eventId = $('#event_id').val();
                         var url = "{{ route('eventComplete', [":eventId"]) }}";
                         url = url.replace(':eventId', eventId);
+                        $('#loader-modal').modal('show');
                         $.ajax({
                             type: "get",
                             url: url,
                             success: function (data) {
+                                $('#loader-modal').modal('hide');
                                 $('#filtersButton').click();
                             },
                             error: function (data) {
+                                $('#loader-modal').modal('hide');
                                 console.log('Error:', data);
                             }
                         });

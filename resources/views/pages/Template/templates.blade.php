@@ -131,6 +131,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -195,8 +214,9 @@
 
             $('body').on('click', '#edit-template', function () {
                 var template_id = $(this).data('id');
-
+                $('#loader-modal').modal('show');
                 $.get('templateController/' + template_id + '/edit', function (data) {
+                    $('#loader-modal').modal('hide');
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Registration Form");
                     $('#btn-save').val("edit-template");
@@ -252,6 +272,7 @@
 
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
                     if ($button[0].id === 'btn-yes') {
+                        $('#loader-modal').modal('show');
                         var template_id = $('#curr_template_id').val();
                         var mode_id = $('#mode_id').val();
 
@@ -264,10 +285,12 @@
                                 type: "get",
                                 url: url,
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });
@@ -280,10 +303,12 @@
                                 type: "get",
                                 url: url,
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });
@@ -305,13 +330,14 @@
             $("#templateForm").validate({
                 submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
-
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         data: $('#templateForm').serialize(),
                         url: "{{ route('templateController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#templateForm').trigger("reset");
                             $('#template-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
@@ -319,6 +345,7 @@
                             oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }

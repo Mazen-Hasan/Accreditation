@@ -135,6 +135,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 @section('script')
@@ -536,6 +555,7 @@
                         var post_id = $('#curr_element_id').val();
                         var action_button = $('#action_button').val();
                         if (action_button == 'approve') {
+                            $('#loader-modal').modal('show');
                             var staffId = $('#curr_element_id').val();
 
                             var url = "{{ route('securityOfficerAdminControllerApprove', ":staffId") }}";
@@ -546,12 +566,14 @@
                                 // url: "../../securityOfficerAdminController/Approve/" + staffId,
                                 url: url,
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     // var oTable = $('#laravel_datatable').dataTable();
                                     // oTable.fnDraw(false);
                                     $('#filtersButton').click();
                                     $('#filtersButton').hide();
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });
@@ -562,12 +584,13 @@
 
                             var url = "{{ route('securityOfficerAdminControllerReject', ":staffId") }}";
                             url = url.replace(':staffId', staffId);
-
+                            $('#loader-modal').modal('show');
                             $.ajax({
                                 type: "get",
                                 // url: "../../securityOfficerAdminController/Reject/" + staffId,
                                 url: url,
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     //var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
                                     $('#add-new-post').hide();
@@ -576,6 +599,7 @@
                                     //oTable.fnDraw(false);
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });
@@ -593,18 +617,20 @@
                         var url = "{{ route('securityOfficerAdminControllerRejectToCorrect', [":staffId",":reason"]) }}";
                         url = url.replace(':staffId', staffId);
                         url = url.replace(':reason', reason);
-
+                        $('#loader-modal').modal('show');
                         $.ajax({
                             type: "get",
                             // url: "../../securityOfficerAdminController/RejectToCorrect/" + staffId + "/" + reason,
                             url: url,
                             success: function (data) {
+                                $('#loader-modal').modal('hide');
                                 // var oTable = $('#laravel_datatable').dataTable();
                                 // oTable.fnDraw(false);
                                 $('#filtersButton').click();
                                 $('#filtersButton').hide();
                             },
                             error: function (data) {
+                                $('#loader-modal').modal('hide');
                                 console.log('Error:', data);
                             }
                         });

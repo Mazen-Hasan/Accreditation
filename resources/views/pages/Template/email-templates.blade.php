@@ -117,6 +117,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -190,13 +209,14 @@
             $("#emailTemplateForm").validate({
                 submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
-
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         data: $('#emailTemplateForm').serialize(),
                         url: "{{ route('emailTemplateController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#emailTemplateForm').trigger("reset");
                             $('#email_template-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
@@ -204,6 +224,7 @@
                             oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }

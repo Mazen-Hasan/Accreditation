@@ -214,6 +214,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -306,8 +325,10 @@
 
             $('body').on('click', '#edit-badge', function () {
                 var badge_id = $(this).data('id');
+                $('#loader-modal').modal('show');
                 console.log(badge_id);
                 $.get('templateBadgeController/' + badge_id + '/edit', function (data) {
+                    $('#loader-modal').modal('hide');
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Badge");
                     $('#btn-save').html("Save");
@@ -367,14 +388,17 @@
                 if ($button[0].id === 'btn-yes') {
                     var badge_id = $('#curr_badge_id').val();
                     var mode_id = $('#mode_id').val();
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         type: "get",
                         url: "templateBadgeController/changeLock/" + badge_id + "/" + mode_id,
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             var oTable = $('#laravel_datatable').dataTable();
                             oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                         }
                     });
@@ -384,11 +408,13 @@
 
         $('body').on('click', '#preview-badge', function () {
             var badge_id = $(this).data("id");
+            $('#loader-modal').modal('show');
             console.log(badge_id);
             $.ajax({
                 type: "get",
                 url: "badge-design-generate/" + badge_id,
                 success: function (data) {
+                    $('#loader-modal').modal('hide');
                     $('#badge-modal').modal('show');
 
                     var imag = data;
@@ -397,6 +423,7 @@
                     $('#badge').attr('src', image_path + imag);
                 },
                 error: function (data) {
+                    $('#loader-modal').modal('hide');
                     console.log('Error:', data);
                 }
             });
@@ -429,12 +456,14 @@
 
                 submitHandler: function (form) {
                     $('#btn-save').html('Sending..');
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         data: $('#badgeForm').serialize(),
                         url: "{{ route('templateBadgeController.store') }}",
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#badgeForm').trigger("reset");
                             $('#field-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
@@ -442,6 +471,7 @@
                             oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }

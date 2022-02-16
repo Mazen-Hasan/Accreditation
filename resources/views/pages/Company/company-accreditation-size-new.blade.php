@@ -181,6 +181,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -297,6 +316,7 @@
                     $('#error_message').text('Size has to be more than 0 and less than ' + remaining_size);
                     $('#error_message').show();
                 } else {
+                    $('#loader-modal').modal('show');
                     var url = "{{ route('companyControllerStoreCompanyAccrCatSize',[ ':id',':accredit_cat_id',':size',':company_id',':eventId']) }}";
                     url = url.replace(':id', post_id);
                     url = url.replace(':accredit_cat_id', accredit_cat_id);
@@ -308,6 +328,7 @@
                         // url: "../../companyController/storeCompanyAccrCatSize/" + post_id + "/" + accredit_cat_id + "/" + size + "/" + company_id + "/" + eventId,
                     	url:url,
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#ajax-crud-modal').modal('hide');
                             //alert('i am here');
                             var oTable = $('#laravel_datatable').dataTable();
@@ -322,6 +343,7 @@
                             $('#error_message').hide();
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#ajax-crud-modal').modal('hide');
                             $('#errorTitle').html('Error: Duplicate accrediation category');
                             $('#errorText').html('Cant insert duplicate accreditation category size');
@@ -352,11 +374,13 @@
                         if (action_button == 'delete') {
                             var url = "{{ route('companyControllerDestroyCompanyAccreditCat', ':id') }}";
                             url = url.replace(':id', post_id);
+                            $('#loader-modal').modal('show');
                             $.ajax({
                                 type: "get",
                                 // url: "../../companyController/destroyCompanyAccreditCat/" + post_id,
                             	url:url,
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     var oTable = $('#laravel_datatable').dataTable();
                                     oTable.fnDraw(false);
                                     var remaining_size = parseInt($('#remaining_size').val());
@@ -367,6 +391,7 @@
                                     $('#curr_size').val('0');
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });
@@ -377,11 +402,13 @@
                             var url = "{{ route('companyControllerApprove', [':company_id',':eventId']) }}";
                             url = url.replace(':company_id', company_id);
                             url = url.replace(':eventId', eventId);
+                            $('#loader-modal').modal('show');
                             $.ajax({
                                 type: "get",
                                 //url: "../../companyController/Approve/" + company_id + "/" + eventId,
                             	url:url,
                                 success: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     var oTable = $('#laravel_datatable').dataTable();
                                     $('#send-approval-request').hide();
                                     $('#add-new-post').hide();
@@ -389,6 +416,7 @@
                                     oTable.fnDraw(false);
                                 },
                                 error: function (data) {
+                                    $('#loader-modal').modal('hide');
                                     console.log('Error:', data);
                                 }
                             });

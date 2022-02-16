@@ -111,6 +111,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -224,14 +243,16 @@
                     var url = "{{ route('focalPointControllerResetPassword', [":userId",":password"]) }}";
                     url = url.replace(':userId', userId);
                     url = url.replace(':password', password);
-
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         type: "get",
                         url: url,
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#ajax-crud-modal').modal('hide');
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                         }
                     });

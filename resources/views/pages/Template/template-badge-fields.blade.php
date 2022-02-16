@@ -208,6 +208,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -308,15 +327,18 @@
 
                 $(this).closest('.modal').one('hidden.bs.modal', function () {
                     if ($button[0].id === 'btn-yes') {
+                        $('#loader-modal').modal('show');
                         var field_id = $('#curr_field_id').val();
                         $.ajax({
                             type: "get",
                             url: "../templateBadgeFieldController/destroy/" + field_id,
                             success: function (data) {
+                                $('#loader-modal').modal('hide');
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);
                             },
                             error: function (data) {
+                                $('#loader-modal').modal('hide');
                                 console.log('Error:', data);
                             }
                         });
@@ -327,10 +349,12 @@
 
         $('#preview-badge').click(function () {
             var badge_id = $('#badge_id').val();
+            $('#loader-modal').modal('show');
             $.ajax({
                 type: "get",
                 url: "../badge-design-generate/" + badge_id,
                 success: function (data) {
+                    $('#loader-modal').modal('hide');
                     $('#badge-modal').modal('show');
 
                     var imag = data;
@@ -339,6 +363,7 @@
                     $('#badge').attr('src', image_path + imag + '?verion=' + (new Date().getTime()));
                 },
                 error: function (data) {
+                    $('#loader-modal').modal('hide');
                     console.log('Error:', data);
                 }
             });
@@ -348,6 +373,7 @@
         if ($("#fieldForm").length > 0) {
             $("#fieldForm").validate({
                 submitHandler: function (form) {
+                    $('#loader-modal').modal('show');
                     $('#btn-save').html('Sending..');
                     $.ajax({
                         data: $('#fieldForm').serialize(),
@@ -355,6 +381,7 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#fieldForm').trigger("reset");
                             $('#field-modal').modal('hide');
                             $('#btn-save').html('Save Changes');
@@ -362,6 +389,7 @@
                             oTable.fnDraw(false);
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                             $('#btn-save').html('Save Changes');
                         }

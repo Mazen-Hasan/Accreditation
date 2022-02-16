@@ -71,7 +71,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
          role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document" style="width: 250px">
             <div class="modal-content">

@@ -110,6 +110,25 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -194,7 +213,7 @@
                 if (password !== confirm_password) {
                     $('#lbl_error').html('Please enter the same password');
                 } else {
-
+                    $('#loader-modal').modal('show');
                 	var url = "{{ route('userControllerResetPassword', [':userId',':password']) }}";
                     url = url.replace(':userId', userId);
                     url = url.replace(':password', password);
@@ -204,9 +223,11 @@
                         // url: "userController/reset_password/" + userId + "/" + password,
                         url: url,
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#ajax-crud-modal').modal('hide');
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                         }
                     });

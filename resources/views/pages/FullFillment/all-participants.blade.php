@@ -100,6 +100,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 @section('script')
@@ -475,16 +494,19 @@
                 console.log(checkedItems);
                 var staff = checkedItems;
                 if (staff.length > 0) {
+                    $('#loader-modal').modal('show');
                     $.ajax({
                         type: "post",
                         data: {staff: staff},
                         dataType: "json",
                         url: "{{ url('pdf-generate')}}",
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log(data);
                             window.open(data.file, '_blank');
                         },
                         error: function (data) {
+                            $('#loader-modal').modal('hide');
                             console.log('Error:', data);
                         }
                     });

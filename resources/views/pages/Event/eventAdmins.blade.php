@@ -164,6 +164,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -233,14 +252,17 @@
                         var event_admin_id = $('#curr_event_admin_id').val();
                         var url = "{{ route('eventAdminsRemove', ":id") }}";
                         url = url.replace(':id', event_admin_id);
+                        $('#loader-modal').modal('show');
                         $.ajax({
                             type: "get",
                             url: url,
                             success: function (data) {
+                                $('#loader-modal').modal('hide');
                                 var oTable = $('#laravel_datatable').dataTable();
                                 oTable.fnDraw(false);
                             },
                             error: function (data) {
+                                $('#loader-modal').modal('hide');
                                 console.log('Error:', data);
                             }
                         });
@@ -256,6 +278,7 @@
                 },
 
                 submitHandler: function (form) {
+                    $('#loader-modal').modal('show');
                     $('#btn-save').html('Sending..');
                     $.ajax({
                         data: $('#eventAdminForm').serialize(),
@@ -263,6 +286,7 @@
                         type: "POST",
                         dataType: 'json',
                         success: function (data) {
+                            $('#loader-modal').modal('hide');
                             $('#eventAdminForm').trigger("reset");
                             $('#event-admin-modal').modal('hide');
                             $('#btn-save').html('Save');
@@ -271,6 +295,7 @@
                         },
                         error: function (data) {
                             //console.log('Error:', data);
+                            $('#loader-modal').modal('hide');
                         	$('#event-admin-modal').modal('hide');
                             $('#errorTitle').html('Error: Duplicate Event admins');
                             $('#errorText').html('Cant insert duplicate aevent admin');

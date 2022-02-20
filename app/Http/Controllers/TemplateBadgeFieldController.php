@@ -52,9 +52,9 @@ class TemplateBadgeFieldController extends Controller
             ['badge_id' => $request->badge_id,
                 'template_field_id' => $request->template_field_id,
                 'template_field_name' => $templateFiled->label_en,
-                'position_x' => $request->position_x,
-                'position_y' => $request->position_y,
-                'size' => $request->size,
+                'position_x' => round($request->position_x * 3.7795275591),
+                'position_y' => round($request->position_y * 3.7795275591),
+                'size' => round($request->size * 3.7795275591),
                 'text_color' => $request->text_color,
                 'bg_color' => $request->bg_color,
             ]);

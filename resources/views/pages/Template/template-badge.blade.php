@@ -333,8 +333,8 @@
                     $('#modalTitle').html("Edit Badge");
                     $('#btn-save').html("Save");
                     $('#badge_id').val(data.id);
-                	$('#width').val(Math.round(data.width * 0.2645833333));
-                    $('#high').val(Math.round(data.high * 0.2645833333));
+                	$('#width').val(Math.trunc(data.width * 0.2645833333));
+                    $('#high').val(Math.trunc(data.high * 0.2645833333));
                     $('#bg_color').val(data.bg_color);
                     $('#field-modal').modal('show');
 

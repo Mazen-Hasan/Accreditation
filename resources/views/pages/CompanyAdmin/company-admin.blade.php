@@ -28,7 +28,7 @@
                                             <a href="{{route('companyParticipants',[$event->company_id,$event->id])}}">
                                                 <img id="logo" class="card-img-top"
                                                      style="width: 374px; height:374px; border-top-left-radius: 20px; border-top-right-radius: 20px"
-                                                     src="{{ asset('images/event.png') }}" alt="Event">
+                                                     src="{{asset('logo/' . $event->logo)}}" alt="Event">
                                             </a>
                                         </div>
                                         <div class="card-body">
@@ -143,12 +143,6 @@
             var subCompany_status = $('#subCompnay_status').val();
             if (subCompany_status == 0) {
                 $('#subsidiaries_nav').hide();
-            }
-
-            let imag = $('#logoName').val();
-            if (imag) {
-                var image_path = "{{URL::asset('logo/')}}/";
-                $('#logo').attr('src', image_path + imag);
             }
         });
     </script>

@@ -25,7 +25,7 @@
                                             <input type="hidden" id="logoName" value="{{$event->logo}}">
                                             <a href="{{route('securityOfficerCompanies',[$event->id])}}">
                                                 <img id="logo" class="card-img-top event-card-logo"
-                                                     src="{{ asset('images/event.png') }}" alt="Event">
+                                                     src="{{asset('logo/' . $event->logo)}}" alt="Event">
                                             </a>
                                         </div>
                                         <div class="card-body">
@@ -111,17 +111,5 @@
             </div>
         </div>
     </div>
-@endsection
-@section('script')
-    <script>
-        $(document).ready(function () {
-                let imag = $('#logoName').val();
-                if (imag) {
-                    var image_path = "{{URL::asset('logo/')}}/";
-                    $('#logo').attr('src', image_path + imag);
-                }
-            }
-        );
-    </script>
 @endsection
 

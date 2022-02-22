@@ -14,7 +14,18 @@
             <div class="col-12 grid-margin">
                 <div class="card" style="border-radius: 20px">
                     <div class="card-body">
-                        <h4 class="card-title">{{$event_name}} / {{$company_name}} - Edit</h4>
+                        <h4 class="card-title">
+                            <a class="url-nav" href="{{ route('event-admin') }} ">
+                                <span>My Events:</span>
+                            </a>
+                            <a class="url-nav" href="{{route('eventCompanies',[$eventid])}}">
+                                <span>{{$event_name}}</span>
+                            </a>
+                            <a class="url-nav" href="{{route('eventCompanyParticipants',[$company->id ,$eventid])}}">
+                                <span>/ {{$company_name}}</span>
+                            </a>
+                            - Edit
+                        </h4>
                         <form class="form-sample" id="postForm" name="postForm">
                             <input type="hidden" name="creation_date" id="creation_date" value="">
                             <input type="hidden" name="creator" id="creator" value="">
@@ -504,7 +515,7 @@
             //alert('hi');
             $("#focal_point").val($("#focal_point option:first").val());
         });
-    
+
 
         if ($("#postForm").length > 0) {
             $("#postForm").validate({

@@ -63,9 +63,9 @@
                                     <th>ID</th>
                                     <th>Field ID</th>
                                     <th>Field Name</th>
-                                    <th>Position (X)</th>
-                                    <th>Position (Y)</th>
-                                    <th>Size</th>
+                                    <th>Position - X (mm)</th>
+                                    <th>Position - Y (mm)</th>
+                                    <th>Size (mm)</th>
                                     <th>Text color</th>
                                     <th>Action</th>
                                 </tr>
@@ -112,7 +112,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group col">
-                                    <label>Size</label>
+                                    <label>Size (mm)</label>
                                     <div class="col-sm-12">
                                         <input type="number" id="size" name="size" placeholder="enter size (pixel)"
                                                required="">
@@ -124,7 +124,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group col">
-                                    <label>Position (X)</label>
+                                    <label>Position - X (mm)</label>
                                     <div class="col-sm-12">
                                         <input type="number" id="position_x" name="position_x"
                                                placeholder="enter position x (pixel)" required="">
@@ -133,7 +133,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group col">
-                                    <label>Position (Y)</label>
+                                    <label>Position - Y (mm)</label>
                                     <div class="col-sm-12">
                                         <input type="number" id="position_y" name="position_y"
                                                placeholder="enter position y (pixel)" required="">
@@ -237,7 +237,9 @@
                 }
             });
 
-            var badge_id = $('#badge_id').val();
+            let badge_id = $('#badge_id').val();
+            let url = "{{ route('templateBadgeFields', [":badge_id"]) }}";
+            url = url.replace(':badge_id', badge_id);
 
             $('#laravel_datatable').DataTable({
 
@@ -253,16 +255,34 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '../template-badge-fields/' + badge_id,
+                    url: url,
                     type: 'GET',
                 },
                 columns: [
                     {data: 'id', name: 'id', 'visible': false},
                     {data: 'template_field_id', name: 'template_field_id', 'visible': false},
                     {data: 'template_field_name', name: 'template_field_name'},
-                    {data: 'position_x', name: 'position_x'},
-                    {data: 'position_y', name: 'position_y'},
-                    {data: 'size', name: 'size'},
+                    // {data: 'position_x', name: 'position_x'},
+                    {
+                        "data": "position_x",
+                        "render": function (val) {
+                            return Math.trunc(val * 0.2645833333);
+                        }
+                    },
+                    // {data: 'position_y', name: 'position_y'},
+                    {
+                        "data": "position_y",
+                        "render": function (val) {
+                            return Math.trunc(val * 0.2645833333);
+                        }
+                    },
+                    // {data: 'size', name: 'size'},
+                    {
+                        "data": "size",
+                        "render": function (val) {
+                            return Math.trunc(val * 0.2645833333);
+                        }
+                    },
                     {
                         "data": "text_color",
                         "render": function (val) {
@@ -296,16 +316,17 @@
             });
 
             $('body').on('click', '#edit-field', function () {
-                var field_id = $(this).data('id');
+                let field_id = $(this).data('id');
+
                 $.get('../templateBadgeFieldController/' + field_id + '/edit', function (data) {
                     $('#name-error').hide();
                     $('#modalTitle').html("Edit Field");
                     $('#btn-save').val("edit-field");
                     $('#field-modal').modal('show');
                     $('#field_id').val(data.id);
-                    $('#position_x').val(data.position_x);
-                    $('#position_y').val(data.position_y);
-                    $('#size').val(data.size);
+                    $('#position_x').val(Math.trunc(data.position_x * 0.2645833333));
+                    $('#position_y').val(Math.trunc(data.position_y * 0.2645833333));
+                    $('#size').val(Math.round(data.size * 0.2645833333));
                     $('#text_color').val(data.text_color);
                     // $('#bg_color').val(data.bg_color);
                     $('#template_field_id').val(data.template_field_id);
@@ -329,9 +350,12 @@
                     if ($button[0].id === 'btn-yes') {
                         $('#loader-modal').modal('show');
                         var field_id = $('#curr_field_id').val();
+                        let url = "{{ route('TemplateBadgeFieldControllerDestroy', [":field_id"]) }}";
+                        url = url.replace(':field_id', field_id);
+
                         $.ajax({
                             type: "get",
-                            url: "../templateBadgeFieldController/destroy/" + field_id,
+                            url: url,
                             success: function (data) {
                                 $('#loader-modal').modal('hide');
                                 var oTable = $('#laravel_datatable').dataTable();
@@ -349,10 +373,13 @@
 
         $('#preview-badge').click(function () {
             var badge_id = $('#badge_id').val();
+            let url = "{{ route('badgeDesignGenerate', [":badge_id"]) }}";
+            url = url.replace(':badge_id', badge_id);
+
             $('#loader-modal').modal('show');
             $.ajax({
                 type: "get",
-                url: "../badge-design-generate/" + badge_id,
+                url: url,
                 success: function (data) {
                     $('#loader-modal').modal('hide');
                     $('#badge-modal').modal('show');

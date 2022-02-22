@@ -27,7 +27,7 @@
                                             <input type="hidden" id="logoName" value="{{ $event->logo }}">
                                             <a href="{{route('dataEntryParticipants',[$event->company_id,$event->id])}}">
                                                 <img id="logo" class="card-img-top event-card-logo"
-                                                     src="{{ asset('images/event.png') }}" alt="Event">
+                                                     src="{{asset('logo/' . $event->logo)}}" alt="Event">
                                             </a>
                                         </div>
                                         <div class="card-body">
@@ -117,15 +117,8 @@
     <script>
         $(document).ready(function () {
             var subCompany_status = $('#subCompnay_status').val();
-            //alert(subCompany_status);
             if (subCompany_status == 0) {
                 $('#subsidiaries_nav').hide();
-            }
-
-            let imag = $('#logoName').val();
-            if (imag) {
-                var image_path = "{{URL::asset('logo/')}}/";
-                $('#logo').attr('src', image_path + imag);
             }
         });
     </script>

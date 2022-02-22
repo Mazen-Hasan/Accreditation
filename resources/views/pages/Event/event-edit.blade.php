@@ -92,7 +92,7 @@
                                     <div class="form-group col">
                                         <label>Owner</label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="name" name="name" value="{{$event->owner}}"
+                                            <input type="text" id="owner" name="owner" value="{{$event->owner}}"
                                                    required="" placeholder="enter name"/>
 {{--                                            <select id="owner" name="owner" required="">--}}
 {{--                                                @foreach ($owners as $owner)--}}

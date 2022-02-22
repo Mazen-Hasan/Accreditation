@@ -192,6 +192,10 @@ class CompanyController extends Controller
         $companyStatus1 = new SelectOption(1, 'Active');
         $companyStatus2 = new SelectOption(0, 'InActive');
         $companyStatuss = [$companyStatus1, $companyStatus2];
+
+        $accreditationManagement1 = new SelectOption(0, 'Managed By Event Admin');
+        $accreditationManagement2 = new SelectOption(1, 'Managed By Company Admin');
+        $accreditationManagements = [$accreditationManagement1,$accreditationManagement2];
     
         $allwoedSize = $event->size;
         $allwoedSize = $allwoedSize + $post->size;
@@ -214,7 +218,7 @@ class CompanyController extends Controller
         }
 
         return view('pages.Company.company-edit')->with('company', $post)->with('countrys', $countrysSelectOptions)->with('citys', $citysSelectOptions)->with('focalPoints', $focalPointsOption)
-            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss)->with('allowedSize',$allwoedSize);
+            ->with('categorys', $categorysSelectOptions)->with('accreditationCategorys', $accreditationCategorysSelectOptions)->with('eventid', $eventid)->with('event_name', $event->name)->with('company_name', $post->name)->with('statuss', $companyStatuss)->with('allowedSize',$allwoedSize)->with('accreditationManagements',$accreditationManagements);
     }
 
 

@@ -374,7 +374,7 @@
                     success: function (data) {
                         if (data.exist === 1) {
                             $('#confirmTitle').html('Add new event');
-                            var confirmText = 'This organizer has another events, all companies, subsidiaries, focal points, data entries will be copied to the new event';
+                            var confirmText = 'This organizer has another events, all companies, subsidiaries, focal points, data entries will be copied to the new event, Sizes of the companies and subsidiaries must be managed as they set to "0"';
                             $('#confirmText').html(confirmText);
                             $('#event-organizer-copy-confirm-modal').modal('show');
                         }

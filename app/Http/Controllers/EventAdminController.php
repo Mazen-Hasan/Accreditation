@@ -34,6 +34,13 @@ class EventAdminController extends Controller
     {
         $where = array('id' => $id);
         $event = Event::where($where)->first();
+        $hasSize = 1;
+        $companies = DB::select('select * from companies_view where event_id = ? and parent_id is null', [$id]);
+        foreach($companies as $company){
+            if($company->size == 0){
+                $hasSize = 0;
+            }
+        }
         if (request()->ajax()) {
             $companies = DB::select('select * from companies_view where event_id = ? and parent_id is null', [$id]);
             return datatables()->of($companies)
@@ -55,7 +62,7 @@ class EventAdminController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.EventAdmin.event-companies')->with('eventid', $id)->with('event_name', $event->name)->with('event_status',$event->status);
+        return view('pages.EventAdmin.event-companies')->with('eventid', $id)->with('event_name', $event->name)->with('event_status',$event->status)->with('hasSize',$hasSize);
     }
 
     public function getData($id,$values){

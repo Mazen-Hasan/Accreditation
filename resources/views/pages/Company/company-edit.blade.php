@@ -165,6 +165,42 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group col">
+                                        <label>Accreditation Management</label>
+                                        <div class="col-sm-12">
+                                            <select id="need_management" name="need_management" value="" required="">
+                                                @foreach ($accreditationManagements as $accreditationManagement)
+                                                    <option value="{{ $accreditationManagement->key }}"
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($accreditationManagement->key == $company->need_management)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $accreditationManagement->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- <div class="form-group col">
+                                        <label>Status</label>
+                                        <div class="col-sm-12">
+                                            <select id="company_status" name="company_status" value="" required="">
+                                                @foreach ($statuss as $status)
+                                                    <option value="{{ $status->key }}"
+                                                            {{--                                                            @if ($key == old('myselect', $model->option))--}}
+                                                            @if ($status->key == $company->status)
+                                                            selected="selected"
+                                                        @endif
+                                                    >{{ $status->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" id="btn-save" value="create">Edit
                                 </button>

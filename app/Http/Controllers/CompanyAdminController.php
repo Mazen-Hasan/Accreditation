@@ -923,7 +923,7 @@ class CompanyAdminController extends Controller
         foreach($eventcompanies as $eventcompnay){
             $allwoedSize = $allwoedSize - $eventcompnay->size;
         }
-        $participants = CompanyStaff::where(['company_id'=>$companyId])->get()->all();
+        $participants = CompanyStaff::where(['event_id'=> $id,'company_id'=>$companyId])->get()->all();
         foreach($participants as $participant){
             $allwoedSize = $allwoedSize - 1;
         }

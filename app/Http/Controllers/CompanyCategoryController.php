@@ -63,7 +63,7 @@ class CompanyCategoryController extends Controller
 
         } catch (Exception $e) {
             $action_result = Config::get('resultEnum.results.FAILED');
-            LogTrait::supperAdminLog($action_id, $action_result, $params, $e);
+            LogTrait::supperAdminLog($action_id, $action_result, $params, $e->getMessage());
 
             return Response::json(array(
                 'code' => -999,
@@ -116,7 +116,7 @@ class CompanyCategoryController extends Controller
 
         } catch (Exception $e) {
             $action_result = Config::get('resultEnum.results.FAILED');
-            LogTrait::supperAdminLog($action_id, $action_result, $params, $e);
+            LogTrait::supperAdminLog($action_id, $action_result, $params, $e->getMessage());
 
             return Response::json(array(
                 'code' => -999,

@@ -559,8 +559,30 @@ class DataEntryController extends Controller
                         if ($participant_id == 0) {
                             $fieldElements = DB::select('select * from template_field_elements f inner join event_company_accrediation_categories_view e on e.accredit_cat_id = f.value_id where f.template_field_id = ? and e.size <> e.inserted and company_id =? and event_id = ?', [$templateField->id,$companyId,$eventId]);
                             foreach ($fieldElements as $fieldElement) {
-                                $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
-                                $options [] = $option;
+                                // $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
+                                // $options [] = $option;
+                                $childs = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+                                if($childs == null){
+                                    $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
+                                    $options [] = $option;
+                                }else{
+                                    $companyAccreditSize = 0;
+                                    $companyAccreditInserted = 0;
+                                    $childSizes = 0;
+                                    $companyAccredits = CompanyAccreditaionCategory::where(['event_id'=>$eventId,'company_id'=>$companyId,'accredit_cat_id'=>$fieldElement->value_id])->get()->all();
+                                    foreach($companyAccredits as $companyAccredit){
+                                        $companyAccreditSize = $companyAccredit->size;
+                                        $companyAccreditInserted = $companyAccredit->inserted;
+                                    }
+                                    $childsAccredits = CompanyAccreditaionCategory::where(['event_id'=>$eventId,'parent_id'=>$companyId,'accredit_cat_id'=>$fieldElement->value_id])->get()->all();
+                                    foreach($childsAccredits as $childsAccredit){
+                                        $childSizes = $childSizes + $childsAccredit->size;    
+                                    }
+                                    if($companyAccreditSize > $childSizes + $companyAccreditInserted){
+                                        $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
+                                        $options [] = $option;
+                                    }
+                                }
                             }
                             $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, '');
                         } else {
@@ -568,6 +590,28 @@ class DataEntryController extends Controller
                             foreach ($fieldElements as $fieldElement) {
                                 $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
                                 $options [] = $option;
+                                // $childs = EventCompany::where(['event_id'=>$eventId,'parent_id'=>$companyId])->get()->all();
+                                // if($childs == null){
+                                //     $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
+                                //     $options [] = $option;
+                                // }else{
+                                //     $companyAccreditSize = 0;
+                                //     $companyAccreditInserted = 0;
+                                //     $childSizes = 0;
+                                //     $companyAccredits = CompanyAccreditaionCategory::where(['event_id'=>$eventId,'company_id'=>$companyId,'accredit_cat_id'=>$fieldElement->value_id])->get()->all();
+                                //     foreach($companyAccredits as $companyAccredit){
+                                //         $companyAccreditSize = $companyAccredit->size;
+                                //         $companyAccreditInserted = $companyAccredit->inserted;
+                                //     }
+                                //     $childsAccredits = CompanyAccreditaionCategory::where(['event_id'=>$eventId,'parent_id'=>$companyId,'accredit_cat_id'=>$fieldElement->value_id])->get()->all();
+                                //     foreach($childsAccredits as $childsAccredit){
+                                //         $childSizes = $childSizes + $childsAccredit->size;    
+                                //     }
+                                //     if($companyAccreditSize > $childSizes + $companyAccreditInserted){
+                                //         $option = new SelectOption($fieldElement->value_id, $fieldElement->value_en);
+                                //         $options [] = $option;
+                                //     }
+                                // }
                             }
                             $form .= $this->createSelect(str_replace(' ', '_', $templateField->label_en), $templateField->label_en, $options, $templateField->value);
                         }

@@ -523,6 +523,7 @@ class CompanyAdminController extends Controller
                  	'event_company_id' => $eventcompnay->id,
                     'accredit_cat_id' => $accredit_cat_id,
                     'company_id' => $company_id,
+                    'parent_id' => $eventcompnay->parent_id,
                     'subcompany_id' => $company_id,
                     'event_id' => $event_id,
                     'status' => $status
@@ -617,6 +618,13 @@ class CompanyAdminController extends Controller
         $company = Company::where($where)->first();
         $where = array('id' => $eventId);
         $event = Event::where($where)->first();
+        $hasSize = 1;
+        $companies = DB::select('select * from event_companies where event_id = ? and parent_id = ?', [$eventId,$companyId]);
+        foreach($companies as $company1){
+            if($company1->size == 0){
+                $hasSize = 0;
+            }
+        }
         if (request()->ajax()) {
             $companies = DB::select('select * from companies_view where parent_id = ? and event_id = ?', [$company->id,$eventId]);
             return datatables()->of($companies)
@@ -638,7 +646,7 @@ class CompanyAdminController extends Controller
         if($company->parent_id != null){
             $subCompany_nav = 0;
         }
-        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventId', $event->id)->with('companyId',$companyId)->with('subCompany_nav',$subCompany_nav)->with('event_status',$event->status);
+        return view('pages.CompanyAdmin.subCompany')->with('event_name', $event->name)->with('company_name', $company->name)->with('eventId', $event->id)->with('companyId',$companyId)->with('subCompany_nav',$subCompany_nav)->with('event_status',$event->status)->with('hasSize',$hasSize);
     }
 
     public function getsubCompaniesData($companyId, $eventId,$values){
@@ -811,7 +819,8 @@ class CompanyAdminController extends Controller
 
         $companyStatus1 = new SelectOption(1, 'Active');
         $companyStatus2 = new SelectOption(0, 'InActive');
-        $companyStatuss = [$companyStatus1, $companyStatus2];
+        $companyStatus3 = new SelectOption(3, 'Invited');
+        $companyStatuss = [$companyStatus1, $companyStatus2,$companyStatus3];
 
         $parentId = $post->parent_id;
 
@@ -940,12 +949,17 @@ class CompanyAdminController extends Controller
             $parentId = $companyParent->parent_id;
         }
         $parentAcredititationCategories = CompanyAccreditaionCategory::where(['company_id'=> $parentId,'event_id'=>$eventId])->get()->all();
-        foreach($parentAcredititationCategories as $parentAcredititationCategory){
-            $parentAcredititationCategorystatus = $parentAcredititationCategory->status;
-            if($parentAcredititationCategorystatus != 2){
-                $addable = 0;
+        if($parentAcredititationCategories == null){
+            $addable = 2;
+        }else{
+            foreach($parentAcredititationCategories as $parentAcredititationCategory){
+                $parentAcredititationCategorystatus = $parentAcredititationCategory->status;
+                if($parentAcredititationCategorystatus != 2){
+                    $addable = 0;
+                }
             }
         }
+
 
         $companies = DB::select('select * from companies_view where id = ? and event_id = ?', [$companyId,$eventId]);
         foreach($companies as $company1){
@@ -970,9 +984,10 @@ class CompanyAdminController extends Controller
 //             $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->id, $accreditationCategory->name);
 //             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
 //         }
-        $accreditationCategories = DB::select('select * from event_accreditation_categories_view where event_id = ?',[$eventId]);
+        //$accreditationCategories = DB::select('select * from event_accreditation_categories_view where event_id = ?',[$eventId]);
+        $accreditationCategories = DB::select('select * from event_company_accrediation_categories_view where event_id = ? and company_id = ?',[$eventId,$parentId]);
         foreach ($accreditationCategories as $accreditationCategory) {
-            $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->accreditation_category_id, $accreditationCategory->name);
+            $accreditationCategorysSelectOption = new SelectOption($accreditationCategory->accredit_cat_id, $accreditationCategory->name);
             $accreditationCategorysSelectOptions[] = $accreditationCategorysSelectOption;
         }
 

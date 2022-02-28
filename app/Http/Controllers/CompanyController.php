@@ -100,7 +100,6 @@ class CompanyController extends Controller
                 $company = $company1;
             }
         } else {
-
             $where = array('id' => $companyId);
             $company = Company::where($where)->first();
             $status = $company->status;
@@ -120,6 +119,20 @@ class CompanyController extends Controller
                     'city_id' => $request->city,
                     'category_id' => $request->category,
                 ]);
+                $lastEventCompnay = EventCompany::where(['event_id'=> $request->event_id,'company_id' => $companyId])->get()->first();
+                $previuosSize = $lastEventCompnay->size;
+                if($previuosSize > $request->size){
+                    if($lastEventCompnay->parent_id == null){
+                        $deleteCompanySize = DB::delete('delete from company_accreditaion_categories where event_id = ? and company_id = ?' ,[$request->event_id,$companyId]);
+                        $ziroSubsidirySize = DB::update('update event_companies set size = 0 where event_id = ? and parent_id = ?',[$request->event_id,$companyId]);
+                        $companySubsidiries = EventCompany::where(['event_id'=>$request->event_id,'parent_id'=>$companyId])->get()->all();
+                        foreach($companySubsidiries as $companySubsidiriy){
+                            $deleteSubsidirySize = DB::delete('delete from company_accreditaion_categories where event_id = ? and company_id = ?' ,[$request->event_id,$companySubsidiriy->company_id]);
+                        }
+                    }else{
+                        $deleteCompanySize = DB::delete('delete from company_accreditaion_categories where event_id = ? and company_id = ?' ,[$request->event_id,$companyId]);
+                    }
+                }
                 $event_company = EventCompany::updateOrCreate(['event_id' => $request->event_id,'company_id' => $companyId],
                 [
                 'status' => $request->company_status,
@@ -191,7 +204,8 @@ class CompanyController extends Controller
 
         $companyStatus1 = new SelectOption(1, 'Active');
         $companyStatus2 = new SelectOption(0, 'InActive');
-        $companyStatuss = [$companyStatus1, $companyStatus2];
+        $companyStatus3 = new SelectOption(2, 'Invited');
+        $companyStatuss = [$companyStatus1, $companyStatus2,$companyStatus3];
 
         $accreditationManagement1 = new SelectOption(0, 'Managed By Event Admin');
         $accreditationManagement2 = new SelectOption(1, 'Managed By Company Admin');

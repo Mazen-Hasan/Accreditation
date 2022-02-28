@@ -61,6 +61,7 @@
                             <input type="hidden" id="company_id" value={{$companyId}}>
                             <input type="hidden" id="event_id" value={{$eventId}}>
                             <input type="hidden" id="h_event_status" value={{$event_status}}>
+                            <input type="hidden" id="hasSize" value={{$hasSize}}>
                             <div class="col-md-11">
                                 <h4 class="card-title">
                                     <a class="url-nav" href="{{ route('company-admin') }} ">
@@ -154,6 +155,30 @@
                             <label class="loading">
                                 loading...
                             </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="error-pop-up-modal" tabindex="-1" data-bs-backdrop="static"
+         data-bs-keyboard="false" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorTitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="col-sm-12 confirm-text" id="errorText"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn-cancel" data-dismiss="modal" id="btn-ok">OK
+                            </button>
+                        </div>
+                        <div class="col-sm-4">
                         </div>
                     </div>
                 </div>
@@ -405,6 +430,14 @@
 
         //////////end new lines
         $(document).ready(function () {
+
+            var hasSize = $('#hasSize').val();
+            if(hasSize == 0){
+                $('#errorTitle').html('Company Subsidiaries');
+                $('#errorText').html('there is a subsidiary(s) in this company with 0 size, you need to manage them');
+                $('#error-pop-up-modal').modal('show');
+            }
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

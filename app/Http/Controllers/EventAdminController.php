@@ -35,7 +35,7 @@ class EventAdminController extends Controller
         $where = array('id' => $id);
         $event = Event::where($where)->first();
         $hasSize = 1;
-        $companies = DB::select('select * from companies_view where event_id = ? and parent_id is null', [$id]);
+        $companies = DB::select('select * from event_companies where event_id = ? and parent_id is null', [$id]);
         foreach($companies as $company){
             if($company->size == 0){
                 $hasSize = 0;

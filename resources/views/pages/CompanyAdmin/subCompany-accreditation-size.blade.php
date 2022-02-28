@@ -196,6 +196,25 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="loader-modal" tabindex="-1" data-backdrop="static" data-keyboard="false"
+         role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 250px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="col-sm-10">
+                            <label class="loading">
+                                loading...
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -245,9 +264,15 @@
                         $('#error-pop-up-modal').modal('show');
                     }
                 }else{
-                        $('#errorTitle').html('Adding Accreditation Category');
-                        $('#errorText').html('you can not manage accrediation categories till Event Admin approval');
-                        $('#error-pop-up-modal').modal('show');
+                        if(addable == 0){
+                            $('#errorTitle').html('Adding Accreditation Category');
+                            $('#errorText').html('you can not manage accrediation categories till Event Admin approval');
+                            $('#error-pop-up-modal').modal('show');
+                        }else{
+                            $('#errorTitle').html('Adding Accreditation Category');
+                            $('#errorText').html('you can not manage accrediation categories till parent company accreditation categories managed');
+                            $('#error-pop-up-modal').modal('show'); 
+                        }
                     }
             });
             $('body').on('click', '#edit-company-accreditation', function () {

@@ -447,7 +447,7 @@
                 // url: "fullFillmentController/getCompanies/" + this.value,
                 url: url,
                 success: function (data) {
-                    $('#loader-modal').modal('hdie');
+                    $('#loader-modal').modal('hide');
                     var citySelectOptions = data;
                     $('#container').html('');
                     var html = '<select id="city" name="city" required="">';

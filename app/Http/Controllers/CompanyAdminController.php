@@ -67,6 +67,17 @@ class CompanyAdminController extends Controller
         // }
 
     	$addable = 1;
+        $eventCompanySize = 0;
+        $eventCompany = EventCompany::where(['company_id'=>$companyId,'event_id'=>$eventId])->first();
+        if($eventCompany != null){
+            $eventCompanySize = $eventCompany->size;  
+        }
+        $eventCompnaySubsidiariesSize = 0;
+        $eventCompnaySubsidiaries = EventCompany::where(['parent_id'=>$companyId,'event_id'=>$eventId])->get()->all();
+        foreach($eventCompnaySubsidiaries as $eventCompnaySubsidiary){
+            $eventCompnaySubsidiariesSize = $eventCompnaySubsidiariesSize + $eventCompnaySubsidiary->size;
+        }
+        $companyRemainingSize = $eventCompanySize - $eventCompnaySubsidiariesSize;
         $companyAccrediationCategories = CompanyAccreditaionCategory::where(['company_id'=>$companyId,'event_id'=>$eventId])->get()->all();
         if($companyAccrediationCategories == null){
             $addable = 2;
@@ -81,7 +92,7 @@ class CompanyAdminController extends Controller
                 $status = $status + $companyAccrediationCategory->status;
                 $count = $count + 1;
             }
-            if($size == $inserted){
+            if($companyRemainingSize == $inserted){
                 if($size == 0){
                     $addable = 2;
                 }else{
@@ -513,7 +524,7 @@ class CompanyAdminController extends Controller
 
         $where = array('company_id'=>$company_id, 'event_id' => $event_id);
         $eventcompnay = EventCompany::where($where)->first();
-    	$status = 0;
+    	$status = 1;
     	if($eventcompnay->parent_id != null){
         	$status = 2;
         }
@@ -748,6 +759,11 @@ class CompanyAdminController extends Controller
                     'city_id' => $request->city,
                     'category_id' => $request->category,
                 ]);
+                $eventSubsidiary = EventCompany::where(['company_id'=> $request->company_Id , 'event_id'=>$request->event_id])->first();
+                $eventSubsidiaryPreviousSize = $eventSubsidiary->size;
+                if($request->size < $eventSubsidiaryPreviousSize){
+                    $deleteCompanySize = DB::delete('delete from company_accreditaion_categories where event_id = ? and company_id = ?' ,[$request->event_id,$companyId]);
+                }
                 $event_company = EventCompany::updateOrCreate(['event_id' => $request->event_id,'company_id' => $companyId],
                 [
                 'status' => $request->company_status,
